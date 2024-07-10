@@ -28,7 +28,7 @@ const LoginForm = () => {
                 <Logo />
                 <FormHeader
                     title="Sign In"
-                    subtitle="Use an email or another service to continue with Forj (it's free)!"
+                    subtitle="Sign in using email or another service to continue with Forj (it's free)!"
                 />
 
                 <form>
