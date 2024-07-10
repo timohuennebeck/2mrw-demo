@@ -26,20 +26,20 @@ Stripe is used for handling paYments in this project. Follow these steps to set 
     ```
     STRIPE_API_KEY=your_stripe_api_key_here
     ```
-
-4. Install the Stripe CLI:
+4. Inside the `config/subscriptionPlans.ts` file, update the plans to reflect all Your plans inside Stripe.
+5. Install the Stripe CLI:
 
     ```
     brew install stripe/stripe-cli/stripe
     ```
 
-5. Log in to Your Stripe account via the CLI:
+6. Log in to Your Stripe account via the CLI:
 
     ```
     stripe login
     ```
 
-6. Start the Stripe webhook listener:
+7. Start the Stripe webhook listener:
 
     ```
     stripe listen --forward-to localhost:3000/api/webhooks/stripe
@@ -47,7 +47,7 @@ Stripe is used for handling paYments in this project. Follow these steps to set 
 
     Important: Ensure Your local development server is running (`npm run dev`) before starting the webhook listener.
 
-7. You'll get a webhook signing secret provided from the Stripe CLI. Include that in the `.env.local` file:
+8. You'll get a webhook signing secret provided from the Stripe CLI. Include that in the `.env.local` file:
     ```
     STRIPE_WEBHOOK_SECRET=your_webhook_secret_here
     ```
@@ -75,6 +75,18 @@ Resend is used for sending emails in this project. Here's how to set it up:
     NEXT_PUBLIC_EMAIL_LOGO_BASE_URL=your_logo_url_here
     ```
 
+## Supabase Setup
+To set up Supabase for your project, follow these steps:
+
+1. Go to [Supabase](https://supabase.com) and create a new project.
+2. Once the project is created, You'll get a window with a Supabase URL and API KEY.
+3. Include those in Your `.env.local` file:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
+NEXT_PUBLIC_SUPABASE_API_KEY=your_supabase_api_key_here
+```
+
 ## Configuration
 
 Update the following values in Your project:
@@ -98,3 +110,10 @@ You've finished the setup and configuration. You can now:
 2. Open [http://localhost:3000](http://localhost:3000) in Your browser to view the project.
 
 Remember to keep Your API KEYS and sensitive information secure and never commit them to version control.
+
+
+setting up supabase
+inside supabase create a new project
+then youll get a window with all the dtails
+add the url inside the "NEXT_PUBLIC_SUPABASE_URL"
+and add the NEXT_PUBLIC_SUPABASE_API_KEY" to the env.local. as well

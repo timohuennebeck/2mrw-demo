@@ -1,31 +1,12 @@
-import PreOrderEmail from "@/emails/PreOrderEmail";
-import { PreOrderEmailInterface } from "@/interfaces/PreOrderEmailInterface";
+import { StripePriceId } from "@/config/subscriptionPlans";
+import { createOrUpdateUser } from "@/utils/createOrUpdateUser";
+import { sendPreOrderEmail } from "@/utils/emails/client";
+import { extractSubscriptionPlanDetails } from "@/utils/extractSubscriptionPlanDetails";
 import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_API_KEY ?? "");
 const stripeWebhook = process.env.NEXT_PUBLIC_STRIPE_WEBHOOK_SECRET ?? "";
-const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_EMAIL_API_KEY ?? "");
-
-const sendPreOrderEmail = async ({
-    customerEmail,
-    customerFullName,
-    purchasedPackage,
-}: PreOrderEmailInterface) => {
-    await resend.emails.send({
-        from: "onboarding@resend.dev",
-        to: customerEmail,
-        subject: `Order Confirmation - ${purchasedPackage}`,
-        react: PreOrderEmail({
-            customerFullName,
-            purchasedPackage,
-            estimatedLaunchDate: "September 15, 2024",
-            companyTitle: "Forj",
-            customerSupportEmail: "hello@joinforj.com",
-        }),
-    });
-};
 
 export async function POST(req: NextRequest) {
     try {
@@ -53,14 +34,25 @@ export async function POST(req: NextRequest) {
                     expand: ["line_items"],
                 });
 
+                const customerEmail = session?.customer_details?.email;
+                const stripePriceId = session.line_items?.data[0].price?.id;
+
+                if (customerEmail && stripePriceId) {
+                    await createOrUpdateUser(customerEmail, stripePriceId as StripePriceId);
+                } else {
+                    console.error("Error missing customer email or Stripe price Id");
+                }
+
                 try {
-                    sendPreOrderEmail({
-                        customerEmail: session?.customer_details?.email ?? "",
+                    const plan = extractSubscriptionPlanDetails(stripePriceId as StripePriceId);
+
+                    await sendPreOrderEmail({
+                        customerEmail: customerEmail ?? "",
                         customerFullName: session?.customer_details?.name ?? "",
-                        purchasedPackage: session.line_items?.data[0].description ?? "",
+                        purchasedPackage: plan?.name ?? "",
                     });
-                } catch (err) {
-                    console.log("Error sending email", err);
+                } catch (error) {
+                    console.error("Failed to send pre-order email:", error);
                 }
 
                 break;
@@ -69,7 +61,7 @@ export async function POST(req: NextRequest) {
                 const deletedSubscription = event.data.object as Stripe.Subscription;
                 break;
             default:
-                console.log(`Unhandled event type ${event.type}`);
+                console.log(`Unhandled event: ${event.type}`);
         }
 
         return NextResponse.json({ received: true }, { status: 200 });

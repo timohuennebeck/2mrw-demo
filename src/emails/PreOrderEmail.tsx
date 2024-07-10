@@ -13,7 +13,7 @@ import {
     Tailwind,
 } from "@react-email/components";
 
-interface ForjPreorderEmailProps {
+interface PreOrderEmailProps {
     customerFullName: string;
     purchasedPackage: string;
     estimatedLaunchDate: string;
@@ -25,13 +25,13 @@ const logoUrl = process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL
     ? `https://${process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL}`
     : "https://i.imgur.com/e0cWC6I.png";
 
-export const ForjPreorderEmail = ({
+export const PreOrderEmail = ({
     customerFullName,
     purchasedPackage,
     estimatedLaunchDate,
     companyTitle,
     customerSupportEmail,
-}: ForjPreorderEmailProps) => {
+}: PreOrderEmailProps) => {
     const previewText = `A personal thank you for pre-ordering the ${purchasedPackage} from us!`;
 
     return (
@@ -102,9 +102,9 @@ export const ForjPreorderEmail = ({
 
 // enable this during development to preview what the email will look like
 
-// ForjPreorderEmail.PreviewProps = {
+// PreOrderEmail.PreviewProps = {
 //     customerFullName: "Michael",
 //     purchasedPackage: "Standard Package",
-// } as ForjPreorderEmailProps;
+// } as PreOrderEmailProps;
 
-export default ForjPreorderEmail;
+export default PreOrderEmail;
