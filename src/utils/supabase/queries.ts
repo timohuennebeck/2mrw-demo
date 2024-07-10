@@ -1,4 +1,4 @@
-import supabase from "@/lib/supabaseClient";
+import { createClient } from "./client";
 
 interface UserExists {
     userEmail: string;
@@ -6,6 +6,8 @@ interface UserExists {
 
 export const checkUserExists = async ({ userEmail }: UserExists) => {
     try {
+        const supabase = createClient();
+
         const { data, error } = await supabase
             .from("users")
             .select()

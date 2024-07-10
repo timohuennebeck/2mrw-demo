@@ -94,7 +94,7 @@ To set up Supabase for your project, follow these steps:
 
 ```
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
-NEXT_PUBLIC_SUPABASE_API_KEY=your_supabase_api_key_here
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_api_key_here
 ```
 
 ## Configuration
@@ -120,10 +120,3 @@ You've finished the setup and configuration. You can now:
 2. Open [http://localhost:3000](http://localhost:3000) in Your browser to view the project.
 
 Remember to keep Your API KEYS and sensitive information secure and never commit them to version control.
-
-
-setting up supabase
-inside supabase create a new project
-then youll get a window with all the dtails
-add the url inside the "NEXT_PUBLIC_SUPABASE_URL"
-and add the NEXT_PUBLIC_SUPABASE_API_KEY" to the env.local. as well

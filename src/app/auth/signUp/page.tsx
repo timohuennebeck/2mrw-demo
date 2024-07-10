@@ -2,10 +2,10 @@ import FormDivider from "@/components/FormDivider";
 import FormHeader from "@/components/FormHeader";
 import GoogleSignUpButton from "@/components/GoogleSignUpButton";
 import InputField from "@/components/InputField";
-import MainButton from "@/components/MainButton";
+import FormButton from "@/components/FormButton";
 import RememberMeCheckbox from "@/components/RememberMeCheckbox";
 import SignUpLink from "@/components/SignUpLink";
-import Link from "next/link";
+import { signUp } from "./action";
 
 const Logo = () => {
     return (
@@ -31,16 +31,16 @@ const LoginForm = () => {
                 />
 
                 <form>
-                    <InputField label="Full Name" id="fullname" type="text" />
-                    <InputField label="Email" id="email" type="email" />
-                    <InputField label="Password" id="password" type="password" />
-                    <InputField label="Confirm Password" id="confirmPassword" type="password" />
+                    <InputField label="Full Name" id="fullname" name="fullname" type="text" />
+                    <InputField label="Email" id="email" name="email" type="email" />
+                    <InputField label="Password" id="password" name="password" type="password" />
+                    <InputField label="Confirm Password" id="confirmPassword" name="confirmPassword" type="password" />
 
                     <div className="flex items-center justify-between mb-6">
                         <RememberMeCheckbox />
                     </div>
 
-                    <MainButton title="Sign Up" />
+                    <FormButton title="Sign Up" onPress={signUp} />
                 </form>
 
                 <div className="mt-6">

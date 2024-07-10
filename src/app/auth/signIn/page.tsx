@@ -2,11 +2,12 @@ import FormDivider from "@/components/FormDivider";
 import FormHeader from "@/components/FormHeader";
 import GoogleSignUpButton from "@/components/GoogleSignUpButton";
 import InputField from "@/components/InputField";
-import MainButton from "@/components/MainButton";
+import FormButton from "@/components/FormButton";
 import RememberMeCheckbox from "@/components/RememberMeCheckbox";
 import SignUpLink from "@/components/SignUpLink";
 import Link from "next/link";
 import React from "react";
+import { signIn } from "./action";
 
 const Logo = () => {
     return (
@@ -32,26 +33,26 @@ const LoginForm = () => {
                 />
 
                 <form>
-                    <InputField label="Email" id="username" type="text" />
-                    <InputField label="Password" id="password" type="password" />
+                    <InputField label="Email" id="email" name="email" type="text" />
+                    <InputField label="Password" id="password" name="password" type="password" />
                     <div className="flex items-center justify-between mb-6">
                         <RememberMeCheckbox />
                         <Link
-                            href="/auth/register"
+                            href="/auth/signUp"
                             className="text-sm font-medium text-black hover:text-gray-800 transition-colors"
                         >
                             Forgot password?
                         </Link>
                     </div>
 
-                    <MainButton title="Sign In" />
+                    <FormButton title="Sign In" onPress={signIn} />
                 </form>
 
                 <div className="mt-6">
                     <SignUpLink
                         title="Don't have an account?"
                         buttonText="Sign Up"
-                        link="/auth/register"
+                        link="/auth/signUp"
                     />
                     <FormDivider />
                     <GoogleSignUpButton />

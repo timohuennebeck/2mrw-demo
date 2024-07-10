@@ -1,13 +1,13 @@
 import { StripePriceId } from "@/config/subscriptionPlans";
-import supabase from "@/lib/supabaseClient";
 import { extractSubscriptionPlanDetails } from "../extractSubscriptionPlanDetails";
+import { createClient } from "./client";
 
 export const createUserInSupabase = async ({
     userFullName,
     userEmail,
     stripePriceId,
 }: {
-    userFullName: string,
+    userFullName: string;
     userEmail: string;
     stripePriceId: StripePriceId;
 }) => {
@@ -16,6 +16,8 @@ export const createUserInSupabase = async ({
     if (!plan) {
         throw new Error(`Error, no plan found for price id: ${stripePriceId}`);
     }
+
+    const supabase = createClient();
 
     return await supabase
         .from("users")
@@ -43,6 +45,8 @@ export const updateExistingUserInSupabase = async ({
     if (!plan) {
         throw new Error(`Error, no plan found for price id: ${stripePriceId}`);
     }
+
+    const supabase = createClient();
 
     return await supabase
         .from("users")
