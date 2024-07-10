@@ -22,6 +22,7 @@ export const createUserInSupabase = async ({
             has_premium: plan.hasPremium,
             subscription_plan: plan.name,
             stripe_price_id: stripePriceId,
+            updated_at: new Date().toISOString(),
         })
         .select()
         .single();
@@ -46,6 +47,7 @@ export const updateExistingUserInSupabase = async ({
             has_premium: plan.hasPremium,
             subscription_plan: plan.name,
             stripe_price_id: stripePriceId,
+            updated_at: new Date().toISOString(),
         })
         .eq("id", userId)
         .select()
