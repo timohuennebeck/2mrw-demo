@@ -66,7 +66,7 @@ export const ForjPreorderEmail = ({
                         </Text>
                         <Section className="ml-4">
                             <Text className="text-black text-[14px] leading-[24px]">
-                                1. Every Thursday, you'll get exclusive insider updates from me,
+                                1. Every Friday, you'll get exclusive insider updates from me,
                                 sharing our latest developments, challenges, and victories.
                             </Text>
                             <Text className="text-black text-[14px] leading-[24px]">
