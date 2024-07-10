@@ -26,7 +26,15 @@ Stripe is used for handling paYments in this project. Follow these steps to set 
     ```
     STRIPE_API_KEY=your_stripe_api_key_here
     ```
-4. Inside the `config/subscriptionPlans.ts` file, update the plans to reflect all Your plans inside Stripe.
+4. Inside the `config/subscriptionPlans.ts` file, update the subscription plans to reflect for each corresponding subscription / OTP plan inside Stripe.
+
+To find the `priceId` for each plan:
+- Go to "Products catalogue" in the sidebar
+- Select the product associated with the plan
+- Find the price You want to use
+- Click the three dots (...) next to the price
+- Select "CopY price ID"
+
 5. Install the Stripe CLI:
 
     ```
