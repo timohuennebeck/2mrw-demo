@@ -1,13 +1,17 @@
 export const SUBSCRIPTION_PLANS = [
     {
-        priceId: "price_1Pahzt2KkHLYehJNekUQ3Bmz" as const,
         name: "Standard Package (20% off)",
+        description: "",
+        priceId: "price_1Pahzt2KkHLYehJNekUQ3Bmz" as const,
         hasPremium: true,
+        price: 44.95,
     },
     {
-        priceId: "price_1Pahyu2KkHLYehJNG4ZoLtbv" as const,
         name: "Elite Package (40% off)",
+        description: "",
+        priceId: "price_1Pahyu2KkHLYehJNG4ZoLtbv" as const,
         hasPremium: true,
+        price: 59.95,
     },
 ] as const;
 
