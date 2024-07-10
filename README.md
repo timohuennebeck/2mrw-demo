@@ -83,6 +83,8 @@ Resend is used for sending emails in this project. Here's how to set it up:
     NEXT_PUBLIC_EMAIL_LOGO_BASE_URL=your_logo_url_here
     ```
 
+7. Inside the `utils/emails/client.ts` replace the `from: "onboarding@resend.dev"` with Your own email.
+
 ## Supabase Setup
 To set up Supabase for your project, follow these steps:
 

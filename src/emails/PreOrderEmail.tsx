@@ -14,7 +14,7 @@ import {
 } from "@react-email/components";
 
 interface PreOrderEmailProps {
-    customerFullName: string;
+    userFullName: string;
     purchasedPackage: string;
     estimatedLaunchDate: string;
     companyTitle: string;
@@ -26,7 +26,7 @@ const logoUrl = process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL
     : "https://i.imgur.com/e0cWC6I.png";
 
 export const PreOrderEmail = ({
-    customerFullName,
+    userFullName,
     purchasedPackage,
     estimatedLaunchDate,
     companyTitle,
@@ -54,7 +54,7 @@ export const PreOrderEmail = ({
                             Thaaaaank You! 😃
                         </Heading>
                         <Text className="text-black text-[14px] leading-[24px]">
-                            Hi {customerFullName},
+                            Hi {userFullName},
                         </Text>
                         <Text className="text-black text-[14px] leading-[24px]">
                             This is Timo, the founder of Forj. Thank You so much for pre-ordering
@@ -103,7 +103,7 @@ export const PreOrderEmail = ({
 // enable this during development to preview what the email will look like
 
 // PreOrderEmail.PreviewProps = {
-//     customerFullName: "Michael",
+//     userFullName: "Michael",
 //     purchasedPackage: "Standard Package",
 // } as PreOrderEmailProps;
 

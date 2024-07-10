@@ -34,11 +34,16 @@ export async function POST(req: NextRequest) {
                     expand: ["line_items"],
                 });
 
-                const customerEmail = session?.customer_details?.email;
+                const userFullName = session?.customer_details?.name;
+                const userEmail = session?.customer_details?.email;
                 const stripePriceId = session.line_items?.data[0].price?.id;
 
-                if (customerEmail && stripePriceId) {
-                    await createOrUpdateUser(customerEmail, stripePriceId as StripePriceId);
+                if (userEmail && stripePriceId) {
+                    await createOrUpdateUser({
+                        userEmail: userEmail ?? "",
+                        userFullName: userFullName ?? "",
+                        stripePriceId: stripePriceId as StripePriceId,
+                    });
                 } else {
                     console.error("Error missing customer email or Stripe price Id");
                 }
@@ -47,8 +52,8 @@ export async function POST(req: NextRequest) {
                     const plan = extractSubscriptionPlanDetails(stripePriceId as StripePriceId);
 
                     await sendPreOrderEmail({
-                        customerEmail: customerEmail ?? "",
-                        customerFullName: session?.customer_details?.name ?? "",
+                        userEmail: userEmail ?? "",
+                        userFullName: userFullName ?? "",
                         purchasedPackage: plan?.name ?? "",
                     });
                 } catch (error) {

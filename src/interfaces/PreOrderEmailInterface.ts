@@ -1,5 +1,5 @@
 export interface PreOrderEmailInterface {
-    customerEmail: string;
-    customerFullName: string;
+    userEmail: string;
+    userFullName: string;
     purchasedPackage: string;
 }

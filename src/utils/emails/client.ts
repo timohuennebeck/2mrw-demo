@@ -5,17 +5,17 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_EMAIL_API_KEY ?? "");
 
 export const sendPreOrderEmail = async ({
-    customerEmail,
-    customerFullName,
+    userEmail,
+    userFullName,
     purchasedPackage,
 }: PreOrderEmailInterface) => {
     try {
         const { data, error } = await resend.emails.send({
             from: "onboarding@resend.dev",
-            to: customerEmail,
+            to: userEmail,
             subject: `Order Confirmation - ${purchasedPackage}`,
             react: PreOrderEmail({
-                customerFullName,
+                userFullName,
                 purchasedPackage,
                 estimatedLaunchDate: "September 15, 2024",
                 companyTitle: "Forj",

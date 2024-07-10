@@ -3,9 +3,11 @@ import supabase from "@/lib/supabaseClient";
 import { extractSubscriptionPlanDetails } from "../extractSubscriptionPlanDetails";
 
 export const createUserInSupabase = async ({
+    userFullName,
     userEmail,
     stripePriceId,
 }: {
+    userFullName: string,
     userEmail: string;
     stripePriceId: StripePriceId;
 }) => {
@@ -18,6 +20,7 @@ export const createUserInSupabase = async ({
     return await supabase
         .from("users")
         .insert({
+            full_name: userFullName,
             email: userEmail,
             has_premium: plan.hasPremium,
             subscription_plan: plan.name,
