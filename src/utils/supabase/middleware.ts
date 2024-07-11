@@ -1,8 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse as response, type NextRequest as request } from "next/server";
 
-export async function updateSession(request: NextRequest) {
-    let supabaseResponse = NextResponse.next({
+export async function updateSession(request: request) {
+    let supabaseResponse = response.next({
         request,
     });
 
@@ -17,7 +17,7 @@ export async function updateSession(request: NextRequest) {
                 setAll(cookiesToSet) {
                     cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
 
-                    supabaseResponse = NextResponse.next({
+                    supabaseResponse = response.next({
                         request,
                     });
 
@@ -36,17 +36,21 @@ export async function updateSession(request: NextRequest) {
         data: { user },
     } = await supabase.auth.getUser();
 
-    if (!user && !request.nextUrl.pathname.startsWith("/auth")) {
+    // checks if the request is for an API route
+    const isApiRoute = request.nextUrl.pathname.startsWith("/api");
+
+    // redirects non-authenticated users if it's not an API route and the user isn't on an auth page
+    if (!user && !isApiRoute && !request.nextUrl.pathname.startsWith("/auth")) {
         const url = request.nextUrl.clone();
         url.pathname = "/auth/signIn";
-        return NextResponse.redirect(url);
+        return response.redirect(url);
     }
 
     // redirects authenticated users to home page if they try to access auth pages
     if (user && request.nextUrl.pathname.startsWith("/auth")) {
         const url = request.nextUrl.clone();
         url.pathname = "/";
-        return NextResponse.redirect(url);
+        return response.redirect(url);
     }
 
     return supabaseResponse;

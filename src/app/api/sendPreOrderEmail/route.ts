@@ -1,17 +1,19 @@
-import PreOrderEmailTemplate from "@/emails/PreOrderEmailTemplate";
-import { PreOrderEmailInterface } from "@/interfaces/PreOrderEmailInterface";
+import { NextRequest as request, NextResponse as response } from "next/server";
 import { Resend } from "resend";
+import PreOrderEmailTemplate from "@/emails/PreOrderEmailTemplate";
 
 const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_EMAIL_API_KEY ?? "");
 
-export const sendPreOrderEmail = async ({
-    userEmail,
-    userFullName,
-    purchasedPackage,
-}: PreOrderEmailInterface) => {
+export async function POST(req: request) {
     try {
+        const { userEmail, userFullName, purchasedPackage } = await req.json();
+
+        if (!userEmail || !userFullName || !purchasedPackage) {
+            return response.json({ error: "Missing required fields" }, { status: 400 });
+        }
+
         const { data, error } = await resend.emails.send({
-            from: "onboarding@resend.dev",
+            from: "info@updates.joinforj.com",
             to: userEmail,
             subject: `Order Confirmation - ${purchasedPackage}`,
             react: PreOrderEmailTemplate({
@@ -25,12 +27,12 @@ export const sendPreOrderEmail = async ({
 
         if (error) {
             console.error("Failed to send email:", error);
-            throw new Error("Email sending failed");
+            return response.json({ error: "Email sending failed" }, { status: 500 });
         }
 
-        return data;
+        return response.json({ message: "Email has been sent", data }, { status: 200 });
     } catch (error) {
         console.error("Unexpected error while sending email:", error);
-        throw error;
+        return response.json({ error: "Failed to send email" }, { status: 500 });
     }
-};
+}

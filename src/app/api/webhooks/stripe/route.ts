@@ -1,21 +1,21 @@
 import { StripePriceId } from "@/config/subscriptionPlans";
-import { sendPreOrderEmail } from "@/utils/emails/client";
 import { extractSubscriptionPlanDetails } from "@/helper/extractSubscriptionPlanDetails";
 import { createUserInSupabase, updateExistingUserInSupabase } from "@/utils/supabase/admin";
 import { checkUserExists } from "@/utils/supabase/queries";
-import { NextRequest, NextResponse } from "next/server";
+import axios from "axios";
+import { NextRequest as request, NextResponse as response } from "next/server";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_API_KEY ?? "");
 const stripeWebhook = process.env.NEXT_PUBLIC_STRIPE_WEBHOOK_SECRET ?? "";
 
-export async function POST(req: NextRequest) {
+export async function POST(req: request) {
     try {
         const body = await req.text();
         const signature = req.headers.get("stripe-signature");
 
         if (!signature) {
-            return NextResponse.json({ error: "There was no signature provided" }, { status: 400 });
+            return response.json({ error: "There was no signature provided" }, { status: 400 });
         }
 
         let event: Stripe.Event;
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
             event = stripe.webhooks.constructEvent(body, signature, stripeWebhook);
         } catch (err: any) {
             console.error(`Webhook signature verification failed: ${err.message}`);
-            return NextResponse.json({ error: err.message }, { status: 400 });
+            return response.json({ error: err.message }, { status: 400 });
         }
 
         switch (event.type) {
@@ -64,12 +64,15 @@ export async function POST(req: NextRequest) {
                 try {
                     const plan = extractSubscriptionPlanDetails(stripePriceId as StripePriceId);
 
-                    // sends an email to the user that he'll get access to the product when it's live
-                    await sendPreOrderEmail({
-                        userEmail: userEmail ?? "",
-                        userFullName: userFullName ?? "",
-                        purchasedPackage: plan?.name ?? "",
-                    });
+                    try {
+                        axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/sendPreorderEmail`, {
+                            userEmail: userEmail ?? "",
+                            userFullName: userFullName ?? "",
+                            purchasedPackage: plan?.name ?? "",
+                        });
+                    } catch (err) {
+                        console.error("Failed to send pre-order email", err);
+                    }
                 } catch (error) {
                     console.error("Failed to send pre-order email:", error);
                 }
@@ -83,9 +86,9 @@ export async function POST(req: NextRequest) {
                 console.log(`Unhandled event: ${event.type}`);
         }
 
-        return NextResponse.json({ received: true }, { status: 200 });
+        return response.json({ received: true }, { status: 200 });
     } catch (err: any) {
         console.error("Error processing webhook:", err);
-        return NextResponse.json({ error: "Webhook processing failed" }, { status: 500 });
+        return response.json({ error: "Webhook processing failed" }, { status: 500 });
     }
 }
