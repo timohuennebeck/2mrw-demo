@@ -8,15 +8,16 @@ import { createClient } from "@/utils/supabase/server";
 export async function signIn(formData: FormData) {
     const supabase = createClient();
 
-    const data = {
-        email: formData.get("email") as string,
-        password: formData.get("password") as string,
-    };
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
-    const { error } = await supabase.auth.signInWithPassword(data);
+    const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+    });
 
     if (error) {
-        redirect("/error");
+        return { error: error.message };
     }
 
     revalidatePath("/", "layout");
