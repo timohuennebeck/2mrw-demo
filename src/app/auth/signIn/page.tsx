@@ -42,7 +42,7 @@ const SignInForm = () => {
                 if (result.success) {
                     setIsLoading(false);
 
-                    router.push(result.redirect ?? "/");
+                    router.replace(result.redirect ?? "/");
 
                     return "Sign in successful!";
                 }
