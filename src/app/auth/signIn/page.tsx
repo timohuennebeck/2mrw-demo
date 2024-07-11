@@ -11,9 +11,12 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { signIn } from "./action";
+import { useRouter } from "next/navigation";
 
 const SignInForm = () => {
     const [isLoading, setIsLoading] = useState(false);
+
+    const router = useRouter();
 
     const handleSubmit = async (formData: FormData) => {
         setIsLoading(true);
@@ -38,6 +41,9 @@ const SignInForm = () => {
             success: (result) => {
                 if (result.success) {
                     setIsLoading(false);
+
+                    router.push(result.redirect ?? "/");
+
                     return "Sign in successful!";
                 }
                 throw new Error(result.error);
