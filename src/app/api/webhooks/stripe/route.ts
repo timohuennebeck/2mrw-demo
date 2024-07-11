@@ -1,7 +1,8 @@
 import { StripePriceId } from "@/config/subscriptionPlans";
-import { createOrUpdateUser } from "@/utils/createOrUpdateUser";
 import { sendPreOrderEmail } from "@/utils/emails/client";
-import { extractSubscriptionPlanDetails } from "@/utils/extractSubscriptionPlanDetails";
+import { extractSubscriptionPlanDetails } from "@/helper/extractSubscriptionPlanDetails";
+import { createUserInSupabase, updateExistingUserInSupabase } from "@/utils/supabase/admin";
+import { checkUserExists } from "@/utils/supabase/queries";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -19,9 +20,9 @@ export async function POST(req: NextRequest) {
 
         let event: Stripe.Event;
 
-        // checks if the stripe webhook event is legit
-        event = stripe.webhooks.constructEvent(body, signature, stripeWebhook);
         try {
+            // checks if the stripe webhook event is legit
+            event = stripe.webhooks.constructEvent(body, signature, stripeWebhook);
         } catch (err: any) {
             console.error(`Webhook signature verification failed: ${err.message}`);
             return NextResponse.json({ error: err.message }, { status: 400 });
@@ -39,11 +40,23 @@ export async function POST(req: NextRequest) {
                 const stripePriceId = session.line_items?.data[0].price?.id;
 
                 if (userEmail && stripePriceId) {
-                    await createOrUpdateUser({
-                        userEmail: userEmail ?? "",
-                        userFullName: userFullName ?? "",
-                        stripePriceId: stripePriceId as StripePriceId,
-                    });
+                    const user = await checkUserExists({ userEmail });
+
+                    if (user) {
+                        // if a user purchases another product, his stripePriceId will be updated
+                        // to reflect the latest change
+                        await updateExistingUserInSupabase({
+                            userId: user.id ?? 0,
+                            stripePriceId: (stripePriceId as StripePriceId) ?? "",
+                        });
+                    } else {
+                        // if he doesn't have an account in the database, create a new one
+                        await createUserInSupabase({
+                            userFullName: userFullName ?? "",
+                            userEmail: userEmail ?? "",
+                            stripePriceId: (stripePriceId as StripePriceId) ?? "",
+                        });
+                    }
                 } else {
                     console.error("Error missing customer email or Stripe price Id");
                 }
@@ -51,6 +64,7 @@ export async function POST(req: NextRequest) {
                 try {
                     const plan = extractSubscriptionPlanDetails(stripePriceId as StripePriceId);
 
+                    // sends an email to the user that he'll get access to the product when it's live
                     await sendPreOrderEmail({
                         userEmail: userEmail ?? "",
                         userFullName: userFullName ?? "",

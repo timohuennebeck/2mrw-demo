@@ -1,5 +1,5 @@
 import { StripePriceId } from "@/config/subscriptionPlans";
-import { extractSubscriptionPlanDetails } from "../extractSubscriptionPlanDetails";
+import { extractSubscriptionPlanDetails } from "../../helper/extractSubscriptionPlanDetails";
 import { createClient } from "./client";
 
 export const createUserInSupabase = async ({
