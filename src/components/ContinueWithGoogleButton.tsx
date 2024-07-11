@@ -1,10 +1,31 @@
-import React from "react";
+"use client";
 
-function GoogleSignUpButton() {
+import { signInUsingGoogle } from "@/app/auth/signIn/action";
+import { useRouter } from "next/navigation";
+import React from "react";
+import { toast } from "sonner";
+
+function ContinueWithGoogleButton() {
+    const router = useRouter();
+
+    const continueWithGoogle = async () => {
+        const result = await signInUsingGoogle();
+
+        if (result.success) {
+            router.push(result.redirect);
+
+            toast("Redirecting to Google...");
+        }
+
+        if (result.error) {
+            toast.error(result.error);
+        }
+    };
+
     return (
         <button
-            type="button"
             className="mt-4 w-full flex items-center justify-center gap-2 bg-white text-gray-700 border border-gray-300 py-2 px-4 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+            onClick={continueWithGoogle}
         >
             <svg className="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -17,4 +38,4 @@ function GoogleSignUpButton() {
     );
 }
 
-export default GoogleSignUpButton;
+export default ContinueWithGoogleButton;

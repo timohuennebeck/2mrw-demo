@@ -2,7 +2,7 @@
 
 import FormDivider from "@/components/FormDivider";
 import FormHeader from "@/components/FormHeader";
-import GoogleSignUpButton from "@/components/GoogleSignUpButton";
+import ContinueWithGoogleButton from "@/components/ContinueWithGoogleButton";
 import InputField from "@/components/InputField";
 import FormButton from "@/components/FormButton";
 import RememberMeCheckbox from "@/components/RememberMeCheckbox";
@@ -90,7 +90,7 @@ const SignUpForm = () => {
                 <div className="mt-6">
                     <SignUpLink title="Have an account?" buttonText="Sign In" link="/auth/signIn" />
                     <FormDivider />
-                    <GoogleSignUpButton />
+                    <ContinueWithGoogleButton />
                 </div>
             </div>
         </div>

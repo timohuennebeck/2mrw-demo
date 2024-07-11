@@ -1,8 +1,7 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-
 import { createClient } from "@/utils/supabase/server";
+import { revalidatePath } from "next/cache";
 
 export async function signIn(formData: FormData) {
     const supabase = createClient();
@@ -21,4 +20,23 @@ export async function signIn(formData: FormData) {
 
     revalidatePath("/", "layout");
     return { success: true, redirect: "/" };
+}
+
+export async function signInUsingGoogle() {
+    const supabase = createClient();
+
+    // check if email already exists in database, if not create new account inside database
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+            redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+        },
+    });
+
+    if (error) {
+        return { error: error.message };
+    }
+
+    return { success: true, redirect: data.url };
 }
