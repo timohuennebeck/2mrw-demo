@@ -11,6 +11,11 @@ export async function signUp(formData: FormData) {
     const data = {
         email: formData.get("email") as string,
         password: formData.get("password") as string,
+        options: {
+            data: {
+                first_name: formData.get("firstName") as string,
+            },
+        },
     };
 
     const { error } = await supabase.auth.signUp(data);
@@ -19,6 +24,6 @@ export async function signUp(formData: FormData) {
         redirect("/error");
     }
 
-    revalidatePath("/", "layout");
-    redirect("/");
+    revalidatePath("/auth/emailConfirmation", "layout");
+    redirect("/auth/emailConfirmation");
 }

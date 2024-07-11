@@ -31,7 +31,7 @@ const LoginForm = () => {
                 />
 
                 <form>
-                    <InputField label="Full Name" id="fullname" name="fullname" type="text" />
+                    <InputField label="First Name" id="firstName" name="firstName" type="text" />
                     <InputField label="Email" id="email" name="email" type="email" />
                     <InputField label="Password" id="password" name="password" type="password" />
                     <InputField label="Confirm Password" id="confirmPassword" name="confirmPassword" type="password" />
@@ -44,7 +44,7 @@ const LoginForm = () => {
                 </form>
 
                 <div className="mt-6">
-                    <SignUpLink title="Have an account?" buttonText="Sign In" link="/auth/login" />
+                    <SignUpLink title="Have an account?" buttonText="Sign In" link="/auth/signIn" />
                     <FormDivider />
                     <GoogleSignUpButton />
                 </div>

@@ -13,7 +13,7 @@ import {
     Tailwind,
 } from "@react-email/components";
 
-interface PreOrderEmailProps {
+interface PreOrderEmailTemplateProps {
     userFullName: string;
     purchasedPackage: string;
     estimatedLaunchDate: string;
@@ -25,13 +25,13 @@ const logoUrl = process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL
     ? `https://${process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL}`
     : "https://i.imgur.com/e0cWC6I.png";
 
-export const PreOrderEmail = ({
+export const PreOrderEmailTemplate = ({
     userFullName,
     purchasedPackage,
     estimatedLaunchDate,
     companyTitle,
     customerSupportEmail,
-}: PreOrderEmailProps) => {
+}: PreOrderEmailTemplateProps) => {
     const previewText = `A personal thank you for pre-ordering the ${purchasedPackage} from us!`;
 
     return (
@@ -57,16 +57,16 @@ export const PreOrderEmail = ({
                             Hi {userFullName},
                         </Text>
                         <Text className="text-black text-[14px] leading-[24px]">
-                            This is Timo, the founder of Forj. Thank You so much for pre-ordering
+                            This is Timo, the founder of {companyTitle}. Thank You so much for pre-ordering
                             our <strong>{purchasedPackage}</strong>. You're awesome!
                         </Text>
                         <Text className="text-black text-[14px] leading-[24px]">
-                            I know you're eager to get started, so here's what you can look forward
+                            I know You're eager to get started, so here's what You can look forward
                             to:
                         </Text>
                         <Section className="ml-4">
                             <Text className="text-black text-[14px] leading-[24px]">
-                                1. Every Friday, you'll get exclusive insider updates from me,
+                                1. EverY FridaY, You'll get exclusive insider updates from me,
                                 sharing our latest developments, challenges, and victories.
                             </Text>
                             <Text className="text-black text-[14px] leading-[24px]">
@@ -74,11 +74,11 @@ export const PreOrderEmail = ({
                                 <strong>{estimatedLaunchDate}</strong>.
                             </Text>
                             <Text className="text-black text-[14px] leading-[24px]">
-                                3. You'll get priority access when we launch, with a personal email
-                                from me on how to claim your account.
+                                3. You'll get prioritY access when we launch, with a personal email
+                                from me on how to claim Your account.
                             </Text>
                             <Text className="text-black text-[14px] leading-[24px]">
-                                4. As an early supporter, you'll have a direct line to me for
+                                4. As an earlY supporter, You'll have a direct line to me for
                                 feedback and suggestions. Feel free to reach out to me at{" "}
                                 <strong>{customerSupportEmail}</strong>
                             </Text>
@@ -102,9 +102,12 @@ export const PreOrderEmail = ({
 
 // enable this during development to preview what the email will look like
 
-// PreOrderEmail.PreviewProps = {
-//     userFullName: "Michael",
-//     purchasedPackage: "Standard Package",
-// } as PreOrderEmailProps;
+PreOrderEmailTemplate.PreviewProps = {
+    userFullName: "Michael",
+    purchasedPackage: "Standard Package",
+    estimatedLaunchDate: "September 18th, 2024",
+    companyTitle: "Forj",
+    customerSupportEmail: "hello@joinforj.com"
+} as PreOrderEmailTemplateProps;
 
-export default PreOrderEmail;
+export default PreOrderEmailTemplate;

@@ -1,4 +1,4 @@
-import PreOrderEmail from "@/emails/PreOrderEmail";
+import PreOrderEmailTemplate from "@/emails/PreOrderEmailTemplate";
 import { PreOrderEmailInterface } from "@/interfaces/PreOrderEmailInterface";
 import { Resend } from "resend";
 
@@ -14,7 +14,7 @@ export const sendPreOrderEmail = async ({
             from: "onboarding@resend.dev",
             to: userEmail,
             subject: `Order Confirmation - ${purchasedPackage}`,
-            react: PreOrderEmail({
+            react: PreOrderEmailTemplate({
                 userFullName,
                 purchasedPackage,
                 estimatedLaunchDate: "September 15, 2024",

@@ -10,6 +10,7 @@
     "email": "email dev --dir src/emails"
   },
   "dependencies": {
+    "@heroicons/react": "^2.1.5",
     "@react-email/components": "^0.0.21",
     "@supabase/ssr": "^0.4.0",
     "@supabase/supabase-js": "^2.44.3",
