@@ -1,9 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-
 import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
 
 export async function signUp(formData: FormData) {
     const supabase = createClient();
@@ -19,7 +16,7 @@ export async function signUp(formData: FormData) {
         .single();
 
     if (existingUser) {
-        return { error: "This email is alreadY in use" };
+        return { error: "This email is already in use. Please log in to continue." };
     }
 
     const { error } = await supabase.auth.signUp({
