@@ -4,7 +4,4 @@ export interface UserFromDatabase {
     updated_at: number;
     full_name: string;
     email: string;
-    stripe_price_id: string;
-    has_premium: boolean;
-    subscription_plan: string;
 }
