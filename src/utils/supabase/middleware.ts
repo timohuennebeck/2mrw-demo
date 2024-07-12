@@ -37,10 +37,10 @@ export async function updateSession(request: request) {
     } = await supabase.auth.getUser();
 
     // checks if the request is for an API route
-    const isApiRoute = request.nextUrl.pathname.startsWith("/api");
+    const apiRoute = request.nextUrl.pathname.startsWith("/api");
 
     // redirects non-authenticated users if it's not an API route and the user isn't on an auth page
-    if (!user && !isApiRoute && !request.nextUrl.pathname.startsWith("/auth")) {
+    if (!user && !apiRoute && !request.nextUrl.pathname.startsWith("/auth")) {
         const url = request.nextUrl.clone();
         url.pathname = "/auth/signIn";
         return response.redirect(url);
@@ -48,6 +48,26 @@ export async function updateSession(request: request) {
 
     // redirects authenticated users to home page if they try to access auth pages
     if (user && request.nextUrl.pathname.startsWith("/auth")) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/";
+        return response.redirect(url);
+    }
+
+    const hasPremium = false;
+
+    if (!user) {
+        return supabaseResponse;
+    }
+
+    // non-premium users should be redirected to the choosePricingPlan page to choose a plan
+    if (!hasPremium && request.nextUrl.pathname !== "/choosePricingPlan") {
+        const url = request.nextUrl.clone();
+        url.pathname = "/choosePricingPlan";
+        return response.redirect(url);
+    }
+
+    // premium users should be redirected away from choosePricingPlan
+    if (hasPremium && request.nextUrl.pathname === "/choosePricingPlan") {
         const url = request.nextUrl.clone();
         url.pathname = "/";
         return response.redirect(url);

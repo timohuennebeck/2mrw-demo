@@ -1,13 +1,10 @@
 import { createClient } from "./client";
 
-interface UserExists {
-    userEmail: string;
-}
+const supabase = createClient();
 
-export const checkUserExists = async ({ userEmail }: UserExists) => {
+
+export const checkUserExists = async ({ userEmail }: { userEmail: string }) => {
     try {
-        const supabase = createClient();
-
         const { data, error } = await supabase
             .from("users")
             .select()

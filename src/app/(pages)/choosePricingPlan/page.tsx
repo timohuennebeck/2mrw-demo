@@ -2,6 +2,7 @@
 
 import DefaultButton from "@/components/DefaultButton";
 import { PricingPlanCard } from "@/components/PricingPlanCard";
+import { SUBSCRIPTION_PLANS } from "@/config/subscriptionPlans";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -28,39 +29,6 @@ const ChoosePricingPlanPage = () => {
         }
     };
 
-    const plans = [
-        {
-            name: "Essentials",
-            previousPrice: 53.95,
-            price: 44.95,
-            description: "*For freelancers and solopreneurs",
-            discountInfo: "This plan is 20% off for the first 50 customers (47 left)",
-            features: [
-                { name: "Feature", included: true },
-                { name: "Feature-02", included: true },
-                { name: "Feature-03", included: false },
-                { name: "Feature-04", included: false },
-                { name: "Feature-05", included: false },
-            ],
-            isHighlighted: false,
-        },
-        {
-            name: "Founders Edition",
-            previousPrice: 71.95,
-            price: 59.95,
-            description: "*For freelancers and solopreneurs",
-            discountInfo: "This plan is 20% off for the first 50 customers (47 left)",
-            features: [
-                { name: "Feature", included: true },
-                { name: "Feature-02", included: true },
-                { name: "Feature-03", included: true },
-                { name: "Feature-04", included: true },
-                { name: "Feature-05", included: true },
-            ],
-            isHighlighted: true,
-        },
-    ];
-
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
             <div className="absolute top-8 right-8">
@@ -79,8 +47,8 @@ const ChoosePricingPlanPage = () => {
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                    {plans.map((plan, index) => (
-                        <PricingPlanCard key={index} {...plan} onClick={() => {}} />
+                    {SUBSCRIPTION_PLANS.map((plan, index) => (
+                        <PricingPlanCard key={index} {...plan} />
                     ))}
                 </div>
 

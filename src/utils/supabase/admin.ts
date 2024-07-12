@@ -3,42 +3,35 @@ import { extractSubscriptionPlanDetails } from "../../helper/extractSubscription
 import { createClient } from "./client";
 
 export const createUserInSupabase = async ({
+    userId,
     userFullName,
     userEmail,
-    stripePriceId,
 }: {
+    userId: string;
     userFullName: string;
     userEmail: string;
-    stripePriceId: StripePriceId;
 }) => {
-    const plan = extractSubscriptionPlanDetails(stripePriceId as StripePriceId);
-
-    if (!plan) {
-        throw new Error(`Error, no plan found for price id: ${stripePriceId}`);
-    }
-
     const supabase = createClient();
 
     return await supabase
         .from("users")
         .insert({
+            id: userId,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
             full_name: userFullName,
             email: userEmail,
-            has_premium: plan.hasPremium,
-            subscription_plan: plan.name,
-            stripe_price_id: stripePriceId,
-            updated_at: new Date().toISOString(),
         })
         .select()
         .single();
 };
 
-export const updateExistingUserInSupabase = async ({
+export const updateUserSubscriptionStatus = async ({
     userId,
     stripePriceId,
 }: {
-    userId: number;
-    stripePriceId: StripePriceId;
+    userId: string;
+    stripePriceId: string;
 }) => {
     const plan = extractSubscriptionPlanDetails(stripePriceId as StripePriceId);
 
@@ -46,17 +39,15 @@ export const updateExistingUserInSupabase = async ({
         throw new Error(`Error, no plan found for price id: ${stripePriceId}`);
     }
 
-    const supabase = createClient();
-
-    return await supabase
-        .from("users")
+    return supabase
+        .from("subscription")
         .update({
-            has_premium: plan.hasPremium,
+            updated_at: new Date().toISOString(),
+            has_premium: true,
             subscription_plan: plan.name,
             stripe_price_id: stripePriceId,
-            updated_at: new Date().toISOString(),
         })
-        .eq("id", userId)
+        .eq("user_id", userId)
         .select()
         .single();
 };
