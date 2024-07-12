@@ -72,9 +72,10 @@ const SignInForm = () => {
                     <InputField label="Password" id="password" name="password" type="password" />
                     <div className="flex items-center justify-between mb-6">
                         <RememberMeCheckbox />
+
                         <Link
-                            href="/auth/signUp"
-                            className="text-sm font-medium text-black hover:text-gray-800 transition-colors"
+                            href="/auth/forgotPassword"
+                            className="text-sm font-medium text-black hover:text-gray-800 transition-colors cursor-pointer"
                         >
                             Forgot password?
                         </Link>
