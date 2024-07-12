@@ -10,9 +10,12 @@ import SignUpLink from "@/components/SignUpLink";
 import { signUp } from "./action";
 import { toast } from "sonner";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const SignUpForm = () => {
     const [isLoading, setIsLoading] = useState(false);
+
+    const router = useRouter();
 
     const handleSubmit = async (formData: FormData) => {
         setIsLoading(true);
@@ -38,7 +41,10 @@ const SignUpForm = () => {
             success: (result) => {
                 if (result.success) {
                     setIsLoading(false);
-                    return "Sign up successful! Please check Your email to confirm Your account.";
+
+                    router.push(`/auth/confirmEmail?email=${encodeURIComponent(email)}`);
+
+                    return "Sign up successful! There's just one last step.";
                 }
                 throw new Error(result.error);
             },
