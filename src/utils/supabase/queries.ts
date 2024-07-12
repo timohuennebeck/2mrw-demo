@@ -6,7 +6,7 @@ export const checkUserExists = async ({ userEmail }: { userEmail: string }) => {
     try {
         const { data, error } = await supabase
             .from("users")
-            .select()
+            .select("email")
             .eq("email", userEmail)
             .single();
 
@@ -31,7 +31,7 @@ export const checkSubscriptionStatus = async ({ userId }: { userId: string }) =>
     try {
         const { data, error } = await supabase
             .from("subscriptions")
-            .select("*")
+            .select("user_id")
             .eq("user_id", userId)
             .single();
 
