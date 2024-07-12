@@ -1,5 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse as response, type NextRequest as request } from "next/server";
+import { checkSubscriptionStatus } from "./queries";
+import { Subscription } from "@/interfaces/Subscription";
 
 export async function updateSession(request: request) {
     let supabaseResponse = response.next({
@@ -53,21 +55,22 @@ export async function updateSession(request: request) {
         return response.redirect(url);
     }
 
-    const hasPremium = false;
+    const subscription: Subscription = await checkSubscriptionStatus({ userId: user?.id ?? "" });
+    const hasPremiumSubscription = subscription?.has_premium;
 
     if (!user) {
         return supabaseResponse;
     }
 
     // non-premium users should be redirected to the choosePricingPlan page to choose a plan
-    if (!hasPremium && request.nextUrl.pathname !== "/choosePricingPlan") {
+    if (!hasPremiumSubscription && request.nextUrl.pathname !== "/choosePricingPlan") {
         const url = request.nextUrl.clone();
         url.pathname = "/choosePricingPlan";
         return response.redirect(url);
     }
 
     // premium users should be redirected away from choosePricingPlan
-    if (hasPremium && request.nextUrl.pathname === "/choosePricingPlan") {
+    if (hasPremiumSubscription && request.nextUrl.pathname === "/choosePricingPlan") {
         const url = request.nextUrl.clone();
         url.pathname = "/";
         return response.redirect(url);
