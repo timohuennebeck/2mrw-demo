@@ -65,11 +65,22 @@ export async function POST(req: request) {
                     const plan = extractSubscriptionPlanDetails(stripePriceId as StripePriceId);
 
                     try {
-                        axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/sendPreorderEmail`, {
-                            userEmail: userEmail ?? "",
-                            userFullName: userFullName ?? "",
-                            purchasedPackage: plan?.name ?? "",
-                        });
+                        // sends pre-order confirmation email for products not yet launched
+                        // axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/sendPreorderEmail`, {
+                        //     userEmail: userEmail ?? "",
+                        //     userFullName: userFullName ?? "",
+                        //     purchasedPackage: plan?.name ?? "",
+                        // });
+
+                        // sends official order confirmation email for live products
+                        axios.post(
+                            `${process.env.NEXT_PUBLIC_BASE_URL}/api/sendOrderConfirmationEmail`,
+                            {
+                                userEmail: userEmail ?? "",
+                                userFullName: userFullName ?? "",
+                                purchasedPackage: plan?.name ?? "",
+                            }
+                        );
                     } catch (err) {
                         console.error("Failed to send pre-order email", err);
                     }

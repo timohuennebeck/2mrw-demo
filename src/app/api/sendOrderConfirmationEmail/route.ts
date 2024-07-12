@@ -1,6 +1,6 @@
+import OrderConfirmationEmailTemplate from "@/emails/OrderConfirmationEmailTemplate";
 import { NextRequest as request, NextResponse as response } from "next/server";
 import { Resend } from "resend";
-import PreOrderEmailTemplate from "@/emails/PreOrderEmailTemplate";
 
 const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_EMAIL_API_KEY ?? "");
 
@@ -15,13 +15,17 @@ export const POST = async (req: request) => {
         const { data, error } = await resend.emails.send({
             from: "info@updates.joinforj.com",
             to: userEmail,
-            subject: `Pre-Order Confirmation - ${purchasedPackage}`,
-            react: PreOrderEmailTemplate({
+            subject: `Order Confirmation - ${purchasedPackage}`,
+            react: OrderConfirmationEmailTemplate({
+                userEmail,
                 userFullName,
                 purchasedPackage,
-                estimatedLaunchDate: "September 15, 2024",
+                accountSetupLink: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/signUp`,
                 companyTitle: "Forj",
-                customerSupportEmail: "hello@joinforj.com",
+                twitterCompanyTag: "@joinforj",
+                twitterCompanyUrl: "www.x.com/timohuennebeck",
+                twitterFounderTag: "@timohuennebeck",
+                twitterFounderUrl: "www.x.com/timohuennebeck",
             }),
         });
 

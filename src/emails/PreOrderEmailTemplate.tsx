@@ -58,7 +58,7 @@ export const PreOrderEmailTemplate = ({
                         </Text>
                         <Text className="text-black text-[14px] leading-[24px]">
                             This is Timo, the founder of {companyTitle}. Thank You so much for pre-ordering
-                            our <strong>{purchasedPackage}</strong>. You're awesome!
+                            the <strong>{purchasedPackage}</strong>. You're awesome!
                         </Text>
                         <Text className="text-black text-[14px] leading-[24px]">
                             I know You're eager to get started, so here's what You can look forward
@@ -67,14 +67,14 @@ export const PreOrderEmailTemplate = ({
                         <Section className="ml-4">
                             <Text className="text-black text-[14px] leading-[24px]">
                                 1. EverY FridaY, You'll get exclusive insider updates from me,
-                                sharing our latest developments, challenges, and victories.
+                                sharing the latest developments, challenges, and victories.
                             </Text>
                             <Text className="text-black text-[14px] leading-[24px]">
-                                2. We're aiming to launch the <strong>{purchasedPackage}</strong> on{" "}
+                                2. I'm aiming to launch the <strong>{purchasedPackage}</strong> on{" "}
                                 <strong>{estimatedLaunchDate}</strong>.
                             </Text>
                             <Text className="text-black text-[14px] leading-[24px]">
-                                3. You'll get prioritY access when we launch, with a personal email
+                                3. You'll get prioritY access when {companyTitle} launches, with a personal email
                                 from me on how to claim Your account.
                             </Text>
                             <Text className="text-black text-[14px] leading-[24px]">
@@ -84,8 +84,8 @@ export const PreOrderEmailTemplate = ({
                             </Text>
                         </Section>
                         <Text className="text-black text-[14px] leading-[24px]">
-                            Thanks again for being one of our first adopters. We're pouring our
-                            hearts into making {companyTitle} exceptional 🤩
+                            Thanks again for being one of the first adopters. I'm pouring mY
+                            heart into making {companyTitle} exceptional 🤩
                         </Text>
                         <Hr className="border border-solid border-gray-200 my-[26px] mx-0 w-full" />
                         <Text className="text-gray-500 text-[12px] leading-[24px]">
