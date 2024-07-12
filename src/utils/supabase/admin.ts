@@ -10,7 +10,7 @@ export const createUserTable = async ({ user }: { user: User }) => {
         user_id: user.id,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
-        full_name: user.user_metadata.first_name,
+        full_name: user.user_metadata.first_name ?? user.user_metadata.full_name,
         email: user.email,
     });
 

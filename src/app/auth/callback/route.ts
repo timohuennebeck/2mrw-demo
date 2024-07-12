@@ -1,6 +1,8 @@
 import { cookies } from "next/headers";
 import { NextResponse as response } from "next/server";
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
+import { checkUserExists } from "@/utils/supabase/queries";
+import { createSubscriptionTable, createUserTable } from "@/utils/supabase/admin";
 
 export async function GET(request: Request) {
     const { searchParams, origin } = new URL(request.url);
@@ -25,13 +27,27 @@ export async function GET(request: Request) {
                         cookieStore.delete({ name, ...options });
                     },
                 },
-            }
+            },
         );
 
-        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
-        if (!error) {
-            return response.redirect(`${origin}${next}`);
+        if (!error && data.session) {
+            const { user } = data.session;
+
+            try {
+                const existingUser = await checkUserExists({ userEmail: user.email ?? "" });
+
+                if (!existingUser) {
+                    await createUserTable({ user });
+                    await createSubscriptionTable({ userId: user.id });
+                }
+
+                return response.redirect(`${origin}${next}`);
+            } catch (err) {
+                console.error("Unexpected error during Google sign in:", err);
+                return response.redirect(`${origin}/auth/auth-code-error`);
+            }
         }
     }
 

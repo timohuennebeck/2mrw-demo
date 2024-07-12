@@ -1,5 +1,7 @@
 "use server";
 
+import { createSubscriptionTable, createUserTable } from "@/utils/supabase/admin";
+import { checkUserExists } from "@/utils/supabase/queries";
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 
@@ -24,8 +26,6 @@ export async function signIn(formData: FormData) {
 
 export async function signInUsingGoogle() {
     const supabase = createClient();
-
-    // check if email already exists in database, if not create new account inside database
 
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",

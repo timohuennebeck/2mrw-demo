@@ -1,26 +1,22 @@
 "use client";
 
 import { signInUsingGoogle } from "@/app/auth/signIn/action";
-import { useRouter } from "next/navigation";
-import React from "react";
-import { toast } from "sonner";
 import googleIcon from "@/assets/icons/google-icon.svg";
 import Image from "next/image";
+import { toast } from "sonner";
 
 function ContinueWithGoogleButton() {
-    const router = useRouter();
-
     const continueWithGoogle = async () => {
-        const result = await signInUsingGoogle();
+        const { success, error, redirect } = await signInUsingGoogle();
 
-        if (result.success) {
-            router.push(result.redirect);
-
-            toast("Redirecting to Google...");
+        if (error) {
+            toast.error(error);
         }
 
-        if (result.error) {
-            toast.error(result.error);
+        if (success && redirect) {
+            window.location.href = redirect;
+
+            toast("Redirecting to Google...");
         }
     };
 
