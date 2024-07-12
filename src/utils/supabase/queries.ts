@@ -6,7 +6,7 @@ const supabase = createClient();
 export const checkUserExists = async ({ userEmail }: { userEmail: string }) => {
     const { data: existingUser } = await supabase
         .from("users")
-        .select("email")
+        .select("*")
         .eq("email", userEmail)
         .single();
 
