@@ -84,7 +84,7 @@ const SignUpForm = () => {
                         <RememberMeCheckbox />
                     </div>
 
-                    <FormButton title="Sign Up" onPress={handleSubmit} disabled={isLoading} />
+                    <FormButton title="Sign Up" onClick={handleSubmit} disabled={isLoading} />
                 </form>
 
                 <div className="mt-6">

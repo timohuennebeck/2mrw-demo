@@ -66,21 +66,18 @@ export async function POST(req: request) {
 
                     try {
                         // sends pre-order confirmation email for products not yet launched
-                        // axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/sendPreorderEmail`, {
+                        axios.post("api/sendPreorderEmail", {
+                            userEmail: userEmail ?? "",
+                            userFullName: userFullName ?? "",
+                            purchasedPackage: plan?.name ?? "",
+                        });
+
+                        // sends official order confirmation email for live products
+                        // axios.post("api/sendOrderConfirmationEmail", {
                         //     userEmail: userEmail ?? "",
                         //     userFullName: userFullName ?? "",
                         //     purchasedPackage: plan?.name ?? "",
                         // });
-
-                        // sends official order confirmation email for live products
-                        axios.post(
-                            `${process.env.NEXT_PUBLIC_BASE_URL}/api/sendOrderConfirmationEmail`,
-                            {
-                                userEmail: userEmail ?? "",
-                                userFullName: userFullName ?? "",
-                                purchasedPackage: plan?.name ?? "",
-                            }
-                        );
                     } catch (err) {
                         console.error("Failed to send pre-order email", err);
                     }
@@ -90,9 +87,9 @@ export async function POST(req: request) {
 
                 break;
             // checks if the user has cancelled their subscription
-            case "customer.subscription.deleted":
-                const deletedSubscription = event.data.object as Stripe.Subscription;
-                break;
+            // case "customer.subscription.deleted":
+            //     const deletedSubscription = event.data.object as Stripe.Subscription;
+            //     break;
             default:
                 console.log(`Unhandled event: ${event.type}`);
         }

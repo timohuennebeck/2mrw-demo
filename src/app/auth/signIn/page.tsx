@@ -80,7 +80,7 @@ const SignInForm = () => {
                         </Link>
                     </div>
 
-                    <FormButton title="Sign In" onPress={handleSubmit} disabled={isLoading} />
+                    <FormButton title="Sign In" onClick={handleSubmit} disabled={isLoading} />
                 </form>
 
                 <div className="mt-6">
