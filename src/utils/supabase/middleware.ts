@@ -24,11 +24,11 @@ export async function updateSession(request: request) {
                     });
 
                     cookiesToSet.forEach(({ name, value, options }) =>
-                        supabaseResponse.cookies.set(name, value, options)
+                        supabaseResponse.cookies.set(name, value, options),
                     );
                 },
             },
-        }
+        },
     );
 
     // IMPORTANT: avoid writing any logic between createServerClient and supabase.auth.getUser()
@@ -55,12 +55,19 @@ export async function updateSession(request: request) {
         return response.redirect(url);
     }
 
-    const subscription: Subscription = await checkSubscriptionStatus({ userId: user?.id ?? "" });
-    const hasPremiumSubscription = subscription?.has_premium;
-
+    // do NOT move this above the api routes because this would block the api from calling
     if (!user) {
         return supabaseResponse;
     }
+
+    const { subscription, error } = await checkSubscriptionStatus({ userId: user?.id ?? "" });
+
+    if (error) {
+        console.error("Error checking subscription:", error);
+        return { hasPremium: false, error: "Failed to check subscription status" };
+    }
+
+    const hasPremiumSubscription = subscription?.has_premium ?? false;
 
     // non-premium users should be redirected to the choosePricingPlan page to choose a plan
     if (!hasPremiumSubscription && request.nextUrl.pathname !== "/choosePricingPlan") {

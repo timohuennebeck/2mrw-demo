@@ -1,30 +1,16 @@
+import { Subscription } from "@/interfaces/Subscription";
 import { createClient } from "./client";
 
 const supabase = createClient();
 
 export const checkUserExists = async ({ userEmail }: { userEmail: string }) => {
-    try {
-        const { data, error } = await supabase
-            .from("users")
-            .select("*")
-            .eq("email", userEmail)
-            .single();
+    const { data: existingUser } = await supabase
+        .from("users")
+        .select("email")
+        .eq("email", userEmail)
+        .single();
 
-        if (error) {
-            if (error.code === "PGRST116") {
-                // means that no match was found
-                return null;
-            }
-
-            // triggered when some other error occurs
-            throw error;
-        }
-
-        return data;
-    } catch (error) {
-        console.error("Error checking user existence:", error);
-        throw error;
-    }
+    return existingUser;
 };
 
 export const checkSubscriptionStatus = async ({ userId }: { userId: string }) => {
@@ -38,16 +24,16 @@ export const checkSubscriptionStatus = async ({ userId }: { userId: string }) =>
         if (error) {
             if (error.code === "PGRST116") {
                 // means that no match was found
-                return null;
+                return { subscription: null, error: null };
             }
 
             // triggered when some other error occurs
             throw error;
         }
 
-        return data;
+        return { subscription: data as Subscription, error: null };
     } catch (error) {
-        console.error("Error checking subscription status:", error);
-        throw error;
+        console.error("Unexpected error checking subscription status:", error);
+        return { subscription: null, error: error as Error };
     }
 };

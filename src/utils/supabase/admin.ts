@@ -1,67 +1,30 @@
 import { StripePriceId } from "@/config/subscriptionPlans";
 import { extractSubscriptionPlanDetails } from "../../helper/extractSubscriptionPlanDetails";
 import { createClient } from "./client";
+import { User } from "@supabase/supabase-js";
 
 const supabase = createClient();
 
-export const createUserTable = async ({
-    userId,
-    userFullName,
-    userEmail,
-}: {
-    userId: string;
-    userFullName: string;
-    userEmail: string;
-}) => {
-    try {
-        const { data, error } = await supabase
-            .from("users")
-            .insert({
-                user_id: userId,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-                full_name: userFullName,
-                email: userEmail,
-            })
-            .select()
-            .single();
+export const createUserTable = async ({ user }: { user: User }) => {
+    const { error } = await supabase.from("users").insert({
+        user_id: user.id,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        full_name: user.user_metadata.first_name,
+        email: user.email,
+    });
 
-        if (error) {
-            console.error("There has been an error", error);
-            return;
-        }
-
-        return data;
-    } catch (err) {
-        console.error(`Error creating User Table for User: ${userId}`, err);
-
-        return err;
-    }
+    if (error) throw error;
 };
 
 export const createSubscriptionTable = async ({ userId }: { userId: string }) => {
-    try {
-        const { data, error } = await supabase
-            .from("subscriptions")
-            .insert({
-                user_id: userId,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-            })
-            .select()
-            .single();
+    const { error } = await supabase.from("subscriptions").insert({
+        user_id: userId,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+    });
 
-        if (error) {
-            console.error("There has been an error", error);
-            return;
-        }
-
-        return data;
-    } catch (err) {
-        console.error(`Error creating Subscription Table for User: ${userId}`, err);
-
-        return err;
-    }
+    if (error) throw error;
 };
 
 export const updateUserSubscriptionStatus = async ({
