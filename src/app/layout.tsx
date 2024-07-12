@@ -19,7 +19,7 @@ export default function RootLayout({
         <html className="h-full bg-white" lang="en">
             <body className={`h-full ${inter.className}`}>
                 {children}
-                <Toaster position="top-center" richColors />
+                <Toaster position="top-center" />
             </body>
         </html>
     );

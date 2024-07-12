@@ -6,7 +6,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export const PostSignupPricingPage = () => {
+const ChoosePricingPlanPage = () => {
     const router = useRouter();
     const supabase = createClient();
 
@@ -18,7 +18,7 @@ export const PostSignupPricingPage = () => {
                 console.error("Error signing out:", error.message);
                 toast.error(`Error signing out: ${error.message}`);
             } else {
-                toast.success("You've been signed out ");
+                toast.success("You've been signed out!");
 
                 router.replace("/auth/signIn");
             }
@@ -92,4 +92,4 @@ export const PostSignupPricingPage = () => {
     );
 };
 
-export default PostSignupPricingPage;
+export default ChoosePricingPlanPage;
