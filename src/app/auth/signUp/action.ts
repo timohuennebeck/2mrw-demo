@@ -23,7 +23,7 @@ export async function signUp(formData: FormData) {
             password,
             options: {
                 data: {
-                    first_name: firstName,
+                    full_name: firstName,
                 },
             },
         });
