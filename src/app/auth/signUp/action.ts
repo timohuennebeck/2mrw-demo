@@ -1,5 +1,6 @@
 "use server";
 
+import { createUserTable, createSubscriptionTable } from "@/utils/supabase/admin";
 import { createClient } from "@/utils/supabase/server";
 
 export async function signUp(formData: FormData) {
@@ -19,7 +20,7 @@ export async function signUp(formData: FormData) {
         return { error: "This email is already in use. Please log in to continue." };
     }
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -28,6 +29,16 @@ export async function signUp(formData: FormData) {
             },
         },
     });
+
+    const { user } = data;
+
+    await createUserTable({
+        userEmail: user?.email ?? "",
+        userFullName: user?.user_metadata?.first_name ?? "",
+        userId: user?.id ?? "",
+    });
+
+    await createSubscriptionTable({ userId: user?.id ?? "" });
 
     if (error) {
         return { error: error.message };
