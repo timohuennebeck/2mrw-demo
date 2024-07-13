@@ -17,10 +17,9 @@ export const POST = async (req: request) => {
             to: userEmail,
             subject: `Order Confirmation - ${purchasedPackage}`,
             react: OrderConfirmationEmailTemplate({
-                userEmail,
                 userFullName,
                 purchasedPackage,
-                accountSetupLink: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/signUp`,
+                gettingStartedLoomUrl: "loom.com",
                 companyTitle: "Forj",
                 twitterCompanyTag: "@joinforj",
                 twitterCompanyUrl: "www.x.com/timohuennebeck",

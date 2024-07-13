@@ -19,8 +19,7 @@ interface OrderConfirmationEmailTemplateProps {
     userFullName: string;
     purchasedPackage: string;
     companyTitle: string;
-    userEmail: string;
-    accountSetupLink: string;
+    gettingStartedLoomUrl: string;
     twitterCompanyUrl: string;
     twitterCompanyTag: string;
     twitterFounderUrl: string;
@@ -35,8 +34,7 @@ export const OrderConfirmationEmailTemplate = ({
     userFullName,
     purchasedPackage,
     companyTitle,
-    userEmail,
-    accountSetupLink,
+    gettingStartedLoomUrl,
     twitterCompanyUrl,
     twitterCompanyTag,
     twitterFounderUrl,
@@ -61,37 +59,29 @@ export const OrderConfirmationEmailTemplate = ({
                             />
                         </Section>
                         <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">
-                            You're (almost) all set!
+                            You're all set to go!
                         </Heading>
                         <Text className="text-black text-[14px] leading-[24px]">
                             Hi {userFullName},
                         </Text>
                         <Text className="text-black text-[14px] leading-[24px]">
-                            Welcome to the {companyTitle} family! Your transaction for{" "}
-                            <strong>{purchasedPackage}</strong> has been successfully processed.
+                            Great news! Your transaction for <strong>{purchasedPackage}</strong> has
+                            been successfullY processed.
                         </Text>
-                        <Section className="bg-gray-50 rounded-lg p-6 my-6">
-                            <Text className="text-[16px] leading-[24px] m-0 font-semibold">
-                                Let's Get You Set Up:
-                            </Text>
-                            <Text className="text-[14px] leading-[22px] mt-2 mb-4">
-                                1. Create your account (it only takes a couple of seconds!)
-                                <br />
-                                2. Your subscription will automatically link to your new account
-                                <br />
-                                3. Dive in and start supercharging your workflow!
-                            </Text>
-                            <Button
-                                className="bg-black rounded text-white text-[14px] font-semibold no-underline text-center w-full py-2.5"
-                                href={accountSetupLink}
-                            >
-                                Create Your Account Now
-                            </Button>
-                            <Text className="text-[12px] leading-[18px] mt-4 mb-0 text-center italic">
-                                Important: Use the same email address ({userEmail}) you used for
-                                your Stripe payment to ensure your subscription links correctly.
-                            </Text>
-                        </Section>
+                        <Text className="text-black text-[14px] leading-[24px] mt-4">
+                            To help You get the most out our product, I've created a quick video
+                            walkthrough.
+                        </Text>
+                        <Text className="text-black text-[14px] leading-[24px] mt-4">
+                            It covers everYthing You need to know to hit the ground running with{" "}
+                            {companyTitle}.
+                        </Text>
+                        <Button
+                            className="bg-black rounded text-white text-[14px] font-semibold no-underline text-center w-full py-2.5 mb-3"
+                            href={gettingStartedLoomUrl}
+                        >
+                            Watch the Getting Started Video
+                        </Button>
                         <Text className="text-black text-[14px] leading-[24px]">
                             P.S.: This is sooo exciting! I'd love to hear about how You're using{" "}
                             {companyTitle}. Feel free to share it with me on Twitter! 😃
@@ -124,8 +114,7 @@ OrderConfirmationEmailTemplate.PreviewProps = {
     userFullName: "Sarah",
     purchasedPackage: "Premium Plan (20% off)",
     companyTitle: "Forj",
-    userEmail: "timo.huennebeck@outlook.de",
-    accountSetupLink: "https://app.joinforj.com/setup",
+    gettingStartedLoomUrl: "https://app.joinforj.com/setup",
     twitterCompanyUrl: "www.x.com/joinforj",
     twitterCompanyTag: "@joinforj",
     twitterFounderUrl: "www.x.com/timohuennebeck",
