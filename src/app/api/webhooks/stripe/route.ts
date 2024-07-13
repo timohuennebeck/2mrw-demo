@@ -58,16 +58,16 @@ export async function POST(req: request) {
 
                     try {
                         // sends pre-order confirmation email for products not yet launched
-                        axios.post("api/sendPreorderEmail", {
+                        axios.post(`${process.env.NEXT_PUBLIC_SITE_URL}/api/sendPreOrderEmail`, {
                             userEmail: userEmail ?? "",
                             userFullName: session?.customer_details?.name ?? "",
                             purchasedPackage: plan?.name ?? "",
                         });
 
                         // sends official order confirmation email for live products
-                        // axios.post("api/sendOrderConfirmationEmail", {
+                        // axios.post(`${process.env.NEXT_PUBLIC_SITE_URL}/api/sendOrderConfirmationEmail`, {
                         //     userEmail: userEmail ?? "",
-                        //     userFullName: userFullName ?? "",
+                        //     userFullName: session?.customer_details?.name ?? "",
                         //     purchasedPackage: plan?.name ?? "",
                         // });
                     } catch (err) {

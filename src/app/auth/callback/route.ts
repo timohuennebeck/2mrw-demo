@@ -3,6 +3,7 @@ import { NextResponse as response } from "next/server";
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
 import { checkUserExists } from "@/utils/supabase/queries";
 import { createSubscriptionTable, createUserTable } from "@/utils/supabase/admin";
+import axios from "axios";
 
 export async function GET(request: Request) {
     const { searchParams, origin } = new URL(request.url);
@@ -39,11 +40,18 @@ export async function GET(request: Request) {
             const { user } = data.session;
 
             try {
-                const existingUser = await checkUserExists({ userEmail: user.email ?? "" });
+                const existingUser = await checkUserExists({
+                    userEmail: user.user_metadata.email ?? "",
+                });
 
                 if (!existingUser) {
                     await createUserTable({ user });
                     await createSubscriptionTable({ userId: user.id });
+
+                    axios.post(`${process.env.NEXT_PUBLIC_SITE_URL}/api/sendFreeTrialEmail`, {
+                        userEmail: user.user_metadata.email ?? "",
+                        userFullName: user.user_metadata.full_name ?? "",
+                    });
                 }
 
                 return response.redirect(`${origin}${next}`);

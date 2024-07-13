@@ -2,6 +2,7 @@ import { type EmailOtpType } from "@supabase/supabase-js";
 import { type NextRequest } from "next/server";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
+import axios from "axios";
 
 export async function GET(request: NextRequest) {
     // this route is used for email authentication when the user needs to confirm their email via email
@@ -14,13 +15,28 @@ export async function GET(request: NextRequest) {
     const supabase = createClient();
 
     if (token_hash && type) {
-        const { error } = await supabase.auth.verifyOtp({
+        const { data, error } = await supabase.auth.verifyOtp({
             type,
             token_hash,
         });
 
         if (!error) {
-            redirect(next);
+            try {
+                const user = data.user;
+
+                if (user) {
+                    await axios.post(`${process.env.NEXT_PUBLIC_SITE_URL}/api/sendFreeTrialEmail`, {
+                        userEmail: user.user_metadata.email ?? "",
+                        userFullName: user.user_metadata.full_name ?? "",
+                    });
+                } else {
+                    console.error("User data not available");
+                }
+            } catch (emailError) {
+                console.error("Error sending free trial email:", emailError);
+            }
+
+            return redirect(next);
         }
     }
 
