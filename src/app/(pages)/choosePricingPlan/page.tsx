@@ -25,6 +25,7 @@ const ChoosePricingPlanPage = () => {
             }
         } catch (err) {
             console.error("Unexpected error during sign out:", err);
+            
             toast.error(`There has been an unexpected error: ${err}`);
         }
     };

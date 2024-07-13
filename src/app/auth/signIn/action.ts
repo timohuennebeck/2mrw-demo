@@ -1,7 +1,5 @@
 "use server";
 
-import { createSubscriptionTable, createUserTable } from "@/utils/supabase/admin";
-import { checkUserExists } from "@/utils/supabase/queries";
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 
