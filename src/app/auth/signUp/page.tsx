@@ -72,7 +72,7 @@ const SignUpForm = () => {
 
                 <FormHeader
                     title="Sign Up"
-                    subtitle="Sign up using email or another service to continue with Forj (it's free)!"
+                    subtitle="Sign up using email or another service to continue with Forj (it takes 2 seconds)!"
                 />
 
                 <form>

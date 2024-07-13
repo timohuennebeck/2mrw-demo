@@ -67,19 +67,19 @@ export const OrderConfirmationEmailTemplate = ({
                             Hi {userFullName},
                         </Text>
                         <Text className="text-black text-[14px] leading-[24px]">
-                            Welcome to the {companyTitle} familY! Your transaction for{" "}
-                            <strong>{purchasedPackage}</strong> has been successfullY processed.
+                            Welcome to the {companyTitle} family! Your transaction for{" "}
+                            <strong>{purchasedPackage}</strong> has been successfully processed.
                         </Text>
                         <Section className="bg-gray-50 rounded-lg p-6 my-6">
                             <Text className="text-[16px] leading-[24px] m-0 font-semibold">
                                 Let's Get You Set Up:
                             </Text>
                             <Text className="text-[14px] leading-[22px] mt-2 mb-4">
-                                1. Create Your account (it onlY takes a couple of seconds!)
+                                1. Create your account (it only takes a couple of seconds!)
                                 <br />
-                                2. Your subscription will automaticallY link to Your new account
+                                2. Your subscription will automatically link to your new account
                                 <br />
-                                3. Dive in and start supercharging Your workflow!
+                                3. Dive in and start supercharging your workflow!
                             </Text>
                             <Button
                                 className="bg-black rounded text-white text-[14px] font-semibold no-underline text-center w-full py-2.5"
@@ -88,8 +88,8 @@ export const OrderConfirmationEmailTemplate = ({
                                 Create Your Account Now
                             </Button>
                             <Text className="text-[12px] leading-[18px] mt-4 mb-0 text-center italic">
-                                Important: Use the same email address ({userEmail}) You used for
-                                Your Stripe paYment to ensure Your subscription links correctlY.
+                                Important: Use the same email address ({userEmail}) you used for
+                                your Stripe payment to ensure your subscription links correctly.
                             </Text>
                         </Section>
                         <Text className="text-black text-[14px] leading-[24px]">

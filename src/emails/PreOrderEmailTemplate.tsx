@@ -61,12 +61,12 @@ export const PreOrderEmailTemplate = ({
                             the <strong>{purchasedPackage}</strong>. You're awesome!
                         </Text>
                         <Text className="text-black text-[14px] leading-[24px]">
-                            I know You're eager to get started, so here's what You can look forward
+                            I know you're eager to get started, so here's what you can look forward
                             to:
                         </Text>
                         <Section className="ml-4">
                             <Text className="text-black text-[14px] leading-[24px]">
-                                1. EverY FridaY, You'll get exclusive insider updates from me,
+                                1. Every Friday, you'll get exclusive insider updates from me,
                                 sharing the latest developments, challenges, and victories.
                             </Text>
                             <Text className="text-black text-[14px] leading-[24px]">
@@ -74,17 +74,17 @@ export const PreOrderEmailTemplate = ({
                                 <strong>{estimatedLaunchDate}</strong>.
                             </Text>
                             <Text className="text-black text-[14px] leading-[24px]">
-                                3. You'll get prioritY access when {companyTitle} launches, with a personal email
-                                from me on how to claim Your account.
+                                3. You'll get priority access when {companyTitle} launches, with a personal email
+                                from me on how to claim your account.
                             </Text>
                             <Text className="text-black text-[14px] leading-[24px]">
-                                4. As an earlY supporter, You'll have a direct line to me for
+                                4. As an early supporter, you'll have a direct line to me for
                                 feedback and suggestions. Feel free to reach out to me at{" "}
                                 <strong>{customerSupportEmail}</strong>
                             </Text>
                         </Section>
                         <Text className="text-black text-[14px] leading-[24px]">
-                            Thanks again for being one of the first adopters. I'm pouring mY
+                            Thanks again for being one of the first adopters. I'm pouring my
                             heart into making {companyTitle} exceptional 🤩
                         </Text>
                         <Hr className="border border-solid border-gray-200 my-[26px] mx-0 w-full" />

@@ -17,7 +17,7 @@ const ForgotPasswordPage = () => {
         const email = formData.get("email") as string;
 
         if (!email) {
-            toast.error("Please enter Your email address");
+            toast.error("Please enter your email address");
             return;
         }
 
@@ -52,7 +52,7 @@ const ForgotPasswordPage = () => {
                 <h1 className="text-2xl font-semibold text-center mb-4">Forgot Password</h1>
 
                 <p className="text-center text-gray-600 mb-6 text-sm">
-                    Enter Your email address and we'll send You a link to reset Your password.
+                    Enter your email address below and we'll send you a link to reset your password.
                 </p>
 
                 <form>
@@ -66,7 +66,7 @@ const ForgotPasswordPage = () => {
                 </form>
 
                 <p className="text-center text-sm text-gray-600 mt-4">
-                    Remember Your password?{" "}
+                    Remember your password?{" "}
                     <Link
                         href="/auth/signIn"
                         className="font-medium text-black hover:text-gray-800 transition-colors"

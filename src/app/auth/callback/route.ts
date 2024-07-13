@@ -9,6 +9,9 @@ export async function GET(request: Request) {
     const code = searchParams.get("code");
     const next = searchParams.get("next") ?? "/";
 
+    // this route is used when the user logs in via Google
+    // he'll be redirected to this route and then have his cookies and token verified
+
     if (code) {
         const cookieStore = cookies();
 

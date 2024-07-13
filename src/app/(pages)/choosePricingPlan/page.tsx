@@ -43,7 +43,7 @@ const ChoosePricingPlanPage = () => {
                 <h1 className="text-2xl font-semibold text-center mb-2">Choose a Plan</h1>
                 <p className="text-center text-gray-600 mb-8 text-sm">
                     Choose a plan to start using Forj. This is a one-time purchase not a
-                    subscription. You can still upgrade the plan later if needed.
+                    subscription. You can still upgrade your plan later if needed.
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
