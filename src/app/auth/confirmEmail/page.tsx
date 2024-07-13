@@ -49,7 +49,9 @@ const EmailConfirmationPage = () => {
                     <img src="https://i.imgur.com/e0cWC6I.png" alt="" className="w-12 h-12" />
                 </div>
 
-                <h1 className="text-2xl font-semibold text-center mb-6">Check your Email</h1>
+                <h1 className="text-2xl font-semibold text-center mb-6">
+                    Email Verification Required
+                </h1>
 
                 <p className="text-center text-gray-600 mb-2 text-sm">
                     The confirmation email was sent to:
@@ -57,7 +59,8 @@ const EmailConfirmationPage = () => {
                 <p className="text-center font-semibold mb-4">{email}</p>
 
                 <p className="text-center text-gray-600 mb-8 text-sm">
-                    Please click the link in the email to verify your account.
+                    Please click the verification link in the email to activate your account and get
+                    started.
                 </p>
 
                 <DefaultButton
@@ -66,7 +69,7 @@ const EmailConfirmationPage = () => {
                 />
 
                 <p className="text-center text-sm text-gray-600 mt-4">
-                    Didn't receive the email? Check your spam folder.
+                    Didn't receive the email? Have a look into your junk folder.
                 </p>
             </div>
         </div>

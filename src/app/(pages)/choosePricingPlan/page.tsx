@@ -19,7 +19,7 @@ const ChoosePricingPlanPage = () => {
                 console.error("Error signing out:", error.message);
                 toast.error(`Error signing out: ${error.message}`);
             } else {
-                toast.success("You've been signed out!");
+                toast.success("Sign out successful!");
 
                 router.replace("/auth/signIn");
             }
