@@ -11,6 +11,7 @@ import {
     Section,
     Text,
     Tailwind,
+    Link,
 } from "@react-email/components";
 
 interface PreOrderEmailTemplateProps {
@@ -18,7 +19,8 @@ interface PreOrderEmailTemplateProps {
     purchasedPackage: string;
     estimatedLaunchDate: string;
     companyTitle: string;
-    customerSupportEmail: string;
+    twitterFounderUrl: string;
+    twitterFounderTag: string;
 }
 
 const logoUrl = process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL
@@ -30,7 +32,8 @@ export const PreOrderEmailTemplate = ({
     purchasedPackage,
     estimatedLaunchDate,
     companyTitle,
-    customerSupportEmail,
+    twitterFounderUrl,
+    twitterFounderTag,
 }: PreOrderEmailTemplateProps) => {
     const previewText = `A personal thank you for pre-ordering the ${purchasedPackage} from us!`;
 
@@ -51,22 +54,22 @@ export const PreOrderEmailTemplate = ({
                             />
                         </Section>
                         <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">
-                            Thaaaaank You! 😃
+                            Thaaaaank You!
                         </Heading>
                         <Text className="text-black text-[14px] leading-[24px]">
                             Hi {userFullName},
                         </Text>
                         <Text className="text-black text-[14px] leading-[24px]">
-                            This is Timo, the founder of {companyTitle}. Thank You so much for pre-ordering
-                            the <strong>{purchasedPackage}</strong>. You're awesome!
+                            This is Timo, the founder of {companyTitle}. Thank You so much for
+                            pre-ordering the <strong>{purchasedPackage}</strong>. You're awesome! 😃
                         </Text>
                         <Text className="text-black text-[14px] leading-[24px]">
-                            I know you're eager to get started, so here's what you can look forward
+                            I know You're eager to get started, so here's what You can look forward
                             to:
                         </Text>
                         <Section className="ml-4">
                             <Text className="text-black text-[14px] leading-[24px]">
-                                1. Every Friday, you'll get exclusive insider updates from me,
+                                1. Every FridaY, You'll get exclusive insider updates from me,
                                 sharing the latest developments, challenges, and victories.
                             </Text>
                             <Text className="text-black text-[14px] leading-[24px]">
@@ -74,18 +77,20 @@ export const PreOrderEmailTemplate = ({
                                 <strong>{estimatedLaunchDate}</strong>.
                             </Text>
                             <Text className="text-black text-[14px] leading-[24px]">
-                                3. You'll get priority access when {companyTitle} launches, with a personal email
-                                from me on how to claim your account.
+                                3. You'll get prioritY access when it launches, with a personal
+                                email from me on how to get started.
                             </Text>
                             <Text className="text-black text-[14px] leading-[24px]">
-                                4. As an early supporter, you'll have a direct line to me for
-                                feedback and suggestions. Feel free to reach out to me at{" "}
-                                <strong>{customerSupportEmail}</strong>
+                                4. You'll have a direct line to me for feedback and suggestions as
+                                an earlY supporter. Feel free to reach out to me on Twitter at{" "}
+                                <Link href={twitterFounderUrl} className="text-blue-500">
+                                    {twitterFounderTag}
+                                </Link>{" "}
                             </Text>
                         </Section>
                         <Text className="text-black text-[14px] leading-[24px]">
-                            Thanks again for being one of the first adopters. I'm pouring my
-                            heart into making {companyTitle} exceptional 🤩
+                            Thanks again for being one of the first adopters. I'm pouring mY heart
+                            into making {companyTitle} exceptional 🤩
                         </Text>
                         <Hr className="border border-solid border-gray-200 my-[26px] mx-0 w-full" />
                         <Text className="text-gray-500 text-[12px] leading-[24px]">
@@ -107,7 +112,8 @@ PreOrderEmailTemplate.PreviewProps = {
     purchasedPackage: "Standard Package",
     estimatedLaunchDate: "September 18th, 2024",
     companyTitle: "Forj",
-    customerSupportEmail: "hello@joinforj.com"
+    twitterFounderUrl: "www.x.com/timohuennebeck",
+    twitterFounderTag: "@timohuennebeck",
 } as PreOrderEmailTemplateProps;
 
 export default PreOrderEmailTemplate;

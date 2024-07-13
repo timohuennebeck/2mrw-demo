@@ -1,27 +1,27 @@
+import FreeTrialEmailTemplate from "@/emails/FreeTrialEmailTemplate";
 import { NextRequest as request, NextResponse as response } from "next/server";
 import { Resend } from "resend";
-import PreOrderEmailTemplate from "@/emails/PreOrderEmailTemplate";
 
 const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_EMAIL_API_KEY ?? "");
 
 export const POST = async (req: request) => {
     try {
-        const { userEmail, userFullName, purchasedPackage } = await req.json();
+        const { userEmail, userFullName } = await req.json();
 
-        if (!userEmail || !userFullName || !purchasedPackage) {
+        if (!userEmail || !userFullName) {
             return response.json({ error: "Missing required fields" }, { status: 400 });
         }
 
         const { data, error } = await resend.emails.send({
             from: "info@updates.joinforj.com",
             to: userEmail,
-            subject: `Pre-Order Confirmation - ${purchasedPackage}`,
-            react: PreOrderEmailTemplate({
-                userFullName,
-                purchasedPackage,
-                estimatedLaunchDate: "September 15, 2024",
+            subject: `Welcome to Forj!`,
+            react: FreeTrialEmailTemplate({
+                userFirstName: userFullName,
                 companyTitle: "Forj",
-                twitterFounderUrl: "www.x.com/timohuennebeck",
+                trialDuration: 14,
+                trialSignupLink: `${process.env.NEXT_PUBLIC_SITE_URL}/trial`,
+                twitterFounderUrl: "https://twitter.com/timohuennebeck",
                 twitterFounderTag: "@timohuennebeck",
             }),
         });
