@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import DefaultButton from "@/components/DefaultButton";
 import { createClient } from "@/utils/supabase/client";
 import { toast } from "sonner";
+import Image from "next/image";
 
 const EmailConfirmationPage = () => {
     const [isResending, setIsResending] = useState(false);
@@ -46,7 +47,7 @@ const EmailConfirmationPage = () => {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-2xl shadow-lg border p-8 max-w-md w-full">
                 <div className="flex justify-center mb-6">
-                    <img src="https://i.imgur.com/e0cWC6I.png" alt="" className="w-12 h-12" />
+                    <Image src="https://i.imgur.com/e0cWC6I.png" alt="" className="w-12 h-12" />
                 </div>
 
                 <h1 className="text-2xl font-semibold text-center mb-6">

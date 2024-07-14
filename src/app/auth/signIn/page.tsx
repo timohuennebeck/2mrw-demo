@@ -12,6 +12,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { signIn } from "./action";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const SignInForm = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -59,7 +60,7 @@ const SignInForm = () => {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-2xl shadow-lg border p-8 max-w-md w-full">
                 <div className="flex justify-center mb-6">
-                    <img src="https://i.imgur.com/e0cWC6I.png" alt="" className="w-12 h-12" />
+                    <Image src="https://i.imgur.com/e0cWC6I.png" alt="" className="w-12 h-12" />
                 </div>
 
                 <FormHeader

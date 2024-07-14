@@ -172,6 +172,7 @@ export const PricingPlanCard = ({
                             ? "Loading..."
                             : `Start Free Trial (${welcomeEmail === "true" ? "14" : "7"} Days)`
                     }
+                    disabled={isLoading}
                 />
             )}
 

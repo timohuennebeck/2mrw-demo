@@ -4,6 +4,7 @@ import DefaultButton from "@/components/DefaultButton";
 import { PricingPlanCard } from "@/components/PricingPlanCard";
 import { SUBSCRIPTION_PLANS } from "@/config/subscriptionPlans";
 import { createClient } from "@/utils/supabase/client";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -38,7 +39,7 @@ const ChoosePricingPlanPage = () => {
 
             <div className="p-8 max-w-4xl w-full">
                 <div className="flex justify-center mb-6">
-                    <img src="https://i.imgur.com/e0cWC6I.png" alt="" className="w-12 h-12" />
+                    <Image src="https://i.imgur.com/e0cWC6I.png" alt="" className="w-12 h-12" />
                 </div>
 
                 <h1 className="text-2xl font-semibold text-center mb-2">Choose a Plan</h1>

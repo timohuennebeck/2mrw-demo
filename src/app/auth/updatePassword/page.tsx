@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import FormButton from "@/components/FormButton";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const UpdatePasswordPage = () => {
     const [isUpdating, setIsUpdating] = useState(false);
@@ -50,7 +51,7 @@ const UpdatePasswordPage = () => {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-2xl shadow-lg border p-8 max-w-md w-full">
                 <div className="flex justify-center mb-6">
-                    <img src="https://i.imgur.com/e0cWC6I.png" alt="" className="w-12 h-12" />
+                    <Image src="https://i.imgur.com/e0cWC6I.png" alt="" className="w-12 h-12" />
                 </div>
 
                 <h1 className="text-2xl font-semibold text-center mb-4">Update Password</h1>
