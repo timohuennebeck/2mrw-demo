@@ -27,12 +27,35 @@ export const createSubscriptionTable = async ({ userId }: { userId: string }) =>
     if (error) throw error;
 };
 
+export const startUserFreeTrial = async ({
+    userId,
+    freeTrialEndDate,
+}: {
+    userId: string;
+    freeTrialEndDate: Date;
+}) => {
+    const { error } = await supabase.from("free_trials").insert({
+        user_id: userId,
+        start_date: new Date().toISOString(),
+        end_date: freeTrialEndDate.toISOString(),
+        is_active: true,
+    });
+
+    if (error) {
+        return { error: error };
+    }
+
+    return { sucess: true };
+};
+
 export const updateUserSubscriptionStatus = async ({
     userId,
     stripePriceId,
+    hasPremium,
 }: {
     userId: string;
     stripePriceId: string;
+    hasPremium: boolean;
 }) => {
     const plan = extractSubscriptionPlanDetails(stripePriceId as StripePriceId);
 
@@ -45,7 +68,7 @@ export const updateUserSubscriptionStatus = async ({
             .from("subscription")
             .update({
                 updated_at: new Date().toISOString(),
-                has_premium: true,
+                has_premium: hasPremium,
                 subscription_plan: plan.name,
                 stripe_price_id: stripePriceId,
             })

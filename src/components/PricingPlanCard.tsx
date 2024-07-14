@@ -1,6 +1,13 @@
 import { CheckBadgeIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { StripeSubscriptionPlan } from "@/interfaces/StripeSubscriptionPlan";
 import ExternalButton from "./ExternalButton";
+import { redirect, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { checkFreeTrialStatus } from "@/utils/supabase/queries";
+import { createClient } from "@/utils/supabase/client";
+import { startUserFreeTrial, updateUserSubscriptionStatus } from "@/utils/supabase/admin";
+import DefaultButton from "./DefaultButton";
+import { toast } from "sonner";
 
 export const PricingPlanCard = ({
     name,
@@ -9,10 +16,99 @@ export const PricingPlanCard = ({
     previousPrice,
     price,
     stripePaymentLink,
+    stripePriceId,
     buttonCta,
     features,
     isHighlighted,
 }: StripeSubscriptionPlan) => {
+    const [hasCompletedFreeTrial, setHasCompletedFreeTrial] = useState(false);
+
+    // when a user has starts a free trial then also update the following fields in the subscriptions table
+    // stripe_price_id, subscription_plan, and has_premium
+
+    const searchParams = useSearchParams();
+    const welcomeEmail = searchParams.get("welcomeEmail");
+
+    const supabase = createClient();
+
+    const fetchUser = async () => {
+        const {
+            data: { user },
+            error,
+        } = await supabase.auth.getUser();
+
+        if (error) {
+            console.error("Error fetching user:", error);
+            throw error;
+        }
+
+        if (!user) {
+            console.log("There is no logged in user");
+            throw new Error("There is no logged in user");
+        }
+
+        return user;
+    };
+
+    const increaseDate = ({ date, days }: { date: Date; days: number }) => {
+        let result = new Date(date);
+        result.setDate(result.getDate() + days);
+
+        return result;
+    };
+
+    const startFreeTrial = async () => {
+        const user = await fetchUser();
+
+        if (!hasCompletedFreeTrial) {
+            const currentDate = new Date();
+
+            let freeTrialEndDate;
+            if (welcomeEmail === "true") {
+                freeTrialEndDate = increaseDate({ date: currentDate, days: 7 });
+            } else {
+                freeTrialEndDate = increaseDate({ date: currentDate, days: 14 });
+            }
+
+            const { error } = await startUserFreeTrial({
+                userId: user.id,
+                freeTrialEndDate: freeTrialEndDate,
+            });
+
+            if (error) {
+                return toast.error("Error starting free trial");
+            }
+
+            toast.success("Free trial has been started");
+
+            // this seems to fail
+            updateUserSubscriptionStatus({
+                hasPremium: true,
+                stripePriceId: stripePriceId,
+                userId: user.id,
+            });
+
+            // redirect("/");
+        }
+    };
+
+    useEffect(() => {
+        const getUserFreeTrialStatus = async () => {
+            try {
+                const user = await fetchUser();
+                const { freeTrial } = await checkFreeTrialStatus({ userId: user.id });
+
+                setHasCompletedFreeTrial(!!freeTrial);
+            } catch (error) {
+                console.error("Error in getUserFreeTrialStatus:", error);
+
+                setHasCompletedFreeTrial(false);
+            }
+        };
+
+        getUserFreeTrialStatus();
+    }, []);
+
     return (
         <div
             className={`bg-white rounded-2xl shadow-lg border p-8 ${
@@ -53,7 +149,14 @@ export const PricingPlanCard = ({
                 </ul>
             </div>
 
-            <ExternalButton title={buttonCta} href={stripePaymentLink} />
+            {hasCompletedFreeTrial ? (
+                <ExternalButton title={buttonCta} href={stripePaymentLink} />
+            ) : (
+                <DefaultButton
+                    onClick={startFreeTrial}
+                    title={`Start Free Trial (${welcomeEmail === "true" ? "14" : "7"} Days)`}
+                />
+            )}
 
             <p className="text-center text-sm text-gray-600 mt-4">Purchase Once. Forever Yours.</p>
         </div>

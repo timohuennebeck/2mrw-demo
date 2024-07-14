@@ -37,3 +37,29 @@ export const checkSubscriptionStatus = async ({ userId }: { userId: string }) =>
         return { subscription: null, error: error as Error };
     }
 };
+
+export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
+    try {
+        const { data, error } = await supabase
+            .from("free_trials")
+            .select("*")
+            .eq("user_id", userId)
+            .single();
+
+        if (error) {
+            if (error.code === "PGRST116") {
+                // means that no match was found
+                return { freeTrial: null, error: null };
+            }
+
+            // triggered when some other error occurs
+            throw error;
+        }
+
+        return { freeTrial: data as Subscription, error: null };
+    } catch (error) {
+        console.error("Unexpected error checking free trial status:", error);
+
+        return { subscription: null, error: error as Error };
+    }
+};

@@ -85,6 +85,16 @@ Resend is used for sending emails in this project. Here's how to set it up:
 
 7. Inside the `utils/emails/client.ts` replace the `from: "onboarding@resend.dev"` with Your own email.
 
+
+we'll also need to setup resend to send supabase emails on behalf of it
+first, inside resend go to domains -> add an domain -> its best to use a subdomain. For instance, instead of using joinforj.com, use updates.joinforj.com
+Heres a setup video: https://supabase.com/partners/integrations/resend
+now all emails from supabase will be sent via resend
+
+Insert Loom Link:
+
+
+
 ## Supabase Setup
 To set up Supabase for your project, follow these steps:
 
@@ -96,6 +106,12 @@ To set up Supabase for your project, follow these steps:
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_api_key_here
 ```
+
+## Google Authentication Setup
+
+https://supabase.com/docs/guides/auth/social-login/auth-google?queryGroups=platform&platform=web&queryGroups=environment&environment=client
+
+Loom:
 
 ## Configuration
 

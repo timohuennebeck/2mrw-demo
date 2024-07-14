@@ -20,7 +20,7 @@ export const POST = async (req: request) => {
                 userFirstName: userFullName,
                 companyTitle: "Forj",
                 trialDuration: 14,
-                trialSignupLink: `${process.env.NEXT_PUBLIC_SITE_URL}/trial`,
+                trialSignupLink: `${process.env.NEXT_PUBLIC_SITE_URL}/choosePricingPlan?freeTrial=true&duration=14`,
                 twitterFounderUrl: "https://twitter.com/timohuennebeck",
                 twitterFounderTag: "@timohuennebeck",
             }),
