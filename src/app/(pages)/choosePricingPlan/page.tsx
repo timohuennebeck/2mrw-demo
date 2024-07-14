@@ -39,7 +39,7 @@ const ChoosePricingPlanPage = () => {
 
             <div className="p-8 max-w-4xl w-full">
                 <div className="flex justify-center mb-6">
-                    <Image src="https://i.imgur.com/e0cWC6I.png" alt="" width={48} height={48} width={48} height={48} />
+                    <Image src="https://i.imgur.com/e0cWC6I.png" alt="" width={48} height={48} />
                 </div>
 
                 <h1 className="text-2xl font-semibold text-center mb-2">Choose a Plan</h1>
