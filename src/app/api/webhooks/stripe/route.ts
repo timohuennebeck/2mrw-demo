@@ -47,6 +47,7 @@ export async function POST(req: request) {
                         await updateUserSubscriptionStatus({
                             userId: user.id ?? "",
                             stripePriceId: (stripePriceId as StripePriceId) ?? "",
+                            hasPremium: true
                         });
                     }
                 } else {

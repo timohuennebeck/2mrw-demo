@@ -26,10 +26,6 @@ interface OrderConfirmationEmailTemplateProps {
     twitterFounderTag: string;
 }
 
-const logoUrl = process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL
-    ? `https://${process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL}`
-    : "https://i.imgur.com/e0cWC6I.png";
-
 export const OrderConfirmationEmailTemplate = ({
     userFullName,
     purchasedPackage,
@@ -51,7 +47,7 @@ export const OrderConfirmationEmailTemplate = ({
                     <Container className="border border-solid border-gray-200 rounded my-[40px] mx-auto p-[20px] max-w-[465px]">
                         <Section className="mt-[32px]">
                             <Img
-                                src={logoUrl}
+                                src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL}
                                 width="48"
                                 height="48"
                                 alt={companyTitle}

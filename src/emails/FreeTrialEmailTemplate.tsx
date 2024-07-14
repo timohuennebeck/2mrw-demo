@@ -23,10 +23,6 @@ interface FreeTrialEmailTemplateProps {
     twitterFounderTag: string;
 }
 
-const logoUrl = process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL
-    ? `https://${process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL}`
-    : "https://i.imgur.com/e0cWC6I.png";
-
 export const FreeTrialEmailTemplate = ({
     userFirstName,
     companyTitle,
@@ -45,7 +41,7 @@ export const FreeTrialEmailTemplate = ({
                 <Body className="bg-white my-auto mx-auto font-sans px-2">
                     <Container className="border border-solid border-gray-200 rounded my-[40px] mx-auto p-[20px] max-w-[465px]">
                         <Img
-                            src={logoUrl}
+                            src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL}
                             width="48"
                             height="48"
                             alt={companyTitle}
