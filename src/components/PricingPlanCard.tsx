@@ -22,9 +22,7 @@ export const PricingPlanCard = ({
     isHighlighted,
 }: StripeSubscriptionPlan) => {
     const [hasCompletedFreeTrial, setHasCompletedFreeTrial] = useState(false);
-
-    // when a user has starts a free trial then also update the following fields in the subscriptions table
-    // stripe_price_id, subscription_plan, and has_premium
+    const [isLoading, setIsLoading] = useState(false);
 
     const searchParams = useSearchParams();
     const welcomeEmail = searchParams.get("welcomeEmail");
@@ -33,6 +31,7 @@ export const PricingPlanCard = ({
     const router = useRouter();
 
     const fetchUser = async () => {
+        // this causes a 406, not acceptable error
         const {
             data: { user },
             error,
@@ -59,45 +58,58 @@ export const PricingPlanCard = ({
     };
 
     const startFreeTrial = async () => {
+        setIsLoading(true);
         const user = await fetchUser();
 
-        if (!hasCompletedFreeTrial) {
-            const currentDate = new Date();
+        const currentDate = new Date();
 
-            let freeTrialEndDate;
-            if (welcomeEmail === "true") {
-                freeTrialEndDate = increaseDate({ date: currentDate, days: 14 });
-            } else {
-                freeTrialEndDate = increaseDate({ date: currentDate, days: 7 });
-            }
-
-            const { error: freeTrialError } = await startUserFreeTrial({
-                userId: user.id,
-                freeTrialEndDate: freeTrialEndDate,
-            });
-
-            // this seems to fail!!
-            const { error: subscriptionError } = await updateUserSubscriptionStatus({
-                hasPremium: true,
-                stripePriceId: stripePriceId,
-                userId: user.id,
-            });
-
-            if (freeTrialError || subscriptionError) {
-                return toast.error("Error starting free trial");
-            }
-
-            toast.success("Free trial has been started");
-
-            router.push("/");
+        let freeTrialEndDate;
+        if (welcomeEmail === "true") {
+            freeTrialEndDate = increaseDate({ date: currentDate, days: 14 });
+        } else {
+            freeTrialEndDate = increaseDate({ date: currentDate, days: 7 });
         }
+
+        const { error: freeTrialError } = await startUserFreeTrial({
+            userId: user.id,
+            freeTrialEndDate: freeTrialEndDate,
+        });
+
+        const { error: subscriptionError } = await updateUserSubscriptionStatus({
+            hasPremium: true,
+            stripePriceId: stripePriceId,
+            userId: user.id,
+        });
+
+        if (freeTrialError) {
+            console.error("Error starting free trial", freeTrialError);
+            setIsLoading(false);
+
+            return toast.error("Error starting free trial");
+        }
+
+        if (subscriptionError) {
+            console.error("Error updating subscription", subscriptionError);
+
+            setIsLoading(false);
+        }
+
+        setIsLoading(false);
+
+        toast.success("Free trial has been started");
+
+        router.push("/");
     };
 
     useEffect(() => {
         const getUserFreeTrialStatus = async () => {
             try {
                 const user = await fetchUser();
-                const { freeTrial } = await checkFreeTrialStatus({ userId: user.id });
+                const { freeTrial, error } = await checkFreeTrialStatus({ userId: user.id });
+
+                if (error) {
+                    toast.error("Error checking free trial status");
+                }
 
                 setHasCompletedFreeTrial(!!freeTrial);
             } catch (error) {
@@ -155,7 +167,11 @@ export const PricingPlanCard = ({
             ) : (
                 <DefaultButton
                     onClick={startFreeTrial}
-                    title={`Start Free Trial (${welcomeEmail === "true" ? "14" : "7"} Days)`}
+                    title={
+                        isLoading
+                            ? "Loading..."
+                            : `Start Free Trial (${welcomeEmail === "true" ? "14" : "7"} Days)`
+                    }
                 />
             )}
 

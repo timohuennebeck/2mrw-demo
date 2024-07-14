@@ -65,7 +65,7 @@ export const updateUserSubscriptionStatus = async ({
 
     try {
         const { data, error } = await supabase
-            .from("subscription")
+            .from("subscriptions")
             .update({
                 updated_at: new Date().toISOString(),
                 has_premium: hasPremium,
