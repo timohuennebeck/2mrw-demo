@@ -1,7 +1,7 @@
 import { CheckBadgeIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { StripeSubscriptionPlan } from "@/interfaces/StripeSubscriptionPlan";
 import ExternalButton from "./ExternalButton";
-import { redirect, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { checkFreeTrialStatus } from "@/utils/supabase/queries";
 import { createClient } from "@/utils/supabase/client";
@@ -30,6 +30,7 @@ export const PricingPlanCard = ({
     const welcomeEmail = searchParams.get("welcomeEmail");
 
     const supabase = createClient();
+    const router = useRouter();
 
     const fetchUser = async () => {
         const {
@@ -65,30 +66,30 @@ export const PricingPlanCard = ({
 
             let freeTrialEndDate;
             if (welcomeEmail === "true") {
-                freeTrialEndDate = increaseDate({ date: currentDate, days: 7 });
-            } else {
                 freeTrialEndDate = increaseDate({ date: currentDate, days: 14 });
+            } else {
+                freeTrialEndDate = increaseDate({ date: currentDate, days: 7 });
             }
 
-            const { error } = await startUserFreeTrial({
+            const { error: freeTrialError } = await startUserFreeTrial({
                 userId: user.id,
                 freeTrialEndDate: freeTrialEndDate,
             });
 
-            if (error) {
-                return toast.error("Error starting free trial");
-            }
-
-            toast.success("Free trial has been started");
-
-            // this seems to fail
-            updateUserSubscriptionStatus({
+            // this seems to fail!!
+            const { error: subscriptionError } = await updateUserSubscriptionStatus({
                 hasPremium: true,
                 stripePriceId: stripePriceId,
                 userId: user.id,
             });
 
-            // redirect("/");
+            if (freeTrialError || subscriptionError) {
+                return toast.error("Error starting free trial");
+            }
+
+            toast.success("Free trial has been started");
+
+            router.push("/");
         }
     };
 

@@ -34,7 +34,7 @@ export const startUserFreeTrial = async ({
     userId: string;
     freeTrialEndDate: Date;
 }) => {
-    const { error } = await supabase.from("free_trials").insert({
+    const { data, error } = await supabase.from("free_trials").insert({
         user_id: userId,
         start_date: new Date().toISOString(),
         end_date: freeTrialEndDate.toISOString(),
@@ -45,7 +45,7 @@ export const startUserFreeTrial = async ({
         return { error: error };
     }
 
-    return { sucess: true };
+    return { freeTrial: data, error: null };
 };
 
 export const updateUserSubscriptionStatus = async ({
@@ -60,7 +60,7 @@ export const updateUserSubscriptionStatus = async ({
     const plan = extractSubscriptionPlanDetails(stripePriceId as StripePriceId);
 
     if (!plan) {
-        throw new Error(`Error, no plan found for price id: ${stripePriceId}`);
+        return { error: `Error, no plan found for price id: ${stripePriceId}` };
     }
 
     try {
@@ -78,13 +78,14 @@ export const updateUserSubscriptionStatus = async ({
 
         if (error) {
             console.error("There has been an error", error);
-            return;
+
+            return { error: error };
         }
 
-        return data;
+        return { subscription: data, error: null };
     } catch (err) {
         console.error(`Error creating Subscription Table for User: ${userId}`, err);
 
-        return err;
+        return { error: err };
     }
 };

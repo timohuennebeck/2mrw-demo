@@ -1,5 +1,6 @@
 import { Subscription } from "@/interfaces/Subscription";
 import { createClient } from "./client";
+import { FreeTrial } from "@/interfaces/FreeTrial";
 
 const supabase = createClient();
 
@@ -56,7 +57,7 @@ export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
             throw error;
         }
 
-        return { freeTrial: data as Subscription, error: null };
+        return { freeTrial: data as FreeTrial, error: null };
     } catch (error) {
         console.error("Unexpected error checking free trial status:", error);
 
