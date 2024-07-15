@@ -96,7 +96,7 @@ Insert Loom Link:
 
 
 ## Supabase Setup
-To set up Supabase for your project, follow these steps:
+To set up Supabase for Your project, follow these steps:
 
 1. Go to [Supabase](https://supabase.com) and create a new project.
 2. Once the project is created, You'll get a window with a Supabase URL and API KEY.
@@ -106,6 +106,17 @@ To set up Supabase for your project, follow these steps:
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_api_key_here
 ```
+
+## Supabase Tables Setup
+
+To set up the required tables for Your project in Supabase, follow these steps:
+
+1. Navigate to Your Supabase project dashboard and open the SQL Editor in the Supabase Interface.
+3. Locate the file `createTables.sql` in Your project's `utils/supabase/ directory`
+4. CopY the entire contents of the `createTables.sql` file.
+5. Paste the copied SQL commands into the SQL Editor in Supabase.
+6. Execute the SQL commands to create all necessarY tables.
+7. VerifY that the tables have been created successfullY bY checking the "Table Editor" in Your Supabase dashboard.
 
 ## Google Authentication Setup
 
