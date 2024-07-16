@@ -86,14 +86,23 @@ Resend is used for sending emails in this project. Here's how to set it up:
 7. Inside the `utils/emails/client.ts` replace the `from: "onboarding@resend.dev"` with Your own email.
 
 
-we'll also need to setup resend to send supabase emails on behalf of it
-first, inside resend go to domains -> add an domain -> its best to use a subdomain. For instance, instead of using joinforj.com, use updates.joinforj.com
-Heres a setup video: https://supabase.com/partners/integrations/resend
-now all emails from supabase will be sent via resend
+# Resend Setup for Supabase
 
-Insert Loom Link:
+This guide will help you configure Resend to send emails on behalf of Supabase, enhancing your email delivery capabilities.
 
+## Steps to Set Up Resend
 
+1. **Add Your Domain in Resend**
+   - Navigate to Resend's dashboard
+   - Go to "Domains" -> "Add a Domain" (You can use the default settings)
+   - Important: Use a subdomain (e.g., `updates.yourdomain.com` instead of `yourdomain.com`)
+
+2. **Configure Resend with Supabase**
+   - Follow the setup instructions in this video: [Supabase-Resend Integration Guide](https://supabase.com/partners/integrations/resend)
+
+3. **Verify Configuration**
+   - Ensure all Supabase emails are now routing through Resend
+   - Meaning, whenever an email inside Supabase has been sent it should be also visible inside Resend.
 
 ## Supabase Setup
 To set up Supabase for Your project, follow these steps:
