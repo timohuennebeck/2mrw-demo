@@ -31,7 +31,7 @@ export const PreOrderEmailTemplate = ({
     twitterFounderUrl,
     twitterFounderTag,
 }: PreOrderEmailTemplateProps) => {
-    const previewText = `A personal thank you for pre-ordering the ${purchasedPackage} from us!`;
+    const previewText = `Thank You for pre-ordering the ${purchasedPackage} from us!`;
 
     return (
         <Html>
