@@ -131,7 +131,7 @@ To set up the required tables for Your project in Supabase, follow these steps:
 
 https://supabase.com/docs/guides/auth/social-login/auth-google?queryGroups=platform&platform=web&queryGroups=environment&environment=client
 
-Loom:
+You can also watch this Loom to see how to set up Google for Supabase:
 
 ## Configuration
 
