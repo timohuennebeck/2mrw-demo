@@ -127,6 +127,17 @@ To set up the required tables for Your project in Supabase, follow these steps:
 6. Execute the SQL commands to create all necessarY tables.
 7. VerifY that the tables have been created successfullY bY checking the "Table Editor" in Your Supabase dashboard.
 
+## Supabase Tables Policies
+
+To set up the required policies for each table in Supabase, follow these steps:
+
+1. Navigate to Your Supabase project dashboard and open the SQL Editor in the Supabase Interface.
+3. Locate the file `createPolicies.sql` in Your project's `utils/supabase/ directory`
+4. CopY the entire contents of the `createPolicies.sql` file.
+5. Paste the copied SQL commands into the SQL Editor in Supabase.
+6. Execute the SQL commands to create all necessarY policies.
+7. VerifY that the policies have been created successfullY bY checking the "Policies" which can be found under Authentication inside Your Supabase dashboard.
+
 ## Google Authentication Setup
 
 https://supabase.com/docs/guides/auth/social-login/auth-google?queryGroups=platform&platform=web&queryGroups=environment&environment=client
