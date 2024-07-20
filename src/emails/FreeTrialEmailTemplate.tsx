@@ -59,7 +59,7 @@ export const FreeTrialEmailTemplate = ({
                         </Text>
                         <Text className="text-black text-[14px] leading-[24px]">
                             P.S. Here's a special welcome gift: a{" "}
-                            <strong>full-access {trialDuration}-daY free trial </strong> of{" "}
+                            <strong>Full-Access {trialDuration}-DaY Free Trial </strong> of{" "}
                             {companyTitle}. You don't even need to enter a credit card. It's
                             risk-free and commitment-free.
                         </Text>
