@@ -79,7 +79,7 @@ export async function updateSession(request: request) {
     const hasOnGoingFreeTrial = freeTrial?.is_active ?? false;
 
     if (hasOnGoingFreeTrial) {
-        const isPastFreeTrialEndDate = freeTrial && freeTrial?.end_date >= new Date().toISOString();
+        const isPastFreeTrialEndDate = freeTrial && freeTrial?.end_date > new Date().toISOString();
 
         if (isPastFreeTrialEndDate) {
             const { success, error } = await endFreeTrial({ userId: user.id });
