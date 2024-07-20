@@ -2,8 +2,8 @@
 
 import { StripePriceId } from "@/config/subscriptionPlans";
 import { extractSubscriptionPlanDetails } from "@/helper/extractSubscriptionPlanDetails";
-import { updateUserSubscriptionStatus } from "@/utils/supabase/admin";
-import { checkFreeTrialStatus, checkUserExists, endFreeTrial } from "@/utils/supabase/queries";
+import { endUserFreeTrial, updateUserSubscriptionStatus } from "@/utils/supabase/admin";
+import { checkFreeTrialStatus, checkUserExists } from "@/utils/supabase/queries";
 import { createClient } from "@/utils/supabase/server";
 import axios from "axios";
 import { NextRequest as request, NextResponse as response } from "next/server";
@@ -59,7 +59,7 @@ export async function POST(req: request) {
                     });
 
                     if (freeTrial?.is_active) {
-                        const { success, error } = await endFreeTrial({ userId: user.id });
+                        const { success, error } = await endUserFreeTrial({ supabase, userId: user.id });
 
                         if (error) {
                             console.error("Error ending free trial");

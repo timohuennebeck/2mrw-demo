@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse as response, type NextRequest as request } from "next/server";
-import { checkFreeTrialStatus, checkSubscriptionStatus, endFreeTrial } from "./queries";
+import { checkFreeTrialStatus, checkSubscriptionStatus } from "./queries";
+import { endUserFreeTrial } from "./admin";
 
 export async function updateSession(request: request) {
     let supabaseResponse = response.next({
@@ -82,7 +83,7 @@ export async function updateSession(request: request) {
         const isPastFreeTrialEndDate = freeTrial && freeTrial?.end_date > new Date().toISOString();
 
         if (isPastFreeTrialEndDate) {
-            const { success, error } = await endFreeTrial({ userId: user.id });
+            const { success, error } = await endUserFreeTrial({ supabase, userId: user.id });
 
             if (error) {
                 console.error("Error ending free trial");

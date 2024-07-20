@@ -59,6 +59,35 @@ export const startUserFreeTrial = async ({
     return { freeTrial: data, error: null };
 };
 
+export const endUserFreeTrial = async ({ supabase, userId }: { supabase: SupabaseClient, userId: string }) => {
+    try {
+        const { error } = await supabase
+            .from("free_trials")
+            .update({
+                end_date: new Date().toISOString(),
+                is_active: false,
+            })
+            .eq("user_id", userId)
+            .single();
+
+        if (error) {
+            if (error.code === "PGRST116") {
+                // means that no match was found
+                return { success: null, error: null };
+            }
+
+            // triggered when some other error occurs
+            throw error;
+        }
+
+        return { success: true, error: null };
+    } catch (error) {
+        console.error("Unexpected error checking free trial status:", error);
+
+        return { success: null, error: error as Error };
+    }
+};
+
 export const updateUserSubscriptionStatus = async ({
     supabase,
     userId,
