@@ -1,13 +1,18 @@
+"use server";
+
 import { StripePriceId } from "@/config/subscriptionPlans";
 import { extractSubscriptionPlanDetails } from "@/helper/extractSubscriptionPlanDetails";
 import { updateUserSubscriptionStatus } from "@/utils/supabase/admin";
-import { checkUserExists } from "@/utils/supabase/queries";
+import { checkFreeTrialStatus, checkUserExists, endFreeTrial } from "@/utils/supabase/queries";
+import { createClient } from "@/utils/supabase/server";
 import axios from "axios";
 import { NextRequest as request, NextResponse as response } from "next/server";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_API_KEY ?? "");
 const stripeWebhook = process.env.NEXT_PUBLIC_STRIPE_WEBHOOK_SECRET ?? "";
+
+const supabase = createClient();
 
 export async function POST(req: request) {
     try {
@@ -40,15 +45,29 @@ export async function POST(req: request) {
 
                 if (userEmail && stripePriceId) {
                     const user = await checkUserExists({ userEmail });
+                    const { freeTrial } = await checkFreeTrialStatus({ userId: user.id });
 
-                    if (user) {
-                        // if a user purchases another product, his stripePriceId will be updated
-                        // to reflect the latest subscription
-                        await updateUserSubscriptionStatus({
-                            userId: user.id ?? "",
-                            stripePriceId: (stripePriceId as StripePriceId) ?? "",
-                            hasPremium: true
-                        });
+                    if (!user) return;
+
+                    // if a user purchases another product, his stripePriceId will be updated
+                    // to reflect the latest subscription
+                    await updateUserSubscriptionStatus({
+                        supabase,
+                        userId: user.id ?? "",
+                        stripePriceId: (stripePriceId as StripePriceId) ?? "",
+                        hasPremium: true,
+                    });
+
+                    if (freeTrial?.is_active) {
+                        const { success, error } = await endFreeTrial({ userId: user.id });
+
+                        if (error) {
+                            console.error("Error ending free trial");
+                        }
+
+                        if (success) {
+                            console.log("Free trial has been ended");
+                        }
                     }
                 } else {
                     console.error("Error missing customer email or Stripe price Id");
