@@ -31,7 +31,7 @@ export const PricingPlanCard = ({
     const router = useRouter();
 
     const fetchUser = async () => {
-        // this causes a 406, not acceptable error
+        // TODO: this causes a 406, not acceptable error
         const {
             data: { user },
             error,
@@ -113,7 +113,9 @@ export const PricingPlanCard = ({
                     toast.error("Error checking free trial status");
                 }
 
-                setHasCompletedFreeTrial(!!freeTrial);
+                if (freeTrial) {
+                    setHasCompletedFreeTrial(freeTrial?.end_date > new Date().toISOString());
+                }
             } catch (error) {
                 console.error("Error in getUserFreeTrialStatus:", error);
 
