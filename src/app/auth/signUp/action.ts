@@ -1,6 +1,5 @@
 "use server";
 
-import { createSubscriptionTable, createUserTable } from "@/utils/supabase/admin";
 import { checkUserExists } from "@/utils/supabase/queries";
 import { createClient } from "@/utils/supabase/server";
 
@@ -37,9 +36,6 @@ export async function signUp(formData: FormData) {
         if (!user) {
             return { error: "User creation failed." };
         }
-
-        await createUserTable({ user });
-        await createSubscriptionTable({ userId: user.id });
 
         return { success: true };
     } catch (err) {

@@ -1,11 +1,14 @@
 import { StripePriceId } from "@/config/subscriptionPlans";
 import { extractSubscriptionPlanDetails } from "../../helper/extractSubscriptionPlanDetails";
-import { createClient } from "./client";
-import { User } from "@supabase/supabase-js";
+import { SupabaseClient, User } from "@supabase/supabase-js";
 
-const supabase = createClient();
-
-export const createUserTable = async ({ user }: { user: User }) => {
+export const createUserTable = async ({
+    supabase,
+    user,
+}: {
+    supabase: SupabaseClient;
+    user: User;
+}) => {
     const { error } = await supabase.from("users").insert({
         user_id: user.id,
         created_at: new Date().toISOString(),
@@ -17,7 +20,13 @@ export const createUserTable = async ({ user }: { user: User }) => {
     if (error) throw error;
 };
 
-export const createSubscriptionTable = async ({ userId }: { userId: string }) => {
+export const createSubscriptionTable = async ({
+    supabase,
+    userId,
+}: {
+    supabase: SupabaseClient;
+    userId: string;
+}) => {
     const { error } = await supabase.from("subscriptions").insert({
         user_id: userId,
         created_at: new Date().toISOString(),
@@ -28,9 +37,11 @@ export const createSubscriptionTable = async ({ userId }: { userId: string }) =>
 };
 
 export const startUserFreeTrial = async ({
+    supabase,
     userId,
     freeTrialEndDate,
 }: {
+    supabase: SupabaseClient,
     userId: string;
     freeTrialEndDate: Date;
 }) => {
@@ -49,10 +60,12 @@ export const startUserFreeTrial = async ({
 };
 
 export const updateUserSubscriptionStatus = async ({
+    supabase,
     userId,
     stripePriceId,
     hasPremium,
 }: {
+    supabase: SupabaseClient
     userId: string;
     stripePriceId: string;
     hasPremium: boolean;

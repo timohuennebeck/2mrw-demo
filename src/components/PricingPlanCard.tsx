@@ -71,11 +71,13 @@ export const PricingPlanCard = ({
         }
 
         const { error: freeTrialError } = await startUserFreeTrial({
+            supabase,
             userId: user.id,
             freeTrialEndDate: freeTrialEndDate,
         });
 
         const { error: subscriptionError } = await updateUserSubscriptionStatus({
+            supabase,
             hasPremium: true,
             stripePriceId: stripePriceId,
             userId: user.id,
