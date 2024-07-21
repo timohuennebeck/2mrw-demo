@@ -67,7 +67,7 @@ export async function POST(req: request) {
                         }
 
                         if (success) {
-                            console.log("Free trial has been ended");
+                            console.log("Free Trial has been ended");
                         }
                     }
                 } else {

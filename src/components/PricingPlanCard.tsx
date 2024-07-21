@@ -13,6 +13,7 @@ import { FreeTrial } from "@/interfaces/FreeTrial";
 import { Subscription } from "@/interfaces/Subscription";
 import { formatDateToHumanFormat } from "@/helper/formatDateToHumanFormat";
 import { increaseDate } from "@/helper/increaseDate";
+import { SubscriptionStatus } from "@/app/enums/SubscriptionStatus";
 
 export const PricingPlanCard = ({
     name,
@@ -28,6 +29,8 @@ export const PricingPlanCard = ({
 }: StripeSubscriptionPlan) => {
     const [freeTrialStatus, setFreeTrialStatus] = useState<FreeTrialStatus | null>(null);
     const [freeTrialInfo, setFreeTrialInfo] = useState<FreeTrial | null>(null);
+
+    const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatus | null>(null);
     const [subscriptionInfo, setSubscriptionInfo] = useState<Subscription | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -98,69 +101,83 @@ export const PricingPlanCard = ({
 
         setIsLoading(false);
 
-        toast.success("Free trial has been started");
+        toast.success("Free Trial has been started");
 
         router.push("/");
     };
 
     useEffect(() => {
         const getUserFreeTrialStatus = async () => {
-            setIsLoading(true);
-
             try {
                 const user = await fetchUser();
-                const { status, freeTrial, error } = await checkFreeTrialStatus({
+                const {
+                    status: freeTrialStatus,
+                    freeTrial,
+                    error,
+                } = await checkFreeTrialStatus({
                     userId: user.id,
                 });
 
-                const { subscription } = await checkSubscriptionStatus({ userId: user.id });
+                const { status: subscriptionStatus, subscription } = await checkSubscriptionStatus({
+                    userId: user.id,
+                });
 
                 if (error) {
                     toast.error("Error checking free trial status");
                     setFreeTrialStatus(FreeTrialStatus.ERROR);
                 } else {
-                    setFreeTrialStatus(status);
+                    setFreeTrialStatus(freeTrialStatus);
                     setFreeTrialInfo(freeTrial);
+                    setSubscriptionStatus(subscriptionStatus);
                     setSubscriptionInfo(subscription);
                 }
             } catch (error) {
                 console.error("Error in getUserFreeTrialStatus:", error);
 
                 setFreeTrialStatus(FreeTrialStatus.ERROR);
-            } finally {
-                setIsLoading(false);
+                setSubscriptionStatus(SubscriptionStatus.ERROR);
             }
         };
 
         getUserFreeTrialStatus();
     }, []);
 
-    const renderFreeTrialButton = () => {
-        if (isLoading || freeTrialStatus === null) {
-            return <DefaultButton title="Loading..." disabled={true} onClick={() => {}} />;
+    const renderSubscriptionButtons = () => {
+        if (freeTrialStatus === null || subscriptionStatus === null) {
+            return <DefaultButton title="Loading..." disabled={true} />;
         }
 
-        const getFreeTrialButtonText = () => {
-            if (isLoading) return "Loading...";
-
-            return `Start Free Trial (${welcomeEmail === "true" ? "14" : "7"} Days)`;
-        };
-
-        switch (freeTrialStatus) {
-            case FreeTrialStatus.NOT_STARTED:
-                return (
-                    <DefaultButton
-                        onClick={startFreeTrial}
-                        title={getFreeTrialButtonText()}
-                        disabled={isLoading}
-                    />
-                );
-            case FreeTrialStatus.ACTIVE:
-            case FreeTrialStatus.EXPIRED:
-            case FreeTrialStatus.ERROR:
-            default:
-                return <ExternalButton title={buttonCta} href={stripePaymentLink} />;
+        if (freeTrialStatus === FreeTrialStatus.NOT_STARTED) {
+            return (
+                <DefaultButton
+                    onClick={startFreeTrial}
+                    title={`Start Free Trial (${welcomeEmail === "true" ? "14" : "7"} Days)`}
+                    disabled={isLoading}
+                />
+            );
         }
+
+        const hasOnGoingFreeTrial = freeTrialStatus === FreeTrialStatus.ACTIVE;
+        const hasPurchasedSubscription = subscriptionStatus === SubscriptionStatus.ACTIVE;
+
+        if (!hasOnGoingFreeTrial && hasPurchasedSubscription) {
+            const isCurrentPlan = subscriptionInfo?.stripe_price_id === stripePriceId;
+
+            // dont show this on a free trial
+            // because we want to give users the option to purchase a paid plan during the free trial
+            if (isCurrentPlan) {
+                return <DefaultButton title="Current Plan" disabled={true} />;
+            } else {
+                return <DefaultButton title="Upgrade Now" onClick={() => {}} disabled={false} />;
+            }
+        }
+
+        return (
+            <DefaultButton
+                title={buttonCta}
+                onClick={() => window.open(stripePaymentLink, "_blank")}
+            />
+        );
     };
 
     const renderFreeTrialIndicator = () => {
@@ -221,7 +238,7 @@ export const PricingPlanCard = ({
                 </ul>
             </div>
 
-            {renderFreeTrialButton()}
+            {renderSubscriptionButtons()}
 
             <p className="text-center text-sm text-gray-600 mt-4">Purchase Once. Forever Yours.</p>
         </div>

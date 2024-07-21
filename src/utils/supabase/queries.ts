@@ -2,6 +2,7 @@ import { Subscription } from "@/interfaces/Subscription";
 import { createClient } from "./client";
 import { FreeTrial } from "@/interfaces/FreeTrial";
 import { FreeTrialStatus } from "@/app/enums/FreeTrialStatus";
+import { SubscriptionStatus } from "@/app/enums/SubscriptionStatus";
 
 const supabase = createClient();
 
@@ -25,18 +26,34 @@ export const checkSubscriptionStatus = async ({ userId }: { userId: string }) =>
 
         if (error) {
             if (error.code === "PGRST116") {
-                // means that no match was found
-                return { subscription: null, error: null };
+                // no subscription found for the user
+                return {
+                    status: SubscriptionStatus.NOT_PURCHASED,
+                    subscription: null,
+                    error: null,
+                };
             }
-
-            // triggered when some other error occurs
             throw error;
         }
 
-        return { subscription: data as Subscription, error: null };
+        const response: Subscription = data;
+
+        if (response.has_premium) {
+            return {
+                status: SubscriptionStatus.ACTIVE,
+                subscription: response,
+                error: null,
+            };
+        } else {
+            return {
+                status: SubscriptionStatus.NOT_PURCHASED,
+                subscription: null,
+                error: null,
+            };
+        }
     } catch (error) {
         console.error("Unexpected error checking subscription status:", error);
-        return { subscription: null, error: error as Error };
+        return { status: SubscriptionStatus.ERROR, subscription: null, error: error as Error };
     }
 };
 
