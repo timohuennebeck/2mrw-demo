@@ -45,8 +45,8 @@ export async function GET(request: Request) {
                 });
 
                 if (!existingUser) {
-                    await createUserTable({ user });
-                    await createSubscriptionTable({ userId: user.id });
+                    await createUserTable({ supabase, user });
+                    await createSubscriptionTable({ supabase, userId: user.id });
 
                     axios.post(`${process.env.NEXT_PUBLIC_SITE_URL}/api/sendUserFreeTrialEmail`, {
                         userEmail: user.user_metadata.email ?? "",

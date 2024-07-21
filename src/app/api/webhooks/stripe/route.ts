@@ -1,5 +1,6 @@
 "use server";
 
+import { FreeTrialStatus } from "@/app/enums/FreeTrialStatus";
 import { StripePriceId } from "@/config/subscriptionPlans";
 import { extractSubscriptionPlanDetails } from "@/helper/extractSubscriptionPlanDetails";
 import { endUserFreeTrial, updateUserSubscriptionStatus } from "@/utils/supabase/admin";
@@ -45,7 +46,7 @@ export async function POST(req: request) {
 
                 if (userEmail && stripePriceId) {
                     const user = await checkUserExists({ userEmail });
-                    const { freeTrial } = await checkFreeTrialStatus({ userId: user.id });
+                    const { status } = await checkFreeTrialStatus({ userId: user.id });
 
                     if (!user) return;
 
@@ -58,7 +59,7 @@ export async function POST(req: request) {
                         hasPremium: true,
                     });
 
-                    if (freeTrial?.is_active) {
+                    if (status === FreeTrialStatus.ACTIVE) {
                         const { success, error } = await endUserFreeTrial({ supabase, userId: user.id });
 
                         if (error) {

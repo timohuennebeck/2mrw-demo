@@ -82,7 +82,7 @@ export const endUserFreeTrial = async ({ supabase, userId }: { supabase: Supabas
 
         return { success: true, error: null };
     } catch (error) {
-        console.error("Unexpected error checking free trial status:", error);
+        console.error("Unexpected error ending free trial:", error);
 
         return { success: null, error: error as Error };
     }

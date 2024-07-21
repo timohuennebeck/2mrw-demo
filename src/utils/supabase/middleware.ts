@@ -1,7 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse as response, type NextRequest as request } from "next/server";
-import { checkFreeTrialStatus, checkSubscriptionStatus } from "./queries";
-import { endUserFreeTrial } from "./admin";
+import { checkSubscriptionStatus } from "./queries";
 
 export async function updateSession(request: request) {
     let supabaseResponse = response.next({
@@ -69,31 +68,7 @@ export async function updateSession(request: request) {
         return { hasPremium: false, error: "Failed to check subscription status" };
     }
 
-    const { freeTrial, error: freeTrialError } = await checkFreeTrialStatus({ userId: user.id });
-
-    if (freeTrialError) {
-        console.error("Error checking free trial:", freeTrialError);
-        return { hasOnGoingFreeTrial: false, error: "Failed to check free trial status" };
-    }
-
     const hasPremiumSubscription = subscription?.has_premium ?? false;
-    const hasOnGoingFreeTrial = freeTrial?.is_active ?? false;
-
-    if (hasOnGoingFreeTrial) {
-        const isPastFreeTrialEndDate = freeTrial && freeTrial?.end_date > new Date().toISOString();
-
-        if (isPastFreeTrialEndDate) {
-            const { success, error } = await endUserFreeTrial({ supabase, userId: user.id });
-
-            if (error) {
-                console.error("Error ending free trial");
-            }
-
-            if (success) {
-                console.log("Free trial has been ended");
-            }
-        }
-    }
 
     // non-premium users should be redirected to the choosePricingPlan page to choose a plan
     if (!hasPremiumSubscription && request.nextUrl.pathname !== "/choosePricingPlan") {

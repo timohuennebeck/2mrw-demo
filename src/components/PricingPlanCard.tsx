@@ -3,11 +3,16 @@ import { StripeSubscriptionPlan } from "@/interfaces/StripeSubscriptionPlan";
 import ExternalButton from "./ExternalButton";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { checkFreeTrialStatus } from "@/utils/supabase/queries";
+import { checkFreeTrialStatus, checkSubscriptionStatus } from "@/utils/supabase/queries";
 import { createClient } from "@/utils/supabase/client";
 import { startUserFreeTrial, updateUserSubscriptionStatus } from "@/utils/supabase/admin";
 import DefaultButton from "./DefaultButton";
 import { toast } from "sonner";
+import { FreeTrialStatus } from "@/app/enums/FreeTrialStatus";
+import { FreeTrial } from "@/interfaces/FreeTrial";
+import { Subscription } from "@/interfaces/Subscription";
+import { formatDateToHumanFormat } from "@/helper/formatDateToHumanFormat";
+import { increaseDate } from "@/helper/increaseDate";
 
 export const PricingPlanCard = ({
     name,
@@ -21,7 +26,9 @@ export const PricingPlanCard = ({
     features,
     isHighlighted,
 }: StripeSubscriptionPlan) => {
-    const [hasCompletedFreeTrial, setHasCompletedFreeTrial] = useState(false);
+    const [freeTrialStatus, setFreeTrialStatus] = useState<FreeTrialStatus | null>(null);
+    const [freeTrialInfo, setFreeTrialInfo] = useState<FreeTrial | null>(null);
+    const [subscriptionInfo, setSubscriptionInfo] = useState<Subscription | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
     const searchParams = useSearchParams();
@@ -48,13 +55,6 @@ export const PricingPlanCard = ({
         }
 
         return user;
-    };
-
-    const increaseDate = ({ date, days }: { date: Date; days: number }) => {
-        let result = new Date(date);
-        result.setDate(result.getDate() + days);
-
-        return result;
     };
 
     const startFreeTrial = async () => {
@@ -105,34 +105,89 @@ export const PricingPlanCard = ({
 
     useEffect(() => {
         const getUserFreeTrialStatus = async () => {
+            setIsLoading(true);
+
             try {
                 const user = await fetchUser();
-                const { freeTrial, error } = await checkFreeTrialStatus({ userId: user.id });
+                const { status, freeTrial, error } = await checkFreeTrialStatus({
+                    userId: user.id,
+                });
+
+                const { subscription } = await checkSubscriptionStatus({ userId: user.id });
 
                 if (error) {
                     toast.error("Error checking free trial status");
-                }
-
-                if (freeTrial) {
-                    setHasCompletedFreeTrial(freeTrial?.end_date > new Date().toISOString());
+                    setFreeTrialStatus(FreeTrialStatus.ERROR);
+                } else {
+                    setFreeTrialStatus(status);
+                    setFreeTrialInfo(freeTrial);
+                    setSubscriptionInfo(subscription);
                 }
             } catch (error) {
                 console.error("Error in getUserFreeTrialStatus:", error);
 
-                setHasCompletedFreeTrial(false);
+                setFreeTrialStatus(FreeTrialStatus.ERROR);
+            } finally {
+                setIsLoading(false);
             }
         };
 
         getUserFreeTrialStatus();
     }, []);
 
+    const renderFreeTrialButton = () => {
+        if (isLoading || freeTrialStatus === null) {
+            return <DefaultButton title="Loading..." disabled={true} onClick={() => {}} />;
+        }
+
+        const getFreeTrialButtonText = () => {
+            if (isLoading) return "Loading...";
+
+            return `Start Free Trial (${welcomeEmail === "true" ? "14" : "7"} Days)`;
+        };
+
+        switch (freeTrialStatus) {
+            case FreeTrialStatus.NOT_STARTED:
+                return (
+                    <DefaultButton
+                        onClick={startFreeTrial}
+                        title={getFreeTrialButtonText()}
+                        disabled={isLoading}
+                    />
+                );
+            case FreeTrialStatus.ACTIVE:
+            case FreeTrialStatus.EXPIRED:
+            case FreeTrialStatus.ERROR:
+            default:
+                return <ExternalButton title={buttonCta} href={stripePaymentLink} />;
+        }
+    };
+
+    const renderFreeTrialIndicator = () => {
+        if (freeTrialStatus !== FreeTrialStatus.ACTIVE) return null;
+
+        if (!freeTrialInfo?.end_date) return null;
+
+        if (subscriptionInfo?.stripe_price_id !== stripePriceId) return null;
+
+        return (
+            <div className="bg-black text-white text-sm px-2.5 py-0.5 rounded-md mb-4 text-center whitespace-nowrap">
+                Free Trial End Date: {formatDateToHumanFormat(freeTrialInfo.end_date)}
+            </div>
+        );
+    };
+
     return (
         <div
-            className={`bg-white rounded-2xl shadow-lg border p-8 ${
+            className={`bg-white rounded-2xl shadow-lg border p-8 relative ${
                 isHighlighted ? "border-black" : ""
             }`}
         >
             <div className="mb-6">
+                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
+                    {renderFreeTrialIndicator()}
+                </div>
+
                 <h3 className="text-lg mb-6 font-medium">{name}</h3>
 
                 <p className="text-gray-600 line-through font-medium">${previousPrice}</p>
@@ -166,19 +221,7 @@ export const PricingPlanCard = ({
                 </ul>
             </div>
 
-            {hasCompletedFreeTrial ? (
-                <ExternalButton title={buttonCta} href={stripePaymentLink} />
-            ) : (
-                <DefaultButton
-                    onClick={startFreeTrial}
-                    title={
-                        isLoading
-                            ? "Loading..."
-                            : `Start Free Trial (${welcomeEmail === "true" ? "14" : "7"} Days)`
-                    }
-                    disabled={isLoading}
-                />
-            )}
+            {renderFreeTrialButton()}
 
             <p className="text-center text-sm text-gray-600 mt-4">Purchase Once. Forever Yours.</p>
         </div>
