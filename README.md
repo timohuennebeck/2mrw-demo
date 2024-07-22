@@ -195,7 +195,7 @@ Update the following values in Your project:
 
 Inside the `api/sendFreeTrialEmail`, `api/sendOrderConfirmationEmail`, and `api/sendPreOrderEmail` folders, update all required fields like `estimatedLaunchDate`, `companyTitle`, etc.
 
-# Deploying on Vercel
+## DeploYing on Vercel
 
 Follow these steps to deploy your project on Vercel:
 
