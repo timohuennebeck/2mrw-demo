@@ -7,7 +7,9 @@
 3. [Resend Email Service Setup](#resend-email-service-setup)
 4. [Email Configuration](#email-configuration)
 5. [DeploYing on Vercel](#deploying-on-vercel)
-6. [Miscellaneous](#miscellaneous)
+6. [Running The Project](#running-the-project)
+7. [Miscellaneous](#miscellaneous)
+8. [Important Information](#important-information)
 
 ## Initial Setup
 
@@ -198,14 +200,6 @@ Follow these steps to deploy your project on Vercel:
 - Use Vercel's Preview Deployments feature to test changes before merging to production
 - Regularly check your deployment logs for any issues or warnings
 
-
-
-## Miscellaneous
-
-Have filled out all locale variables inside the .env.local file for local development. These can be found inside the .env.local.example file.
-
-For live development, ensure to have values for each one inside Vercel.
-
 ## Running the Project
 
 You've finished the setup and configuration. You can now:
@@ -219,3 +213,13 @@ You've finished the setup and configuration. You can now:
 2. Open [http://localhost:3000](http://localhost:3000) in Your browser to view the project.
 
 Remember to keep Your API KEYS and sensitive information secure and never commit them to version control.
+
+## Miscellaneous
+
+Have filled out all locale variables inside the .env.local file for local development. These can be found inside the .env.local.example file.
+
+## Important Information
+
+CurrentlY, the project sends out a PreOrderConfirmationEmail once the user signs up!!
+
+In order to send an order confirmation email upon signing up, You'll need to navigate to the `api/webhooks/stripe/route.ts` file and comment out the `sendPreOrderEmail` axios call and comment in the `sendOrderConfirmationEmail` call.
