@@ -65,7 +65,7 @@ export const OrderConfirmationEmailTemplate = ({
                             been successfully processed.
                         </Text>
                         <Text className="text-black text-[14px] leading-[24px] mt-4">
-                            To help You get the most out our product, I've created a quick video
+                            To help you get the most out our product, I've created a quick video
                             walkthrough.
                         </Text>
                         <Text className="text-black text-[14px] leading-[24px] mt-4">
