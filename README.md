@@ -202,7 +202,7 @@ Follow these steps to deploy your project on Vercel:
 
 ## Miscellaneous
 
-Ensure to have all locale variables inside the .env.local file for local development. These can be found inside the .env.local.example file.
+Have filled out all locale variables inside the .env.local file for local development. These can be found inside the .env.local.example file.
 
 For live development, ensure to have values for each one inside Vercel.
 
