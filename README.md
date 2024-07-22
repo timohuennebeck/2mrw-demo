@@ -96,7 +96,7 @@ This guide will help you configure Resend to send emails on behalf of Supabase, 
 
 1. **Add Your Domain in Resend**
    - Navigate to Resend's dashboard
-   - Go to "Domains" -> "Add a Domain" (You can use the default settings)
+   - Go to "Domains" → "Add a Domain" (You can use the default settings)
    - Important: Use a subdomain (e.g., `updates.yourdomain.com` instead of `yourdomain.com`)
 
 2. **Configure Resend with Supabase**
@@ -185,13 +185,13 @@ Follow these steps to deploy your project on Vercel:
    - Follow Vercel's instructions to add the necessarY DNS records to Your domain provider (e.g., GoDaddY)
 
 7. **Update Environment Variables**
-   - Once your custom domain is set up, go to 'Settings' -> 'Environment Variables'
+   - Once your custom domain is set up, go to 'Settings' → 'Environment Variables'
    - Find the `NEXT_PUBLIC_SITE_URL` variable
    - Update its value to Your new domain (e.g., `https://joinforj.com`)
 
 8. **RedeploY**
    - If You made changes to environment variables, You will need to redeploY Your project
-   - Click on Your project -> 'Deployments', find the latest deployment, click the three dots and click 'Redeploy'
+   - Click on Your project → 'Deployments', find the latest deployment, click the three dots and click 'Redeploy'
 
 ## Tips
 - Enable automatic deployments in your project settings to deploy on every push to your main branch

@@ -11,7 +11,7 @@ import axios from "axios";
 import { NextRequest as request, NextResponse as response } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_API_KEY ?? "");
+const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY ?? "");
 const stripeWebhook = process.env.NEXT_PUBLIC_STRIPE_WEBHOOK_SECRET ?? "";
 
 const supabase = createClient();
