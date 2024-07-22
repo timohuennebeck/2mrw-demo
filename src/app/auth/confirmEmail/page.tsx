@@ -47,7 +47,7 @@ const EmailConfirmationPage = () => {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-2xl shadow-lg border p-8 max-w-md w-full">
                 <div className="flex justify-center mb-6">
-                    <Image src="https://i.imgur.com/e0cWC6I.png" alt="" width={48} height={48} />
+                    <Image src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL ?? ""} alt="" width={48} height={48} />
                 </div>
 
                 <h1 className="text-2xl font-semibold text-center mb-6">
