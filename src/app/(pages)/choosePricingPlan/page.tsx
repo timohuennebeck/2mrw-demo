@@ -56,9 +56,8 @@ const ChoosePricingPlanPage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                     {SUBSCRIPTION_PLANS.map((plan, index) => (
-                        <Suspense>
+                        <Suspense key={index}>
                             <PricingPlanCard
-                                key={index}
                                 {...plan}
                                 stripePaymentLink={
                                     userEmail
