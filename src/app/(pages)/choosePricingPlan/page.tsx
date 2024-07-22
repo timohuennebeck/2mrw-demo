@@ -5,8 +5,7 @@ import SignOutButton from "@/components/SignOutButton";
 import { SUBSCRIPTION_PLANS } from "@/config/subscriptionPlans";
 import { createClient } from "@/utils/supabase/client";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 const ChoosePricingPlanPage = () => {
     const supabase = createClient();

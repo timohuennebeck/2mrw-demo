@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
 import DefaultButton from "@/components/DefaultButton";
 import { createClient } from "@/utils/supabase/client";
-import { toast } from "sonner";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
+import { toast } from "sonner";
 
 const EmailConfirmationContent = () => {
     const [isResending, setIsResending] = useState(false);
