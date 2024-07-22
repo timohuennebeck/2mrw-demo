@@ -1,40 +1,40 @@
 "use client";
 
-import DefaultButton from "@/components/DefaultButton";
 import { PricingPlanCard } from "@/components/PricingPlanCard";
+import SignOutButton from "@/components/SignOutButton";
 import { SUBSCRIPTION_PLANS } from "@/config/subscriptionPlans";
 import { createClient } from "@/utils/supabase/client";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import { useEffect, useState } from "react";
 
 const ChoosePricingPlanPage = () => {
-    const router = useRouter();
     const supabase = createClient();
 
-    const handleSignOut = async () => {
-        try {
-            const { error } = await supabase.auth.signOut();
+    const [userEmail, setUserEmail] = useState("");
 
-            if (error) {
-                console.error("Error signing out:", error.message);
-                toast.error(`Error signing out: ${error.message}`);
-            } else {
-                toast.success("Sign out successful!");
+    useEffect(() => {
+        const fetchUserEmail = async () => {
+            try {
+                const {
+                    data: { user },
+                    error,
+                } = await supabase.auth.getUser();
 
-                router.replace("/auth/signIn");
+                if (error) throw error;
+
+                if (user) setUserEmail(encodeURIComponent(user.email ?? ""));
+            } catch (error) {
+                console.error("Error fetching user email:", error);
             }
-        } catch (err) {
-            console.error("Unexpected error during sign out:", err);
+        };
 
-            toast.error(`There has been an unexpected error: ${err}`);
-        }
-    };
+        fetchUserEmail();
+    }, [supabase.auth]);
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
             <div className="absolute top-8 right-8">
-                <DefaultButton title="Sign out" onClick={handleSignOut} />
+                <SignOutButton title="Sign out" />
             </div>
 
             <div className="p-8 max-w-4xl w-full">
@@ -50,7 +50,15 @@ const ChoosePricingPlanPage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                     {SUBSCRIPTION_PLANS.map((plan, index) => (
-                        <PricingPlanCard key={index} {...plan} />
+                        <PricingPlanCard
+                            key={index}
+                            {...plan}
+                            stripePaymentLink={
+                                userEmail
+                                    ? `${plan.stripePaymentLink}?prefilled_email=${userEmail}`
+                                    : plan.stripePaymentLink
+                            }
+                        />
                     ))}
                 </div>
 

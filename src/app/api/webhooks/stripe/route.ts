@@ -50,16 +50,15 @@ export async function POST(req: request) {
 
                     if (!user) return;
 
-                    const { status } = await checkFreeTrialStatus({ userId: user.user_id });
-
-                    // if a user purchases another product, his stripePriceId will be updated
-                    // to reflect the latest subscription
+                    // update to the most recent subscription if a user purchases another paid plan
                     await updateUserSubscriptionStatus({
                         supabase,
                         userId: user.user_id ?? "",
                         stripePriceId: (stripePriceId as StripePriceId) ?? "",
                         hasPremium: true,
                     });
+
+                    const { status } = await checkFreeTrialStatus({ userId: user.user_id });
 
                     if (status === FreeTrialStatus.ACTIVE) {
                         const { success, error } = await endUserFreeTrial({

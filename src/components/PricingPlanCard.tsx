@@ -1,6 +1,5 @@
 import { CheckBadgeIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { StripeSubscriptionPlan } from "@/interfaces/StripeSubscriptionPlan";
-import ExternalButton from "./ExternalButton";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { checkFreeTrialStatus, checkSubscriptionStatus } from "@/utils/supabase/queries";
@@ -164,11 +163,17 @@ export const PricingPlanCard = ({
             const isCurrentPlan = subscriptionInfo?.stripe_price_id === stripePriceId;
 
             // dont show this on a free trial
-            // because we want to give users the option to purchase a paid plan during the free trial
+            // as we want to give users the option to upgrade to a paid plan during the free trial
             if (isCurrentPlan) {
                 return <DefaultButton title="Current Plan" disabled={true} />;
             } else {
-                return <DefaultButton title="Upgrade Now" onClick={() => {}} disabled={false} />;
+                return (
+                    <DefaultButton
+                        title="Upgrade Now"
+                        onClick={() => window.open(stripePaymentLink)}
+                        disabled={false}
+                    />
+                );
             }
         }
 
