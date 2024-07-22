@@ -42,7 +42,7 @@ const ChoosePricingPlanPage = () => {
                 <div className="flex justify-center mb-6">
                     <Image
                         src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL ?? ""}
-                        alt=""
+                        alt="Logo"
                         width={48}
                         height={48}
                     />
