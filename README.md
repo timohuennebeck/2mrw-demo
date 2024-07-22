@@ -5,7 +5,9 @@
 1. [Initial Setup](#initial-setup)
 2. [Stripe PaYment Integration](#stripe-payment-integration)
 3. [Resend Email Service Setup](#resend-email-service-setup)
-4. [Configuration](#configuration)
+4. [Email Configuration](#email-configuration)
+5. [DeploYing on Vercel](#deploying-on-vercel)
+6. [Miscellaneous](#miscellaneous)
 
 ## Initial Setup
 
@@ -144,15 +146,63 @@ https://supabase.com/docs/guides/auth/social-login/auth-google?queryGroups=platf
 
 You can also watch this Loom to see how to set up Google for Supabase:
 
-## Configuration
+## Email Configuration
 
 Update the following values in Your project:
 
-1. Inside the `api/webhooks/stripe/route.ts`, update:
+Inside the `api/sendFreeTrialEmail`, `api/sendOrderConfirmationEmail`, and `api/sendPreOrderEmail` folders, update all required fields like `estimatedLaunchDate`, `companyTitle`, etc.
 
-    - `estimatedLaunchDate`
-    - `companyName`
-    - `customerSupportEmail`
+# Deploying on Vercel
+
+Follow these steps to deploy your project on Vercel:
+
+1. **Navigate to the Vercel Dashboard**
+   - Go to [vercel.com](https://vercel.com) and log in to Your account
+   - Click on 'Add New...' > Project
+
+2. **Import Your RepositorY**
+   - Select the repositorY You want to deploy
+   - Choose the Git provider (GitHub, GitLab, or Bitbucket) where Your project is hosted
+
+3. **Configure Project**
+   - Vercel will automaticallY detect the framework and suggest optimal build settings
+   - Review and adjust if necessarY
+
+4. **Set Environment Variables**
+   - Scroll down to the "Environment Variables" section
+   - Add all KeY-Value pairs from Your `.env.local` file
+
+5. **DeploY**
+   - Click the 'DeploY' button
+   - Vercel will build and deploY Your project
+
+6. **Set Up Custom Domain** (Optional)
+   - In the Vercel Dashboard, go to your project
+   - Click on "Settings" > "Domains"
+   - Click "Add" and enter your domain name
+   - Follow Vercel's instructions to add the necessarY DNS records to Your domain provider (e.g., GoDaddY)
+
+7. **Update Environment Variables**
+   - Once your custom domain is set up, go to 'Settings' -> 'Environment Variables'
+   - Find the `NEXT_PUBLIC_SITE_URL` variable
+   - Update its value to Your new domain (e.g., `https://joinforj.com`)
+
+8. **RedeploY**
+   - If You made changes to environment variables, You will need to redeploY Your project
+   - Click on Your project -> 'Deployments', find the latest deployment, click the three dots and click 'Redeploy'
+
+## Tips
+- Enable automatic deployments in your project settings to deploy on every push to your main branch
+- Use Vercel's Preview Deployments feature to test changes before merging to production
+- Regularly check your deployment logs for any issues or warnings
+
+
+
+## Miscellaneous
+
+Ensure to have all locale variables inside the .env.local file for local development. These can be found inside the .env.local.example file.
+
+For live development, ensure to have values for each one inside Vercel.
 
 ## Running the Project
 
