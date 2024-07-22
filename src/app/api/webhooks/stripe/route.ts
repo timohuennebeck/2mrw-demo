@@ -3,9 +3,10 @@
 import { FreeTrialStatus } from "@/app/enums/FreeTrialStatus";
 import { StripePriceId } from "@/config/subscriptionPlans";
 import { extractSubscriptionPlanDetails } from "@/helper/extractSubscriptionPlanDetails";
+import { User } from "@/interfaces/User";
 import { endUserFreeTrial, updateUserSubscriptionStatus } from "@/utils/supabase/admin";
+import { createClient } from "@/utils/supabase/client";
 import { checkFreeTrialStatus, checkUserExists } from "@/utils/supabase/queries";
-import { createClient } from "@/utils/supabase/server";
 import axios from "axios";
 import { NextRequest as request, NextResponse as response } from "next/server";
 import Stripe from "stripe";
@@ -45,22 +46,26 @@ export async function POST(req: request) {
                 const stripePriceId = session.line_items?.data[0].price?.id;
 
                 if (userEmail && stripePriceId) {
-                    const user = await checkUserExists({ userEmail });
-                    const { status } = await checkFreeTrialStatus({ userId: user.id });
+                    const user: User = await checkUserExists({ userEmail });
 
                     if (!user) return;
+
+                    const { status } = await checkFreeTrialStatus({ userId: user.user_id });
 
                     // if a user purchases another product, his stripePriceId will be updated
                     // to reflect the latest subscription
                     await updateUserSubscriptionStatus({
                         supabase,
-                        userId: user.id ?? "",
+                        userId: user.user_id ?? "",
                         stripePriceId: (stripePriceId as StripePriceId) ?? "",
                         hasPremium: true,
                     });
 
                     if (status === FreeTrialStatus.ACTIVE) {
-                        const { success, error } = await endUserFreeTrial({ supabase, userId: user.id });
+                        const { success, error } = await endUserFreeTrial({
+                            supabase,
+                            userId: user.user_id,
+                        });
 
                         if (error) {
                             console.error("Error ending free trial");

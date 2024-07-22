@@ -78,9 +78,7 @@ export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
         const startDate = new Date(freeTrial.start_date);
         const endDate = new Date(freeTrial.end_date);
 
-        if (now < startDate) {
-            return { status: FreeTrialStatus.NOT_STARTED, freeTrial, error: null };
-        } else if (now >= startDate && now <= endDate) {
+        if (now >= startDate && now <= endDate) {
             return { status: FreeTrialStatus.ACTIVE, freeTrial, error: null };
         } else {
             return { status: FreeTrialStatus.EXPIRED, freeTrial, error: null };
