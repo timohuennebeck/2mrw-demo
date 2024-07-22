@@ -146,6 +146,8 @@ https://supabase.com/docs/guides/auth/social-login/auth-google?queryGroups=platf
 
 You can also watch this Loom to see how to set up Google for Supabase:
 
+https://www.loom.com/share/da7f7f53608945a69b7fb3dc04862a73?sid=686c75da-f3b0-4a07-8bea-ec90ad0d9c4b
+
 ## Email Configuration
 
 Update the following values in Your project:
