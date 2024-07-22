@@ -54,12 +54,12 @@ export const FreeTrialEmailTemplate = ({
                             Hi {userFirstName},
                         </Text>
                         <Text className="text-black text-[14px] leading-[24px]">
-                            I'm thrilled You've decided to check out {companyTitle}! It's alwaYs
+                            I'm thrilled you've decided to check out {companyTitle}! It's always
                             exciting to welcome someone new to our gang! 🤩
                         </Text>
                         <Text className="text-black text-[14px] leading-[24px]">
                             P.S. Here's a special welcome gift: a{" "}
-                            <strong>Full-Access {trialDuration}-DaY Free Trial </strong> of{" "}
+                            <strong>Full-Access {trialDuration}-Day Free Trial </strong> of{" "}
                             {companyTitle}. You don't even need to enter a credit card. It's
                             risk-free and commitment-free.
                         </Text>
@@ -70,11 +70,11 @@ export const FreeTrialEmailTemplate = ({
                             Start Free Trial Now
                         </Button>
                         <Text className="text-[12px] leading-[18px] mt-4 mb-0 text-center italic">
-                            You can also copY and paste this link into Your browser:{" "}
+                            You can also copy and paste this link into your browser:{" "}
                             {trialSignupLink}
                         </Text>
                         <Text className="text-black text-[14px] leading-[24px]">
-                            If You have anY questions or need clarification about our services,
+                            If you have any questions or need clarification about our services,
                             please don't hesitate to reach out to me.
                         </Text>
                         <Text className="text-[14px] leading-[24px]">
@@ -82,7 +82,7 @@ export const FreeTrialEmailTemplate = ({
                             <Link href={twitterFounderUrl} className="text-blue-500">
                                 {twitterFounderTag}
                             </Link>
-                            , where I regularlY share updates about {companyTitle} and engage with
+                            , where I regularly share updates about {companyTitle} and engage with
                             our users.
                         </Text>
                         <Hr className="border border-solid border-gray-200 my-[26px] mx-0 w-full" />

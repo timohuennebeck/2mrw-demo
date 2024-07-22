@@ -31,7 +31,7 @@ export const PreOrderEmailTemplate = ({
     twitterFounderUrl,
     twitterFounderTag,
 }: PreOrderEmailTemplateProps) => {
-    const previewText = `Thank You for pre-ordering the ${purchasedPackage} from us!`;
+    const previewText = `Thank You for pre-ordering the ${purchasedPackage}!`;
 
     return (
         <Html>
@@ -60,12 +60,12 @@ export const PreOrderEmailTemplate = ({
                             pre-ordering the <strong>{purchasedPackage}</strong>. You're awesome! 😃
                         </Text>
                         <Text className="text-black text-[14px] leading-[24px]">
-                            I know You're eager to get started, so here's what You can look forward
+                            I know you're eager to get started, so here's what you can look forward
                             to:
                         </Text>
                         <Section className="ml-4">
                             <Text className="text-black text-[14px] leading-[24px]">
-                                1. Every FridaY, You'll get exclusive insider updates from me,
+                                1. Every Friday, you'll get exclusive insider updates from me,
                                 sharing the latest developments, challenges, and victories.
                             </Text>
                             <Text className="text-black text-[14px] leading-[24px]">
@@ -73,19 +73,19 @@ export const PreOrderEmailTemplate = ({
                                 <strong>{estimatedLaunchDate}</strong>.
                             </Text>
                             <Text className="text-black text-[14px] leading-[24px]">
-                                3. You'll get prioritY access when it launches, with a personal
+                                3. You'll get priority access when it launches, with a personal
                                 email from me on how to get started.
                             </Text>
                             <Text className="text-black text-[14px] leading-[24px]">
                                 4. You'll have a direct line to me for feedback and suggestions as
-                                an earlY supporter. Feel free to reach out to me on Twitter at{" "}
+                                an early supporter. Feel free to reach out to me on Twitter at{" "}
                                 <Link href={twitterFounderUrl} className="text-blue-500">
                                     {twitterFounderTag}
                                 </Link>{" "}
                             </Text>
                         </Section>
                         <Text className="text-black text-[14px] leading-[24px]">
-                            Thanks again for being one of the first adopters. I'm pouring mY heart
+                            Thanks again for being one of the first adopters. I'm pouring my heart
                             into making {companyTitle} exceptional 🤩
                         </Text>
                         <Hr className="border border-solid border-gray-200 my-[26px] mx-0 w-full" />

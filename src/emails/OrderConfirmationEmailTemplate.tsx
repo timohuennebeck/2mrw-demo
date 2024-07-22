@@ -62,14 +62,14 @@ export const OrderConfirmationEmailTemplate = ({
                         </Text>
                         <Text className="text-black text-[14px] leading-[24px]">
                             Great news! Your transaction for <strong>{purchasedPackage}</strong> has
-                            been successfullY processed.
+                            been successfully processed.
                         </Text>
                         <Text className="text-black text-[14px] leading-[24px] mt-4">
                             To help You get the most out our product, I've created a quick video
                             walkthrough.
                         </Text>
                         <Text className="text-black text-[14px] leading-[24px] mt-4">
-                            It covers everYthing You need to know to hit the ground running with{" "}
+                            It covers everything you need to know to hit the ground running with{" "}
                             {companyTitle}.
                         </Text>
                         <Button
@@ -79,7 +79,7 @@ export const OrderConfirmationEmailTemplate = ({
                             Watch the Getting Started Video
                         </Button>
                         <Text className="text-black text-[14px] leading-[24px]">
-                            P.S.: This is sooo exciting! I'd love to hear about how You're using{" "}
+                            P.S.: This is sooo exciting! I'd love to hear about how you're using{" "}
                             {companyTitle}. Feel free to share it with me on Twitter! 😃
                         </Text>
                         <Text className="text-[14px] leading-[22px] mt-2">
