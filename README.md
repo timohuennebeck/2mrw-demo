@@ -202,7 +202,7 @@ Follow these steps to deploy your project on Vercel:
 1. **Navigate to the Vercel Dashboard**
 
     - Go to [vercel.com](https://vercel.com) and log in to Your account
-    - Click on 'Add New...' > Project
+    - Click on 'Add New...' → Project
 
 2. **Import Your RepositorY**
 
@@ -227,7 +227,7 @@ Follow these steps to deploy your project on Vercel:
 6. **Set Up Custom Domain** (Optional)
 
     - In the Vercel Dashboard, go to your project
-    - Click on "Settings" > "Domains"
+    - Click on "Settings" → "Domains"
     - Click "Add" and enter your domain name
     - Follow Vercel's instructions to add the necessarY DNS records to Your domain provider (e.g., GoDaddY)
 
