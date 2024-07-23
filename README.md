@@ -28,13 +28,9 @@ Install dependencies: `npm install`
 
     - `cd new-project-name`
 
-3. **Remove the old Git historY**
+3. **Remove existing remote origin**
 
-    - `rm -rf .git`
-
-4. **Initialize a new Git repositorY**
-
-    - `git init`
+    - `git remote remove origin`
 
 5. **Add all files to the new repositorY**
 
