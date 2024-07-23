@@ -9,8 +9,9 @@
 5. [Email Configuration](#email-configuration)
 6. [DeploYing on Vercel](#deploying-on-vercel)
 7. [Running The Project](#running-the-project)
-8. [Miscellaneous](#miscellaneous)
-9. [Important Information](#important-information)
+8. [Creating Documentation](#creating-documentation)
+9. [Miscellaneous](#miscellaneous)
+10. [Important Information](#important-information)
 
 ## Initial Setup
 
@@ -255,6 +256,37 @@ You've finished the setup and configuration. You can now:
 2. Open [http://localhost:3000](http://localhost:3000) in Your browser to view the project.
 
 Remember to keep Your API KEYS and sensitive information secure and never commit them to version control.
+
+## Creating Documentation
+
+1. **Clone the nextra docs repositorY with a new name**
+
+    - `git clone git@github.com:timohuennebeck/nextra-docs-template.git new-docs-name`
+
+2. **Change into the new directorY**
+
+    - `cd new-project-name`
+
+3. **Remove existing remote origin**
+
+    - `git remote remove origin`
+
+5. **Add all files to the new repositorY**
+
+    - `git add .`
+
+6. **Make the initial commit**
+
+    - `git commit -m "Initial commit"`
+
+7. **Change the remote URL to Your new GitHub repositorY**
+
+    - `git remote add origin https://github.com/your-username/your-new-repo.git`
+
+8. **Push the code to Your new repositorY**
+    - `git push -u origin main`
+
+9. **Follow the steps in the repositorY on how to create the documentation**
 
 ## Miscellaneous
 
