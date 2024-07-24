@@ -27,13 +27,51 @@ export const createSubscriptionTable = async ({
     supabase: SupabaseClient;
     userId: string;
 }) => {
-    const { error } = await supabase.from("user_subscriptions").insert({
+    const { error } = await supabase.from("purchased_subscriptions").insert({
         user_id: userId,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
+        status: SubscriptionStatus.NOT_PURCHASED,
     });
 
     if (error) throw error;
+};
+
+export const updateUserSubscriptionStatus = async ({
+    supabase,
+    userId,
+    stripePriceId,
+    status,
+}: {
+    supabase: SupabaseClient;
+    userId: string;
+    stripePriceId: string;
+    status: SubscriptionStatus;
+}) => {
+    try {
+        const { data, error } = await supabase
+            .from("purchased_subscriptions")
+            .update({
+                updated_at: new Date().toISOString(),
+                status,
+                stripe_price_id: stripePriceId,
+            })
+            .eq("user_id", userId)
+            .select()
+            .single();
+
+        if (error) {
+            console.error("There has been an error", error);
+
+            return { error: error };
+        }
+
+        return { subscription: data, error: null };
+    } catch (err) {
+        console.error(`Error creating Subscription Table for User: ${userId}`, err);
+
+        return { error: err };
+    }
 };
 
 export const startUserFreeTrial = async ({
@@ -94,42 +132,5 @@ export const endUserFreeTrial = async ({
         console.error("Unexpected error ending free trial:", error);
 
         return { success: null, error: error as Error };
-    }
-};
-
-export const updateUserSubscriptionStatus = async ({
-    supabase,
-    userId,
-    stripePriceId,
-    status,
-}: {
-    supabase: SupabaseClient;
-    userId: string;
-    stripePriceId: string;
-    status: SubscriptionStatus;
-}) => {
-    try {
-        const { data, error } = await supabase
-            .from("user_subscriptions")
-            .update({
-                updated_at: new Date().toISOString(),
-                status,
-                stripe_price_id: stripePriceId,
-            })
-            .eq("user_id", userId)
-            .select()
-            .single();
-
-        if (error) {
-            console.error("There has been an error", error);
-
-            return { error: error };
-        }
-
-        return { subscription: data, error: null };
-    } catch (err) {
-        console.error(`Error creating Subscription Table for User: ${userId}`, err);
-
-        return { error: err };
     }
 };

@@ -8,7 +8,7 @@ CREATE TABLE free_trials (
     is_active BOOLEAN
 );
 
-CREATE TABLE user_subscriptions (
+CREATE TABLE purchased_subscriptionss (
     id INT8 PRIMARY KEY,
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ,
