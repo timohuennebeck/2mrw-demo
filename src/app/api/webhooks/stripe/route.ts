@@ -2,7 +2,8 @@
 
 import { FreeTrialStatus } from "@/app/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/app/enums/SubscriptionStatus";
-import { extractSubscriptionPlanDetails } from "@/helper/extractSubscriptionPlanDetails";
+import { useProductCache } from "@/hooks/useProductCache";
+import { Product } from "@/interfaces/Product";
 import { User } from "@/interfaces/User";
 import { endUserFreeTrial, updateUserSubscriptionStatus } from "@/utils/supabase/admin";
 import { createClient } from "@/utils/supabase/client";
@@ -79,8 +80,10 @@ export async function POST(req: request) {
                 }
 
                 try {
-                    const { plan, error } = await extractSubscriptionPlanDetails(
-                        stripePriceId ?? "",
+                    const { products, error } = useProductCache();
+
+                    const plan = products.find(
+                        (plan: Product) => plan.stripe_price_id === stripePriceId,
                     );
 
                     if (error) {
