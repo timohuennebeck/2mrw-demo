@@ -1,5 +1,4 @@
 import { SubscriptionStatus } from "@/app/enums/SubscriptionStatus";
-import { extractSubscriptionPlanDetails } from "../../helper/extractSubscriptionPlanDetails";
 import { SupabaseClient, User } from "@supabase/supabase-js";
 import { FreeTrialStatus } from "@/app/enums/FreeTrialStatus";
 
