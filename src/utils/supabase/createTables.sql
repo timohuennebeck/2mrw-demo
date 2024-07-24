@@ -1,6 +1,6 @@
 -- insert the commands below into the SQL Editor in Supabase to create the corresponding tables
 
-CREATE TABLE free_trials (
+CREATE TABLE user_free_trials (
     id INT8 PRIMARY KEY,
     start_date TIMESTAMPTZ,
     end_date TIMESTAMPTZ,
@@ -8,7 +8,7 @@ CREATE TABLE free_trials (
     is_active BOOLEAN
 );
 
-CREATE TABLE subscriptions (
+CREATE TABLE user_subscriptions (
     id INT8 PRIMARY KEY,
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ,

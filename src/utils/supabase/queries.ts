@@ -19,7 +19,7 @@ export const checkUserExists = async ({ userEmail }: { userEmail: string }) => {
 export const checkSubscriptionStatus = async ({ userId }: { userId: string }) => {
     try {
         const { data, error } = await supabase
-            .from("subscriptions")
+            .from("user_subscriptions")
             .select("*")
             .eq("user_id", userId)
             .single();
@@ -60,7 +60,7 @@ export const checkSubscriptionStatus = async ({ userId }: { userId: string }) =>
 export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
     try {
         const { data, error } = await supabase
-            .from("free_trials")
+            .from("user_free_trials")
             .select("*")
             .eq("user_id", userId)
             .single();

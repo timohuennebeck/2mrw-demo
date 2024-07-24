@@ -27,7 +27,7 @@ export const createSubscriptionTable = async ({
     supabase: SupabaseClient;
     userId: string;
 }) => {
-    const { error } = await supabase.from("subscriptions").insert({
+    const { error } = await supabase.from("user_subscriptions").insert({
         user_id: userId,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -41,11 +41,11 @@ export const startUserFreeTrial = async ({
     userId,
     freeTrialEndDate,
 }: {
-    supabase: SupabaseClient,
+    supabase: SupabaseClient;
     userId: string;
     freeTrialEndDate: Date;
 }) => {
-    const { data, error } = await supabase.from("free_trials").insert({
+    const { data, error } = await supabase.from("user_free_trials").insert({
         user_id: userId,
         start_date: new Date().toISOString(),
         end_date: freeTrialEndDate.toISOString(),
@@ -59,10 +59,16 @@ export const startUserFreeTrial = async ({
     return { freeTrial: data, error: null };
 };
 
-export const endUserFreeTrial = async ({ supabase, userId }: { supabase: SupabaseClient, userId: string }) => {
+export const endUserFreeTrial = async ({
+    supabase,
+    userId,
+}: {
+    supabase: SupabaseClient;
+    userId: string;
+}) => {
     try {
         const { error } = await supabase
-            .from("free_trials")
+            .from("user_free_trials")
             .update({
                 end_date: new Date().toISOString(),
                 is_active: false,
@@ -94,7 +100,7 @@ export const updateUserSubscriptionStatus = async ({
     stripePriceId,
     hasPremium,
 }: {
-    supabase: SupabaseClient
+    supabase: SupabaseClient;
     userId: string;
     stripePriceId: string;
     hasPremium: boolean;
@@ -107,7 +113,7 @@ export const updateUserSubscriptionStatus = async ({
 
     try {
         const { data, error } = await supabase
-            .from("subscriptions")
+            .from("user_subscriptions")
             .update({
                 updated_at: new Date().toISOString(),
                 has_premium: hasPremium,
