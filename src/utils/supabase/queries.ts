@@ -60,7 +60,7 @@ export const checkSubscriptionStatus = async ({ userId }: { userId: string }) =>
 export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
     try {
         const { data, error } = await supabase
-            .from("user_free_trials")
+            .from("free_trials")
             .select("*")
             .eq("user_id", userId)
             .single();

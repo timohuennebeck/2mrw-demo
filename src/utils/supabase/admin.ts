@@ -45,7 +45,7 @@ export const startUserFreeTrial = async ({
     userId: string;
     freeTrialEndDate: Date;
 }) => {
-    const { data, error } = await supabase.from("user_free_trials").insert({
+    const { data, error } = await supabase.from("free_trials").insert({
         user_id: userId,
         start_date: new Date().toISOString(),
         end_date: freeTrialEndDate.toISOString(),
@@ -68,7 +68,7 @@ export const endUserFreeTrial = async ({
 }) => {
     try {
         const { error } = await supabase
-            .from("user_free_trials")
+            .from("free_trials")
             .update({
                 end_date: new Date().toISOString(),
                 is_active: false,
