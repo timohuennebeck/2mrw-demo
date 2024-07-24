@@ -24,6 +24,7 @@ export const PricingPlanCard = (props: Product) => {
         current_price,
         description,
         additional_info,
+        features,
     } = props;
 
     const [freeTrialStatus, setFreeTrialStatus] = useState<FreeTrialStatus | null>(null);
@@ -212,7 +213,7 @@ export const PricingPlanCard = (props: Product) => {
                 <p className="text-gray-600 text-sm mb-8">{additional_info}</p>
 
                 <ul className="flex flex-col gap-3 mb-10">
-                    {/* {features.map((feature, index) => (
+                    {features.map((feature, index) => (
                         <li key={index} className="flex items-center gap-2">
                             {feature.included ? (
                                 <CheckBadgeIcon className="w-5 h-5 text-black" />
@@ -227,7 +228,7 @@ export const PricingPlanCard = (props: Product) => {
                                 {feature.name}
                             </span>
                         </li>
-                    ))} */}
+                    ))}
                 </ul>
             </div>
 
