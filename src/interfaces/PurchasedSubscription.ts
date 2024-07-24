@@ -1,6 +1,6 @@
 import { SubscriptionStatus } from "@/app/enums/SubscriptionStatus";
 
-export interface Subscription {
+export interface PurchasedSubscription {
     id: number;
     created_at: string;
     updated_at: string;

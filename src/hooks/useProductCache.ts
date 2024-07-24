@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { Product } from "@/interfaces/Product";
 import { fetchProducts } from "@/utils/supabase/queries";

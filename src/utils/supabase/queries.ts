@@ -1,4 +1,4 @@
-import { Subscription } from "@/interfaces/Subscription";
+import { PurchasedSubscription } from "@/interfaces/PurchasedSubscription";
 import { createClient } from "./client";
 import { FreeTrial } from "@/interfaces/FreeTrial";
 import { FreeTrialStatus } from "@/app/enums/FreeTrialStatus";
@@ -40,7 +40,7 @@ export const checkSubscriptionStatus = async ({ userId }: { userId: string }) =>
             if (error.code === "PGRST116") {
                 // no subscription found for the user
                 return {
-                    status: SubscriptionStatus.NOT_PURCHASED,
+                    status: null,
                     subscription: null,
                     error: null,
                 };
@@ -48,24 +48,36 @@ export const checkSubscriptionStatus = async ({ userId }: { userId: string }) =>
             throw error;
         }
 
-        const response: Subscription = data;
+        const response: PurchasedSubscription = data;
 
-        if (response.has_premium) {
-            return {
-                status: SubscriptionStatus.ACTIVE,
-                subscription: response,
-                error: null,
-            };
-        } else {
-            return {
-                status: SubscriptionStatus.NOT_PURCHASED,
-                subscription: null,
-                error: null,
-            };
+        switch (response.status) {
+            case SubscriptionStatus.ACTIVE:
+                return {
+                    status: SubscriptionStatus.ACTIVE,
+                    subscription: response,
+                    error: null,
+                };
+
+            case SubscriptionStatus.NOT_PURCHASED:
+                return {
+                    status: SubscriptionStatus.NOT_PURCHASED,
+                    subscription: null,
+                    error: null,
+                };
+            default:
+                return {
+                    status: null,
+                    subscription: null,
+                    error: null,
+                };
         }
     } catch (error) {
         console.error("Unexpected error checking subscription status:", error);
-        return { status: SubscriptionStatus.ERROR, subscription: null, error: error as Error };
+        return {
+            status: null,
+            subscription: null,
+            error: error as Error,
+        };
     }
 };
 
@@ -97,6 +109,6 @@ export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
         }
     } catch (error) {
         console.error("Unexpected error checking free trial status:", error);
-        return { status: FreeTrialStatus.ERROR, error: error as Error };
+        return { status: FreeTrialStatus.NOT_STARTED, error: error as Error };
     }
 };

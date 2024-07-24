@@ -8,11 +8,11 @@ import DefaultButton from "./DefaultButton";
 import { toast } from "sonner";
 import { FreeTrialStatus } from "@/app/enums/FreeTrialStatus";
 import { FreeTrial } from "@/interfaces/FreeTrial";
-import { Subscription } from "@/interfaces/Subscription";
 import { formatDateToHumanFormat } from "@/helper/formatDateToHumanFormat";
 import { increaseDate } from "@/helper/increaseDate";
 import { SubscriptionStatus } from "@/app/enums/SubscriptionStatus";
 import { Product } from "@/interfaces/Product";
+import { PurchasedSubscription } from "@/interfaces/PurchasedSubscription";
 
 export const PricingPlanCard = (props: Product) => {
     const {
@@ -31,7 +31,7 @@ export const PricingPlanCard = (props: Product) => {
     const [freeTrialInfo, setFreeTrialInfo] = useState<FreeTrial | null>(null);
 
     const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatus | null>(null);
-    const [subscriptionInfo, setSubscriptionInfo] = useState<Subscription | null>(null);
+    const [subscriptionInfo, setSubscriptionInfo] = useState<PurchasedSubscription | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
     const searchParams = useSearchParams();
@@ -112,7 +112,7 @@ export const PricingPlanCard = (props: Product) => {
 
                 if (error) {
                     toast.error("Error checking free trial status");
-                    setFreeTrialStatus(FreeTrialStatus.ERROR);
+                    setFreeTrialStatus(null);
                 } else {
                     setFreeTrialStatus(freeTrialStatus);
                     setFreeTrialInfo(freeTrial);
@@ -122,8 +122,8 @@ export const PricingPlanCard = (props: Product) => {
             } catch (error) {
                 console.error("Error in getUserFreeTrialStatus:", error);
 
-                setFreeTrialStatus(FreeTrialStatus.ERROR);
-                setSubscriptionStatus(SubscriptionStatus.ERROR);
+                setFreeTrialStatus(null);
+                setSubscriptionStatus(null);
             }
         };
 

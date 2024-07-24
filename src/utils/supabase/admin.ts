@@ -53,8 +53,8 @@ export const updateUserSubscriptionStatus = async ({
             .from("purchased_subscriptions")
             .update({
                 updated_at: new Date().toISOString(),
-                status,
                 stripe_price_id: stripePriceId,
+                status,
             })
             .eq("user_id", userId)
             .select()
@@ -90,7 +90,7 @@ export const startUserFreeTrial = async ({
         start_date: new Date().toISOString(),
         end_date: freeTrialEndDate.toISOString(),
         stripe_price_id: stripePriceId,
-        status: FreeTrialStatus.EXPIRED,
+        status: FreeTrialStatus.ACTIVE,
     });
 
     if (error) {

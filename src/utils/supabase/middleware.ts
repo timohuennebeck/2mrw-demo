@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse as response, type NextRequest as request } from "next/server";
 import { checkSubscriptionStatus } from "./queries";
+import { SubscriptionStatus } from "@/app/enums/SubscriptionStatus";
 
 export async function updateSession(request: request) {
     let supabaseResponse = response.next({
@@ -65,10 +66,9 @@ export async function updateSession(request: request) {
 
     if (subscriptionError) {
         console.error("Error checking subscription:", subscriptionError);
-        return { hasPremium: false, error: "Failed to check subscription status" };
     }
 
-    const hasPremiumSubscription = subscription?.has_premium ?? false;
+    const hasPremiumSubscription = subscription?.status === SubscriptionStatus.ACTIVE ?? false;
 
     // non-premium users should be redirected to the choosePricingPlan page to choose a plan
     if (!hasPremiumSubscription && request.nextUrl.pathname !== "/choosePricingPlan") {
