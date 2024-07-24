@@ -1,3 +1,5 @@
+"use client";
+
 import { CheckBadgeIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";

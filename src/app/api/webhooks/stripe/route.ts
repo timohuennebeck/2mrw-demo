@@ -2,12 +2,11 @@
 
 import { FreeTrialStatus } from "@/app/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/app/enums/SubscriptionStatus";
-import { useProductCache } from "@/hooks/useProductCache";
 import { Product } from "@/interfaces/Product";
 import { User } from "@/interfaces/User";
 import { endUserFreeTrial, updateUserSubscriptionStatus } from "@/utils/supabase/admin";
 import { createClient } from "@/utils/supabase/client";
-import { checkFreeTrialStatus, checkUserExists } from "@/utils/supabase/queries";
+import { checkFreeTrialStatus, checkUserExists, fetchProducts } from "@/utils/supabase/queries";
 import axios from "axios";
 import { NextRequest as request, NextResponse as response } from "next/server";
 import Stripe from "stripe";
@@ -80,9 +79,9 @@ export async function POST(req: request) {
                 }
 
                 try {
-                    const { products, error } = useProductCache();
+                    const { products, error } = await fetchProducts();
 
-                    const plan = products.find(
+                    const plan = products?.find(
                         (plan: Product) => plan.stripe_price_id === stripePriceId,
                     );
 

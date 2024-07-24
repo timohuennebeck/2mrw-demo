@@ -1,50 +1,35 @@
-"use client";
-
 import { PricingPlanCard } from "@/components/PricingPlanCard";
 import SignOutButton from "@/components/SignOutButton";
-import { Product } from "@/interfaces/Product";
-import { createClient } from "@/utils/supabase/client";
 import { fetchProducts } from "@/utils/supabase/queries";
+import { createClient } from "@/utils/supabase/server";
 import Image from "next/image";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, cache } from "react";
 
-const ChoosePricingPlanPage = () => {
+const getProducts = cache(async () => {
+    const { products, error } = await fetchProducts();
+
+    if (error) throw error;
+
+    return products;
+});
+
+const getUser = cache(async () => {
     const supabase = createClient();
 
-    const [userEmail, setUserEmail] = useState("");
-    const [products, setProducts] = useState<Product[]>([]);
+    const {
+        data: { user },
+        error,
+    } = await supabase.auth.getUser();
 
-    const fetchUserEmail = async () => {
-        try {
-            const {
-                data: { user },
-                error,
-            } = await supabase.auth.getUser();
+    if (error) throw error;
 
-            if (error) throw error;
+    return user;
+});
 
-            if (user) setUserEmail(encodeURIComponent(user.email ?? ""));
-        } catch (error) {
-            console.error("Error fetching user email:", error);
-        }
-    };
+const ChoosePricingPlanPage = async () => {
+    const [products, user] = await Promise.all([getProducts(), getUser()]);
 
-    const fetchProductsFromSupabase = async () => {
-        try {
-            const { products, error } = await fetchProducts();
-
-            if (error) throw error;
-
-            if (products) setProducts(products);
-        } catch (error) {
-            console.error("Error fetching products:", error);
-        }
-    };
-
-    useEffect(() => {
-        fetchUserEmail();
-        fetchProductsFromSupabase();
-    }, []);
+    const userEmail = user?.email ? encodeURIComponent(user.email) : "";
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -69,7 +54,7 @@ const ChoosePricingPlanPage = () => {
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                    {products.map((product, index) => (
+                    {products?.map((product, index) => (
                         <Suspense key={index}>
                             <PricingPlanCard
                                 {...product}
