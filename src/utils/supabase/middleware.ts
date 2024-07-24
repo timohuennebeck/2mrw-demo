@@ -1,7 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse as response, type NextRequest as request } from "next/server";
-import { checkSubscriptionStatus } from "./queries";
+import { checkFreeTrialStatus, checkSubscriptionStatus } from "./queries";
 import { SubscriptionStatus } from "@/app/enums/SubscriptionStatus";
+import { FreeTrialStatus } from "@/app/enums/FreeTrialStatus";
 
 export async function updateSession(request: request) {
     let supabaseResponse = response.next({
@@ -60,25 +61,31 @@ export async function updateSession(request: request) {
         return supabaseResponse;
     }
 
-    const { subscription, error: subscriptionError } = await checkSubscriptionStatus({
+    const { status: subscriptionStatus, error: subscriptionError } = await checkSubscriptionStatus({
         userId: user?.id ?? "",
     });
 
-    if (subscriptionError) {
-        console.error("Error checking subscription:", subscriptionError);
+    const { status: freeTrialStatus, error: freeTrialError } = await checkFreeTrialStatus({
+        userId: user?.id ?? "",
+    });
+
+    if (subscriptionError || freeTrialError) {
+        console.error("Error checking subscription or free trial status");
     }
 
-    const hasPremiumSubscription = subscription?.status === SubscriptionStatus.ACTIVE ?? false;
+    const hasPremiumSubscription = subscriptionStatus === SubscriptionStatus.ACTIVE ?? false;
+    const isOnFreeTrial = freeTrialStatus === FreeTrialStatus.ACTIVE ?? false;
+    const hasPremiumOrFreeTrial = hasPremiumSubscription || isOnFreeTrial;
 
     // non-premium users should be redirected to the choosePricingPlan page to choose a plan
-    if (!hasPremiumSubscription && request.nextUrl.pathname !== "/choosePricingPlan") {
+    if (!hasPremiumOrFreeTrial && request.nextUrl.pathname !== "/choosePricingPlan") {
         const url = request.nextUrl.clone();
         url.pathname = "/choosePricingPlan";
         return response.redirect(url);
     }
 
     // premium users should be redirected away from choosePricingPlan
-    if (hasPremiumSubscription && request.nextUrl.pathname === "/choosePricingPlan") {
+    if (hasPremiumOrFreeTrial && request.nextUrl.pathname === "/choosePricingPlan") {
         const url = request.nextUrl.clone();
         url.pathname = "/";
         return response.redirect(url);

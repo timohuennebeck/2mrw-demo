@@ -145,10 +145,10 @@ export const PricingPlanCard = (props: Product) => {
             );
         }
 
-        const hasOnGoingFreeTrial = freeTrialStatus === FreeTrialStatus.ACTIVE;
         const hasPurchasedSubscription = subscriptionStatus === SubscriptionStatus.ACTIVE;
+        const isOnFreeTrial = freeTrialStatus === FreeTrialStatus.ACTIVE;
 
-        if (!hasOnGoingFreeTrial && hasPurchasedSubscription) {
+        if (hasPurchasedSubscription && !isOnFreeTrial) {
             const isCurrentPlan = subscriptionInfo?.stripe_price_id === stripe_price_id;
 
             // dont show this on a free trial
