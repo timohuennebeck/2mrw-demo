@@ -1,10 +1,9 @@
 import { CheckBadgeIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { StripeSubscriptionPlan } from "@/interfaces/StripeSubscriptionPlan";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { checkFreeTrialStatus, checkSubscriptionStatus } from "@/utils/supabase/queries";
 import { createClient } from "@/utils/supabase/client";
-import { startUserFreeTrial, updateUserSubscriptionStatus } from "@/utils/supabase/admin";
+import { startUserFreeTrial } from "@/utils/supabase/admin";
 import DefaultButton from "./DefaultButton";
 import { toast } from "sonner";
 import { FreeTrialStatus } from "@/app/enums/FreeTrialStatus";
@@ -13,19 +12,20 @@ import { Subscription } from "@/interfaces/Subscription";
 import { formatDateToHumanFormat } from "@/helper/formatDateToHumanFormat";
 import { increaseDate } from "@/helper/increaseDate";
 import { SubscriptionStatus } from "@/app/enums/SubscriptionStatus";
+import { Product } from "@/interfaces/Product";
 
-export const PricingPlanCard = ({
-    name,
-    description,
-    additionalInfo,
-    previousPrice,
-    price,
-    stripePaymentLink,
-    stripePriceId,
-    buttonCta,
-    features,
-    isHighlighted,
-}: StripeSubscriptionPlan) => {
+export const PricingPlanCard = (props: Product) => {
+    const {
+        stripe_price_id,
+        stripe_purchase_link,
+        is_highlighted,
+        name,
+        previous_price,
+        current_price,
+        description,
+        additional_info,
+    } = props;
+
     const [freeTrialStatus, setFreeTrialStatus] = useState<FreeTrialStatus | null>(null);
     const [freeTrialInfo, setFreeTrialInfo] = useState<FreeTrial | null>(null);
 
@@ -75,14 +75,8 @@ export const PricingPlanCard = ({
         const { error: freeTrialError } = await startUserFreeTrial({
             supabase,
             userId: user.id,
+            stripePriceId: stripe_price_id,
             freeTrialEndDate: freeTrialEndDate,
-        });
-
-        const { error: subscriptionError } = await updateUserSubscriptionStatus({
-            supabase,
-            hasPremium: true,
-            stripePriceId: stripePriceId,
-            userId: user.id,
         });
 
         if (freeTrialError) {
@@ -90,12 +84,6 @@ export const PricingPlanCard = ({
             setIsLoading(false);
 
             return toast.error("Error starting free trial");
-        }
-
-        if (subscriptionError) {
-            console.error("Error updating subscription", subscriptionError);
-
-            setIsLoading(false);
         }
 
         setIsLoading(false);
@@ -160,7 +148,7 @@ export const PricingPlanCard = ({
         const hasPurchasedSubscription = subscriptionStatus === SubscriptionStatus.ACTIVE;
 
         if (!hasOnGoingFreeTrial && hasPurchasedSubscription) {
-            const isCurrentPlan = subscriptionInfo?.stripe_price_id === stripePriceId;
+            const isCurrentPlan = subscriptionInfo?.stripe_price_id === stripe_price_id;
 
             // dont show this on a free trial
             // as we want to give users the option to upgrade to a paid plan during the free trial
@@ -170,7 +158,7 @@ export const PricingPlanCard = ({
                 return (
                     <DefaultButton
                         title="Upgrade Now"
-                        onClick={() => window.open(stripePaymentLink)}
+                        onClick={() => window.open(stripe_purchase_link)}
                         disabled={false}
                     />
                 );
@@ -179,8 +167,8 @@ export const PricingPlanCard = ({
 
         return (
             <DefaultButton
-                title={buttonCta}
-                onClick={() => window.open(stripePaymentLink, "_blank")}
+                title={`Get Started Now (${is_highlighted ? "40" : "20"}% off)`}
+                onClick={() => window.open(stripe_purchase_link, "_blank")}
             />
         );
     };
@@ -190,7 +178,7 @@ export const PricingPlanCard = ({
 
         if (!freeTrialInfo?.end_date) return null;
 
-        if (subscriptionInfo?.stripe_price_id !== stripePriceId) return null;
+        if (subscriptionInfo?.stripe_price_id !== stripe_price_id) return null;
 
         return (
             <div className="bg-black text-white text-sm px-2.5 py-0.5 rounded-md mb-4 text-center whitespace-nowrap">
@@ -202,7 +190,7 @@ export const PricingPlanCard = ({
     return (
         <div
             className={`bg-white rounded-2xl shadow-lg border p-8 relative ${
-                isHighlighted ? "border-black" : ""
+                is_highlighted ? "border-black" : ""
             }`}
         >
             <div className="mb-6">
@@ -212,19 +200,19 @@ export const PricingPlanCard = ({
 
                 <h3 className="text-lg mb-6 font-medium">{name}</h3>
 
-                <p className="text-gray-600 line-through font-medium">${previousPrice}</p>
+                <p className="text-gray-600 line-through font-medium">${previous_price}</p>
 
                 <div className="mb-6">
-                    <span className="text-3xl font-medium">${price}</span>
+                    <span className="text-3xl font-medium">${current_price}</span>
                     <span className="text-gray-600 ml-2">USD</span>
                 </div>
 
                 <p className="text-gray-600 text-sm mb-2">{description}</p>
 
-                <p className="text-gray-600 text-sm mb-8">{additionalInfo}</p>
+                <p className="text-gray-600 text-sm mb-8">{additional_info}</p>
 
                 <ul className="flex flex-col gap-3 mb-10">
-                    {features.map((feature, index) => (
+                    {/* {features.map((feature, index) => (
                         <li key={index} className="flex items-center gap-2">
                             {feature.included ? (
                                 <CheckBadgeIcon className="w-5 h-5 text-black" />
@@ -239,7 +227,7 @@ export const PricingPlanCard = ({
                                 {feature.name}
                             </span>
                         </li>
-                    ))}
+                    ))} */}
                 </ul>
             </div>
 

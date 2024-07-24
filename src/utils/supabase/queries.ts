@@ -3,8 +3,20 @@ import { createClient } from "./client";
 import { FreeTrial } from "@/interfaces/FreeTrial";
 import { FreeTrialStatus } from "@/app/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/app/enums/SubscriptionStatus";
+import { Product } from "@/interfaces/Product";
 
 const supabase = createClient();
+
+export const fetchProducts = async () => {
+    const { data: products, error } = await supabase.from("products").select("*");
+
+    if (error) {
+        console.error("Error fetching products:", error);
+        return { products: null, error };
+    }
+
+    return { products: products as Product[], error: null };
+};
 
 export const checkUserExists = async ({ userEmail }: { userEmail: string }) => {
     const { data: existingUser } = await supabase

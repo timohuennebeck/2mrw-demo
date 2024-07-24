@@ -1,7 +1,7 @@
 "use server";
 
 import { FreeTrialStatus } from "@/app/enums/FreeTrialStatus";
-import { StripePriceId } from "@/config/subscriptionPlans";
+import { SubscriptionStatus } from "@/app/enums/SubscriptionStatus";
 import { extractSubscriptionPlanDetails } from "@/helper/extractSubscriptionPlanDetails";
 import { User } from "@/interfaces/User";
 import { endUserFreeTrial, updateUserSubscriptionStatus } from "@/utils/supabase/admin";
@@ -54,8 +54,8 @@ export async function POST(req: request) {
                     await updateUserSubscriptionStatus({
                         supabase,
                         userId: user.user_id ?? "",
-                        stripePriceId: (stripePriceId as StripePriceId) ?? "",
-                        hasPremium: true,
+                        stripePriceId: stripePriceId ?? "",
+                        status: SubscriptionStatus.ACTIVE,
                     });
 
                     const { status } = await checkFreeTrialStatus({ userId: user.user_id });
@@ -79,7 +79,13 @@ export async function POST(req: request) {
                 }
 
                 try {
-                    const plan = extractSubscriptionPlanDetails(stripePriceId as StripePriceId);
+                    const { plan, error } = await extractSubscriptionPlanDetails(
+                        stripePriceId ?? "",
+                    );
+
+                    if (error) {
+                        console.error("Failed to fetch products");
+                    }
 
                     try {
                         // sends pre-order confirmation email for products not yet launched

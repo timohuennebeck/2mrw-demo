@@ -2,8 +2,9 @@
 
 import { PricingPlanCard } from "@/components/PricingPlanCard";
 import SignOutButton from "@/components/SignOutButton";
-import { SUBSCRIPTION_PLANS } from "@/config/subscriptionPlans";
+import { Product } from "@/interfaces/Product";
 import { createClient } from "@/utils/supabase/client";
+import { fetchProducts } from "@/utils/supabase/queries";
 import Image from "next/image";
 import { Suspense, useEffect, useState } from "react";
 
@@ -11,25 +12,39 @@ const ChoosePricingPlanPage = () => {
     const supabase = createClient();
 
     const [userEmail, setUserEmail] = useState("");
+    const [products, setProducts] = useState<Product[]>([]);
+
+    const fetchUserEmail = async () => {
+        try {
+            const {
+                data: { user },
+                error,
+            } = await supabase.auth.getUser();
+
+            if (error) throw error;
+
+            if (user) setUserEmail(encodeURIComponent(user.email ?? ""));
+        } catch (error) {
+            console.error("Error fetching user email:", error);
+        }
+    };
+
+    const fetchProductsFromSupabase = async () => {
+        try {
+            const { products, error } = await fetchProducts();
+
+            if (error) throw error;
+
+            if (products) setProducts(products);
+        } catch (error) {
+            console.error("Error fetching products:", error);
+        }
+    };
 
     useEffect(() => {
-        const fetchUserEmail = async () => {
-            try {
-                const {
-                    data: { user },
-                    error,
-                } = await supabase.auth.getUser();
-
-                if (error) throw error;
-
-                if (user) setUserEmail(encodeURIComponent(user.email ?? ""));
-            } catch (error) {
-                console.error("Error fetching user email:", error);
-            }
-        };
-
         fetchUserEmail();
-    }, [supabase.auth]);
+        fetchProductsFromSupabase();
+    }, []);
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -54,14 +69,14 @@ const ChoosePricingPlanPage = () => {
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                    {SUBSCRIPTION_PLANS.map((plan, index) => (
+                    {products.map((product, index) => (
                         <Suspense key={index}>
                             <PricingPlanCard
-                                {...plan}
-                                stripePaymentLink={
+                                {...product}
+                                stripe_purchase_link={
                                     userEmail
-                                        ? `${plan.stripePaymentLink}?prefilled_email=${userEmail}`
-                                        : plan.stripePaymentLink
+                                        ? `${product.stripe_purchase_link}?prefilled_email=${userEmail}`
+                                        : product.stripe_purchase_link
                                 }
                             />
                         </Suspense>

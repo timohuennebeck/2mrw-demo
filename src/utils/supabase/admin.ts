@@ -1,6 +1,7 @@
-import { StripePriceId } from "@/config/subscriptionPlans";
+import { SubscriptionStatus } from "@/app/enums/SubscriptionStatus";
 import { extractSubscriptionPlanDetails } from "../../helper/extractSubscriptionPlanDetails";
 import { SupabaseClient, User } from "@supabase/supabase-js";
+import { FreeTrialStatus } from "@/app/enums/FreeTrialStatus";
 
 export const createUserTable = async ({
     supabase,
@@ -39,17 +40,20 @@ export const createSubscriptionTable = async ({
 export const startUserFreeTrial = async ({
     supabase,
     userId,
+    stripePriceId,
     freeTrialEndDate,
 }: {
     supabase: SupabaseClient;
     userId: string;
+    stripePriceId: string;
     freeTrialEndDate: Date;
 }) => {
     const { data, error } = await supabase.from("free_trials").insert({
         user_id: userId,
         start_date: new Date().toISOString(),
         end_date: freeTrialEndDate.toISOString(),
-        is_active: true,
+        stripe_price_id: stripePriceId,
+        status: FreeTrialStatus.EXPIRED,
     });
 
     if (error) {
@@ -71,7 +75,7 @@ export const endUserFreeTrial = async ({
             .from("free_trials")
             .update({
                 end_date: new Date().toISOString(),
-                is_active: false,
+                status: FreeTrialStatus.EXPIRED,
             })
             .eq("user_id", userId)
             .single();
@@ -98,26 +102,19 @@ export const updateUserSubscriptionStatus = async ({
     supabase,
     userId,
     stripePriceId,
-    hasPremium,
+    status,
 }: {
     supabase: SupabaseClient;
     userId: string;
     stripePriceId: string;
-    hasPremium: boolean;
+    status: SubscriptionStatus;
 }) => {
-    const plan = extractSubscriptionPlanDetails(stripePriceId as StripePriceId);
-
-    if (!plan) {
-        return { error: `Error, no plan found for price id: ${stripePriceId}` };
-    }
-
     try {
         const { data, error } = await supabase
             .from("user_subscriptions")
             .update({
                 updated_at: new Date().toISOString(),
-                has_premium: hasPremium,
-                subscription_plan: plan.name,
+                status,
                 stripe_price_id: stripePriceId,
             })
             .eq("user_id", userId)
