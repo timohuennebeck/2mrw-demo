@@ -3,7 +3,11 @@
 import { CheckBadgeIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { checkFreeTrialStatus, checkSubscriptionStatus } from "@/lib/supabase/queries";
+import {
+    checkFreeTrialStatus,
+    checkSubscriptionStatus,
+    fetchSupabaseUser,
+} from "@/lib/supabase/queries";
 import { createClient } from "@/lib/supabase/client";
 import { startUserFreeTrial } from "@/lib/supabase/admin";
 import DefaultButton from "./DefaultButton";
@@ -42,29 +46,12 @@ export const PricingPlanCard = (props: Product) => {
     const supabase = createClient();
     const router = useRouter();
 
-    const fetchUser = async () => {
-        // TODO: this causes a 406, not acceptable error
-        const {
-            data: { user },
-            error,
-        } = await supabase.auth.getUser();
-
-        if (error) {
-            console.error("Error fetching user:", error);
-            throw error;
-        }
-
-        if (!user) {
-            console.log("There is no logged in user");
-            throw new Error("There is no logged in user");
-        }
-
-        return user;
-    };
-
     const startFreeTrial = async () => {
         setIsLoading(true);
-        const user = await fetchUser();
+
+        const { user } = await fetchSupabaseUser({ supabase });
+
+        if (!user) return;
 
         const currentDate = new Date();
 
@@ -97,9 +84,12 @@ export const PricingPlanCard = (props: Product) => {
     };
 
     useEffect(() => {
-        const getUserFreeTrialStatus = async () => {
+        const fetchSubscriptionStatus = async () => {
+            const { user } = await fetchSupabaseUser({ supabase });
+
+            if (!user) return;
+
             try {
-                const user = await fetchUser();
                 const [freeTrialResult, subscriptionResult] = await Promise.all([
                     checkFreeTrialStatus({ userId: user.id }),
                     checkSubscriptionStatus({ userId: user.id }),
@@ -110,13 +100,17 @@ export const PricingPlanCard = (props: Product) => {
                 setSubscriptionStatus(subscriptionResult.status);
                 setSubscriptionInfo(subscriptionResult.subscription);
             } catch (error) {
-                console.error("Error in getUserFreeTrialStatus:", error);
+                console.error("Error fetching subscription data:", error);
             } finally {
                 setIsLoading(false);
             }
         };
 
-        getUserFreeTrialStatus();
+        fetchSubscriptionStatus();
+
+        const intervalId = setInterval(fetchSubscriptionStatus, 5000);
+
+        return () => clearInterval(intervalId);
     }, []);
 
     const renderSubscriptionButtons = () => {

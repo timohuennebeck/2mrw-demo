@@ -1,5 +1,3 @@
-"use server";
-
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { Product } from "@/interfaces/Product";
@@ -49,14 +47,6 @@ export async function POST(req: request) {
 
                     if (!user) return;
 
-                    // update to the most recent subscription if a user purchases another paid plan
-                    await updateUserSubscriptionStatus({
-                        supabase,
-                        userId: user.user_id ?? "",
-                        stripePriceId: stripePriceId ?? "",
-                        status: SubscriptionStatus.ACTIVE,
-                    });
-
                     const { status } = await checkFreeTrialStatus({ userId: user.user_id });
 
                     if (status === FreeTrialStatus.ACTIVE) {
@@ -73,6 +63,14 @@ export async function POST(req: request) {
                             console.log("Free Trial has been ended");
                         }
                     }
+
+                    // update to the most recent subscription if a user purchases another paid plan
+                    await updateUserSubscriptionStatus({
+                        supabase,
+                        userId: user.user_id ?? "",
+                        stripePriceId: stripePriceId ?? "",
+                        status: SubscriptionStatus.ACTIVE,
+                    });
                 } else {
                     console.error("Error missing customer email or Stripe price Id");
                 }

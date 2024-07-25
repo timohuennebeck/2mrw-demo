@@ -10,6 +10,7 @@ import {
     CheckSubscriptionStatusParams,
     CheckUserExistsParams,
 } from "./supabaseInterfaces";
+import { SupabaseClient } from "@supabase/supabase-js";
 
 const supabase = createClient();
 
@@ -17,6 +18,22 @@ export const handleSupabaseError = (error: unknown) => {
     console.error("Supabase error:", error);
 
     return { error };
+};
+
+export const fetchSupabaseUser = async ({ supabase }: { supabase: SupabaseClient }) => {
+    try {
+        // TODO: this causes a 406, not acceptable error
+        const {
+            data: { user },
+            error,
+        } = await supabase.auth.getUser();
+
+        if (error) throw error;
+
+        return { user, error: null };
+    } catch (error) {
+        return { user: null, error: handleSupabaseError(error) };
+    }
 };
 
 export const fetchProducts = async () => {
