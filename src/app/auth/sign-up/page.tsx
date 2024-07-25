@@ -43,7 +43,7 @@ const SignUpForm = () => {
                 if (result.success) {
                     setIsLoading(false);
 
-                    router.push(`/auth/confirmEmail?email=${encodeURIComponent(email)}`);
+                    router.push(`/auth/confirm-email?email=${encodeURIComponent(email)}`);
 
                     return "Sign up successful! There's just one last step.";
                 }
@@ -100,7 +100,7 @@ const SignUpForm = () => {
                 </form>
 
                 <div className="mt-6">
-                    <SignUpLink title="Have an account?" buttonText="Sign In" link="/auth/signIn" />
+                    <SignUpLink title="Have an account?" buttonText="Sign In" link="/auth/sign-in" />
                     <FormDivider />
                     <ContinueWithGoogleButton />
                 </div>

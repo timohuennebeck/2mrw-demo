@@ -45,7 +45,7 @@ export async function updateSession(request: request) {
     // redirects non-authenticated users if it's not an API route and the user isn't on an auth page
     if (!user && !apiRoute && !request.nextUrl.pathname.startsWith("/auth")) {
         const url = request.nextUrl.clone();
-        url.pathname = "/auth/signIn";
+        url.pathname = "/auth/sign-in";
         return response.redirect(url);
     }
 

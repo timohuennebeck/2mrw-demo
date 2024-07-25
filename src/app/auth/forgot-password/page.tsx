@@ -26,7 +26,7 @@ const ForgotPasswordPage = () => {
 
         toast.promise(
             supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: `${window.location.origin}/auth/updatePassword`,
+                redirectTo: `${window.location.origin}/auth/update-password`,
             }),
             {
                 loading: "Sending reset email...",
@@ -74,7 +74,7 @@ const ForgotPasswordPage = () => {
                 <p className="text-center text-sm text-gray-600 mt-4">
                     Remember your password?{" "}
                     <Link
-                        href="/auth/signIn"
+                        href="/auth/sign-in"
                         className="font-medium text-black hover:text-gray-800 transition-colors"
                     >
                         Sign In

@@ -1,6 +1,6 @@
 "use client";
 
-import { signInUsingGoogle } from "@/app/auth/signIn/action";
+import { signInUsingGoogle } from "@/app/auth/sign-in/action";
 import googleIcon from "@/assets/icons/google-icon.svg";
 import Image from "next/image";
 import { toast } from "sonner";

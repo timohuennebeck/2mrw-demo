@@ -19,7 +19,7 @@ export const SignOutButton = ({ title, disabled }: { title: string; disabled?: b
             } else {
                 toast.success("Sign out successful!");
 
-                router.replace("/auth/signIn");
+                router.replace("/auth/sign-in");
             }
         } catch (err) {
             console.error("Unexpected error during sign out:", err);

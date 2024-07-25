@@ -80,7 +80,7 @@ const SignInForm = () => {
                         <RememberMeCheckbox />
 
                         <Link
-                            href="/auth/forgotPassword"
+                            href="/auth/forgot-password"
                             className="text-sm font-medium text-black hover:text-gray-800 transition-colors cursor-pointer"
                         >
                             Forgot password?
@@ -94,7 +94,7 @@ const SignInForm = () => {
                     <SignUpLink
                         title="Don't have an account?"
                         buttonText="Sign Up"
-                        link="/auth/signUp"
+                        link="/auth/sign-up"
                     />
                     <FormDivider />
                     <ContinueWithGoogleButton />
