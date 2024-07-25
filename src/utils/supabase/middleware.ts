@@ -77,15 +77,15 @@ export async function updateSession(request: request) {
     const isOnFreeTrial = freeTrialStatus === FreeTrialStatus.ACTIVE ?? false;
     const hasPremiumOrFreeTrial = hasPremiumSubscription || isOnFreeTrial;
 
-    // non-premium users should be redirected to the choosePricingPlan page to choose a plan
-    if (!hasPremiumOrFreeTrial && request.nextUrl.pathname !== "/choosePricingPlan") {
+    // non-premium users should be redirected to the choose-pricing-plan page to choose a plan
+    if (!hasPremiumOrFreeTrial && request.nextUrl.pathname !== "/choose-pricing-plan") {
         const url = request.nextUrl.clone();
-        url.pathname = "/choosePricingPlan";
+        url.pathname = "/choose-pricing-plan";
         return response.redirect(url);
     }
 
-    // premium users should be redirected away from choosePricingPlan
-    if (hasPremiumOrFreeTrial && request.nextUrl.pathname === "/choosePricingPlan") {
+    // premium users should be redirected away from choose-pricing-plan
+    if (hasPremiumOrFreeTrial && request.nextUrl.pathname === "/choose-pricing-plan") {
         const url = request.nextUrl.clone();
         url.pathname = "/";
         return response.redirect(url);

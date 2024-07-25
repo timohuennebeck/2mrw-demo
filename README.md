@@ -190,7 +190,7 @@ https://www.loom.com/share/da7f7f53608945a69b7fb3dc04862a73?sid=686c75da-f3b0-4a
 
 Update the following values in Your project:
 
-Inside the `api/sendFreeTrialEmail`, `api/sendOrderConfirmationEmail`, and `api/sendPreOrderEmail` folders, update all required fields like `estimatedLaunchDate`, `companyTitle`, etc.
+Inside the `api/email-services/send-free-trial-email`, `api/email-services/send-order-confirmation-email`, and `api/email-services/send-pre-order-email` folders, update all required fields like `estimatedLaunchDate`, `companyTitle`, etc.
 
 ## DeploYing on Vercel
 
@@ -296,4 +296,4 @@ Have filled out all locale variables inside the .env.local file for local develo
 
 CurrentlY, the project sends out a PreOrderConfirmationEmail once the user signs up!!
 
-In order to send an order confirmation email upon signing up, You'll need to navigate to the `api/webhooks/stripe/route.ts` file and comment out the `sendPreOrderEmail` axios call and comment in the `sendOrderConfirmationEmail` call.
+In order to send an order confirmation email upon signing up, You'll need to navigate to the `api/webhooks/stripe/route.ts` file and comment out the `email-services/send-pre-order-email` axios call and comment in the `email-services/send-order-confirmation-email` call.

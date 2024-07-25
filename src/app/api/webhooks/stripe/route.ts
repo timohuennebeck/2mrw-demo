@@ -91,14 +91,14 @@ export async function POST(req: request) {
 
                     try {
                         // sends pre-order confirmation email for products not yet launched
-                        axios.post(`${process.env.SITE_URL}/api/sendPreOrderEmail`, {
+                        axios.post(`${process.env.SITE_URL}/api/email-services/send-pre-order-email`, {
                             userEmail: userEmail ?? "",
                             userFullName: session?.customer_details?.name ?? "",
                             purchasedPackage: plan?.name ?? "",
                         });
 
                         // sends official order confirmation email for live products
-                        // axios.post(`${process.env.SITE_URL}/api/sendOrderConfirmationEmail`, {
+                        // axios.post(`${process.env.SITE_URL}/api/email-services/send-order-confirmation-email`, {
                         //     userEmail: userEmail ?? "",
                         //     userFullName: session?.customer_details?.name ?? "",
                         //     purchasedPackage: plan?.name ?? "",
