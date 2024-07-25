@@ -3,7 +3,7 @@ import { type NextRequest } from "next/server";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import axios from "axios";
-import { createSubscriptionTable, createUserTable } from "@/lib/supabase/admin";
+import { createPurchasedSubscriptionTable, createUserTable } from "@/lib/supabase/admin";
 
 export async function GET(request: NextRequest) {
     // this route is used for email authentication when the user needs to confirm their email via email
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
                 if (user) {
                     await createUserTable({ supabase, user });
 
-                    await createSubscriptionTable({ supabase, userId: user.id });
+                    await createPurchasedSubscriptionTable({ supabase, userId: user.id });
 
                     await axios.post(`${process.env.SITE_URL}/api/sendUserFreeTrialEmail`, {
                         userEmail: user.user_metadata.email ?? "",

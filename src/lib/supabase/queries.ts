@@ -4,31 +4,50 @@ import { FreeTrial } from "@/interfaces/FreeTrial";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { Product } from "@/interfaces/Product";
+import { User } from "@/interfaces/User";
+import {
+    CheckFreeTrialStatusParams,
+    CheckSubscriptionStatusParams,
+    CheckUserExistsParams,
+} from "./supabaseInterfaces";
 
 const supabase = createClient();
 
+export const handleSupabaseError = (error: unknown) => {
+    console.error("Supabase error:", error);
+
+    return { error };
+};
+
 export const fetchProducts = async () => {
-    const { data: products, error } = await supabase.from("products").select("*");
+    try {
+        const { data: products, error } = await supabase.from("products").select("*");
 
-    if (error) {
-        console.error("Error fetching products:", error);
-        return { products: null, error };
+        if (error) throw error;
+
+        return { products: products as Product[] };
+    } catch (error) {
+        return handleSupabaseError(error);
     }
-
-    return { products: products as Product[], error: null };
 };
 
-export const checkUserExists = async ({ userEmail }: { userEmail: string }) => {
-    const { data: existingUser } = await supabase
-        .from("users")
-        .select("*")
-        .eq("email", userEmail)
-        .single();
+export const checkUserExists = async ({ userEmail }: CheckUserExistsParams) => {
+    try {
+        const { data: user, error } = await supabase
+            .from("users")
+            .select("*")
+            .eq("email", userEmail)
+            .single();
 
-    return existingUser;
+        if (error) throw error;
+
+        return { user: user as User };
+    } catch (error) {
+        return handleSupabaseError(error);
+    }
 };
 
-export const checkSubscriptionStatus = async ({ userId }: { userId: string }) => {
+export const checkSubscriptionStatus = async ({ userId }: CheckSubscriptionStatusParams) => {
     try {
         const { data, error } = await supabase
             .from("purchased_subscriptions")
@@ -36,25 +55,15 @@ export const checkSubscriptionStatus = async ({ userId }: { userId: string }) =>
             .eq("user_id", userId)
             .single();
 
-        if (error) {
-            if (error.code === "PGRST116") {
-                // no subscription found for the user
-                return {
-                    status: null,
-                    subscription: null,
-                    error: null,
-                };
-            }
-            throw error;
-        }
+        if (error) throw error;
 
-        const response: PurchasedSubscription = data;
+        const subscription: PurchasedSubscription = data;
 
-        switch (response.status) {
+        switch (subscription.status) {
             case SubscriptionStatus.ACTIVE:
                 return {
                     status: SubscriptionStatus.ACTIVE,
-                    subscription: response,
+                    subscription: subscription,
                     error: null,
                 };
 
@@ -72,16 +81,11 @@ export const checkSubscriptionStatus = async ({ userId }: { userId: string }) =>
                 };
         }
     } catch (error) {
-        console.error("Unexpected error checking subscription status:", error);
-        return {
-            status: null,
-            subscription: null,
-            error: error as Error,
-        };
+        return handleSupabaseError(error);
     }
 };
 
-export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
+export const checkFreeTrialStatus = async ({ userId }: CheckFreeTrialStatusParams) => {
     try {
         const { data, error } = await supabase
             .from("free_trials")
@@ -89,13 +93,7 @@ export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
             .eq("user_id", userId)
             .single();
 
-        if (error) {
-            if (error.code === "PGRST116") {
-                // no free trial found for the user
-                return { status: FreeTrialStatus.NOT_STARTED, freeTrial: null, error: null };
-            }
-            throw error;
-        }
+        if (error) throw error;
 
         const freeTrial = data as FreeTrial;
         const now = new Date();
@@ -108,7 +106,6 @@ export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
             return { status: FreeTrialStatus.EXPIRED, freeTrial, error: null };
         }
     } catch (error) {
-        console.error("Unexpected error checking free trial status:", error);
-        return { status: FreeTrialStatus.NOT_STARTED, error: error as Error };
+        return handleSupabaseError(error);
     }
 };

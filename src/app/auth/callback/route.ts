@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse as response } from "next/server";
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
 import { checkUserExists } from "@/lib/supabase/queries";
-import { createSubscriptionTable, createUserTable } from "@/lib/supabase/admin";
+import { createPurchasedSubscriptionTable, createUserTable } from "@/lib/supabase/admin";
 import axios from "axios";
 
 export async function GET(request: Request) {
@@ -46,7 +46,7 @@ export async function GET(request: Request) {
 
                 if (!existingUser) {
                     await createUserTable({ supabase, user });
-                    await createSubscriptionTable({ supabase, userId: user.id });
+                    await createPurchasedSubscriptionTable({ supabase, userId: user.id });
 
                     axios.post(`${process.env.SITE_URL}/api/email-services/send-free-trial-email`, {
                         userEmail: user.user_metadata.email ?? "",
