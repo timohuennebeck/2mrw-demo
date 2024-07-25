@@ -10,8 +10,8 @@ export async function updateSession(request: request) {
     });
 
     const supabase = createServerClient(
-        process.env.SUPABASE_URL!,
-        process.env.SUPABASE_ANON_KEY!,
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
         {
             cookies: {
                 getAll() {
@@ -85,11 +85,11 @@ export async function updateSession(request: request) {
     }
 
     // premium users should be redirected away from choose-pricing-plan
-    if (hasPremiumOrFreeTrial && request.nextUrl.pathname === "/choose-pricing-plan") {
-        const url = request.nextUrl.clone();
-        url.pathname = "/";
-        return response.redirect(url);
-    }
+    // if (hasPremiumOrFreeTrial && request.nextUrl.pathname === "/choose-pricing-plan") {
+    //     const url = request.nextUrl.clone();
+    //     url.pathname = "/";
+    //     return response.redirect(url);
+    // }
 
     return supabaseResponse;
 }

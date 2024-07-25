@@ -118,7 +118,7 @@ Resend is used for sending emails in this project. Here's how to set it up:
 6. Include the logo URL in the `.env.local` file:
 
     ```
-    EMAIL_LOGO_BASE_URL=your_logo_url_here
+    NEXT_PUBLIC_EMAIL_LOGO_BASE_URL=your_logo_url_here
     ```
 
 7. Inside the `utils/emails/client.ts` replace the `from: "onboarding@resend.dev"` with Your own email.
@@ -152,8 +152,8 @@ To set up Supabase for Your project, follow these steps:
 3. Include those in Your `.env.local` file:
 
 ```
-SUPABASE_URL=your_supabase_url_here
-SUPABASE_ANON_KEY=your_supabase_api_key_here
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_api_key_here
 ```
 
 ## Supabase Tables Setup

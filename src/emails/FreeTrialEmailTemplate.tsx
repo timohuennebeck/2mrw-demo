@@ -41,7 +41,7 @@ export const FreeTrialEmailTemplate = ({
                 <Body className="bg-white my-auto mx-auto font-sans px-2">
                     <Container className="border border-solid border-gray-200 rounded my-[40px] mx-auto p-[20px] max-w-[465px]">
                         <Img
-                            src={process.env.EMAIL_LOGO_BASE_URL}
+                            src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL}
                             width="48"
                             height="48"
                             alt={companyTitle}
