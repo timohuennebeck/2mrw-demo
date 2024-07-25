@@ -11,9 +11,9 @@ export async function signUp(formData: FormData) {
     const password = formData.get("password") as string;
 
     try {
-        const existingUser = await checkUserExists({ userEmail: email });
+        const { user: userExists } = await checkUserExists({ userEmail: email });
 
-        if (existingUser) {
+        if (userExists) {
             return { error: "This email is already in use. Please log in to continue." };
         }
 

@@ -3,7 +3,6 @@
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { Product } from "@/interfaces/Product";
-import { User } from "@/interfaces/User";
 import { endUserFreeTrial, updateUserSubscriptionStatus } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/client";
 import { checkFreeTrialStatus, checkUserExists, fetchProducts } from "@/lib/supabase/queries";

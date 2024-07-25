@@ -25,9 +25,9 @@ export const fetchProducts = async () => {
 
         if (error) throw error;
 
-        return { products: products as Product[] };
+        return { products: products as Product[], error: null };
     } catch (error) {
-        return handleSupabaseError(error);
+        return { products: null, error: handleSupabaseError(error) };
     }
 };
 
@@ -41,9 +41,9 @@ export const checkUserExists = async ({ userEmail }: CheckUserExistsParams) => {
 
         if (error) throw error;
 
-        return { user: user as User };
+        return { user: user as User, error: null };
     } catch (error) {
-        return handleSupabaseError(error);
+        return { user: null, error: handleSupabaseError(error) };
     }
 };
 
@@ -81,7 +81,7 @@ export const checkSubscriptionStatus = async ({ userId }: CheckSubscriptionStatu
                 };
         }
     } catch (error) {
-        return handleSupabaseError(error);
+        return { status: null, subscription: null, error: handleSupabaseError(error) };
     }
 };
 
@@ -106,6 +106,6 @@ export const checkFreeTrialStatus = async ({ userId }: CheckFreeTrialStatusParam
             return { status: FreeTrialStatus.EXPIRED, freeTrial, error: null };
         }
     } catch (error) {
-        return handleSupabaseError(error);
+        return { status: null, freeTrial: null, error: handleSupabaseError(error) };
     }
 };

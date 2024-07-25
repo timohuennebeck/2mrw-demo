@@ -26,9 +26,9 @@ export const createUserTable = async ({ supabase, user }: CreateUserTableParams)
 
         if (error) throw error;
 
-        return { success: true };
+        return { success: true, error: null };
     } catch (error) {
-        return handleSupabaseError(error);
+        return { success: null, error: handleSupabaseError(error) };
     }
 };
 
@@ -46,9 +46,9 @@ export const createPurchasedSubscriptionTable = async ({
 
         if (error) throw error;
 
-        return { success: true };
+        return { success: true, error: null };
     } catch (error) {
-        return handleSupabaseError(error);
+        return { success: null, error: handleSupabaseError(error) };
     }
 };
 
@@ -72,9 +72,9 @@ export const updateUserSubscriptionStatus = async ({
 
         if (error) throw error;
 
-        return { subscription };
+        return { success: true, error: null };
     } catch (error) {
-        return handleSupabaseError(error);
+        return { success: null, error: handleSupabaseError(error) };
     }
 };
 
@@ -95,9 +95,9 @@ export const startUserFreeTrial = async ({
 
         if (error) throw error;
 
-        return { success: true };
+        return { success: true, error: null };
     } catch (error) {
-        return handleSupabaseError(error);
+        return { success: null, error: handleSupabaseError(error) };
     }
 };
 
@@ -114,8 +114,8 @@ export const endUserFreeTrial = async ({ supabase, userId }: EndUserFreeTrialPar
 
         if (error) throw error;
 
-        return { success: true };
+        return { success: true, error: null };
     } catch (error) {
-        return handleSupabaseError(error);
+        return { success: null, error: handleSupabaseError(error) };
     }
 };
