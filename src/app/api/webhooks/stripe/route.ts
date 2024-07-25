@@ -1,7 +1,7 @@
 "use server";
 
-import { FreeTrialStatus } from "@/app/enums/FreeTrialStatus";
-import { SubscriptionStatus } from "@/app/enums/SubscriptionStatus";
+import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
+import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { Product } from "@/interfaces/Product";
 import { User } from "@/interfaces/User";
 import { endUserFreeTrial, updateUserSubscriptionStatus } from "@/utils/supabase/admin";

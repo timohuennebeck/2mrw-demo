@@ -1,8 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse as response, type NextRequest as request } from "next/server";
 import { checkFreeTrialStatus, checkSubscriptionStatus } from "./queries";
-import { SubscriptionStatus } from "@/app/enums/SubscriptionStatus";
-import { FreeTrialStatus } from "@/app/enums/FreeTrialStatus";
+import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
+import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 
 export async function updateSession(request: request) {
     let supabaseResponse = response.next({

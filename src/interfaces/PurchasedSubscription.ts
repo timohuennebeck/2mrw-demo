@@ -1,4 +1,4 @@
-import { SubscriptionStatus } from "@/app/enums/SubscriptionStatus";
+import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 
 export interface PurchasedSubscription {
     id: number;

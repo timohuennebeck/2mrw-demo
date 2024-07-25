@@ -1,8 +1,8 @@
 import { PurchasedSubscription } from "@/interfaces/PurchasedSubscription";
 import { createClient } from "./client";
 import { FreeTrial } from "@/interfaces/FreeTrial";
-import { FreeTrialStatus } from "@/app/enums/FreeTrialStatus";
-import { SubscriptionStatus } from "@/app/enums/SubscriptionStatus";
+import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
+import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { Product } from "@/interfaces/Product";
 
 const supabase = createClient();

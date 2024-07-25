@@ -1,4 +1,4 @@
-import { FreeTrialStatus } from "@/app/enums/FreeTrialStatus";
+import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 
 export interface FreeTrial {
     id: number;

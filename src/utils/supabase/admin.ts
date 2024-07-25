@@ -1,6 +1,6 @@
-import { SubscriptionStatus } from "@/app/enums/SubscriptionStatus";
+import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { SupabaseClient, User } from "@supabase/supabase-js";
-import { FreeTrialStatus } from "@/app/enums/FreeTrialStatus";
+import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 
 export const createUserTable = async ({
     supabase,

@@ -8,11 +8,11 @@ import { createClient } from "@/utils/supabase/client";
 import { startUserFreeTrial } from "@/utils/supabase/admin";
 import DefaultButton from "./DefaultButton";
 import { toast } from "sonner";
-import { FreeTrialStatus } from "@/app/enums/FreeTrialStatus";
+import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { FreeTrial } from "@/interfaces/FreeTrial";
 import { formatDateToHumanFormat } from "@/helper/formatDateToHumanFormat";
 import { increaseDate } from "@/helper/increaseDate";
-import { SubscriptionStatus } from "@/app/enums/SubscriptionStatus";
+import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { Product } from "@/interfaces/Product";
 import { PurchasedSubscription } from "@/interfaces/PurchasedSubscription";
 
