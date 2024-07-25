@@ -1,7 +1,7 @@
 "use client";
 
 import DefaultButton from "@/components/DefaultButton";
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";

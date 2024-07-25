@@ -1,7 +1,7 @@
 "use server";
 
-import { checkUserExists } from "@/utils/supabase/queries";
-import { createClient } from "@/utils/supabase/server";
+import { checkUserExists } from "@/lib/supabase/queries";
+import { createClient } from "@/lib/supabase/server";
 
 export async function signUp(formData: FormData) {
     const supabase = createClient();

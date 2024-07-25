@@ -1,7 +1,7 @@
 import { PricingPlanCard } from "@/components/PricingPlanCard";
 import SignOutButton from "@/components/SignOutButton";
-import { fetchProducts } from "@/utils/supabase/queries";
-import { createClient } from "@/utils/supabase/server";
+import { fetchProducts } from "@/lib/supabase/queries";
+import { createClient } from "@/lib/supabase/server";
 import Image from "next/image";
 import { Suspense, cache } from "react";
 

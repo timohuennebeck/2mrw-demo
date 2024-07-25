@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import DefaultButton from "@/components/DefaultButton";
 import InputField from "@/components/InputField";
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import Link from "next/link";
 import FormButton from "@/components/FormButton";

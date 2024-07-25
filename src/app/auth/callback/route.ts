@@ -1,8 +1,8 @@
 import { cookies } from "next/headers";
 import { NextResponse as response } from "next/server";
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
-import { checkUserExists } from "@/utils/supabase/queries";
-import { createSubscriptionTable, createUserTable } from "@/utils/supabase/admin";
+import { checkUserExists } from "@/lib/supabase/queries";
+import { createSubscriptionTable, createUserTable } from "@/lib/supabase/admin";
 import axios from "axios";
 
 export async function GET(request: Request) {
