@@ -34,7 +34,7 @@ export const PricingPlanCard = (props: Product) => {
 
     const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatus | null>(null);
     const [subscriptionInfo, setSubscriptionInfo] = useState<PurchasedSubscription | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const searchParams = useSearchParams();
     const welcomeEmail = searchParams.get("welcomeEmail");
@@ -100,32 +100,19 @@ export const PricingPlanCard = (props: Product) => {
         const getUserFreeTrialStatus = async () => {
             try {
                 const user = await fetchUser();
-                const {
-                    status: freeTrialStatus,
-                    freeTrial,
-                    error,
-                } = await checkFreeTrialStatus({
-                    userId: user.id,
-                });
+                const [freeTrialResult, subscriptionResult] = await Promise.all([
+                    checkFreeTrialStatus({ userId: user.id }),
+                    checkSubscriptionStatus({ userId: user.id }),
+                ]);
 
-                const { status: subscriptionStatus, subscription } = await checkSubscriptionStatus({
-                    userId: user.id,
-                });
-
-                if (error) {
-                    toast.error("Error checking free trial status");
-                    setFreeTrialStatus(null);
-                } else {
-                    setFreeTrialStatus(freeTrialStatus);
-                    setFreeTrialInfo(freeTrial);
-                    setSubscriptionStatus(subscriptionStatus);
-                    setSubscriptionInfo(subscription);
-                }
+                setFreeTrialStatus(freeTrialResult.status);
+                setFreeTrialInfo(freeTrialResult.freeTrial);
+                setSubscriptionStatus(subscriptionResult.status);
+                setSubscriptionInfo(subscriptionResult.subscription);
             } catch (error) {
                 console.error("Error in getUserFreeTrialStatus:", error);
-
-                setFreeTrialStatus(null);
-                setSubscriptionStatus(null);
+            } finally {
+                setIsLoading(false);
             }
         };
 
@@ -133,16 +120,13 @@ export const PricingPlanCard = (props: Product) => {
     }, []);
 
     const renderSubscriptionButtons = () => {
-        if (freeTrialStatus === null || subscriptionStatus === null) {
-            return <DefaultButton title="Loading..." disabled={true} />;
-        }
-
-        if (freeTrialStatus === FreeTrialStatus.NOT_STARTED) {
+        if (freeTrialStatus === null) {
             return (
                 <DefaultButton
                     onClick={startFreeTrial}
                     title={`Start Free Trial (${welcomeEmail === "true" ? "14" : "7"} Days)`}
                     disabled={isLoading}
+                    isLoading={isLoading}
                 />
             );
         }
