@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
 
                     await createSubscriptionTable({ supabase, userId: user.id });
 
-                    await axios.post(`${process.env.NEXT_PUBLIC_SITE_URL}/api/sendUserFreeTrialEmail`, {
+                    await axios.post(`${process.env.SITE_URL}/api/sendUserFreeTrialEmail`, {
                         userEmail: user.user_metadata.email ?? "",
                         userFullName: user.user_metadata.full_name ?? "",
                     });

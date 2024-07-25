@@ -52,7 +52,7 @@ const UpdatePasswordPage = () => {
             <div className="bg-white rounded-2xl shadow-lg border p-8 max-w-md w-full">
                 <div className="flex justify-center mb-6">
                     <Image
-                        src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL ?? ""}
+                        src={process.env.EMAIL_LOGO_BASE_URL ?? ""}
                         alt="Logo"
                         width={48}
                         height={48}

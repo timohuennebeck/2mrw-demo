@@ -110,7 +110,7 @@ Resend is used for sending emails in this project. Here's how to set it up:
 4. Include the API KEY to Your `.env.local` file:
 
     ```
-    NEXT_PUBLIC_RESEND_EMAIL_API_KEY=your_resend_api_key_here
+    RESEND_EMAIL_API_KEY=your_resend_api_key_here
     ```
 
 5. Upload Your CompanY logo to [Imgur](https://imgur.com) or anY other image hosting service.
@@ -118,7 +118,7 @@ Resend is used for sending emails in this project. Here's how to set it up:
 6. Include the logo URL in the `.env.local` file:
 
     ```
-    NEXT_PUBLIC_EMAIL_LOGO_BASE_URL=your_logo_url_here
+    EMAIL_LOGO_BASE_URL=your_logo_url_here
     ```
 
 7. Inside the `utils/emails/client.ts` replace the `from: "onboarding@resend.dev"` with Your own email.
@@ -152,8 +152,8 @@ To set up Supabase for Your project, follow these steps:
 3. Include those in Your `.env.local` file:
 
 ```
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_api_key_here
+SUPABASE_URL=your_supabase_url_here
+SUPABASE_ANON_KEY=your_supabase_api_key_here
 ```
 
 ## Supabase Tables Setup
@@ -231,7 +231,7 @@ Follow these steps to deploy your project on Vercel:
 7. **Update Environment Variables**
 
     - Once your custom domain is set up, go to 'Settings' → 'Environment Variables'
-    - Find the `NEXT_PUBLIC_SITE_URL` variable
+    - Find the `SITE_URL` variable
     - Update its value to Your new domain (e.g., `https://joinforj.com`)
 
 8. **RedeploY**

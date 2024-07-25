@@ -2,7 +2,7 @@ import OrderConfirmationEmailTemplate from "@/emails/OrderConfirmationEmailTempl
 import { NextRequest as request, NextResponse as response } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_EMAIL_API_KEY ?? "");
+const resend = new Resend(process.env.RESEND_EMAIL_API_KEY ?? "");
 
 export const POST = async (req: request) => {
     try {

@@ -47,7 +47,7 @@ export const OrderConfirmationEmailTemplate = ({
                     <Container className="border border-solid border-gray-200 rounded my-[40px] mx-auto p-[20px] max-w-[465px]">
                         <Section className="mt-[32px]">
                             <Img
-                                src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL}
+                                src={process.env.EMAIL_LOGO_BASE_URL}
                                 width="48"
                                 height="48"
                                 alt={companyTitle}
