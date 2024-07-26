@@ -130,7 +130,6 @@ export const PricingPlanCard = (props: Product) => {
 
         if (hasPurchasedSubscription && !isOnFreeTrial) {
             const isCurrentPlan = subscriptionInfo?.stripe_price_id === stripe_price_id;
-
             // dont show this on a free trial
             // as we want to give users the option to upgrade to a paid plan during the free trial
             if (isCurrentPlan) {
@@ -148,8 +147,9 @@ export const PricingPlanCard = (props: Product) => {
 
         return (
             <DefaultButton
-                title={`Get Started Now (${is_highlighted ? "40" : "20"}% off)`}
-                onClick={() => window.open(stripe_purchase_link, "_blank")}
+                title="Get Started Now"
+                onClick={() => window.open(stripe_purchase_link)}
+                disabled={false}
             />
         );
     };

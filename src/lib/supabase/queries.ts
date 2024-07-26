@@ -33,6 +33,24 @@ export const checkTableExists = async ({ tableId }: { tableId: string }) => {
     }
 };
 
+export const fetchUser = async ({ userEmail }: { userEmail: string }) => {
+    try {
+        const { data, error } = await supabase
+            .from("users")
+            .select("*")
+            .eq("email", userEmail)
+            .single();
+
+        if (error) throw error;
+
+        const user: User = data;
+
+        return { user, error: null };
+    } catch (error) {
+        return { user: null, error: handleSupabaseError(error) };
+    }
+};
+
 export const fetchSupabaseUser = async ({ supabase }: { supabase: SupabaseClient }) => {
     try {
         // TODO: this causes a 406, not acceptable error
