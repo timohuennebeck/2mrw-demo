@@ -82,7 +82,7 @@ export const updateUserSubscriptionStatus = async ({
     }
 };
 
-export const startUserFreeTrial = async ({
+export const createFreeTrialTable = async ({
     supabase,
     userId,
     stripePriceId,

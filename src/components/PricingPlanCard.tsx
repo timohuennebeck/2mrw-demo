@@ -9,7 +9,7 @@ import {
     fetchSupabaseUser,
 } from "@/lib/supabase/queries";
 import { createClient } from "@/lib/supabase/client";
-import { startUserFreeTrial } from "@/lib/supabase/admin";
+import { createFreeTrialTable } from "@/lib/supabase/admin";
 import DefaultButton from "./DefaultButton";
 import { toast } from "sonner";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
@@ -61,7 +61,7 @@ export const PricingPlanCard = (props: Product) => {
             freeTrialEndDate = increaseDate({ date: currentDate, days: 7 });
         }
 
-        const { error: freeTrialError } = await startUserFreeTrial({
+        const { error: freeTrialError } = await createFreeTrialTable({
             supabase,
             userId: user.id,
             stripePriceId: stripe_price_id,
