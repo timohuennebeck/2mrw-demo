@@ -108,6 +108,7 @@ export const PricingPlanCard = (props: Product) => {
 
         fetchSubscriptionStatus();
 
+        // ensures that when a user purchases a subscription we get the most recent data
         const intervalId = setInterval(fetchSubscriptionStatus, 5000);
 
         return () => clearInterval(intervalId);
