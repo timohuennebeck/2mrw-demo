@@ -94,7 +94,7 @@ To find the `priceId` for each plan:
 
 8. You'll get a webhook signing secret provided from the Stripe CLI. Include that in the `.env.local` file:
     ```
-    STRIPE_WEBHOOK_SECRET=your_webhook_secret_here
+    NEXT_PUBLIC_STRIPE_WEBHOOK_SECRET=your_webhook_secret_here
     ```
 
 ## Resend Email Service Setup
@@ -110,7 +110,7 @@ Resend is used for sending emails in this project. Here's how to set it up:
 4. Include the API KEY to Your `.env.local` file:
 
     ```
-    RESEND_EMAIL_API_KEY=your_resend_api_key_here
+    NEXT_PUBLIC_RESEND_EMAIL_API_KEY=your_resend_api_key_here
     ```
 
 5. Upload Your CompanY logo to [Imgur](https://imgur.com) or anY other image hosting service.
@@ -231,7 +231,7 @@ Follow these steps to deploy your project on Vercel:
 7. **Update Environment Variables**
 
     - Once your custom domain is set up, go to 'Settings' → 'Environment Variables'
-    - Find the `SITE_URL` variable
+    - Find the `NEXT_PUBLIC_SITE_URL` variable
     - Update its value to Your new domain (e.g., `https://joinforj.com`)
 
 8. **RedeploY**

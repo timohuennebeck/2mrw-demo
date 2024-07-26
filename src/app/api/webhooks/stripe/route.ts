@@ -8,8 +8,8 @@ import axios from "axios";
 import { NextRequest as request, NextResponse as response } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
-const stripeWebhook = process.env.STRIPE_WEBHOOK_SECRET ?? "";
+const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY ?? "");
+const stripeWebhook = process.env.NEXT_PUBLIC_STRIPE_WEBHOOK_SECRET ?? "";
 
 const supabase = createClient();
 
@@ -89,7 +89,7 @@ export async function POST(req: request) {
                     try {
                         // sends pre-order confirmation email for products not yet launched
                         axios.post(
-                            `${process.env.SITE_URL}/api/email-services/send-pre-order-email`,
+                            `${process.env.NEXT_PUBLIC_SITE_URL}/api/email-services/send-pre-order-email`,
                             {
                                 userEmail: userEmail ?? "",
                                 userFullName: session?.customer_details?.name ?? "",
@@ -98,7 +98,7 @@ export async function POST(req: request) {
                         );
 
                         // sends official order confirmation email for live products
-                        // axios.post(`${process.env.SITE_URL}/api/email-services/send-order-confirmation-email`, {
+                        // axios.post(`${process.env.NEXT_PUBLIC_SITE_URL}/api/email-services/send-order-confirmation-email`, {
                         //     userEmail: userEmail ?? "",
                         //     userFullName: session?.customer_details?.name ?? "",
                         //     purchasedPackage: plan?.name ?? "",

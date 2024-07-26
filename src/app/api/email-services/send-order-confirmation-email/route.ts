@@ -1,8 +1,9 @@
+import { TextConstants } from "@/constants/TextConstants";
 import OrderConfirmationEmailTemplate from "@/emails/OrderConfirmationEmailTemplate";
 import { NextRequest as request, NextResponse as response } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_EMAIL_API_KEY ?? "");
+const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_EMAIL_API_KEY ?? "");
 
 export const POST = async (req: request) => {
     try {
@@ -13,18 +14,18 @@ export const POST = async (req: request) => {
         }
 
         const { data, error } = await resend.emails.send({
-            from: "info@updates.joinforj.com",
+            from: TextConstants.TEXT__EMAIL_SEND_FROM,
             to: userEmail,
             subject: `Order Confirmation - ${purchasedPackage}`,
             react: OrderConfirmationEmailTemplate({
                 userFullName,
                 purchasedPackage,
-                gettingStartedLoomUrl: "loom.com",
-                companyTitle: "Forj",
-                twitterCompanyTag: "@joinforj",
-                twitterCompanyUrl: "www.x.com/timohuennebeck",
-                twitterFounderTag: "@timohuennebeck",
-                twitterFounderUrl: "www.x.com/timohuennebeck",
+                gettingStartedLoomUrl: TextConstants.TEXT__LOOM_GETTING_STARTED_URL,
+                companyTitle: TextConstants.TEXT__COMPANY_TITLE,
+                twitterCompanyTag: TextConstants.TEXT__TWITTER_COMPANY_TAG,
+                twitterCompanyUrl: TextConstants.TEXT__TWITTER_COMPANY_URL,
+                twitterFounderTag: TextConstants.TEXT__TWITTER_FOUNDER_TAG,
+                twitterFounderUrl: TextConstants.TEXT__TWITTER_FOUNDER_URL,
             }),
         });
 

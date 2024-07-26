@@ -14,6 +14,7 @@ import {
     Button,
     Link,
 } from "@react-email/components";
+import { TextConstants } from "@/constants/TextConstants";
 
 interface OrderConfirmationEmailTemplateProps {
     userFullName: string;
@@ -109,12 +110,12 @@ export const OrderConfirmationEmailTemplate = ({
 OrderConfirmationEmailTemplate.PreviewProps = {
     userFullName: "Sarah",
     purchasedPackage: "Premium Plan (20% off)",
-    companyTitle: "Forj",
-    gettingStartedLoomUrl: "https://app.joinforj.com/setup",
-    twitterCompanyUrl: "www.x.com/joinforj",
-    twitterCompanyTag: "@joinforj",
-    twitterFounderUrl: "www.x.com/timohuennebeck",
-    twitterFounderTag: "@timohuennebeck",
+    companyTitle: TextConstants.TEXT__COMPANY_TITLE,
+    gettingStartedLoomUrl: TextConstants.TEXT__LOOM_GETTING_STARTED_URL,
+    twitterCompanyUrl: TextConstants.TEXT__TWITTER_COMPANY_URL,
+    twitterCompanyTag: TextConstants.TEXT__TWITTER_COMPANY_TAG,
+    twitterFounderUrl: TextConstants.TEXT__TWITTER_FOUNDER_URL,
+    twitterFounderTag: TextConstants.TEXT__TWITTER_FOUNDER_TAG,
 } as OrderConfirmationEmailTemplateProps;
 
 export default OrderConfirmationEmailTemplate;

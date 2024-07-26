@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { TextConstants } from "@/constants/TextConstants";
 
 const SignUpForm = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -78,7 +79,7 @@ const SignUpForm = () => {
 
                 <FormHeader
                     title="Sign Up"
-                    subtitle="Sign up using email or another service to continue with Forj (it takes 2 seconds)!"
+                    subtitle={`Sign up using email or another service to continue with ${TextConstants.TEXT__COMPANY_TITLE} (it takes 2 seconds)!`}
                 />
 
                 <form>

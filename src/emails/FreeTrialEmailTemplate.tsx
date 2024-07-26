@@ -13,6 +13,7 @@ import {
     Link,
     Button,
 } from "@react-email/components";
+import { TextConstants } from "@/constants/TextConstants";
 
 interface FreeTrialEmailTemplateProps {
     userFirstName: string;
@@ -101,11 +102,11 @@ export const FreeTrialEmailTemplate = ({
 // enable this during development to preview what the email will look like
 FreeTrialEmailTemplate.PreviewProps = {
     userFirstName: "Sarah",
-    companyTitle: "Forj",
-    trialDuration: 14,
-    trialSignupLink: "https://app.joinforj.com/trial",
-    twitterFounderUrl: "https://twitter.com/timohuennebeck",
-    twitterFounderTag: "@timohuennebeck",
+    companyTitle: TextConstants.TEXT__COMPANY_TITLE,
+    trialDuration: TextConstants.TEXT__FREE_TRIAL_DURATION,
+    trialSignupLink: `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan?welcomeEmail=true`,
+    twitterFounderUrl: TextConstants.TEXT__TWITTER_FOUNDER_URL,
+    twitterFounderTag: TextConstants.TEXT__TWITTER_FOUNDER_TAG,
 } as FreeTrialEmailTemplateProps;
 
 export default FreeTrialEmailTemplate;

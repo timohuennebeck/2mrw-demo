@@ -13,6 +13,7 @@ import {
     Tailwind,
     Link,
 } from "@react-email/components";
+import { TextConstants } from "@/constants/TextConstants";
 
 interface PreOrderEmailTemplateProps {
     userFullName: string;
@@ -45,7 +46,7 @@ export const PreOrderEmailTemplate = ({
                                 src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL}
                                 width="48"
                                 height="48"
-                                alt="Forj"
+                                alt="Logo"
                                 className="my-0 mx-auto"
                             />
                         </Section>
@@ -104,12 +105,12 @@ export const PreOrderEmailTemplate = ({
 // enable this during development to preview what the email will look like
 
 PreOrderEmailTemplate.PreviewProps = {
-    userFullName: "Michael",
-    purchasedPackage: "Standard Package",
-    estimatedLaunchDate: "September 18th, 2024",
-    companyTitle: "Forj",
-    twitterFounderUrl: "www.x.com/timohuennebeck",
-    twitterFounderTag: "@timohuennebeck",
+    userFullName: "Sarah",
+    purchasedPackage: "Premium Plan (20% off)",
+    estimatedLaunchDate: TextConstants.TEXT__ESTIMATED_LAUNCH_DATE,
+    companyTitle: TextConstants.TEXT__COMPANY_TITLE,
+    twitterFounderUrl: TextConstants.TEXT__TWITTER_FOUNDER_URL,
+    twitterFounderTag: TextConstants.TEXT__TWITTER_FOUNDER_TAG,
 } as PreOrderEmailTemplateProps;
 
 export default PreOrderEmailTemplate;
