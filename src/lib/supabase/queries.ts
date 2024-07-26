@@ -21,6 +21,18 @@ export const handleSupabaseError = (error: unknown) => {
     return { error };
 };
 
+export const checkTableExists = async ({ tableId }: { tableId: string }) => {
+    try {
+        const { error } = await supabase.from(tableId).select("*").single();
+
+        if (error) throw error;
+
+        return { tableExists: true, error: null };
+    } catch (error) {
+        return { tableExists: false, error: handleSupabaseError(error) };
+    }
+};
+
 export const fetchSupabaseUser = async ({ supabase }: { supabase: SupabaseClient }) => {
     try {
         // TODO: this causes a 406, not acceptable error
@@ -69,7 +81,7 @@ export const checkUserExists = async ({ userEmail }: CheckUserExistsParams) => {
     }
 };
 
-export const checkSubscriptionStatus = async ({ userId }: CheckSubscriptionStatusParams) => {
+export const checkPurchasedSubscriptionStatus = async ({ userId }: CheckSubscriptionStatusParams) => {
     try {
         const { data, error } = await supabase
             .from("purchased_subscriptions")

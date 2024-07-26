@@ -2,10 +2,15 @@ import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
 import { Product } from "@/interfaces/Product";
-import { endUserFreeTrial, updateUserPurchasedSubscription } from "@/lib/supabase/admin";
+import {
+    createPurchasedSubscriptionTable,
+    endUserFreeTrial,
+    updateUserPurchasedSubscription,
+} from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/client";
 import {
     checkFreeTrialStatus,
+    checkTableExists,
     checkUserExists,
     fetchProducts,
     fetchSubscriptionTier,
@@ -70,18 +75,32 @@ export async function POST(req: request) {
                         }
                     }
 
+                    const { tableExists } = await checkTableExists({
+                        tableId: "purchased-subscriptions",
+                    });
+
                     const { subscriptionTier } = await fetchSubscriptionTier({ stripePriceId });
 
                     if (!subscriptionTier) return;
 
-                    // update to the most recent subscription if a user purchases another paid plan
-                    await updateUserPurchasedSubscription({
-                        supabase,
-                        userId: user.user_id ?? "",
-                        stripePriceId: stripePriceId ?? "",
-                        status: SubscriptionStatus.ACTIVE,
-                        subscriptionTier: subscriptionTier,
-                    });
+                    if (tableExists) {
+                        // update to the most recent subscription if a user purchases another paid plan
+                        await updateUserPurchasedSubscription({
+                            supabase,
+                            userId: user.user_id ?? "",
+                            stripePriceId: stripePriceId ?? "",
+                            status: SubscriptionStatus.ACTIVE,
+                            subscriptionTier: subscriptionTier,
+                        });
+                    } else {
+                        // create a subscription with the correct subscriptionTier
+                        await createPurchasedSubscriptionTable({
+                            supabase,
+                            userId: user.user_id ?? "",
+                            stripePriceId: stripePriceId ?? "",
+                            subscriptionTier: subscriptionTier,
+                        });
+                    }
                 } else {
                     console.error("Error missing customer email or Stripe price Id");
                 }

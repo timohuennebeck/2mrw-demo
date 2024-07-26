@@ -1,6 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse as response, type NextRequest as request } from "next/server";
-import { checkFreeTrialStatus, checkSubscriptionStatus } from "./queries";
+import { checkFreeTrialStatus, checkPurchasedSubscriptionStatus } from "./queries";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 
@@ -61,7 +61,7 @@ export async function updateSession(request: request) {
         return supabaseResponse;
     }
 
-    const { status: subscriptionStatus, error: subscriptionError } = await checkSubscriptionStatus({
+    const { status: subscriptionStatus, error: subscriptionError } = await checkPurchasedSubscriptionStatus({
         userId: user?.id ?? "",
     });
 

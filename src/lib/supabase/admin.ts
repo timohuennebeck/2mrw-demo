@@ -36,14 +36,17 @@ export const createUserTable = async ({ supabase, user }: CreateUserTableParams)
 export const createPurchasedSubscriptionTable = async ({
     supabase,
     userId,
+    stripePriceId,
+    subscriptionTier,
 }: CreatePurchasedSubscriptionTableParams) => {
     try {
         const { error } = await supabase.from("purchased_subscriptions").insert({
             user_id: userId,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
-            status: SubscriptionStatus.NOT_PURCHASED,
-            subscription_tier: SubscriptionTier.TIER_ZERO,
+            stripe_price_id: stripePriceId,
+            status: SubscriptionStatus.ACTIVE,
+            subscription_tier: subscriptionTier,
         });
 
         if (error) throw error;

@@ -10,6 +10,8 @@ export interface CreateUserTableParams {
 export interface CreatePurchasedSubscriptionTableParams {
     supabase: SupabaseClient;
     userId: string;
+    stripePriceId: string;
+    subscriptionTier: SubscriptionTier;
 }
 
 export interface UpdateUserSubscriptionStatusParams {

@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
     checkFreeTrialStatus,
-    checkSubscriptionStatus,
+    checkPurchasedSubscriptionStatus,
     fetchSupabaseUser,
 } from "@/lib/supabase/queries";
 import { createClient } from "@/lib/supabase/client";
@@ -91,7 +91,7 @@ export const PricingPlanCard = (props: Product) => {
             try {
                 const [freeTrialResult, subscriptionResult] = await Promise.all([
                     checkFreeTrialStatus({ userId: user.id }),
-                    checkSubscriptionStatus({ userId: user.id }),
+                    checkPurchasedSubscriptionStatus({ userId: user.id }),
                 ]);
 
                 setFreeTrialStatus(freeTrialResult.status);
