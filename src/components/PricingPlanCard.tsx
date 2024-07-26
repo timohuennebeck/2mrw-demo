@@ -147,38 +147,33 @@ export const PricingPlanCard = (props: Product) => {
 
         return (
             <DefaultButton
-                title="Get Started Now"
+                title="Upgrade Now"
                 onClick={() => window.open(stripe_purchase_link)}
                 disabled={false}
             />
         );
     };
 
-    const renderFreeTrialIndicator = () => {
-        if (freeTrialStatus !== FreeTrialStatus.ACTIVE) return null;
+    const getIndicatorText = () => {
+        const isOnFreeTrial = freeTrialStatus === FreeTrialStatus.ACTIVE;
+        const isCurrentPlan = freeTrialInfo?.stripe_price_id === stripe_price_id;
 
-        if (!freeTrialInfo?.end_date) return null;
+        if (isOnFreeTrial && isCurrentPlan && freeTrialInfo?.end_date) {
+            return `Free Trial End Date: ${formatDateToHumanFormat(freeTrialInfo?.end_date)}`;
+        }
 
-        return (
-            <div className="bg-black text-white text-sm px-2.5 py-0.5 rounded-md mb-4 text-center whitespace-nowrap">
-                Free Trial End Date: {formatDateToHumanFormat(freeTrialInfo.end_date)}
-            </div>
-        );
-    };
+        if (is_highlighted) return "Most Popular Option";
 
-    const renderHighlightedPlanIndicator = () => {
-        return (
-            <div className="bg-black text-white text-sm px-2.5 py-0.5 rounded-md mb-4 text-center whitespace-nowrap">
-                Most Popular Option
-            </div>
-        );
+        return null;
     };
 
     return (
         <div className="bg-white rounded-2xl shadow-lg border p-8 relative">
             <div className="mb-6">
                 <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
-                    {is_highlighted ? renderHighlightedPlanIndicator() : renderFreeTrialIndicator()}
+                    <div className="bg-black text-white text-sm px-2.5 py-0.5 rounded-md mb-4 text-center whitespace-nowrap">
+                        {getIndicatorText()}
+                    </div>
                 </div>
 
                 <h3 className="text-lg mb-6 font-medium">{name}</h3>
