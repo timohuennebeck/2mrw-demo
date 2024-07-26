@@ -64,10 +64,6 @@ const ChoosePricingPlanPage = async () => {
                         </Suspense>
                     ))}
                 </div>
-
-                <p className="text-center text-gray-600 mb-8 text-sm">
-                    This limited offer ends November 8th, 2024 at 12 AM CET.
-                </p>
             </div>
         </div>
     );

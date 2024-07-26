@@ -29,7 +29,6 @@ export const PricingPlanCard = (props: Product) => {
         previous_price,
         current_price,
         description,
-        additional_info,
         features,
     } = props;
 
@@ -191,9 +190,7 @@ export const PricingPlanCard = (props: Product) => {
                     <span className="text-gray-600 ml-2">USD</span>
                 </div>
 
-                <p className="text-gray-600 text-sm mb-2">{description}</p>
-
-                <p className="text-gray-600 text-sm mb-8">{additional_info}</p>
+                <p className="text-gray-600 text-sm mb-4">{description}</p>
 
                 <ul className="flex flex-col gap-3 mb-10">
                     {features.map((feature, index) => (
