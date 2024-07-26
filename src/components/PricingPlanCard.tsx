@@ -160,8 +160,6 @@ export const PricingPlanCard = (props: Product) => {
 
         if (!freeTrialInfo?.end_date) return null;
 
-        if (subscriptionInfo?.stripe_price_id !== stripe_price_id) return null;
-
         return (
             <div className="bg-black text-white text-sm px-2.5 py-0.5 rounded-md mb-4 text-center whitespace-nowrap">
                 Free Trial End Date: {formatDateToHumanFormat(freeTrialInfo.end_date)}
@@ -169,15 +167,19 @@ export const PricingPlanCard = (props: Product) => {
         );
     };
 
+    const renderHighlightedPlanIndicator = () => {
+        return (
+            <div className="bg-black text-white text-sm px-2.5 py-0.5 rounded-md mb-4 text-center whitespace-nowrap">
+                Most Popular Option
+            </div>
+        );
+    };
+
     return (
-        <div
-            className={`bg-white rounded-2xl shadow-lg border p-8 relative ${
-                is_highlighted ? "border-black" : ""
-            }`}
-        >
+        <div className="bg-white rounded-2xl shadow-lg border p-8 relative">
             <div className="mb-6">
                 <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
-                    {renderFreeTrialIndicator()}
+                    {is_highlighted ? renderHighlightedPlanIndicator() : renderFreeTrialIndicator()}
                 </div>
 
                 <h3 className="text-lg mb-6 font-medium">{name}</h3>
