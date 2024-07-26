@@ -11,9 +11,10 @@ import { createClient } from "@/lib/supabase/client";
 import {
     checkFreeTrialStatus,
     checkTableExists,
-    checkUserExists,
+    checkUserEmailExists,
     fetchProducts,
     fetchSubscriptionTier,
+    fetchSupabaseUser,
 } from "@/lib/supabase/queries";
 import axios from "axios";
 import { NextRequest as request, NextResponse as response } from "next/server";
@@ -54,16 +55,16 @@ export async function POST(req: request) {
                 const stripePriceId = session.line_items?.data[0].price?.id;
 
                 if (userEmail && stripePriceId) {
-                    const { user } = await checkUserExists({ userEmail });
+                    const { user } = await fetchSupabaseUser({ supabase });
 
                     if (!user) return;
 
-                    const { status } = await checkFreeTrialStatus({ userId: user.user_id });
+                    const { status } = await checkFreeTrialStatus({ userId: user.id });
 
                     if (status === FreeTrialStatus.ACTIVE) {
                         const { success, error } = await endUserFreeTrial({
                             supabase,
-                            userId: user.user_id,
+                            userId: user.id,
                         });
 
                         if (error) {
@@ -87,7 +88,7 @@ export async function POST(req: request) {
                         // update to the most recent subscription if a user purchases another paid plan
                         await updateUserPurchasedSubscription({
                             supabase,
-                            userId: user.user_id ?? "",
+                            userId: user.id ?? "",
                             stripePriceId: stripePriceId ?? "",
                             status: SubscriptionStatus.ACTIVE,
                             subscriptionTier: subscriptionTier,
@@ -96,7 +97,7 @@ export async function POST(req: request) {
                         // create a subscription with the correct subscriptionTier
                         await createPurchasedSubscriptionTable({
                             supabase,
-                            userId: user.user_id ?? "",
+                            userId: user.id ?? "",
                             stripePriceId: stripePriceId ?? "",
                             subscriptionTier: subscriptionTier,
                         });

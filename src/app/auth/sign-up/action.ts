@@ -1,6 +1,6 @@
 "use server";
 
-import { checkUserExists } from "@/lib/supabase/queries";
+import { checkUserEmailExists } from "@/lib/supabase/queries";
 import { createClient } from "@/lib/supabase/server";
 
 export async function signUp(formData: FormData) {
@@ -11,10 +11,10 @@ export async function signUp(formData: FormData) {
     const password = formData.get("password") as string;
 
     try {
-        const { user: userExists } = await checkUserExists({ userEmail: email });
+        const { emailExists } = await checkUserEmailExists({ userEmail: email });
 
-        if (userExists) {
-            return { error: "This email is already in use. Please log in to continue." };
+        if (emailExists) {
+            return { error: "This email is in use. Please log in to continue." };
         }
 
         const { data, error } = await supabase.auth.signUp({

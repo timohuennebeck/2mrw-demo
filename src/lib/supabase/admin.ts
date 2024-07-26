@@ -7,7 +7,6 @@ import {
     StartUserFreeTrialParams,
     UpdateUserSubscriptionStatusParams,
 } from "./supabaseInterfaces";
-import { SubscriptionTier } from "@/enums/SubscriptionTier";
 
 export const handleSupabaseError = (error: unknown) => {
     console.error("Supabase error:", error);

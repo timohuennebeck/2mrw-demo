@@ -65,23 +65,21 @@ export const fetchProducts = async () => {
     }
 };
 
-export const checkUserExists = async ({ userEmail }: CheckUserExistsParams) => {
+export const checkUserEmailExists = async ({ userEmail }: CheckUserExistsParams) => {
     try {
-        const { data: user, error } = await supabase
-            .from("users")
-            .select("*")
-            .eq("email", userEmail)
-            .single();
+        const { error } = await supabase.from("users").select("*").eq("email", userEmail).single();
 
         if (error) throw error;
 
-        return { user: user as User, error: null };
+        return { emailExists: true, error: null };
     } catch (error) {
-        return { user: null, error: handleSupabaseError(error) };
+        return { emailExists: false, error: handleSupabaseError(error) };
     }
 };
 
-export const checkPurchasedSubscriptionStatus = async ({ userId }: CheckSubscriptionStatusParams) => {
+export const checkPurchasedSubscriptionStatus = async ({
+    userId,
+}: CheckSubscriptionStatusParams) => {
     try {
         const { data, error } = await supabase
             .from("purchased_subscriptions")

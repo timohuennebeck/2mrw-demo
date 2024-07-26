@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse as response } from "next/server";
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
-import { checkUserExists } from "@/lib/supabase/queries";
+import { checkTableExists, checkUserEmailExists } from "@/lib/supabase/queries";
 import { createUserTable } from "@/lib/supabase/admin";
 import axios from "axios";
 
@@ -40,17 +40,20 @@ export async function GET(request: Request) {
             const { user } = data.session;
 
             try {
-                const existingUser = await checkUserExists({
-                    userEmail: user.user_metadata.email ?? "",
+                const { emailExists } = await checkUserEmailExists({
+                    userEmail: user.user_metadata.email,
                 });
 
-                if (!existingUser) {
+                if (!emailExists) {
                     await createUserTable({ supabase, user });
 
-                    axios.post(`${process.env.NEXT_PUBLIC_SITE_URL}/api/email-services/send-free-trial-email`, {
-                        userEmail: user.user_metadata.email ?? "",
-                        userFullName: user.user_metadata.full_name ?? "",
-                    });
+                    axios.post(
+                        `${process.env.NEXT_PUBLIC_SITE_URL}/api/email-services/send-free-trial-email`,
+                        {
+                            userEmail: user.user_metadata.email ?? "",
+                            userFullName: user.user_metadata.full_name ?? "",
+                        },
+                    );
                 }
 
                 return response.redirect(`${origin}${next}`);
