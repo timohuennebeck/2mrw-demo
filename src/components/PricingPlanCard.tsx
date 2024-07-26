@@ -139,7 +139,7 @@ export const PricingPlanCard = (props: Product) => {
             } else {
                 return (
                     <DefaultButton
-                        title="Upgrade Now"
+                        title="Get Started Now"
                         onClick={() => window.open(stripe_purchase_link)}
                         disabled={false}
                     />

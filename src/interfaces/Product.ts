@@ -14,6 +14,7 @@ export interface Product {
     stripe_purchase_link: string;
     is_highlighted: boolean;
     features: Feature[];
+    is_active: boolean;
     created_at: Date;
     updated_at: Date;
 }

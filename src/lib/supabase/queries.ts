@@ -38,7 +38,11 @@ export const fetchSupabaseUser = async ({ supabase }: { supabase: SupabaseClient
 
 export const fetchProducts = async () => {
     try {
-        const { data: products, error } = await supabase.from("products").select("*");
+        const { data: products, error } = await supabase
+            .from("products")
+            .select("*")
+            .eq("is_active", "TRUE")
+            .order("id", { ascending: true });
 
         if (error) throw error;
 
