@@ -7,6 +7,7 @@ import {
     StartUserFreeTrialParams,
     UpdateUserSubscriptionStatusParams,
 } from "./supabaseInterfaces";
+import { SubscriptionTier } from "@/enums/SubscriptionTier";
 
 export const handleSupabaseError = (error: unknown) => {
     console.error("Supabase error:", error);
@@ -42,6 +43,7 @@ export const createPurchasedSubscriptionTable = async ({
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
             status: SubscriptionStatus.NOT_PURCHASED,
+            subscription_tier: SubscriptionTier.TIER_ZERO,
         });
 
         if (error) throw error;
@@ -57,17 +59,19 @@ export const updateUserSubscriptionStatus = async ({
     userId,
     stripePriceId,
     status,
+    subscriptionTier,
 }: UpdateUserSubscriptionStatusParams) => {
     try {
-        const { data: subscription, error } = await supabase
+        const { error } = await supabase
             .from("purchased_subscriptions")
             .update({
                 updated_at: new Date().toISOString(),
                 stripe_price_id: stripePriceId,
                 status,
+                subscription_tier: subscriptionTier,
             })
             .eq("user_id", userId)
-            .select()
+            .select("*")
             .single();
 
         if (error) throw error;

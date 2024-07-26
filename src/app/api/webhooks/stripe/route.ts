@@ -1,9 +1,15 @@
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
+import { SubscriptionTier } from "@/enums/SubscriptionTier";
 import { Product } from "@/interfaces/Product";
 import { endUserFreeTrial, updateUserSubscriptionStatus } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/client";
-import { checkFreeTrialStatus, checkUserExists, fetchProducts } from "@/lib/supabase/queries";
+import {
+    checkFreeTrialStatus,
+    checkUserExists,
+    fetchProducts,
+    fetchSubscriptionTier,
+} from "@/lib/supabase/queries";
 import axios from "axios";
 import { NextRequest as request, NextResponse as response } from "next/server";
 import Stripe from "stripe";
@@ -64,12 +70,17 @@ export async function POST(req: request) {
                         }
                     }
 
+                    const { subscriptionTier } = await fetchSubscriptionTier({ stripePriceId });
+
+                    if (!subscriptionTier) return;
+
                     // update to the most recent subscription if a user purchases another paid plan
                     await updateUserSubscriptionStatus({
                         supabase,
                         userId: user.user_id ?? "",
                         stripePriceId: stripePriceId ?? "",
                         status: SubscriptionStatus.ACTIVE,
+                        subscriptionTier: subscriptionTier,
                     });
                 } else {
                     console.error("Error missing customer email or Stripe price Id");

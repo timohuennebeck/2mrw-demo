@@ -11,6 +11,7 @@ import {
     CheckUserExistsParams,
 } from "./supabaseInterfaces";
 import { SupabaseClient } from "@supabase/supabase-js";
+import { SubscriptionTier } from "@/enums/SubscriptionTier";
 
 const supabase = createClient();
 
@@ -84,6 +85,7 @@ export const checkSubscriptionStatus = async ({ userId }: CheckSubscriptionStatu
             case SubscriptionStatus.ACTIVE:
                 return {
                     status: SubscriptionStatus.ACTIVE,
+                    subscriptionTier: subscription.subscription_tier,
                     subscription: subscription,
                     error: null,
                 };
@@ -91,18 +93,25 @@ export const checkSubscriptionStatus = async ({ userId }: CheckSubscriptionStatu
             case SubscriptionStatus.NOT_PURCHASED:
                 return {
                     status: SubscriptionStatus.NOT_PURCHASED,
+                    subscriptionTier: SubscriptionTier.TIER_ZERO,
                     subscription: null,
                     error: null,
                 };
             default:
                 return {
                     status: null,
+                    subscriptionTier: null,
                     subscription: null,
                     error: null,
                 };
         }
     } catch (error) {
-        return { status: null, subscription: null, error: handleSupabaseError(error) };
+        return {
+            status: null,
+            subscriptionTier: null,
+            subscription: null,
+            error: handleSupabaseError(error),
+        };
     }
 };
 
@@ -128,5 +137,23 @@ export const checkFreeTrialStatus = async ({ userId }: CheckFreeTrialStatusParam
         }
     } catch (error) {
         return { status: null, freeTrial: null, error: handleSupabaseError(error) };
+    }
+};
+
+export const fetchSubscriptionTier = async ({ stripePriceId }: { stripePriceId: string }) => {
+    try {
+        const { data, error } = await supabase
+            .from("products")
+            .select("*")
+            .eq("stripe_price_id", stripePriceId)
+            .single();
+
+        if (error) throw error;
+
+        const product: Product = data;
+
+        return { subscriptionTier: product.subscription_tier, error: null };
+    } catch (error) {
+        return { subscriptionTier: null, error: handleSupabaseError(error) };
     }
 };

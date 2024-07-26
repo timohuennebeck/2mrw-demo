@@ -1,4 +1,5 @@
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
+import { SubscriptionTier } from "@/enums/SubscriptionTier";
 import { SupabaseClient, User } from "@supabase/supabase-js";
 
 export interface CreateUserTableParams {
@@ -16,6 +17,7 @@ export interface UpdateUserSubscriptionStatusParams {
     userId: string;
     stripePriceId: string;
     status: SubscriptionStatus;
+    subscriptionTier: SubscriptionTier;
 }
 
 export interface StartUserFreeTrialParams {

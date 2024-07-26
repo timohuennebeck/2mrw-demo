@@ -1,3 +1,5 @@
+import { SubscriptionTier } from "@/enums/SubscriptionTier";
+
 interface Feature {
     name: string;
     included: boolean;
@@ -14,6 +16,7 @@ export interface Product {
     is_highlighted: boolean;
     features: Feature[];
     is_active: boolean;
+    subscription_tier: SubscriptionTier;
     created_at: Date;
     updated_at: Date;
 }

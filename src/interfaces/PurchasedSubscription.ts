@@ -1,4 +1,5 @@
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
+import { SubscriptionTier } from "@/enums/SubscriptionTier";
 
 export interface PurchasedSubscription {
     id: number;
@@ -7,4 +8,5 @@ export interface PurchasedSubscription {
     user_id: number;
     stripe_price_id: string;
     status: SubscriptionStatus;
+    subscription_tier: SubscriptionTier;
 }
