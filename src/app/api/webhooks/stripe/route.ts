@@ -2,7 +2,7 @@ import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
 import { Product } from "@/interfaces/Product";
-import { endUserFreeTrial, updateUserSubscriptionStatus } from "@/lib/supabase/admin";
+import { endUserFreeTrial, updateUserPurchasedSubscription } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/client";
 import {
     checkFreeTrialStatus,
@@ -75,7 +75,7 @@ export async function POST(req: request) {
                     if (!subscriptionTier) return;
 
                     // update to the most recent subscription if a user purchases another paid plan
-                    await updateUserSubscriptionStatus({
+                    await updateUserPurchasedSubscription({
                         supabase,
                         userId: user.user_id ?? "",
                         stripePriceId: stripePriceId ?? "",

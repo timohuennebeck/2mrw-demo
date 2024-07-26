@@ -54,7 +54,7 @@ export const createPurchasedSubscriptionTable = async ({
     }
 };
 
-export const updateUserSubscriptionStatus = async ({
+export const updateUserPurchasedSubscription = async ({
     supabase,
     userId,
     stripePriceId,
