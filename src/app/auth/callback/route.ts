@@ -1,7 +1,9 @@
+"use server";
+
 import { cookies } from "next/headers";
 import { NextResponse as response } from "next/server";
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
-import { checkTableExists, checkUserEmailExists } from "@/lib/supabase/queries";
+import { checkUserEmailExists } from "@/lib/supabase/queries";
 import { createUserTable } from "@/lib/supabase/admin";
 import axios from "axios";
 

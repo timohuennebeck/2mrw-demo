@@ -1,3 +1,5 @@
+"use server";
+
 import { type EmailOtpType } from "@supabase/supabase-js";
 import { type NextRequest } from "next/server";
 import { redirect } from "next/navigation";
@@ -28,10 +30,13 @@ export const GET = async (request: NextRequest) => {
                 if (user) {
                     await createUserTable({ supabase, user });
 
-                    await axios.post(`${process.env.NEXT_PUBLIC_SITE_URL}/api/sendUserFreeTrialEmail`, {
-                        userEmail: user.user_metadata.email ?? "",
-                        userFullName: user.user_metadata.full_name ?? "",
-                    });
+                    await axios.post(
+                        `${process.env.NEXT_PUBLIC_SITE_URL}/api/send-free-trial-email`,
+                        {
+                            userEmail: user.user_metadata.email ?? "",
+                            userFullName: user.user_metadata.full_name ?? "",
+                        },
+                    );
                 } else {
                     console.error("User data not available");
                 }
@@ -44,4 +49,4 @@ export const GET = async (request: NextRequest) => {
     }
 
     redirect("/error");
-}
+};
