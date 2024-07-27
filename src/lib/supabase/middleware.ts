@@ -61,18 +61,13 @@ export const updateSession = async (request: request) => {
         return supabaseResponse;
     }
 
-    const { status: subscriptionStatus, error: subscriptionError } =
-        await checkPurchasedSubscriptionStatus({
-            userId: user?.id ?? "",
-        });
-
-    const { status: freeTrialStatus, error: freeTrialError } = await checkFreeTrialStatus({
+    const { status: subscriptionStatus } = await checkPurchasedSubscriptionStatus({
         userId: user?.id ?? "",
     });
 
-    if (subscriptionError || freeTrialError) {
-        console.error("Error checking subscription or free trial status");
-    }
+    const { status: freeTrialStatus } = await checkFreeTrialStatus({
+        userId: user?.id ?? "",
+    });
 
     const hasPremiumSubscription = subscriptionStatus === SubscriptionStatus.ACTIVE ?? false;
     const isOnFreeTrial = freeTrialStatus === FreeTrialStatus.ACTIVE ?? false;
