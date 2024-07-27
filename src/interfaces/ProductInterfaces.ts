@@ -1,6 +1,6 @@
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
 
-interface Feature {
+export interface Feature {
     name: string;
     included: boolean;
 }

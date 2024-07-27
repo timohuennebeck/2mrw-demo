@@ -1,19 +1,30 @@
-import { PricingPlanCard } from "@/components/PricingPlanCard";
+"use client";
+
+import { PricingPlanCard } from "@/components/PricingPlan/PricingPlanCard";
 import SignOutButton from "@/components/SignOutButton";
 import { TextConstants } from "@/constants/TextConstants";
 import { Product } from "@/interfaces/ProductInterfaces";
 import { fetchProducts, fetchSupabaseUser } from "@/services/supabase/queries";
-import { User } from "@supabase/supabase-js";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { Suspense } from "react";
 
-const ChoosePricingPlanPage = async () => {
-    const [products, user] = await Promise.all([fetchProducts(), fetchSupabaseUser()]);
+const ChoosePricingPlanPage = () => {
+    const { data: products } = useQuery({
+        queryKey: ["products"],
+        queryFn: () => fetchProducts(),
+        staleTime: 5 * 60 * 1000,
+    });
 
-    const allProducts = products.products as Product[];
-    const supabaseUser = user.user as User;
+    const { data: supabaseUser } = useQuery({
+        queryKey: ["supabaseUser"],
+        queryFn: () => fetchSupabaseUser(),
+        staleTime: 5 * 60 * 1000,
+    });
 
-    const userEmail = supabaseUser.email ? encodeURIComponent(supabaseUser.email) : "";
+    const userEmail = supabaseUser?.user?.email
+        ? encodeURIComponent(supabaseUser?.user?.email)
+        : "";
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -39,7 +50,7 @@ const ChoosePricingPlanPage = async () => {
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                    {allProducts?.map((product: Product, index) => (
+                    {products?.products?.map((product: Product, index) => (
                         <Suspense key={index}>
                             <PricingPlanCard
                                 {...product}

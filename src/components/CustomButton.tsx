@@ -1,14 +1,14 @@
 import React from "react";
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
 
-interface DefaultButtonParams {
+interface CustomButtonParams {
     title: string;
     onClick?: () => void;
     disabled?: boolean;
     isLoading?: boolean;
 }
 
-const DefaultButton = ({ title, onClick, disabled, isLoading }: DefaultButtonParams) => {
+const CustomButton = ({ title, onClick, disabled, isLoading }: CustomButtonParams) => {
     const isDisabledOrLoading = disabled || isLoading;
 
     return (
@@ -31,4 +31,4 @@ const DefaultButton = ({ title, onClick, disabled, isLoading }: DefaultButtonPar
     );
 };
 
-export default DefaultButton;
+export default CustomButton;
