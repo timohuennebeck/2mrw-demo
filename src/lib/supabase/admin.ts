@@ -27,7 +27,7 @@ export const createUserTable = async ({ user }: { user: User }) => {
 
         return { success: true, error: null };
     } catch (error) {
-        return { success: null, error: handleSupabaseError(error) };
+        return { success: null, error: handleSupabaseError({ error, fnTitle: "createUserTable" }) };
     }
 };
 
@@ -52,7 +52,10 @@ export const createPurchasedSubscriptionTable = async ({
 
         return { success: true, error: null };
     } catch (error) {
-        return { success: null, error: handleSupabaseError(error) };
+        return {
+            success: null,
+            error: handleSupabaseError({ error, fnTitle: "createPurchasedSubscriptionTable" }),
+        };
     }
 };
 
@@ -81,7 +84,10 @@ export const updateUserPurchasedSubscription = async ({
 
         return { success: true, error: null };
     } catch (error) {
-        return { success: null, error: handleSupabaseError(error) };
+        return {
+            success: null,
+            error: handleSupabaseError({ error, fnTitle: "updateUserPurchasedSubscription" }),
+        };
     }
 };
 
@@ -105,7 +111,10 @@ export const createFreeTrialTable = async ({
 
         return { success: true, error: null };
     } catch (error) {
-        return { success: null, error: handleSupabaseError(error) };
+        return {
+            success: null,
+            error: handleSupabaseError({ error, fnTitle: "createFreeTrialTable" }),
+        };
     }
 };
 
@@ -126,6 +135,9 @@ export const endUserFreeTrial = async ({ userId }: { userId: string }) => {
 
         return { success: true, error: null };
     } catch (error) {
-        return { success: null, error: handleSupabaseError(error) };
+        return {
+            success: null,
+            error: handleSupabaseError({ error, fnTitle: "endUserFreeTrial" }),
+        };
     }
 };

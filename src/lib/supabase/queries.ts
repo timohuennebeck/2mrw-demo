@@ -10,17 +10,29 @@ import { User } from "@/interfaces/UserInterfaces";
 import { createClient } from "./server";
 import { handleSupabaseError } from "../helper/handleSupabaseError";
 
-export const checkTableExists = async ({ tableId }: { tableId: string }) => {
+export const checkUserRowExists = async ({
+    tableId,
+    userId,
+}: {
+    tableId: string;
+    userId: string;
+}) => {
     const supabase = createClient();
 
     try {
-        const { error } = await supabase.from(tableId).select("*").single();
+        const { error } = await supabase.from(tableId).select("*").eq("user_id", userId).single();
 
-        if (error) throw error;
+        if (error) {
+            if (error.code === "PGRST116") {
+                return { rowExists: false, error: null }; // no row found for this user
+            }
 
-        return { tableExists: true, error: null };
+            return { rowExists: false, error };
+        }
+
+        return { rowExists: true, error: null };
     } catch (error) {
-        return { tableExists: false, error: handleSupabaseError(error) };
+        return { rowExists: false, error }; // unexpected errors (e.g., network issues, etc.)
     }
 };
 
@@ -40,7 +52,7 @@ export const fetchUser = async ({ userEmail }: { userEmail: string }) => {
 
         return { user, error: null };
     } catch (error) {
-        return { user: null, error: handleSupabaseError(error) };
+        return { user: null, error: handleSupabaseError({ error, fnTitle: "fetchUser" }) };
     }
 };
 
@@ -57,7 +69,7 @@ export const fetchSupabaseUser = async () => {
 
         return { user, error: null };
     } catch (error) {
-        return { user: null, error: handleSupabaseError(error) };
+        return { user: null, error: handleSupabaseError({ error, fnTitle: "fetchSupabaseUser" }) };
     }
 };
 
@@ -75,7 +87,10 @@ export const fetchProducts = async () => {
 
         return { products: products as Product[], error: null };
     } catch (error) {
-        return { products: null, error: handleSupabaseError(error) };
+        return {
+            products: null,
+            error: handleSupabaseError({ error, fnTitle: "fetchProducts" }),
+        };
     }
 };
 
@@ -89,7 +104,10 @@ export const checkUserEmailExists = async ({ userEmail }: { userEmail: string })
 
         return { emailExists: true, error: null };
     } catch (error) {
-        return { emailExists: false, error: handleSupabaseError(error) };
+        return {
+            emailExists: false,
+            error: handleSupabaseError({ error, fnTitle: "checkUserEmailExists" }),
+        };
     }
 };
 
@@ -97,6 +115,26 @@ export const checkPurchasedSubscriptionStatus = async ({ userId }: { userId: str
     const supabase = createClient();
 
     try {
+        const { rowExists, error: rowCheckError } = await checkUserRowExists({
+            tableId: "free_trials",
+            userId,
+        });
+
+        if (rowCheckError) {
+            throw rowCheckError;
+        }
+
+        if (!rowExists) {
+            // if the row doesn't exist, the user hasn't started a free trial
+            return {
+                status: null,
+                subscriptionTier: null,
+                subscription: null,
+                error: null,
+            };
+        }
+
+        // if the row exists, proceed with fetching the data
         const { data, error } = await supabase
             .from("purchased_subscriptions")
             .select("*")
@@ -136,7 +174,7 @@ export const checkPurchasedSubscriptionStatus = async ({ userId }: { userId: str
             status: null,
             subscriptionTier: null,
             subscription: null,
-            error: handleSupabaseError(error),
+            error: handleSupabaseError({ error, fnTitle: "checkPurchasedSubscriptionStatus" }),
         };
     }
 };
@@ -145,6 +183,25 @@ export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
     const supabase = createClient();
 
     try {
+        const { rowExists, error: rowCheckError } = await checkUserRowExists({
+            tableId: "free_trials",
+            userId,
+        });
+
+        if (rowCheckError) {
+            throw rowCheckError;
+        }
+
+        if (!rowExists) {
+            // if the row doesn't exist, the user hasn't started a free trial
+            return {
+                status: null,
+                freeTrial: null,
+                error: null,
+            };
+        }
+
+        // if the row exists, proceed with fetching the data
         const { data, error } = await supabase
             .from("free_trials")
             .select("*")
@@ -164,7 +221,11 @@ export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
             return { status: FreeTrialStatus.EXPIRED, freeTrial, error: null };
         }
     } catch (error) {
-        return { status: null, freeTrial: null, error: handleSupabaseError(error) };
+        return {
+            status: null,
+            freeTrial: null,
+            error: handleSupabaseError({ error, fnTitle: "checkFreeTrialStatus" }),
+        };
     }
 };
 
@@ -184,6 +245,9 @@ export const fetchSubscriptionTier = async ({ stripePriceId }: { stripePriceId: 
 
         return { subscriptionTier: product.subscription_tier, error: null };
     } catch (error) {
-        return { subscriptionTier: null, error: handleSupabaseError(error) };
+        return {
+            subscriptionTier: null,
+            error: handleSupabaseError({ error, fnTitle: "fetchSubscriptionTier" }),
+        };
     }
 };

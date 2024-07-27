@@ -1,5 +1,5 @@
-export const handleSupabaseError = (error: unknown) => {
-    console.error("Supabase error:", error);
+export const handleSupabaseError = ({ error, fnTitle }: { error: unknown; fnTitle: string }) => {
+    console.error(`Supabase error in: ${fnTitle}`, error);
 
     return { error };
 };

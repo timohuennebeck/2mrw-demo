@@ -7,7 +7,7 @@ import {
 } from "@/lib/supabase/admin";
 import {
     checkFreeTrialStatus,
-    checkTableExists,
+    checkUserRowExists,
     fetchSubscriptionTier,
     fetchUser,
 } from "@/lib/supabase/queries";
@@ -36,9 +36,9 @@ export async function upsertUserSubscription({
     stripePriceId,
     subscriptionTier,
 }: UpsertUserSubscriptionParams) {
-    const { tableExists } = await checkTableExists({ tableId: "purchased_subscriptions" });
+    const { rowExists } = await checkUserRowExists({ tableId: "purchased_subscriptions", userId });
 
-    if (tableExists) {
+    if (rowExists) {
         await updateUserPurchasedSubscription({
             userId,
             stripePriceId,
