@@ -1,0 +1,16 @@
+export enum StripeWebhookEvents {
+    CHECKOUT_SESSION_COMPLETED = "checkout.session.completed",
+    CUSTOMER_SUBSCRIPTION_CREATED = "customer.subscription.created",
+    CUSTOMER_SUBSCRIPTION_UPDATED = "customer.subscription.updated",
+    CUSTOMER_SUBSCRIPTION_DELETED = "customer.subscription.deleted",
+    INVOICE_PAID = "invoice.paid",
+    INVOICE_PAYMENT_FAILED = "invoice.payment_failed",
+    PAYMENT_INTENT_SUCCEEDED = "payment_intent.succeeded",
+    PAYMENT_INTENT_PAYMENT_FAILED = "payment_intent.payment_failed",
+    CHARGE_SUCCEEDED = "charge.succeeded",
+    CHARGE_FAILED = "charge.failed",
+    PRODUCT_CREATED = "product.created",
+    PRODUCT_UPDATED = "product.updated",
+    PRICE_CREATED = "price.created",
+    PRICE_UPDATED = "price.updated",
+}

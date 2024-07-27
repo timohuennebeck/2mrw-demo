@@ -17,8 +17,8 @@ import { FreeTrial } from "@/interfaces/FreeTrial";
 import { formatDateToHumanFormat } from "@/lib/helper/formatDateToHumanFormat";
 import { increaseDate } from "@/lib/helper/increaseDate";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
-import { Product } from "@/interfaces/Product";
-import { PurchasedSubscription } from "@/interfaces/PurchasedSubscription";
+import { Product } from "@/interfaces/ProductInterfaces";
+import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
 
 export const PricingPlanCard = (props: Product) => {
     const {

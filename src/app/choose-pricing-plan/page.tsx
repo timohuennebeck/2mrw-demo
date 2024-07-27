@@ -1,7 +1,7 @@
 import { PricingPlanCard } from "@/components/PricingPlanCard";
 import SignOutButton from "@/components/SignOutButton";
 import { TextConstants } from "@/constants/TextConstants";
-import { Product } from "@/interfaces/Product";
+import { Product } from "@/interfaces/ProductInterfaces";
 import { fetchProducts } from "@/lib/supabase/queries";
 import { createClient } from "@/lib/supabase/server";
 import Image from "next/image";

@@ -1,6 +1,12 @@
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
 
+export interface UpsertUserSubscriptionParams {
+    userId: string;
+    stripePriceId: string;
+    subscriptionTier: SubscriptionTier;
+}
+
 export interface PurchasedSubscription {
     id: number;
     created_at: string;

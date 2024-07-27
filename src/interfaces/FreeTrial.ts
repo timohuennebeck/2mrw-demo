@@ -1,5 +1,9 @@
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 
+export interface EndOnGoingUserFreeTrialParams {
+    status: FreeTrialStatus | null;
+    userId: string;
+}
 export interface FreeTrial {
     id: number;
     start_date: string;
