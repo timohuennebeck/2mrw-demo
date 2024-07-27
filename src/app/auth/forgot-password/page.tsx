@@ -1,46 +1,28 @@
 "use client";
 
-import { useRef, useState } from "react";
-import DefaultButton from "@/components/DefaultButton";
-import InputField from "@/components/InputField";
-import { createClient } from "@/lib/supabase/client";
-import { toast } from "sonner";
-import Link from "next/link";
 import FormButton from "@/components/FormButton";
+import InputField from "@/components/InputField";
 import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import { toast } from "sonner";
+import { sendResetEmail } from "./action";
 
 const ForgotPasswordPage = () => {
     const [isSending, setIsSending] = useState(false);
 
-    const supabase = createClient();
-
-    const handleSendResetEmail = async (formData: FormData) => {
-        const email = formData.get("email") as string;
-
-        if (!email) {
-            toast.error("Please enter your email address");
-            return;
-        }
-
+    const handleSubmit = async (formData: FormData) => {
         setIsSending(true);
 
-        toast.promise(
-            supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: `${window.location.origin}/auth/update-password`,
-            }),
-            {
-                loading: "Sending reset email...",
-                success: () => {
-                    setIsSending(false);
-                    return "Password reset email has been sent";
-                },
-                error: (error) => {
-                    console.error("Error sending password reset email:", error);
-                    setIsSending(false);
-                    return "Failed to send password reset email. Please try again.";
-                },
-            },
-        );
+        const { success, error } = await sendResetEmail(formData);
+
+        setIsSending(false);
+
+        if (error) {
+            toast.error(error);
+        } else if (success) {
+            toast.success(success);
+        }
     };
 
     return (
@@ -66,7 +48,7 @@ const ForgotPasswordPage = () => {
 
                     <FormButton
                         title="Send Reset Link"
-                        onClick={handleSendResetEmail}
+                        onClick={handleSubmit}
                         disabled={isSending}
                     />
                 </form>

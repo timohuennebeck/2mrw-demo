@@ -1,18 +1,18 @@
 "use client";
 
+import ContinueWithGoogleButton from "@/components/ContinueWithGoogleButton";
+import FormButton from "@/components/FormButton";
 import FormDivider from "@/components/FormDivider";
 import FormHeader from "@/components/FormHeader";
-import ContinueWithGoogleButton from "@/components/ContinueWithGoogleButton";
 import InputField from "@/components/InputField";
-import FormButton from "@/components/FormButton";
 import RememberMeCheckbox from "@/components/RememberMeCheckbox";
 import SignUpLink from "@/components/SignUpLink";
-import { signUp } from "./action";
-import { toast } from "sonner";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { TextConstants } from "@/constants/TextConstants";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+import { signUp } from "./action";
 
 const SignUpForm = () => {
     const [isLoading, setIsLoading] = useState(false);

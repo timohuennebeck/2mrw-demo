@@ -3,7 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
-export async function signIn(formData: FormData) {
+export const signIn = async (formData: FormData) => {
     const supabase = createClient();
 
     const email = formData.get("email") as string;
@@ -20,7 +20,7 @@ export async function signIn(formData: FormData) {
 
     revalidatePath("/", "layout");
     return { success: true, redirect: "/" };
-}
+};
 
 export async function signInUsingGoogle() {
     const supabase = createClient();

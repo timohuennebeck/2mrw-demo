@@ -3,7 +3,7 @@
 import { checkUserEmailExists } from "@/lib/supabase/queries";
 import { createClient } from "@/lib/supabase/server";
 
-export async function signUp(formData: FormData) {
+export const signUp = async (formData: FormData) => {
     const supabase = createClient();
 
     const firstName = formData.get("firstName") as string;
@@ -43,4 +43,4 @@ export async function signUp(formData: FormData) {
 
         return { error: "There has been an error during sign up." };
     }
-}
+};
