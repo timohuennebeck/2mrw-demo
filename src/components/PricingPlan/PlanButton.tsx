@@ -1,10 +1,11 @@
-import React, { useCallback, useMemo } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { toast } from "sonner";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
-import { createFreeTrialTable } from "@/services/supabase/admin";
+import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
 import { increaseDate } from "@/lib/helper/increaseDate";
+import { createFreeTrialTable } from "@/services/supabase/admin";
+import { User } from "@supabase/supabase-js";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 import CustomButton from "../CustomButton";
 
 interface PlanButton {
@@ -12,9 +13,9 @@ interface PlanButton {
     stripePurchaseLink: string;
     freeTrialStatus: FreeTrialStatus | null;
     subscriptionStatus: SubscriptionStatus | null;
-    subscriptionInfo: any;
+    subscriptionInfo: PurchasedSubscription;
     isLoading: boolean;
-    supabaseUser: any;
+    supabaseUser: User;
 }
 
 export const PlanButton = ({
@@ -38,7 +39,7 @@ export const PlanButton = ({
 
         try {
             await createFreeTrialTable({
-                userId: supabaseUser.user.id,
+                userId: supabaseUser.id,
                 stripePriceId: stripePriceId,
                 freeTrialEndDate,
             });
