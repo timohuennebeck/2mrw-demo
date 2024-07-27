@@ -24,7 +24,7 @@ const stripeWebhook = process.env.NEXT_PUBLIC_STRIPE_WEBHOOK_SECRET ?? "";
 
 const supabase = createClient();
 
-export async function POST(req: request) {
+export const POST = async (req: request) => {
     try {
         const body = await req.text();
         const signature = req.headers.get("stripe-signature");

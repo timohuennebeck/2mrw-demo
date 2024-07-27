@@ -22,7 +22,7 @@ export const signIn = async (formData: FormData) => {
     return { success: true, redirect: "/" };
 };
 
-export async function signInUsingGoogle() {
+export const signInUsingGoogle = async () => {
     const supabase = createClient();
 
     const { data, error } = await supabase.auth.signInWithOAuth({
@@ -37,4 +37,4 @@ export async function signInUsingGoogle() {
     }
 
     return { success: true, redirect: data.url };
-}
+};

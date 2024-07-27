@@ -5,7 +5,7 @@ import { checkTableExists, checkUserEmailExists } from "@/lib/supabase/queries";
 import { createUserTable } from "@/lib/supabase/admin";
 import axios from "axios";
 
-export async function GET(request: Request) {
+export const GET = async (request: Request) => {
     const { searchParams, origin } = new URL(request.url);
     const code = searchParams.get("code");
     const next = searchParams.get("next") ?? "/";
@@ -65,4 +65,4 @@ export async function GET(request: Request) {
     }
 
     return response.redirect(`${origin}/auth/auth-code-error`);
-}
+};

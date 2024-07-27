@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import axios from "axios";
 import { createUserTable } from "@/lib/supabase/admin";
 
-export async function GET(request: NextRequest) {
+export const GET = async (request: NextRequest) => {
     // this route is used for email authentication when the user needs to confirm their email via email
 
     const { searchParams } = new URL(request.url);

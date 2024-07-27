@@ -4,7 +4,7 @@ import { checkFreeTrialStatus, checkPurchasedSubscriptionStatus } from "./querie
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 
-export async function updateSession(request: request) {
+export const updateSession = async (request: request) => {
     let supabaseResponse = response.next({
         request,
     });
@@ -61,9 +61,10 @@ export async function updateSession(request: request) {
         return supabaseResponse;
     }
 
-    const { status: subscriptionStatus, error: subscriptionError } = await checkPurchasedSubscriptionStatus({
-        userId: user?.id ?? "",
-    });
+    const { status: subscriptionStatus, error: subscriptionError } =
+        await checkPurchasedSubscriptionStatus({
+            userId: user?.id ?? "",
+        });
 
     const { status: freeTrialStatus, error: freeTrialError } = await checkFreeTrialStatus({
         userId: user?.id ?? "",
@@ -92,4 +93,4 @@ export async function updateSession(request: request) {
     // }
 
     return supabaseResponse;
-}
+};
