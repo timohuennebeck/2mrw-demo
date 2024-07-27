@@ -2,14 +2,17 @@
 
 import { PricingPlanCard } from "@/components/PricingPlan/PricingPlanCard";
 import SignOutButton from "@/components/SignOutButton";
+import { PricingPlanCardSkeleton } from "@/components/ui/PricingPlanCardSkeleton";
 import { TextConstants } from "@/constants/TextConstants";
 import { Product } from "@/interfaces/ProductInterfaces";
 import { fetchProducts, fetchSupabaseUser } from "@/services/supabase/queries";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { Suspense } from "react";
+import { useEffect, useState } from "react";
 
 const ChoosePricingPlanPage = () => {
+    const [showSkeleton, setShowSkeleton] = useState(true);
+
     const { data: products } = useQuery({
         queryKey: ["products"],
         queryFn: () => fetchProducts(),
@@ -21,6 +24,14 @@ const ChoosePricingPlanPage = () => {
         queryFn: () => fetchSupabaseUser(),
         staleTime: 5 * 60 * 1000,
     });
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowSkeleton(false);
+        }, 2000);
+
+        return () => clearTimeout(timer);
+    }, []);
 
     const userEmail = supabaseUser?.user?.email
         ? encodeURIComponent(supabaseUser?.user?.email)
@@ -50,8 +61,14 @@ const ChoosePricingPlanPage = () => {
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                    {products?.products?.map((product: Product, index) => (
-                        <Suspense key={index}>
+                    {showSkeleton ? (
+                        <>
+                            {[1, 2].map(() => (
+                                <PricingPlanCardSkeleton />
+                            ))}
+                        </>
+                    ) : (
+                        products?.products?.map((product: Product, index) => (
                             <PricingPlanCard
                                 {...product}
                                 stripe_purchase_link={
@@ -60,8 +77,8 @@ const ChoosePricingPlanPage = () => {
                                         : product.stripe_purchase_link
                                 }
                             />
-                        </Suspense>
-                    ))}
+                        ))
+                    )}
                 </div>
             </div>
         </div>

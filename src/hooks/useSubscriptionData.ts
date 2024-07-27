@@ -10,22 +10,27 @@ import {
 } from "@/services/supabase/queries";
 
 export function useSubscriptionData() {
+    const queryClient = useQueryClient();
+
     const { data: user } = useQuery({
         queryKey: ["supabaseUser"],
         queryFn: fetchSupabaseUser,
         staleTime: 5 * 60 * 1000,
+        initialData: () => queryClient.getQueryData(["supabaseUser"]),
     });
 
     const { data: freeTrialData, isLoading: isFreeTrialLoading } = useQuery({
         queryKey: ["freeTrialStatus"],
         queryFn: () => checkFreeTrialStatus({ userId: user?.user?.id ?? "" }),
         enabled: !!user?.user?.id,
+        initialData: () => queryClient.getQueryData(["freeTrialStatus"]),
     });
 
     const { data: subscriptionData, isLoading: isSubscriptionLoading } = useQuery({
         queryKey: ["subscriptionStatus"],
         queryFn: () => checkPurchasedSubscriptionStatus({ userId: user?.user?.id ?? "" }),
         enabled: !!user?.user?.id,
+        initialData: () => queryClient.getQueryData(["subscriptionStatus"]),
     });
 
     return {

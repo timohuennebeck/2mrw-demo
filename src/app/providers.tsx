@@ -50,8 +50,6 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
         };
 
         fetchInitialInformation();
-
-        console.log("→ [LOG] data has been pre-fetched");
     }, [queryClient]);
 
     return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
