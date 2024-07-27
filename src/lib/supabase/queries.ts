@@ -8,12 +8,7 @@ import { Product } from "@/interfaces/ProductInterfaces";
 import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
 import { User } from "@/interfaces/UserInterfaces";
 import { createClient } from "./server";
-
-export const handleSupabaseError = (error: unknown) => {
-    console.error("Supabase error:", error);
-
-    return { error };
-};
+import { handleSupabaseError } from "../helper/handleSupabaseError";
 
 export const checkTableExists = async ({ tableId }: { tableId: string }) => {
     const supabase = createClient();

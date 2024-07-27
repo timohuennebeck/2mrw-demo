@@ -9,12 +9,7 @@ import {
 } from "./supabaseInterfaces";
 import { createClient } from "./server";
 import { User } from "@supabase/supabase-js";
-
-export const handleSupabaseError = (error: unknown) => {
-    console.error("Supabase error:", error);
-
-    return { error };
-};
+import { handleSupabaseError } from "../helper/handleSupabaseError";
 
 export const createUserTable = async ({ user }: { user: User }) => {
     const supabase = createClient();
