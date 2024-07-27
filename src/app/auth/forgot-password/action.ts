@@ -16,13 +16,10 @@ export const sendResetEmail = async (formData: FormData) => {
             redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/update-password`,
         });
 
-        if (error) {
-            console.error("Error sending password reset email:", error);
-            throw error;
-        }
+        if (error) throw error;
 
         return { success: "Password reset email has been sent" };
     } catch (error) {
-        return { error: "Failed to send password reset email. Please try again." };
+        return { error: "Failed to send password reset email" };
     }
 };

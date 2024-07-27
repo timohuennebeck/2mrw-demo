@@ -47,7 +47,7 @@ const ForgotPasswordPage = () => {
                     <InputField label="Email" id="email" type="email" name="email" />
 
                     <FormButton
-                        title="Send Reset Link"
+                        title={isSending ? "Sending" : "Send Reset Link"}
                         onClick={handleSubmit}
                         disabled={isSending}
                     />

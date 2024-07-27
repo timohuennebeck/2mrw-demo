@@ -1,42 +1,28 @@
 "use client";
 
-import DefaultButton from "@/components/DefaultButton";
-import { createClient } from "@/lib/supabase/client";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { toast } from "sonner";
+import { sendConfirmationEmail } from "./action";
+import FormButton from "@/components/FormButton";
 
 const EmailConfirmationContent = () => {
     const [isResending, setIsResending] = useState(false);
     const searchParams = useSearchParams();
     const email = searchParams.get("email");
-    const supabase = createClient();
 
-    const handleResendEmail = async () => {
-        if (!email) {
-            toast.error("Email address is missing");
-            return;
-        }
-
+    const handleResendEmail = async (formData: FormData) => {
         setIsResending(true);
 
-        try {
-            const { error } = await supabase.auth.resend({
-                type: "signup",
-                email: email,
-            });
+        const { success, error } = await sendConfirmationEmail(formData);
 
-            if (error) {
-                throw error;
-            }
+        setIsResending(false);
 
-            toast.success("Confirmation email has been sent");
-        } catch (error) {
-            console.error("Error resending confirmation email:", error);
-            toast.error(`Error resending email: ${error}`);
-        } finally {
-            setIsResending(false);
+        if (error) {
+            toast.error(error);
+        } else if (success) {
+            toast.success(success);
         }
     };
 
@@ -63,9 +49,10 @@ const EmailConfirmationContent = () => {
                 started.
             </p>
 
-            <DefaultButton
+            <FormButton
                 title={isResending ? "Resending..." : "Resend Email"}
                 onClick={handleResendEmail}
+                disabled={isResending}
             />
 
             <p className="text-center text-sm text-gray-600 mt-4">
