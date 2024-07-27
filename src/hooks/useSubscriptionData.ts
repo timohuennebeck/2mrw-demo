@@ -20,17 +20,15 @@ export function useSubscriptionData() {
     });
 
     const { data: freeTrialData, isLoading: isFreeTrialLoading } = useQuery({
-        queryKey: ["freeTrialStatus"],
+        queryKey: ["freeTrialStatus", { userId: user?.user?.id ?? "" }],
         queryFn: () => checkFreeTrialStatus({ userId: user?.user?.id ?? "" }),
         enabled: !!user?.user?.id,
-        initialData: () => queryClient.getQueryData(["freeTrialStatus"]),
     });
 
     const { data: subscriptionData, isLoading: isSubscriptionLoading } = useQuery({
-        queryKey: ["subscriptionStatus"],
+        queryKey: ["subscriptionStatus", { userId: user?.user?.id ?? "" }],
         queryFn: () => checkPurchasedSubscriptionStatus({ userId: user?.user?.id ?? "" }),
         enabled: !!user?.user?.id,
-        initialData: () => queryClient.getQueryData(["subscriptionStatus"]),
     });
 
     return {

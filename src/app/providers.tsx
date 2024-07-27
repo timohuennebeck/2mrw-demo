@@ -6,51 +6,43 @@ import {
     fetchProducts,
     fetchSupabaseUser,
 } from "@/services/supabase/queries";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+const queryClient = new QueryClient();
+
 export const Providers = ({ children }: { children: React.ReactNode }) => {
-    const [queryClient] = useState(() => new QueryClient());
-
-    const prefetchSupbaseUser = async () => {
-        await queryClient.prefetchQuery({
-            queryKey: ["supabaseUser"],
-            queryFn: () => fetchSupabaseUser(),
-            staleTime: 5 * 60 * 1000,
-        });
-    };
-
-    const prefetchProducts = async () => {
-        await queryClient.prefetchQuery({
-            queryKey: ["products"],
-            queryFn: () => fetchProducts(),
-            staleTime: 5 * 60 * 1000,
-        });
-    };
-
-    const prefetchSubscriptionInfo = async ({ userId }: { userId: string }) => {
-        await queryClient.prefetchQuery({
-            queryKey: ["subscriptionStatus"],
-            queryFn: () => checkPurchasedSubscriptionStatus({ userId }),
-        });
-
-        await queryClient.prefetchQuery({
-            queryKey: ["freeTrialStatus"],
-            queryFn: () => checkFreeTrialStatus({ userId }),
-        });
-    };
-
     useEffect(() => {
         const fetchInitialInformation = async () => {
-            const { user } = await fetchSupabaseUser();
+            try {
+                const { user } = await queryClient.fetchQuery({
+                    queryKey: ["supabaseUser"],
+                    queryFn: () => fetchSupabaseUser(),
+                    staleTime: 5 * 60 * 1000,
+                });
 
-            prefetchSupbaseUser();
-            prefetchProducts();
-            prefetchSubscriptionInfo({ userId: user?.id ?? "" });
+                await Promise.all([
+                    queryClient.prefetchQuery({
+                        queryKey: ["products"],
+                        queryFn: () => fetchProducts(),
+                        staleTime: 5 * 60 * 1000,
+                    }),
+                    queryClient.prefetchQuery({
+                        queryKey: ["subscriptionStatus", { userId: user?.id ?? "" }],
+                        queryFn: () => checkPurchasedSubscriptionStatus({ userId: user?.id ?? "" }),
+                    }),
+                    queryClient.prefetchQuery({
+                        queryKey: ["freeTrialStatus", { userId: user?.id ?? "" }],
+                        queryFn: () => checkFreeTrialStatus({ userId: user?.id ?? "" }),
+                    }),
+                ]);
+            } catch (error) {
+                console.error("Error fetching initial data:", error);
+            }
         };
 
         fetchInitialInformation();
-    }, [queryClient]);
+    }, []);
 
     return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 };

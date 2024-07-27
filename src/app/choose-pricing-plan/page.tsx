@@ -28,7 +28,7 @@ const ChoosePricingPlanPage = () => {
     useEffect(() => {
         const timer = setTimeout(() => {
             setShowSkeleton(false);
-        }, 1500);
+        }, 850);
 
         return () => clearTimeout(timer);
     }, []);
