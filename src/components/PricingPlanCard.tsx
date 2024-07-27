@@ -1,23 +1,17 @@
 "use client";
 
-import { CheckBadgeIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import {
-    checkFreeTrialStatus,
-    checkPurchasedSubscriptionStatus,
-    fetchSupabaseUser,
-} from "@/lib/supabase/queries";
-import { createFreeTrialTable } from "@/lib/supabase/admin";
-import DefaultButton from "./DefaultButton";
-import { toast } from "sonner";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
-import { FreeTrial } from "@/interfaces/FreeTrial";
+import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
+import { useSubscriptionData } from "@/hooks/useSubscriptionData";
+import { Product } from "@/interfaces/ProductInterfaces";
 import { formatDateToHumanFormat } from "@/lib/helper/formatDateToHumanFormat";
 import { increaseDate } from "@/lib/helper/increaseDate";
-import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
-import { Product } from "@/interfaces/ProductInterfaces";
-import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
+import { createFreeTrialTable } from "@/lib/supabase/admin";
+import { fetchSupabaseUser } from "@/lib/supabase/queries";
+import { CheckBadgeIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+import DefaultButton from "./DefaultButton";
 
 export const PricingPlanCard = (props: Product) => {
     const {
@@ -31,12 +25,8 @@ export const PricingPlanCard = (props: Product) => {
         features,
     } = props;
 
-    const [freeTrialStatus, setFreeTrialStatus] = useState<FreeTrialStatus | null>(null);
-    const [freeTrialInfo, setFreeTrialInfo] = useState<FreeTrial | null>(null);
-
-    const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatus | null>(null);
-    const [subscriptionInfo, setSubscriptionInfo] = useState<PurchasedSubscription | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const { freeTrialStatus, freeTrialInfo, subscriptionStatus, subscriptionInfo, isLoading } =
+        useSubscriptionData();
 
     const searchParams = useSearchParams();
     const welcomeEmail = searchParams.get("welcomeEmail");
@@ -44,8 +34,6 @@ export const PricingPlanCard = (props: Product) => {
     const router = useRouter();
 
     const startFreeTrial = async () => {
-        setIsLoading(true);
-
         const { user } = await fetchSupabaseUser();
 
         if (!user) return;
@@ -67,48 +55,14 @@ export const PricingPlanCard = (props: Product) => {
 
         if (freeTrialError) {
             console.error("Error starting free trial", freeTrialError);
-            setIsLoading(false);
 
             return toast.error("Error starting free trial");
         }
-
-        setIsLoading(false);
 
         toast.success("Free Trial has been started");
 
         router.push("/");
     };
-
-    useEffect(() => {
-        const fetchSubscriptionStatus = async () => {
-            const { user } = await fetchSupabaseUser();
-
-            if (!user) return;
-
-            try {
-                const [freeTrialResult, subscriptionResult] = await Promise.all([
-                    checkFreeTrialStatus({ userId: user.id }),
-                    checkPurchasedSubscriptionStatus({ userId: user.id }),
-                ]);
-
-                setFreeTrialStatus(freeTrialResult.status);
-                setFreeTrialInfo(freeTrialResult.freeTrial);
-                setSubscriptionStatus(subscriptionResult.status);
-                setSubscriptionInfo(subscriptionResult.subscription);
-            } catch (error) {
-                console.error("Error fetching subscription data:", error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchSubscriptionStatus();
-
-        // ensures that when a user purchases a subscription we get the most recent data
-        const intervalId = setInterval(fetchSubscriptionStatus, 5000);
-
-        return () => clearInterval(intervalId);
-    }, []);
 
     const renderSubscriptionButtons = () => {
         if (freeTrialStatus === null) {
