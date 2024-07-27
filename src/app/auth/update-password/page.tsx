@@ -8,42 +8,21 @@ import Link from "next/link";
 import FormButton from "@/components/FormButton";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { updatePassword } from "./action";
 
 const UpdatePasswordPage = () => {
     const [isUpdating, setIsUpdating] = useState(false);
 
-    const supabase = createClient();
-    const router = useRouter();
-
-    const handleUpdatePassword = async (formData: FormData) => {
-        const password = formData.get("password") as string;
-        const confirmPassword = formData.get("confirmPassword") as string;
-
-        if (password !== confirmPassword) {
-            toast.error("Passwords do not match");
-            return;
-        }
-
+    const handleSubmit = async (formData: FormData) => {
         setIsUpdating(true);
+        const { error } = await updatePassword(formData);
+        setIsUpdating(false);
 
-        try {
-            const { error } = await supabase.auth.updateUser({ password });
-
-            if (error) throw error;
-
+        if (error) {
+            toast.error(error);
+        } else {
+            // the redirect is handled on the server side
             toast.success("Password has been updated");
-
-            router.push("/");
-        } catch (err) {
-            console.error("Change password error:", err);
-
-            if (err instanceof Error) {
-                toast.error(err.message);
-            } else {
-                toast.error("There has been an unexpected error.");
-            }
-        } finally {
-            setIsUpdating(false);
         }
     };
 
@@ -82,7 +61,7 @@ const UpdatePasswordPage = () => {
                     <FormButton
                         title={isUpdating ? "Updating..." : "Update Password"}
                         disabled={isUpdating}
-                        onClick={handleUpdatePassword}
+                        onClick={handleSubmit}
                     />
                 </form>
 
