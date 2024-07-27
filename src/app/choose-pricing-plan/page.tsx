@@ -3,20 +3,17 @@ import SignOutButton from "@/components/SignOutButton";
 import { TextConstants } from "@/constants/TextConstants";
 import { Product } from "@/interfaces/ProductInterfaces";
 import { fetchProducts, fetchSupabaseUser } from "@/lib/supabase/queries";
+import { User } from "@supabase/supabase-js";
 import Image from "next/image";
 import { Suspense } from "react";
 
-const getProducts = async () => {
-    const { products, error } = await fetchProducts();
-
-    if (error) throw error;
-
-    return products;
-};
-
 const ChoosePricingPlanPage = async () => {
-    const [products, user] = await Promise.all([getProducts(), fetchSupabaseUser()]);
-    const userEmail = user.user?.email ? encodeURIComponent(user.user?.email) : "";
+    const [products, user] = await Promise.all([fetchProducts(), fetchSupabaseUser()]);
+
+    const allProducts = products.products as Product[];
+    const supabaseUser = user.user as User;
+
+    const userEmail = supabaseUser.email ? encodeURIComponent(supabaseUser.email) : "";
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -42,7 +39,7 @@ const ChoosePricingPlanPage = async () => {
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                    {products?.map((product: Product, index) => (
+                    {allProducts?.map((product: Product, index) => (
                         <Suspense key={index}>
                             <PricingPlanCard
                                 {...product}
