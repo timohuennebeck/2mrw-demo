@@ -63,13 +63,14 @@ const ChoosePricingPlanPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                     {showSkeleton ? (
                         <>
-                            {[1, 2].map(() => (
-                                <PricingPlanCardSkeleton />
+                            {[1, 2].map((_, index) => (
+                                <PricingPlanCardSkeleton key={index} />
                             ))}
                         </>
                     ) : (
                         products?.products?.map((product: Product, index) => (
                             <PricingPlanCard
+                                key={index}
                                 {...product}
                                 stripe_purchase_link={
                                     userEmail
