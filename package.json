@@ -20,9 +20,11 @@
     "react": "^18",
     "react-dom": "^18",
     "react-email": "2.1.5",
+    "react-query": "^3.39.3",
     "resend": "^3.4.0",
     "sonner": "^1.5.0",
-    "stripe": "^16.2.0"
+    "stripe": "^16.2.0",
+    "zustand": "^4.5.4"
   },
   "devDependencies": {
     "@types/node": "^20",

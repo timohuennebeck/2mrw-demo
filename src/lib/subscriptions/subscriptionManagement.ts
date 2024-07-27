@@ -4,13 +4,13 @@ import {
     endUserFreeTrial,
     updateUserPurchasedSubscription,
     createPurchasedSubscriptionTable,
-} from "@/lib/supabase/admin";
+} from "@/services/supabase/admin";
 import {
     checkFreeTrialStatus,
     checkUserRowExists,
     fetchSubscriptionTier,
     fetchUser,
-} from "@/lib/supabase/queries";
+} from "@/services/supabase/queries";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import Stripe from "stripe";

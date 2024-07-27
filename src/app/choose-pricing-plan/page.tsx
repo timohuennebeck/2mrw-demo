@@ -2,7 +2,7 @@ import { PricingPlanCard } from "@/components/PricingPlanCard";
 import SignOutButton from "@/components/SignOutButton";
 import { TextConstants } from "@/constants/TextConstants";
 import { Product } from "@/interfaces/ProductInterfaces";
-import { fetchProducts, fetchSupabaseUser } from "@/lib/supabase/queries";
+import { fetchProducts, fetchSupabaseUser } from "@/services/supabase/queries";
 import { User } from "@supabase/supabase-js";
 import Image from "next/image";
 import { Suspense } from "react";

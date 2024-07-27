@@ -6,7 +6,7 @@ import {
     checkFreeTrialStatus,
     checkPurchasedSubscriptionStatus,
     fetchSupabaseUser,
-} from "@/lib/supabase/queries";
+} from "@/services/supabase/queries";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { FreeTrial } from "@/interfaces/FreeTrial";

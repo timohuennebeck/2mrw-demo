@@ -1,7 +1,7 @@
 "use server";
 
 import axios from "axios";
-import { fetchProducts } from "@/lib/supabase/queries";
+import { fetchProducts } from "@/services/supabase/queries";
 import { Product } from "@/interfaces/ProductInterfaces";
 import { SendPostPurchaseEmailParams } from "@/interfaces/EmailInterfaces";
 

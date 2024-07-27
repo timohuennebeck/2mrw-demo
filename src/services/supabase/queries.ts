@@ -8,7 +8,7 @@ import { Product } from "@/interfaces/ProductInterfaces";
 import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
 import { User } from "@/interfaces/UserInterfaces";
 import { createClient } from "./server";
-import { handleSupabaseError } from "../helper/handleSupabaseError";
+import { handleSupabaseError } from "../../lib/helper/handleSupabaseError";
 
 export const checkUserRowExists = async ({
     tableId,

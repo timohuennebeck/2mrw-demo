@@ -3,8 +3,8 @@
 import { cookies } from "next/headers";
 import { NextResponse as response } from "next/server";
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
-import { checkUserEmailExists } from "@/lib/supabase/queries";
-import { createUserTable } from "@/lib/supabase/admin";
+import { checkUserEmailExists } from "@/services/supabase/queries";
+import { createUserTable } from "@/services/supabase/admin";
 import axios from "axios";
 
 export const GET = async (request: Request) => {

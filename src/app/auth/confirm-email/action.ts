@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/services/supabase/server";
 
 export const sendConfirmationEmail = async (formData: FormData) => {
     const supabase = createClient();

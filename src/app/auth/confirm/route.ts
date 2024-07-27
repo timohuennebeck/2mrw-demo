@@ -3,9 +3,9 @@
 import { type EmailOtpType } from "@supabase/supabase-js";
 import { type NextRequest } from "next/server";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/services/supabase/server";
 import axios from "axios";
-import { createUserTable } from "@/lib/supabase/admin";
+import { createUserTable } from "@/services/supabase/admin";
 
 export const GET = async (request: NextRequest) => {
     // this route is used for email authentication when the user needs to confirm their email via email
