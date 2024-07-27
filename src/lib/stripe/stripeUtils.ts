@@ -5,7 +5,7 @@ import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY ?? "");
 
-export const verifyStripeWebhook = ({ body, signature }: VerifyStripeWebhookParams) => {
+export const verifyStripeWebhook = async ({ body, signature }: VerifyStripeWebhookParams) => {
     try {
         return stripe.webhooks.constructEvent(
             body,

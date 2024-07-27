@@ -14,7 +14,7 @@ export const POST = async (req: request) => {
             return response.json({ error: "There was no signature provided" }, { status: 400 });
         }
 
-        const event = verifyStripeWebhook({ body, signature });
+        const event = await verifyStripeWebhook({ body, signature });
 
         switch (event.type) {
             case StripeWebhookEvents.CHECKOUT_SESSION_COMPLETED:
