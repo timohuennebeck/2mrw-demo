@@ -28,12 +28,12 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
                         staleTime: 5 * 60 * 1000,
                     }),
                     queryClient.prefetchQuery({
-                        queryKey: ["subscriptionStatus", { userId: user?.id ?? "" }],
-                        queryFn: () => checkPurchasedSubscriptionStatus({ userId: user?.id ?? "" }),
-                    }),
-                    queryClient.prefetchQuery({
                         queryKey: ["freeTrialStatus", { userId: user?.id ?? "" }],
                         queryFn: () => checkFreeTrialStatus({ userId: user?.id ?? "" }),
+                    }),
+                    queryClient.prefetchQuery({
+                        queryKey: ["subscriptionStatus", { userId: user?.id ?? "" }],
+                        queryFn: () => checkPurchasedSubscriptionStatus({ userId: user?.id ?? "" }),
                     }),
                 ]);
             } catch (error) {
