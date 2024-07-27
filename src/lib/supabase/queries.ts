@@ -1,17 +1,12 @@
-import { PurchasedSubscription } from "@/interfaces/PurchasedSubscription";
-import { createClient } from "./client";
-import { FreeTrial } from "@/interfaces/FreeTrial";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
-import { Product } from "@/interfaces/Product";
-import { User } from "@/interfaces/User";
-import {
-    CheckFreeTrialStatusParams,
-    CheckSubscriptionStatusParams,
-    CheckUserExistsParams,
-} from "./supabaseInterfaces";
-import { SupabaseClient } from "@supabase/supabase-js";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
+import { FreeTrial } from "@/interfaces/FreeTrial";
+import { Product } from "@/interfaces/Product";
+import { PurchasedSubscription } from "@/interfaces/PurchasedSubscription";
+import { User } from "@/interfaces/User";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { createClient } from "./client";
 
 const supabase = createClient();
 
@@ -83,7 +78,7 @@ export const fetchProducts = async () => {
     }
 };
 
-export const checkUserEmailExists = async ({ userEmail }: CheckUserExistsParams) => {
+export const checkUserEmailExists = async ({ userEmail }: { userEmail: string }) => {
     try {
         const { error } = await supabase.from("users").select("*").eq("email", userEmail).single();
 
@@ -95,9 +90,7 @@ export const checkUserEmailExists = async ({ userEmail }: CheckUserExistsParams)
     }
 };
 
-export const checkPurchasedSubscriptionStatus = async ({
-    userId,
-}: CheckSubscriptionStatusParams) => {
+export const checkPurchasedSubscriptionStatus = async ({ userId }: { userId: string }) => {
     try {
         const { data, error } = await supabase
             .from("purchased_subscriptions")
@@ -143,7 +136,7 @@ export const checkPurchasedSubscriptionStatus = async ({
     }
 };
 
-export const checkFreeTrialStatus = async ({ userId }: CheckFreeTrialStatusParams) => {
+export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
     try {
         const { data, error } = await supabase
             .from("free_trials")

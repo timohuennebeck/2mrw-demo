@@ -33,15 +33,3 @@ export interface EndUserFreeTrialParams {
     supabase: SupabaseClient;
     userId: string;
 }
-
-export interface CheckUserExistsParams {
-    userEmail: string;
-}
-
-export interface CheckSubscriptionStatusParams {
-    userId: string;
-}
-
-export interface CheckFreeTrialStatusParams {
-    userId: string;
-}
