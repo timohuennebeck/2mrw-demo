@@ -116,7 +116,7 @@ export const checkPurchasedSubscriptionStatus = async ({ userId }: { userId: str
 
     try {
         const { rowExists, error: rowCheckError } = await checkUserRowExists({
-            tableId: "free_trials",
+            tableId: "purchased_subscriptions",
             userId,
         });
 
