@@ -1,12 +1,14 @@
+"use server";
+
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import {
     CreatePurchasedSubscriptionTableParams,
-    CreateUserTableParams,
-    EndUserFreeTrialParams,
     StartUserFreeTrialParams,
     UpdateUserSubscriptionStatusParams,
 } from "./supabaseInterfaces";
+import { createClient } from "./server";
+import { User } from "@supabase/supabase-js";
 
 export const handleSupabaseError = (error: unknown) => {
     console.error("Supabase error:", error);
@@ -14,7 +16,9 @@ export const handleSupabaseError = (error: unknown) => {
     return { error };
 };
 
-export const createUserTable = async ({ supabase, user }: CreateUserTableParams) => {
+export const createUserTable = async ({ user }: { user: User }) => {
+    const supabase = createClient();
+
     try {
         const { error } = await supabase.from("users").insert({
             user_id: user.id,
@@ -33,11 +37,12 @@ export const createUserTable = async ({ supabase, user }: CreateUserTableParams)
 };
 
 export const createPurchasedSubscriptionTable = async ({
-    supabase,
     userId,
     stripePriceId,
     subscriptionTier,
 }: CreatePurchasedSubscriptionTableParams) => {
+    const supabase = createClient();
+
     try {
         const { error } = await supabase.from("purchased_subscriptions").insert({
             user_id: userId,
@@ -57,12 +62,13 @@ export const createPurchasedSubscriptionTable = async ({
 };
 
 export const updateUserPurchasedSubscription = async ({
-    supabase,
     userId,
     stripePriceId,
     status,
     subscriptionTier,
 }: UpdateUserSubscriptionStatusParams) => {
+    const supabase = createClient();
+
     try {
         const { error } = await supabase
             .from("purchased_subscriptions")
@@ -85,11 +91,12 @@ export const updateUserPurchasedSubscription = async ({
 };
 
 export const createFreeTrialTable = async ({
-    supabase,
     userId,
     stripePriceId,
     freeTrialEndDate,
 }: StartUserFreeTrialParams) => {
+    const supabase = createClient();
+
     try {
         const { error } = await supabase.from("free_trials").insert({
             user_id: userId,
@@ -107,7 +114,9 @@ export const createFreeTrialTable = async ({
     }
 };
 
-export const endUserFreeTrial = async ({ supabase, userId }: EndUserFreeTrialParams) => {
+export const endUserFreeTrial = async ({ userId }: { userId: string }) => {
+    const supabase = createClient();
+
     try {
         const { error } = await supabase
             .from("free_trials")

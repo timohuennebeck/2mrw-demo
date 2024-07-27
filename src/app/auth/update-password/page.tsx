@@ -1,13 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import InputField from "@/components/InputField";
-import { createClient } from "@/lib/supabase/client";
-import { toast } from "sonner";
-import Link from "next/link";
 import FormButton from "@/components/FormButton";
-import { useRouter } from "next/navigation";
+import InputField from "@/components/InputField";
 import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import { toast } from "sonner";
 import { updatePassword } from "./action";
 
 const UpdatePasswordPage = () => {

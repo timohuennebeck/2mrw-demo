@@ -8,7 +8,6 @@ import {
     checkPurchasedSubscriptionStatus,
     fetchSupabaseUser,
 } from "@/lib/supabase/queries";
-import { createClient } from "@/lib/supabase/client";
 import { createFreeTrialTable } from "@/lib/supabase/admin";
 import DefaultButton from "./DefaultButton";
 import { toast } from "sonner";
@@ -42,13 +41,12 @@ export const PricingPlanCard = (props: Product) => {
     const searchParams = useSearchParams();
     const welcomeEmail = searchParams.get("welcomeEmail");
 
-    const supabase = createClient();
     const router = useRouter();
 
     const startFreeTrial = async () => {
         setIsLoading(true);
 
-        const { user } = await fetchSupabaseUser({ supabase });
+        const { user } = await fetchSupabaseUser();
 
         if (!user) return;
 
@@ -62,7 +60,6 @@ export const PricingPlanCard = (props: Product) => {
         }
 
         const { error: freeTrialError } = await createFreeTrialTable({
-            supabase,
             userId: user.id,
             stripePriceId: stripe_price_id,
             freeTrialEndDate: freeTrialEndDate,
@@ -84,7 +81,7 @@ export const PricingPlanCard = (props: Product) => {
 
     useEffect(() => {
         const fetchSubscriptionStatus = async () => {
-            const { user } = await fetchSupabaseUser({ supabase });
+            const { user } = await fetchSupabaseUser();
 
             if (!user) return;
 

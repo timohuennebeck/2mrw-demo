@@ -2,8 +2,7 @@ import { PricingPlanCard } from "@/components/PricingPlanCard";
 import SignOutButton from "@/components/SignOutButton";
 import { TextConstants } from "@/constants/TextConstants";
 import { Product } from "@/interfaces/ProductInterfaces";
-import { fetchProducts } from "@/lib/supabase/queries";
-import { createClient } from "@/lib/supabase/server";
+import { fetchProducts, fetchSupabaseUser } from "@/lib/supabase/queries";
 import Image from "next/image";
 import { Suspense } from "react";
 
@@ -15,19 +14,9 @@ const getProducts = async () => {
     return products;
 };
 
-const getUser = async () => {
-    const supabase = createClient();
-    const {
-        data: { user },
-        error,
-    } = await supabase.auth.getUser();
-    if (error) throw error;
-    return user;
-};
-
 const ChoosePricingPlanPage = async () => {
-    const [products, user] = await Promise.all([getProducts(), getUser()]);
-    const userEmail = user?.email ? encodeURIComponent(user.email) : "";
+    const [products, user] = await Promise.all([getProducts(), fetchSupabaseUser()]);
+    const userEmail = user.user?.email ? encodeURIComponent(user.user?.email) : "";
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -47,8 +36,9 @@ const ChoosePricingPlanPage = async () => {
 
                 <h1 className="text-2xl font-semibold text-center mb-2">Choose a Plan</h1>
                 <p className="text-center text-gray-600 mb-8 text-sm">
-                    Choose a plan to start using {TextConstants.TEXT__COMPANY_TITLE}. This is a one-time
-                    purchase not a subscription. You can still upgrade your plan later if needed.
+                    Choose a plan to start using {TextConstants.TEXT__COMPANY_TITLE}. This is a
+                    one-time purchase not a subscription. You can still upgrade your plan later if
+                    needed.
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">

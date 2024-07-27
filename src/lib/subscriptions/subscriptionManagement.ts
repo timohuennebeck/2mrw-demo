@@ -1,3 +1,5 @@
+"use server";
+
 import {
     endUserFreeTrial,
     updateUserPurchasedSubscription,
@@ -9,7 +11,6 @@ import {
     fetchSubscriptionTier,
     fetchUser,
 } from "@/lib/supabase/queries";
-import { createClient } from "@/lib/supabase/client";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import Stripe from "stripe";
@@ -17,17 +18,12 @@ import { sendPostPurchaseEmail } from "../email/emailServices";
 import { UpsertUserSubscriptionParams } from "@/interfaces/SubscriptionInterfaces";
 import { EndOnGoingUserFreeTrialParams } from "@/interfaces/FreeTrial";
 
-const supabase = createClient();
-
 export const endOnGoingUserFreeTrial = async ({
     status,
     userId,
 }: EndOnGoingUserFreeTrialParams) => {
     if (status === FreeTrialStatus.ACTIVE) {
-        const { error } = await endUserFreeTrial({
-            supabase,
-            userId,
-        });
+        const { error } = await endUserFreeTrial({ userId });
 
         if (error) throw new Error("Failed to end free trial");
 
@@ -44,7 +40,6 @@ export async function upsertUserSubscription({
 
     if (tableExists) {
         await updateUserPurchasedSubscription({
-            supabase,
             userId,
             stripePriceId,
             status: SubscriptionStatus.ACTIVE,
@@ -52,7 +47,6 @@ export async function upsertUserSubscription({
         });
     } else {
         await createPurchasedSubscriptionTable({
-            supabase,
             userId,
             stripePriceId,
             subscriptionTier,

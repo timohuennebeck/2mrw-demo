@@ -1,3 +1,5 @@
+"use server";
+
 import { VerifyStripeWebhookParams } from "@/interfaces/StripeInterfaces";
 import Stripe from "stripe";
 

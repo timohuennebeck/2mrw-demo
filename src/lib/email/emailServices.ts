@@ -1,3 +1,5 @@
+"use server";
+
 import axios from "axios";
 import { fetchProducts } from "@/lib/supabase/queries";
 import { Product } from "@/interfaces/ProductInterfaces";

@@ -47,7 +47,7 @@ export const GET = async (request: Request) => {
                 });
 
                 if (!emailExists) {
-                    await createUserTable({ supabase, user });
+                    await createUserTable({ user });
 
                     axios.post(
                         `${process.env.NEXT_PUBLIC_SITE_URL}/api/email-services/send-free-trial-email`,

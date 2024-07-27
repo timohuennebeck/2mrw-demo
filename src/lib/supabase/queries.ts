@@ -1,14 +1,13 @@
+"use server";
+
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
 import { FreeTrial } from "@/interfaces/FreeTrial";
-import { Product } from "@/interfaces/Product";
-import { PurchasedSubscription } from "@/interfaces/PurchasedSubscription";
-import { User } from "@/interfaces/User";
-import { SupabaseClient } from "@supabase/supabase-js";
-import { createClient } from "./client";
-
-const supabase = createClient();
+import { Product } from "@/interfaces/ProductInterfaces";
+import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
+import { User } from "@/interfaces/UserInterfaces";
+import { createClient } from "./server";
 
 export const handleSupabaseError = (error: unknown) => {
     console.error("Supabase error:", error);
@@ -17,6 +16,8 @@ export const handleSupabaseError = (error: unknown) => {
 };
 
 export const checkTableExists = async ({ tableId }: { tableId: string }) => {
+    const supabase = createClient();
+
     try {
         const { error } = await supabase.from(tableId).select("*").single();
 
@@ -29,6 +30,8 @@ export const checkTableExists = async ({ tableId }: { tableId: string }) => {
 };
 
 export const fetchUser = async ({ userEmail }: { userEmail: string }) => {
+    const supabase = createClient();
+
     try {
         const { data, error } = await supabase
             .from("users")
@@ -46,15 +49,16 @@ export const fetchUser = async ({ userEmail }: { userEmail: string }) => {
     }
 };
 
-export const fetchSupabaseUser = async ({ supabase }: { supabase: SupabaseClient }) => {
+export const fetchSupabaseUser = async () => {
+    const supabase = createClient();
+
     try {
-        // TODO: this causes a 406, not acceptable error
         const {
             data: { user },
             error,
         } = await supabase.auth.getUser();
 
-        if (error) throw error;
+        if (!user) throw error;
 
         return { user, error: null };
     } catch (error) {
@@ -63,6 +67,8 @@ export const fetchSupabaseUser = async ({ supabase }: { supabase: SupabaseClient
 };
 
 export const fetchProducts = async () => {
+    const supabase = createClient();
+
     try {
         const { data: products, error } = await supabase
             .from("products")
@@ -79,6 +85,8 @@ export const fetchProducts = async () => {
 };
 
 export const checkUserEmailExists = async ({ userEmail }: { userEmail: string }) => {
+    const supabase = createClient();
+
     try {
         const { error } = await supabase.from("users").select("*").eq("email", userEmail).single();
 
@@ -91,6 +99,8 @@ export const checkUserEmailExists = async ({ userEmail }: { userEmail: string })
 };
 
 export const checkPurchasedSubscriptionStatus = async ({ userId }: { userId: string }) => {
+    const supabase = createClient();
+
     try {
         const { data, error } = await supabase
             .from("purchased_subscriptions")
@@ -137,6 +147,8 @@ export const checkPurchasedSubscriptionStatus = async ({ userId }: { userId: str
 };
 
 export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
+    const supabase = createClient();
+
     try {
         const { data, error } = await supabase
             .from("free_trials")
@@ -162,6 +174,8 @@ export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
 };
 
 export const fetchSubscriptionTier = async ({ stripePriceId }: { stripePriceId: string }) => {
+    const supabase = createClient();
+
     try {
         const { data, error } = await supabase
             .from("products")

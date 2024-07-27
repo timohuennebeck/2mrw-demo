@@ -28,7 +28,7 @@ export const GET = async (request: NextRequest) => {
                 const user = data.user;
 
                 if (user) {
-                    await createUserTable({ supabase, user });
+                    await createUserTable({ user });
 
                     await axios.post(
                         `${process.env.NEXT_PUBLIC_SITE_URL}/api/send-free-trial-email`,
