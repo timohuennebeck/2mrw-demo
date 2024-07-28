@@ -2,14 +2,14 @@ CREATE TYPE SubscriptionStatusEnums AS ENUM ('ACTIVE', 'EXPIRED', 'NOT_PURCHASED
 CREATE TYPE FreeTrialStatusEnums AS ENUM ('ACTIVE', 'EXPIRED', 'NOT_STARTED');
 CREATE TYPE SubscriptionTierEnums AS ENUM ('TIER_ZERO', 'TIER_ONE', 'TIER_TWO');
 
-CREATE TABLE free_trials (
+CREATE TABLE users {
     id INT8 PRIMARY KEY,
-    start_date TIMESTAMPTZ,
-    end_date TIMESTAMPTZ,
-    stripe_price_id TEXT REFERENCES public.products(stripe_price_id) ON DELETE CASCADE,
-    user_id TEXT REFERENCES public.users(user_id) ON DELETE CASCADE,
-    status SubscriptionTierEnums
-);
+    email TEXT,
+    full_name TEXT,
+    user_id UUID,
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
+}
 
 CREATE TABLE products (
     id INT8 PRIMARY KEY,
@@ -22,26 +22,26 @@ CREATE TABLE products (
     is_highlighted BOOLEAN,
     is_active BOOLEAN,
     features JSONB,
+    subscription_tier SubscriptionTierEnums
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ,
-    subscription_tier SubscriptionTierEnums
+);
+
+CREATE TABLE free_trials (
+    id INT8 PRIMARY KEY,
+    start_date TIMESTAMPTZ,
+    end_date TIMESTAMPTZ,
+    stripe_price_id TEXT REFERENCES public.products(stripe_price_id) ON DELETE CASCADE,
+    user_id UUID REFERENCES public.users(user_id) ON DELETE CASCADE,
+    status SubscriptionTierEnums
 );
 
 CREATE TABLE purchased_subscriptions (
     id INT8 PRIMARY KEY,
-    created_at TIMESTAMPTZ,
-    updated_at TIMESTAMPTZ,
     stripe_price_id TEXT REFERENCES public.products(stripe_price_id) ON DELETE CASCADE,
-    user_id TEXT REFERENCES public.users(user_id) ON DELETE CASCADE,
+    user_id UUID REFERENCES public.users(user_id) ON DELETE CASCADE,
     status SubscriptionStatusEnums
     subscription_tier SubscriptionTierEnums
-);
-
-CREATE TABLE users {
-    id INT8 PRIMARY KEY,
-    email TEXT,
-    full_name TEXT,
-    user_id TEXT,
     created_at TIMESTAMPTZ,
-    updated_at TIMESTAMPTZ
-}
+    updated_at TIMESTAMPTZ,
+);
