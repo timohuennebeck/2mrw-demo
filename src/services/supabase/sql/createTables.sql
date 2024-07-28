@@ -15,7 +15,6 @@ CREATE TABLE products (
     id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid(),
     name TEXT,
     description TEXT,
-    stripe_purchase_link TEXT,
     previous_price FLOAT8,
     current_price FLOAT8,
     stripe_price_id TEXT UNIQUE,

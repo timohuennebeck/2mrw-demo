@@ -72,11 +72,6 @@ const ChoosePricingPlanPage = () => {
                             <PricingPlanCard
                                 key={index}
                                 {...product}
-                                stripe_purchase_link={
-                                    userEmail
-                                        ? `${product.stripe_purchase_link}?prefilled_email=${userEmail}`
-                                        : product.stripe_purchase_link
-                                }
                             />
                         ))
                     )}

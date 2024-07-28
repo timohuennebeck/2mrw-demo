@@ -12,7 +12,6 @@ export interface Product {
     previous_price: number;
     current_price: number;
     stripe_price_id: string;
-    stripe_purchase_link: string;
     is_highlighted: boolean;
     features: Feature[];
     is_active: boolean;

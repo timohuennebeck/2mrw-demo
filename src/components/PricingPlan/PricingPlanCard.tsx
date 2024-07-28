@@ -11,7 +11,6 @@ import { useState } from "react";
 export const PricingPlanCard = (props: Product) => {
     const {
         stripe_price_id,
-        stripe_purchase_link,
         is_highlighted,
         name,
         previous_price,
@@ -52,10 +51,9 @@ export const PricingPlanCard = (props: Product) => {
                 freeTrialStatus={freeTrialStatus}
                 isLoading={isFreeTrialLoading || isSubscriptionLoading}
                 stripePriceId={stripe_price_id}
-                stripePurchaseLink={stripe_purchase_link}
                 subscriptionInfo={subscriptionInfo}
                 subscriptionStatus={subscriptionStatus}
-                userId={supabaseUser?.user?.id ?? ""}
+                supabaseUser={supabaseUser?.user ?? null}
             />
 
             <p className="text-center text-sm text-gray-600 mt-4">Purchase Once. Forever Yours.</p>
