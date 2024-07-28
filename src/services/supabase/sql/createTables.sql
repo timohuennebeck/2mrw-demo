@@ -6,7 +6,7 @@ CREATE TABLE users (
     id INT8 PRIMARY KEY,
     email TEXT,
     full_name TEXT,
-    user_id UUID,
+    user_id UUID UNIQUE,
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ
 );
@@ -18,7 +18,7 @@ CREATE TABLE products (
     stripe_purchase_link TEXT,
     previous_price FLOAT8,
     current_price FLOAT8,
-    stripe_price_id TEXT,
+    stripe_price_id TEXT UNIQUE,
     is_highlighted BOOLEAN,
     is_active BOOLEAN,
     features JSONB,
