@@ -76,9 +76,7 @@ export const updateUserPurchasedSubscription = async ({
                 status,
                 subscription_tier: subscriptionTier,
             })
-            .eq("user_id", userId)
-            .select("*")
-            .single();
+            .eq("user_id", userId);
 
         if (error) throw error;
 
@@ -128,8 +126,7 @@ export const endUserFreeTrial = async ({ userId }: { userId: string }) => {
                 end_date: new Date().toISOString(),
                 status: FreeTrialStatus.EXPIRED,
             })
-            .eq("user_id", userId)
-            .single();
+            .eq("user_id", userId);
 
         if (error) throw error;
 
