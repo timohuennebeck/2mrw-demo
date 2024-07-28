@@ -18,10 +18,10 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
     return (
         <html className="h-full bg-white" lang="en" suppressHydrationWarning={true}>
             <body className={`h-full ${inter.className}`}>
-                    <Providers>
-                        {children}
-                    </Providers>
-                <Toaster />
+                <Providers>
+                    {children}
+                </Providers>
+                <Toaster position="top-left" />
             </body>
         </html>
     );
