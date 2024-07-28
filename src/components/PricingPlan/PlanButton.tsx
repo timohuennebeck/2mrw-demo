@@ -3,7 +3,6 @@ import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
 import { increaseDate } from "@/lib/helper/increaseDate";
 import { createFreeTrialTable } from "@/services/supabase/admin";
-import { User } from "@supabase/supabase-js";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import CustomButton from "../CustomButton";
@@ -15,7 +14,7 @@ interface PlanButton {
     subscriptionStatus: SubscriptionStatus | null;
     subscriptionInfo: PurchasedSubscription;
     isLoading: boolean;
-    supabaseUser: User;
+    userId: string;
 }
 
 export const PlanButton = ({
@@ -25,7 +24,7 @@ export const PlanButton = ({
     subscriptionStatus,
     subscriptionInfo,
     isLoading,
-    supabaseUser,
+    userId,
 }: PlanButton) => {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -39,7 +38,7 @@ export const PlanButton = ({
 
         try {
             await createFreeTrialTable({
-                userId: supabaseUser.id,
+                userId,
                 stripePriceId: stripePriceId,
                 freeTrialEndDate,
             });

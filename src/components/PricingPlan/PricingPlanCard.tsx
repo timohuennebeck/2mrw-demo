@@ -55,7 +55,7 @@ export const PricingPlanCard = (props: Product) => {
                 stripePurchaseLink={stripe_purchase_link}
                 subscriptionInfo={subscriptionInfo}
                 subscriptionStatus={subscriptionStatus}
-                supabaseUser={supabaseUser}
+                userId={supabaseUser?.user?.id ?? ""}
             />
 
             <p className="text-center text-sm text-gray-600 mt-4">Purchase Once. Forever Yours.</p>
