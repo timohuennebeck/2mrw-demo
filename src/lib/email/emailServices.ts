@@ -18,7 +18,7 @@ export const sendPostPurchaseEmail = async ({
         if (!plan) throw new Error("Plan not found");
 
         if (isPreOrder) {
-            const postUrl = `${process.env.SITE_URL}/api/email-services/send-pre-order-email`;
+            const postUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/email-services/send-pre-order-email`;
 
             // sends pre-order confirmation email for products not yet launched
             await axios.post(postUrl, {
