@@ -1,6 +1,9 @@
 "use server";
 
-import { VerifyStripeWebhookParams } from "@/interfaces/StripeInterfaces";
+import {
+    InitiateStripeCheckoutProcessParams,
+    VerifyStripeWebhookParams,
+} from "@/interfaces/StripeInterfaces";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY ?? "");
@@ -27,11 +30,7 @@ export const initiateStripeCheckoutProcess = async ({
     userId,
     userEmail,
     stripePriceId,
-}: {
-    userId: string;
-    userEmail: string;
-    stripePriceId: string;
-}) => {
+}: InitiateStripeCheckoutProcessParams) => {
     const session = await stripe.checkout.sessions.create({
         customer_email: userEmail,
         line_items: [{ price: stripePriceId, quantity: 1 }],
