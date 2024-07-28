@@ -3,7 +3,7 @@ CREATE TYPE FreeTrialStatusEnums AS ENUM ('ACTIVE', 'EXPIRED', 'NOT_STARTED');
 CREATE TYPE SubscriptionTierEnums AS ENUM ('TIER_ZERO', 'TIER_ONE', 'TIER_TWO');
 
 CREATE TABLE users (
-    id INT8 PRIMARY KEY,
+    id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid(),
     email TEXT,
     full_name TEXT,
     user_id UUID UNIQUE,
@@ -12,7 +12,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE products (
-    id INT8 PRIMARY KEY,
+    id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid(),
     name TEXT,
     description TEXT,
     stripe_purchase_link TEXT,
@@ -28,7 +28,7 @@ CREATE TABLE products (
 );
 
 CREATE TABLE free_trials (
-    id INT8 PRIMARY KEY,
+    id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid(),
     start_date TIMESTAMPTZ,
     end_date TIMESTAMPTZ,
     stripe_price_id TEXT REFERENCES public.products(stripe_price_id) ON DELETE CASCADE,
@@ -37,7 +37,7 @@ CREATE TABLE free_trials (
 );
 
 CREATE TABLE purchased_subscriptions (
-    id INT8 PRIMARY KEY,
+    id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid(),
     stripe_price_id TEXT REFERENCES public.products(stripe_price_id) ON DELETE CASCADE,
     user_id UUID REFERENCES public.users(user_id) ON DELETE CASCADE,
     status SubscriptionStatusEnums,
