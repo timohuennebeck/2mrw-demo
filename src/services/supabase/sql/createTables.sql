@@ -32,14 +32,14 @@ CREATE TABLE free_trials (
     start_date TIMESTAMPTZ,
     end_date TIMESTAMPTZ,
     stripe_price_id TEXT REFERENCES public.products(stripe_price_id) ON DELETE CASCADE,
-    user_id UUID REFERENCES public.users(user_id) ON DELETE CASCADE,
+    user_id UNIQUE UUID REFERENCES public.users(user_id) ON DELETE CASCADE,
     status FreeTrialStatusEnums
 );
 
 CREATE TABLE purchased_subscriptions (
     id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid(),
     stripe_price_id TEXT REFERENCES public.products(stripe_price_id) ON DELETE CASCADE,
-    user_id UUID REFERENCES public.users(user_id) ON DELETE CASCADE,
+    user_id UNIQUE UUID REFERENCES public.users(user_id) ON DELETE CASCADE,
     status SubscriptionStatusEnums,
     subscription_tier SubscriptionTierEnums,
     created_at TIMESTAMPTZ,
