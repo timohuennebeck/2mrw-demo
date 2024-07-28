@@ -14,7 +14,7 @@ export function useSubscriptionData() {
 
     const { data: user } = useQuery({
         queryKey: ["supabaseUser"],
-        queryFn: fetchSupabaseUser,
+        queryFn: () => fetchSupabaseUser(),
         staleTime: 5 * 60 * 1000,
         initialData: () => queryClient.getQueryData(["supabaseUser"]),
     });
