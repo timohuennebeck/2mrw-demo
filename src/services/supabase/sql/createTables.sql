@@ -33,7 +33,7 @@ CREATE TABLE free_trials (
     end_date TIMESTAMPTZ,
     stripe_price_id TEXT REFERENCES public.products(stripe_price_id) ON DELETE CASCADE,
     user_id UUID REFERENCES public.users(user_id) ON DELETE CASCADE,
-    status SubscriptionTierEnums
+    status FreeTrialStatusEnums
 );
 
 CREATE TABLE purchased_subscriptions (
