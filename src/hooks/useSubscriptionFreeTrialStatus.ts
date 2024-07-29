@@ -9,7 +9,7 @@ import {
     fetchSupabaseUser,
 } from "@/services/supabase/queries";
 
-export function useSubscriptionData() {
+export function useSubscriptionFreeTrialStatus() {
     const queryClient = useQueryClient();
 
     const { data: user } = useQuery({
@@ -19,7 +19,7 @@ export function useSubscriptionData() {
         initialData: () => queryClient.getQueryData(["supabaseUser"]),
     });
 
-    const { data: freeTrialData, isLoading: isFreeTrialLoading } = useQuery({
+    const { data: freeTrialData, isFetching: isFreeTrialLoading } = useQuery({
         queryKey: ["freeTrialStatus", { userId: user?.user?.id ?? "" }],
         queryFn: () => checkFreeTrialStatus({ userId: user?.user?.id ?? "" }),
         enabled: !!user?.user?.id,
@@ -31,13 +31,14 @@ export function useSubscriptionData() {
         enabled: !!user?.user?.id,
     });
 
+    const isLoading = !user || isFreeTrialLoading || isSubscriptionLoading;
+
     return {
         freeTrialStatus: freeTrialData?.status as FreeTrialStatus,
         freeTrialInfo: freeTrialData?.freeTrial as FreeTrial,
         subscriptionStatus: subscriptionData?.status as SubscriptionStatus,
         subscriptionInfo: subscriptionData?.subscription as PurchasedSubscription,
-        isFreeTrialLoading,
-        isSubscriptionLoading,
+        isLoading,
         supabaseUser: user,
     };
 }
