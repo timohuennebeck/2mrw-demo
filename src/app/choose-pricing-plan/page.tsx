@@ -19,23 +19,13 @@ const ChoosePricingPlanPage = () => {
         staleTime: 5 * 60 * 1000,
     });
 
-    const { data: supabaseUser } = useQuery({
-        queryKey: ["supabaseUser"],
-        queryFn: () => fetchSupabaseUser(),
-        staleTime: 5 * 60 * 1000,
-    });
-
     useEffect(() => {
         const timer = setTimeout(() => {
             setShowSkeleton(false);
-        }, 850);
+        }, 1000);
 
         return () => clearTimeout(timer);
     }, []);
-
-    const userEmail = supabaseUser?.user?.email
-        ? encodeURIComponent(supabaseUser?.user?.email)
-        : "";
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -69,10 +59,7 @@ const ChoosePricingPlanPage = () => {
                         </>
                     ) : (
                         products?.products?.map((product: Product, index) => (
-                            <PricingPlanCard
-                                key={index}
-                                {...product}
-                            />
+                            <PricingPlanCard key={index} {...product} />
                         ))
                     )}
                 </div>

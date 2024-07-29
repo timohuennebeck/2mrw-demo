@@ -3,10 +3,9 @@
 import { useSubscriptionData } from "@/hooks/useSubscriptionData";
 import { Product } from "@/interfaces/ProductInterfaces";
 import { PlanButton } from "./PlanButton";
+import { PlanFeatures } from "./PlanFeatures";
 import { PlanHeader } from "./PlanHeader";
 import { PlanPricing } from "./PlanPricing";
-import { PlanFeatures } from "./PlanFeatures";
-import { useState } from "react";
 
 export const PricingPlanCard = (props: Product) => {
     const {
