@@ -10,7 +10,7 @@ export const PricingPlanCardSkeleton = () => {
 
                 <div className="skeleton-pricing mb-4">
                     {/* Placeholder for PlanPricing */}
-                    <div className="mb-2 h-8 w-1/4 rounded bg-gray-200"></div>
+                    
                     <div className="h-4 w-1/5 rounded bg-gray-200"></div>
                 </div>
 
