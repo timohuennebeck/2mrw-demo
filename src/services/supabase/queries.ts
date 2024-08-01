@@ -229,6 +229,47 @@ export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
     }
 };
 
+export const checkUserProductPreorderStatus = async ({ userId }: { userId: string }) => {
+    const supabase = createClient();
+
+    try {
+        const { data: subscriptionData, error: subscriptionError } = await supabase
+            .from("purchased_subscriptions")
+            .select("*")
+            .eq("user_id", userId)
+            .eq("status", "ACTIVE")
+            .single();
+
+        if (subscriptionError) throw subscriptionError;
+
+        const purchasedSubscription: PurchasedSubscription = subscriptionData;
+
+        const { data: productData, error: productError } = await supabase
+            .from("products")
+            .select("*")
+            .eq("stripe_price_id", purchasedSubscription.stripe_price_id)
+            .single();
+
+        if (productError) throw productError;
+
+        const product: Product = productData;
+
+        return {
+            isPreorder: product.is_preorder,
+            purchasedSubscription,
+            product,
+            error: null,
+        };
+    } catch (error) {
+        return {
+            isPreorder: null,
+            purchasedSubscription: null,
+            product: null,
+            error: handleSupabaseError({ error, fnTitle: "checkUserProductPreorderStatus" }),
+        };
+    }
+};
+
 export const fetchSubscriptionTier = async ({ stripePriceId }: { stripePriceId: string }) => {
     const supabase = createClient();
 

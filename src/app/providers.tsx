@@ -3,6 +3,7 @@
 import {
     checkFreeTrialStatus,
     checkPurchasedSubscriptionStatus,
+    checkUserProductPreorderStatus,
     fetchProducts,
     fetchSupabaseUser,
 } from "@/services/supabase/queries";
@@ -34,6 +35,10 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
                     queryClient.prefetchQuery({
                         queryKey: ["subscriptionStatus", { userId: user?.id ?? "" }],
                         queryFn: () => checkPurchasedSubscriptionStatus({ userId: user?.id ?? "" }),
+                    }),
+                    queryClient.prefetchQuery({
+                        queryKey: ["preOrderStatus", { userId: user?.id ?? "" }],
+                        queryFn: () => checkUserProductPreorderStatus({ userId: user?.id ?? "" }),
                     }),
                 ]);
             } catch (error) {

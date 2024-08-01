@@ -1,6 +1,10 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse as response, type NextRequest as request } from "next/server";
-import { checkFreeTrialStatus, checkPurchasedSubscriptionStatus } from "./queries";
+import {
+    checkFreeTrialStatus,
+    checkPurchasedSubscriptionStatus,
+    checkUserProductPreorderStatus,
+} from "./queries";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 
@@ -69,9 +73,18 @@ export const updateSession = async (request: request) => {
         userId: user?.id ?? "",
     });
 
+    const { isPreorder } = await checkUserProductPreorderStatus({ userId: user?.id ?? "" });
+
     const hasPremiumSubscription = subscriptionStatus === SubscriptionStatus.ACTIVE ?? false;
     const isOnFreeTrial = freeTrialStatus === FreeTrialStatus.ACTIVE ?? false;
     const hasPremiumOrFreeTrial = hasPremiumSubscription || isOnFreeTrial;
+
+    // preorder products should show the pre-order-confirmation page until product is live
+    if (isPreorder && request.nextUrl.pathname !== "/pre-order-confirmation") {
+        const url = request.nextUrl.clone();
+        url.pathname = "/pre-order-confirmation";
+        return response.redirect(url);
+    }
 
     // non-premium users should be redirected to the choose-pricing-plan page to choose a plan
     if (!hasPremiumOrFreeTrial && request.nextUrl.pathname !== "/choose-pricing-plan") {
@@ -79,13 +92,6 @@ export const updateSession = async (request: request) => {
         url.pathname = "/choose-pricing-plan";
         return response.redirect(url);
     }
-
-    // premium users should be redirected away from choose-pricing-plan
-    // if (hasPremiumOrFreeTrial && request.nextUrl.pathname === "/choose-pricing-plan") {
-    //     const url = request.nextUrl.clone();
-    //     url.pathname = "/";
-    //     return response.redirect(url);
-    // }
 
     return supabaseResponse;
 };

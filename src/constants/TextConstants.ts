@@ -13,4 +13,6 @@ export const TextConstants = {
     TEXT__FREE_TRIAL_DURATION: 14,
 
     TEXT__LOOM_GETTING_STARTED_URL: "loom.com",
+
+    TEXT__CUSTOMER_SUPPORT_EMAIL: "contact@joinforj.com",
 };
