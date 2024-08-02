@@ -47,13 +47,13 @@ const handleRedirection = async ({
     return null;
 };
 
-function hasOneHourPassed({ user }: { user: User }) {
+const hasOneHourPassed = ({ user }: { user: User }) => {
     const currentTime = new Date();
     const lastTime = new Date(user?.user_metadata?.lastStatusCheck);
     const timeDifference = currentTime.getTime() - lastTime.getTime();
 
     return timeDifference >= ONE_HOUR_IN_MS;
-}
+};
 
 export const middleware = async (request: nextRequest) => {
     let supabaseResponse = nextResponse.next({
@@ -100,12 +100,16 @@ export const middleware = async (request: nextRequest) => {
             checkUserProductPreorderStatus({ userId: user.id }),
         ]);
 
+        subscriptionStatus = purchasedSubscription.status;
+        freeTrialStatus = freeTrial.status;
+        isPreorder = preOrder.isPreorder;
+
         // update user metadata with new status and timestamp
         await supabaseClient.auth.updateUser({
             data: {
-                subscriptionStatus: purchasedSubscription.status,
-                freeTrialStatus: freeTrial.status,
-                isPreorder: preOrder.isPreorder,
+                subscriptionStatus,
+                freeTrialStatus,
+                isPreorder,
                 lastStatusCheck: new Date(),
             },
         });
