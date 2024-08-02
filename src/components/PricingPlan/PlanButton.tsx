@@ -88,59 +88,34 @@ export const PlanButton = ({
         }
     };
 
-    const determinePaidSubscriptionButtonProps = () => {
-        const hasPurchasedSubscription = subscriptionStatus === SubscriptionStatus.ACTIVE;
-        const isOnFreeTrial = freeTrialStatus === FreeTrialStatus.ACTIVE;
-
-        if (isPreorder) {
-            return {
-                title: "Pre-Order Now",
-                onClick: handleCheckout,
-                disabled: isLoading,
-                isLoading: isLoading,
-            };
-        }
-
-        if (hasPurchasedSubscription && !isOnFreeTrial) {
-            const isCurrentPlan = subscriptionInfo?.stripe_price_id === stripePriceId;
-
-            return isCurrentPlan
-                ? { title: "Current Plan", disabled: true }
-                : {
-                      title: "Get Started Now",
-                      onClick: handleCheckout,
-                      disabled: isLoading,
-                      isLoading: isLoading,
-                  };
-        }
-
-        return null;
-    };
-
     const determineButtonProps = () => {
-        if (freeTrialStatus === null) {
+        const hasPurchasedSubscription = subscriptionStatus === SubscriptionStatus.ACTIVE;
+
+        const baseProps = {
+            disabled: isLoading,
+            isLoading,
+        };
+
+        if (!hasPurchasedSubscription && isPreorder) {
+            return { ...baseProps, title: "Pre-Order Now", onClick: handleCheckout };
+        }
+
+        if (!hasPurchasedSubscription && freeTrialStatus === null) {
+            const freeTrialDuration = welcomeEmail === "true" ? 14 : 7;
             return {
+                ...baseProps,
+                title: `Start Free Trial (${freeTrialDuration} Days)`,
                 onClick: startFreeTrial,
-                title: `Start Free Trial (${welcomeEmail === "true" ? "14" : "7"} Days)`,
-                disabled: isLoading,
-                isLoading: isLoading,
             };
         }
 
-        const subscriptionProps = determinePaidSubscriptionButtonProps();
-
-        console.log("→ [LOG] subscriptionProps", subscriptionProps);
-
-        if (subscriptionProps) {
-            return subscriptionProps;
+        if (hasPurchasedSubscription) {
+            return subscriptionInfo?.stripe_price_id === stripePriceId
+                ? { title: "Current Plan", disabled: true }
+                : { ...baseProps, title: "Get Started Now", onClick: handleCheckout };
         }
 
-        return {
-            title: "Upgrade Now",
-            onClick: handleCheckout,
-            disabled: isLoading,
-            isLoading: isLoading,
-        };
+        return { ...baseProps, title: "Upgrade Now", onClick: handleCheckout };
     };
 
     return <CustomButton {...determineButtonProps()} />;

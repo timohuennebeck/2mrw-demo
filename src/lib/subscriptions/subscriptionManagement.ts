@@ -71,9 +71,10 @@ export const handleCheckoutSessionCompleted = async ({
         if (!user) throw new Error("User not found");
 
         const { status } = await checkFreeTrialStatus({ userId: user.user_id });
-        if (!status) throw new Error("Free Trial status not found");
 
-        await endOnGoingUserFreeTrial({ status: status, userId: user.user_id });
+        if (status) {
+            await endOnGoingUserFreeTrial({ status: status, userId: user.user_id });
+        }
 
         const { subscriptionTier } = await fetchSubscriptionTier({ stripePriceId });
         if (!subscriptionTier) throw new Error("SubscriptionTier not found");
