@@ -41,7 +41,7 @@ const PreorderConfirmationContent = () => {
             <h1 className="mb-6 text-center text-2xl font-semibold">Thank You for Pre-Ordering!</h1>
 
             <p className="mb-2 text-center text-sm text-gray-600">
-                Your Package, '{data?.product?.name}', has been reserved:
+                Your '{data?.product?.name}' package has been reserved.
             </p>
             <p className="mb-4 text-center font-semibold">
                 Purchased on:{" "}
@@ -54,7 +54,7 @@ const PreorderConfirmationContent = () => {
                     <span className="font-medium">Plan:</span> {data?.product?.name}
                 </p>
                 <p className="text-sm text-gray-600">
-                    <span className="font-medium">Price:</span> {data?.product?.current_price}
+                    <span className="font-medium">Price:</span> ${data?.product?.current_price}
                 </p>
                 <p className="text-sm text-gray-600">
                     <span className="font-medium">Expected launch:</span> Q2 2024

@@ -35,6 +35,7 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
         subscriptionInfo,
         isLoading,
         supabaseUser,
+        is_preorder
     } = props;
 
     return (
@@ -56,6 +57,7 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
             </div>
 
             <PlanButton
+                isPreorder={is_preorder}
                 freeTrialStatus={freeTrialStatus}
                 isLoading={isLoading}
                 stripePriceId={stripe_price_id}
