@@ -17,6 +17,7 @@ import Stripe from "stripe";
 import { sendPostPurchaseEmail } from "../email/emailServices";
 import { UpsertUserSubscriptionParams } from "@/interfaces/SubscriptionInterfaces";
 import { EndOnGoingUserFreeTrialParams } from "@/interfaces/FreeTrial";
+import { createClient } from "@/services/supabase/server";
 
 export const endOnGoingUserFreeTrial = async ({
     status,
@@ -59,6 +60,8 @@ export const handleCheckoutSessionCompleted = async ({
 }: {
     session: Stripe.Checkout.Session;
 }) => {
+    const supabase = createClient();
+
     const userEmail = session?.customer_details?.email;
     const stripePriceId = session.line_items?.data[0].price?.id;
 
@@ -75,6 +78,14 @@ export const handleCheckoutSessionCompleted = async ({
         if (!subscriptionTier) throw new Error("SubscriptionTier not found");
 
         await upsertUserSubscription({ stripePriceId, subscriptionTier, userId: user.user_id });
+
+        await supabase.auth.updateUser({
+            data: {
+                subscriptionStatus: SubscriptionStatus.ACTIVE,
+                freeTrialStatus: FreeTrialStatus.EXPIRED,
+                lastStatusCheck: new Date(),
+            },
+        });
 
         await sendPostPurchaseEmail({
             session,

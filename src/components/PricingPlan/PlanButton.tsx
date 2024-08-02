@@ -9,6 +9,7 @@ import CustomButton from "../CustomButton";
 import { initiateStripeCheckoutProcess } from "@/lib/stripe/stripeUtils";
 import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
+import { createClient } from "@/services/supabase/client";
 
 interface PlanButton {
     stripePriceId: string;
@@ -27,6 +28,8 @@ export const PlanButton = ({
     isLoading: dataIsLoading,
     supabaseUser,
 }: PlanButton) => {
+    const supabase = createClient();
+
     const [isLoading, setIsLoading] = useState(dataIsLoading);
 
     useEffect(() => {
@@ -67,6 +70,13 @@ export const PlanButton = ({
                 userId: supabaseUser?.id ?? "",
                 stripePriceId: stripePriceId,
                 freeTrialEndDate,
+            });
+
+            await supabase.auth.updateUser({
+                data: {
+                    freeTrialStatus: FreeTrialStatus.ACTIVE,
+                    lastStatusCheck: new Date(),
+                },
             });
 
             toast.success("Free Trial has been started");

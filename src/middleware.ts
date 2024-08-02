@@ -11,7 +11,7 @@ import {
     checkPurchasedSubscriptionStatus,
     checkUserProductPreorderStatus,
 } from "./services/supabase/queries";
-import { User } from "@supabase/supabase-js";
+import { SupabaseClient, User } from "@supabase/supabase-js";
 
 const ONE_HOUR_IN_MS = 1000 * 60 * 60;
 const HIDE_ON_PREMIUM_PLAN = ["/choose-pricing-plan", "/pre-order-confirmation"];
@@ -45,6 +45,32 @@ const handleRedirection = async ({
 
     // user is authenticated and accessing a non-auth route
     return null;
+};
+
+const checkUpdateSubscriptionStatus = async ({
+    supabaseClient,
+    user,
+}: {
+    supabaseClient: SupabaseClient;
+    user: User;
+}) => {
+    const [purchasedSubscription, freeTrial, preOrder] = await Promise.all([
+        checkPurchasedSubscriptionStatus({ userId: user.id }),
+        checkFreeTrialStatus({ userId: user.id }),
+        checkUserProductPreorderStatus({ userId: user.id }),
+    ]);
+
+    const updatedStatus = {
+        subscriptionStatus: purchasedSubscription.status,
+        freeTrialStatus: freeTrial.status,
+        isPreorder: preOrder.isPreorder,
+        lastStatusCheck: new Date(),
+    };
+
+    // update user metadata with new status and timestamp
+    await supabaseClient.auth.updateUser({ data: updatedStatus });
+
+    return updatedStatus;
 };
 
 const hasOneHourPassed = ({ user }: { user: User }) => {
@@ -89,30 +115,13 @@ export const middleware = async (request: nextRequest) => {
 
     if (!user) return nextResponse.next();
 
-    let subscriptionStatus = user?.user_metadata.subscriptionStatus;
-    let freeTrialStatus = user?.user_metadata.freeTrialStatus;
-    let isPreorder = user?.user_metadata.isPreorder;
+    let { subscriptionStatus, freeTrialStatus, isPreorder } = user.user_metadata;
 
     if (hasOneHourPassed({ user })) {
-        const [purchasedSubscription, freeTrial, preOrder] = await Promise.all([
-            checkPurchasedSubscriptionStatus({ userId: user.id }),
-            checkFreeTrialStatus({ userId: user.id }),
-            checkUserProductPreorderStatus({ userId: user.id }),
-        ]);
-
-        subscriptionStatus = purchasedSubscription.status;
-        freeTrialStatus = freeTrial.status;
-        isPreorder = preOrder.isPreorder;
-
-        // update user metadata with new status and timestamp
-        await supabaseClient.auth.updateUser({
-            data: {
-                subscriptionStatus,
-                freeTrialStatus,
-                isPreorder,
-                lastStatusCheck: new Date(),
-            },
-        });
+        ({ subscriptionStatus, freeTrialStatus, isPreorder } = await checkUpdateSubscriptionStatus({
+            supabaseClient,
+            user,
+        }));
     }
 
     const hasPremiumSubscription = subscriptionStatus === SubscriptionStatus.ACTIVE;
