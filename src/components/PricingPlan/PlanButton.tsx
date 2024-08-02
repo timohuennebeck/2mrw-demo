@@ -92,28 +92,26 @@ export const PlanButton = ({
         const hasPurchasedSubscription = subscriptionStatus === SubscriptionStatus.ACTIVE;
         const isOnFreeTrial = freeTrialStatus === FreeTrialStatus.ACTIVE;
 
-        if (hasPurchasedSubscription && !isOnFreeTrial) {
-            const isCurrentPlan = subscriptionInfo?.stripe_price_id === stripePriceId;
-
-            if (isPreorder) {
-                return {
-                    title: "Pre-Order Now",
-                    onClick: handleCheckout,
-                    disabled: isLoading,
-                    isLoading: isLoading,
-                };
-            }
-
-            if (isCurrentPlan) {
-                return { title: "Current Plan", disabled: true };
-            }
-
+        if (isPreorder) {
             return {
-                title: "Get Started Now",
+                title: "Pre-Order Now",
                 onClick: handleCheckout,
                 disabled: isLoading,
                 isLoading: isLoading,
             };
+        }
+
+        if (hasPurchasedSubscription && !isOnFreeTrial) {
+            const isCurrentPlan = subscriptionInfo?.stripe_price_id === stripePriceId;
+
+            return isCurrentPlan
+                ? { title: "Current Plan", disabled: true }
+                : {
+                      title: "Get Started Now",
+                      onClick: handleCheckout,
+                      disabled: isLoading,
+                      isLoading: isLoading,
+                  };
         }
 
         return null;
@@ -130,6 +128,8 @@ export const PlanButton = ({
         }
 
         const subscriptionProps = determinePaidSubscriptionButtonProps();
+
+        console.log("→ [LOG] subscriptionProps", subscriptionProps);
 
         if (subscriptionProps) {
             return subscriptionProps;
