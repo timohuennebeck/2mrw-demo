@@ -7,6 +7,7 @@ import {
 } from "@/services/supabase/admin";
 import {
     checkFreeTrialStatus,
+    checkUserProductPreorderStatus,
     checkUserRowExists,
     fetchSubscriptionTier,
     fetchUser,
@@ -87,10 +88,12 @@ export const handleCheckoutSessionCompleted = async ({
             },
         });
 
+        const { isPreorder } = await checkUserProductPreorderStatus({ userId: user.user_id });
+
         await sendPostPurchaseEmail({
             session,
             stripePriceId: stripePriceId ?? "",
-            isPreOrder: true,
+            isPreOrder: isPreorder ?? false,
         });
     }
 };
