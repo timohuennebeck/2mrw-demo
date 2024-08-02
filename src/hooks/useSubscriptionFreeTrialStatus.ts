@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { FreeTrial } from "@/interfaces/FreeTrial";
@@ -10,13 +10,10 @@ import {
 } from "@/services/supabase/queries";
 
 export function useSubscriptionFreeTrialStatus() {
-    const queryClient = useQueryClient();
-
     const { data: user } = useQuery({
         queryKey: ["supabaseUser"],
         queryFn: () => fetchSupabaseUser(),
         staleTime: 5 * 60 * 1000,
-        initialData: () => queryClient.getQueryData(["supabaseUser"]),
     });
 
     const { data: freeTrialData, isFetching: isFreeTrialLoading } = useQuery({
