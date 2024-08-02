@@ -1,11 +1,7 @@
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { createServerClient } from "@supabase/ssr";
-import {
-    NextRequest as nextRequest,
-    NextResponse,
-    NextResponse as nextResponse,
-} from "next/server";
+import { NextRequest as nextRequest, NextResponse as nextResponse } from "next/server";
 import {
     checkFreeTrialStatus,
     checkPurchasedSubscriptionStatus,
