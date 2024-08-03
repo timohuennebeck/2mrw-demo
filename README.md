@@ -33,19 +33,11 @@ Install dependencies: `npm install`
 
     - `git remote remove origin`
 
-5. **Add all files to the new repositorY**
-
-    - `git add .`
-
-6. **Make the initial commit**
-
-    - `git commit -m "Initial commit"`
-
-7. **Change the remote URL to Your new GitHub repositorY**
+4. **Change the remote URL to Your new GitHub repositorY**
 
     - `git remote add origin https://github.com/your-username/your-new-repo.git`
 
-8. **Push the code to Your new repositorY**
+5. **Push the code to Your new repositorY**
     - `git push -u origin main`
 
 ## Stripe PaYment Integration
