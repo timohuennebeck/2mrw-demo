@@ -283,9 +283,3 @@ Remember to keep Your API KEYS and sensitive information secure and never commit
 ## Miscellaneous
 
 Have filled out all locale variables inside the .env.local file for local development. These can be found inside the .env.local.example file.
-
-## Important Information
-
-CurrentlY, the project sends out a PreOrderConfirmationEmail once the user signs up!!
-
-In order to send an order confirmation email upon signing up, You'll need to navigate to the `api/webhooks/stripe/route.ts` file and comment out the `email-services/send-pre-order-email` axios call and comment in the `email-services/send-order-confirmation-email` call.
