@@ -9,7 +9,7 @@ import {
 import { SupabaseClient, User } from "@supabase/supabase-js";
 
 const ONE_HOUR_IN_MS = 1000 * 60 * 60;
-const HIDE_ON_PREMIUM_PLAN = ["/choose-pricing-plan", "/pre-order-confirmation"];
+const HIDE_ON_PREMIUM_PLAN = ["/choose-pricing-plan"];
 
 const handleRedirection = async ({
     request,
