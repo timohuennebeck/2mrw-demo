@@ -1,8 +1,4 @@
-"use client";
-
 import { signInUsingGoogle } from "@/app/auth/sign-in/action";
-import googleIcon from "@/assets/icons/google-icon.svg";
-import Image from "next/image";
 import { toast } from "sonner";
 
 function ContinueWithGoogleButton() {
@@ -22,10 +18,9 @@ function ContinueWithGoogleButton() {
 
     return (
         <button
-            className="text-sm mt-4 w-full flex items-center justify-center gap-2 bg-white text-gray-700 border border-gray-300 py-2.5 px-4 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+            className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
             onClick={continueWithGoogle}
         >
-            <Image src={googleIcon} alt="Google Icon" className="size-6" />
             Continue with Google
         </button>
     );
