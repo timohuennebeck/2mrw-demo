@@ -82,9 +82,8 @@ export const handleCheckoutSessionCompleted = async ({
 
         await supabase.auth.updateUser({
             data: {
-                subscriptionStatus: SubscriptionStatus.ACTIVE,
-                freeTrialStatus: FreeTrialStatus.EXPIRED,
-                lastStatusCheck: new Date(),
+                subscription_status: SubscriptionStatus.ACTIVE,
+                free_trial_status: FreeTrialStatus.EXPIRED,
             },
         });
 

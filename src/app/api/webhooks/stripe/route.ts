@@ -16,13 +16,11 @@ export const POST = async (req: request) => {
 
         const event = await verifyStripeWebhook({ body, signature });
 
-        switch (event.type) {
-            case StripeWebhookEvents.CHECKOUT_SESSION_COMPLETED:
-                const session = await retrieveCheckoutSession({ sessionId: event.data.object.id });
-                await handleCheckoutSessionCompleted({ session });
-                break;
-            default:
-                console.log(`Unhandled event: ${event.type}`);
+        if (event.type === StripeWebhookEvents.CHECKOUT_SESSION_COMPLETED) {
+            const session = await retrieveCheckoutSession({ sessionId: event.data.object.id });
+            await handleCheckoutSessionCompleted({ session });
+        } else {
+            console.log(`Unhandled event: ${event.type}`);
         }
 
         return response.json({ received: true }, { status: 200 });

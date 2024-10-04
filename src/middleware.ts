@@ -9,7 +9,6 @@ import {
 import { SupabaseClient, User } from "@supabase/supabase-js";
 import moment from "moment";
 
-const ONE_HOUR = 1;
 const HIDE_ON_PREMIUM_PLAN = ["/choose-pricing-plan"];
 
 const handleRedirection = async ({
@@ -43,35 +42,49 @@ const handleRedirection = async ({
     return null;
 };
 
-const checkUpdateSubscriptionStatus = async ({
-    supabaseClient,
-    user,
-}: {
-    supabaseClient: SupabaseClient;
-    user: User;
-}) => {
-    const [purchasedSubscription, freeTrial] = await Promise.all([
-        checkPurchasedSubscriptionStatus({ userId: user.id }),
-        checkFreeTrialStatus({ userId: user.id }),
-    ]);
+const getSubscriptionStatus = async (supabaseClient: SupabaseClient, user: User) => {
+    // uses metadata as source of truth to prevent making obessive amounts of api calls whenever the middleware triggers
+    if (user?.user_metadata?.subscription_status && user?.user_metadata?.free_trial_status) {
+        return {
+            subscription_status: user.user_metadata.subscription_status,
+            free_trial_status: user.user_metadata.free_trial_status,
+        };
+    }
 
-    const updatedStatus = {
-        subscriptionStatus: purchasedSubscription.status,
-        freeTrialStatus: freeTrial.status,
-        lastStatusCheck: new Date(),
+    const { data: subscriptionData, error: subscriptionError } = await supabaseClient
+        .from("subscriptions")
+        .select("status")
+        .eq("user_id", user.id)
+        .single();
+
+    const { data: freeTrialData, error: freeTrialError } = await supabaseClient
+        .from("free_trials")
+        .select("status")
+        .eq("user_id", user.id)
+        .single();
+
+    if (!subscriptionError && !freeTrialError && subscriptionData && freeTrialData) {
+        await supabaseClient.auth.updateUser({
+            data: {
+                subscription_status: subscriptionData.status,
+                free_trial_status: freeTrialData.status,
+            },
+        });
+
+        return {
+            subscription_status: subscriptionData.status,
+            free_trial_status: freeTrialData.status,
+        };
+    }
+
+    const fallbackStatus = {
+        subscription_status: SubscriptionStatus.NOT_PURCHASED,
+        free_trial_status: FreeTrialStatus.NOT_STARTED,
     };
 
-    // update user metadata with new status and timestamp
-    await supabaseClient.auth.updateUser({ data: updatedStatus });
+    await supabaseClient.auth.updateUser({ data: fallbackStatus });
 
-    return updatedStatus;
-};
-
-const hasOneHourPassed = ({ user }: { user: User }) => {
-    const startTime = moment(user?.user_metadata?.lastStatusCheck);
-    const currentTime = moment();
-
-    return currentTime.diff(startTime, "hours") >= ONE_HOUR;
+    return fallbackStatus;
 };
 
 export const middleware = async (request: nextRequest) => {
@@ -108,26 +121,13 @@ export const middleware = async (request: nextRequest) => {
 
     if (!user) return nextResponse.next();
 
-    let { subscriptionStatus, freeTrialStatus } = user.user_metadata;
+    const { subscription_status, free_trial_status } = await getSubscriptionStatus(
+        supabaseClient,
+        user,
+    );
 
-    if (hasOneHourPassed({ user })) {
-        ({ subscriptionStatus, freeTrialStatus } = await checkUpdateSubscriptionStatus({
-            supabaseClient,
-            user,
-        }));
-    }
-
-    if (true) {
-        ({ subscriptionStatus, freeTrialStatus } = await checkUpdateSubscriptionStatus({
-            supabaseClient,
-            user,
-        }));
-    }
-
-    console.log("→ [LOG] Triggered 02");
-
-    const hasPremiumSubscription = subscriptionStatus === SubscriptionStatus.ACTIVE;
-    const isOnFreeTrial = freeTrialStatus === FreeTrialStatus.ACTIVE;
+    const hasPremiumSubscription = subscription_status === SubscriptionStatus.ACTIVE;
+    const isOnFreeTrial = free_trial_status === FreeTrialStatus.ACTIVE;
     const hasPremiumOrFreeTrial = hasPremiumSubscription || isOnFreeTrial;
 
     const currentPath = request.nextUrl.pathname;
@@ -136,9 +136,7 @@ export const middleware = async (request: nextRequest) => {
         return HIDE_ON_PREMIUM_PLAN.includes(currentPath)
             ? nextResponse.redirect(new URL("/", request.url))
             : nextResponse.next();
-    }
-
-    if (!hasPremiumOrFreeTrial) {
+    } else {
         return currentPath !== "/choose-pricing-plan"
             ? nextResponse.redirect(new URL("/choose-pricing-plan", request.url))
             : nextResponse.next();
