@@ -12,7 +12,6 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/services/supabase/client";
 
 interface PlanButton {
-    isPreorder: boolean;
     stripePriceId: string;
     freeTrialStatus: FreeTrialStatus | null;
     subscriptionStatus: SubscriptionStatus | null;
@@ -22,7 +21,6 @@ interface PlanButton {
 }
 
 export const PlanButton = ({
-    isPreorder,
     stripePriceId,
     freeTrialStatus,
     subscriptionStatus,
@@ -96,7 +94,7 @@ export const PlanButton = ({
             isLoading,
         };
 
-        if (!hasPurchasedSubscription && isPreorder) {
+        if (!hasPurchasedSubscription) {
             return { ...baseProps, title: "Pre-Order Now", onClick: handleCheckout };
         }
 

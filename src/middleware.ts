@@ -5,7 +5,6 @@ import { NextRequest as nextRequest, NextResponse as nextResponse } from "next/s
 import {
     checkFreeTrialStatus,
     checkPurchasedSubscriptionStatus,
-    checkUserProductPreorderStatus,
 } from "./services/supabase/queries";
 import { SupabaseClient, User } from "@supabase/supabase-js";
 
@@ -50,16 +49,14 @@ const checkUpdateSubscriptionStatus = async ({
     supabaseClient: SupabaseClient;
     user: User;
 }) => {
-    const [purchasedSubscription, freeTrial, preOrder] = await Promise.all([
+    const [purchasedSubscription, freeTrial] = await Promise.all([
         checkPurchasedSubscriptionStatus({ userId: user.id }),
         checkFreeTrialStatus({ userId: user.id }),
-        checkUserProductPreorderStatus({ userId: user.id }),
     ]);
 
     const updatedStatus = {
         subscriptionStatus: purchasedSubscription.status,
         freeTrialStatus: freeTrial.status,
-        isPreorder: preOrder.isPreorder,
         lastStatusCheck: new Date(),
     };
 
@@ -111,10 +108,10 @@ export const middleware = async (request: nextRequest) => {
 
     if (!user) return nextResponse.next();
 
-    let { subscriptionStatus, freeTrialStatus, isPreorder } = user.user_metadata;
+    let { subscriptionStatus, freeTrialStatus } = user.user_metadata;
 
     if (hasOneHourPassed({ user })) {
-        ({ subscriptionStatus, freeTrialStatus, isPreorder } = await checkUpdateSubscriptionStatus({
+        ({ subscriptionStatus, freeTrialStatus } = await checkUpdateSubscriptionStatus({
             supabaseClient,
             user,
         }));
@@ -125,12 +122,6 @@ export const middleware = async (request: nextRequest) => {
     const hasPremiumOrFreeTrial = hasPremiumSubscription || isOnFreeTrial;
 
     const currentPath = request.nextUrl.pathname;
-
-    if (isPreorder) {
-        return currentPath !== "/pre-order-confirmation"
-            ? nextResponse.redirect(new URL("/pre-order-confirmation", request.url))
-            : nextResponse.next();
-    }
 
     if (hasPremiumOrFreeTrial) {
         return HIDE_ON_PREMIUM_PLAN.includes(currentPath)

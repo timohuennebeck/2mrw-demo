@@ -22,7 +22,6 @@ CREATE TABLE products (
     is_active BOOLEAN,
     features JSONB,
     subscription_tier SubscriptionTierEnums,
-    is_preorder BOOLEAN,
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ
 );

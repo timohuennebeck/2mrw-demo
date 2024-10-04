@@ -35,11 +35,10 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
         subscriptionInfo,
         isLoading,
         supabaseUser,
-        is_preorder
     } = props;
 
     return (
-        <div className="bg-white rounded-2xl shadow-lg border p-8 relative">
+        <div className="relative rounded-2xl border bg-white p-8 shadow-lg">
             <div className="mb-6">
                 <PlanHeader
                     freeTrialInfo={freeTrialInfo}
@@ -51,13 +50,12 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
 
                 <PlanPricing currentPrice={current_price} previousPrice={previous_price} />
 
-                <p className="text-gray-600 text-sm mb-4">{description}</p>
+                <p className="mb-4 text-sm text-gray-600">{description}</p>
 
                 <PlanFeatures features={features} />
             </div>
 
             <PlanButton
-                isPreorder={is_preorder}
                 freeTrialStatus={freeTrialStatus}
                 isLoading={isLoading}
                 stripePriceId={stripe_price_id}
@@ -66,7 +64,7 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
                 supabaseUser={supabaseUser ?? null}
             />
 
-            <p className="text-center text-sm text-gray-600 mt-4">Purchase Once. Forever Yours.</p>
+            <p className="mt-4 text-center text-sm text-gray-600">Purchase Once. Forever Yours.</p>
         </div>
     );
 };
