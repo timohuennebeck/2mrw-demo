@@ -94,10 +94,6 @@ export const PlanButton = ({
             isLoading,
         };
 
-        if (!hasPurchasedSubscription) {
-            return { ...baseProps, title: "Pre-Order Now", onClick: handleCheckout };
-        }
-
         if (!hasPurchasedSubscription && freeTrialStatus === null) {
             const freeTrialDuration = welcomeEmail === "true" ? 14 : 7;
             return {
