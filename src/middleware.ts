@@ -7,8 +7,9 @@ import {
     checkPurchasedSubscriptionStatus,
 } from "./services/supabase/queries";
 import { SupabaseClient, User } from "@supabase/supabase-js";
+import moment from "moment";
 
-const ONE_HOUR_IN_MS = 1000 * 60 * 60;
+const ONE_HOUR = 1;
 const HIDE_ON_PREMIUM_PLAN = ["/choose-pricing-plan"];
 
 const handleRedirection = async ({
@@ -67,11 +68,10 @@ const checkUpdateSubscriptionStatus = async ({
 };
 
 const hasOneHourPassed = ({ user }: { user: User }) => {
-    const currentTime = new Date();
-    const lastTime = new Date(user?.user_metadata?.lastStatusCheck);
-    const timeDifference = currentTime.getTime() - lastTime.getTime();
+    const startTime = moment(user?.user_metadata?.lastStatusCheck);
+    const currentTime = moment();
 
-    return timeDifference >= ONE_HOUR_IN_MS;
+    return currentTime.diff(startTime, "hours") >= ONE_HOUR;
 };
 
 export const middleware = async (request: nextRequest) => {
@@ -116,6 +116,15 @@ export const middleware = async (request: nextRequest) => {
             user,
         }));
     }
+
+    if (true) {
+        ({ subscriptionStatus, freeTrialStatus } = await checkUpdateSubscriptionStatus({
+            supabaseClient,
+            user,
+        }));
+    }
+
+    console.log("→ [LOG] Triggered 02");
 
     const hasPremiumSubscription = subscriptionStatus === SubscriptionStatus.ACTIVE;
     const isOnFreeTrial = freeTrialStatus === FreeTrialStatus.ACTIVE;
