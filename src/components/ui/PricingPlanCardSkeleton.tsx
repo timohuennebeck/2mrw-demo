@@ -1,6 +1,6 @@
 export const PricingPlanCardSkeleton = () => {
     return (
-        <div className="relative rounded-2xl border bg-white p-8 shadow-lg">
+        <div className="relative rounded-md border p-8">
             <div className="mb-6">
                 <div className="skeleton-header mb-4">
                     {/* Placeholder for PlanHeader */}

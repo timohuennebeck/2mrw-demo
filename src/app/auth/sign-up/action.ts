@@ -3,12 +3,16 @@
 import { checkUserEmailExists } from "@/services/supabase/queries";
 import { createClient } from "@/services/supabase/server";
 
-export const signUp = async (formData: FormData) => {
+export const signUp = async ({
+    name,
+    email,
+    password,
+}: {
+    name: string;
+    email: string;
+    password: string;
+}) => {
     const supabase = createClient();
-
-    const firstName = formData.get("firstName") as string;
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
 
     try {
         const { emailExists } = await checkUserEmailExists({ userEmail: email });
@@ -22,7 +26,7 @@ export const signUp = async (formData: FormData) => {
             password,
             options: {
                 data: {
-                    full_name: firstName,
+                    full_name: name,
                 },
             },
         });

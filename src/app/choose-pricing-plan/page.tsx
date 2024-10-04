@@ -8,7 +8,6 @@ import { useSubscriptionFreeTrialStatus } from "@/hooks/useSubscriptionFreeTrial
 import { Product } from "@/interfaces/ProductInterfaces";
 import { fetchProducts } from "@/services/supabase/queries";
 import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
 
 const ChoosePricingPlanPage = () => {
     const { data: products } = useQuery({
@@ -20,29 +19,22 @@ const ChoosePricingPlanPage = () => {
     const subscriptionFreeTrialStatus = useSubscriptionFreeTrialStatus();
 
     return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-            <div className="absolute top-8 right-8">
+        <div className="flex min-h-screen items-center justify-center p-4">
+            <div className="absolute right-8 top-8">
                 <SignOutButton title="Sign out" />
             </div>
 
-            <div className="p-8 max-w-4xl w-full">
-                <div className="flex justify-center mb-6">
-                    <Image
-                        src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL ?? ""}
-                        alt="Logo"
-                        width={48}
-                        height={48}
-                    />
+            <div className="w-full max-w-4xl p-8">
+                <h1 className="mb-2 text-center text-2xl font-medium">Choose a Plan</h1>
+                <div className="flex justify-center">
+                    <p className="mb-8 w-3/4 text-center text-sm text-neutral-500">
+                        Choose a plan to start using {TextConstants.TEXT__COMPANY_TITLE}. This is a
+                        one-time purchase not a subscription. You can still upgrade your plan later
+                        if needed.
+                    </p>
                 </div>
 
-                <h1 className="text-2xl font-semibold text-center mb-2">Choose a Plan</h1>
-                <p className="text-center text-gray-600 mb-8 text-sm">
-                    Choose a plan to start using {TextConstants.TEXT__COMPANY_TITLE}. This is a
-                    one-time purchase not a subscription. You can still upgrade your plan later if
-                    needed.
-                </p>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-2">
                     {subscriptionFreeTrialStatus.isLoading
                         ? [1, 2].map((_, index) => <PricingPlanCardSkeleton key={index} />)
                         : products?.products?.map((product: Product, index) => (

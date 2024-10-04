@@ -2,10 +2,8 @@
 
 import { createClient } from "@/services/supabase/server";
 
-export const sendResetEmail = async (formData: FormData) => {
+export const sendResetEmail = async ({ email }: { email: string }) => {
     const supabase = createClient();
-
-    const email = formData.get("email") as string;
 
     if (!email) {
         return { error: "Please enter an email address" };

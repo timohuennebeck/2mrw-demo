@@ -10,11 +10,12 @@ import { sendResetEmail } from "./action";
 
 const ForgotPasswordPage = () => {
     const [isSending, setIsSending] = useState(false);
+    const [email, setEmail] = useState("");
 
-    const handleSubmit = async (formData: FormData) => {
+    const handleSubmit = async () => {
         setIsSending(true);
 
-        const { success, error } = await sendResetEmail(formData);
+        const { success, error } = await sendResetEmail({ email });
 
         setIsSending(false);
 
@@ -26,25 +27,22 @@ const ForgotPasswordPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl shadow-lg border p-8 max-w-md w-full">
-                <div className="flex justify-center mb-6">
-                    <Image
-                        src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL ?? ""}
-                        alt="Logo"
-                        width={48}
-                        height={48}
-                    />
-                </div>
+        <div className="bg-gray flex min-h-screen items-center justify-center p-4">
+            <div className="w-full max-w-md rounded-md border border-input bg-white p-8">
+                <h1 className="mb-4 text-2xl font-semibold">Forgot Password</h1>
 
-                <h1 className="text-2xl font-semibold text-center mb-4">Forgot Password</h1>
-
-                <p className="text-center text-gray-600 mb-6 text-sm">
+                <p className="mb-6 text-sm text-gray-600">
                     Enter your email address below and we'll send you a link to reset your password.
                 </p>
 
-                <form>
-                    <InputField label="Email" id="email" type="email" name="email" />
+                <form className="flex flex-col gap-4">
+                    <InputField
+                        label="Email"
+                        id="email"
+                        type="email"
+                        name="email"
+                        onChange={setEmail}
+                    />
 
                     <FormButton
                         title={isSending ? "Sending" : "Send Reset Link"}
@@ -53,12 +51,9 @@ const ForgotPasswordPage = () => {
                     />
                 </form>
 
-                <p className="text-center text-sm text-gray-600 mt-4">
-                    Remember your password?{" "}
-                    <Link
-                        href="/auth/sign-in"
-                        className="font-medium text-black hover:text-gray-800 transition-colors"
-                    >
+                <p className="mt-4 text-center text-sm">
+                    Remember password?{" "}
+                    <Link href="/auth/sign-in" className="underline">
                         Sign In
                     </Link>
                 </p>

@@ -3,11 +3,8 @@
 import { createClient } from "@/services/supabase/server";
 import { revalidatePath } from "next/cache";
 
-export const signIn = async (formData: FormData) => {
+export const signIn = async ({ email, password }: { email: string; password: string }) => {
     const supabase = createClient();
-
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
 
     const { error } = await supabase.auth.signInWithPassword({
         email,

@@ -1,30 +1,18 @@
 "use client";
 
-import ContinueWithGoogleButton from "@/components/ContinueWithGoogleButton";
-import FormButton from "@/components/FormButton";
-import FormDivider from "@/components/FormDivider";
-import FormHeader from "@/components/FormHeader";
-import InputField from "@/components/InputField";
-import RememberMeCheckbox from "@/components/RememberMeCheckbox";
-import SignUpLink from "@/components/SignUpLink";
-import { TextConstants } from "@/constants/TextConstants";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { signIn } from "./action";
+import SharedForm from "@/components/SharedForm";
 
-const SignInForm = () => {
+const SignInPage = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     const router = useRouter();
 
-    const handleSubmit = async (formData: FormData) => {
+    const handleSubmit = async ({ email, password }: { email: string; password: string }) => {
         setIsLoading(true);
-
-        const email = formData.get("email") as string;
-        const password = formData.get("password") as string;
 
         if (email === "") {
             toast.error("Email is missing");
@@ -38,14 +26,12 @@ const SignInForm = () => {
             return;
         }
 
-        toast.promise(signIn(formData), {
+        toast.promise(signIn({ email, password }), {
             loading: "Signing in...",
             success: (result) => {
                 if (result.success) {
                     setIsLoading(false);
-
                     router.replace(result.redirect ?? "/");
-
                     return "Sign in successful!";
                 }
                 throw new Error(result.error);
@@ -57,52 +43,7 @@ const SignInForm = () => {
         });
     };
 
-    return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl shadow-lg border p-8 max-w-md w-full">
-                <div className="flex justify-center mb-6">
-                    <Image
-                        src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL ?? ""}
-                        alt="Logo"
-                        width={48}
-                        height={48}
-                    />
-                </div>
-
-                <FormHeader
-                    title="Sign In"
-                    subtitle={`Sign in using email or another service to continue with ${TextConstants.TEXT__COMPANY_TITLE} (it takes 2 seconds)!`}
-                />
-
-                <form>
-                    <InputField label="Email" id="email" name="email" type="email" />
-                    <InputField label="Password" id="password" name="password" type="password" />
-                    <div className="flex items-center justify-between mb-6">
-                        <RememberMeCheckbox />
-
-                        <Link
-                            href="/auth/forgot-password"
-                            className="text-sm font-medium text-black hover:text-gray-800 transition-colors cursor-pointer"
-                        >
-                            Forgot password?
-                        </Link>
-                    </div>
-
-                    <FormButton title="Sign In" onClick={handleSubmit} disabled={isLoading} />
-                </form>
-
-                <div className="mt-6">
-                    <SignUpLink
-                        title="Don't have an account?"
-                        buttonText="Sign Up"
-                        link="/auth/sign-up"
-                    />
-                    <FormDivider />
-                    <ContinueWithGoogleButton />
-                </div>
-            </div>
-        </div>
-    );
+    return <SharedForm mode="signin" handleSubmit={handleSubmit} isLoading={isLoading} />;
 };
 
-export default SignInForm;
+export default SignInPage;

@@ -15,18 +15,13 @@ const CustomButton = ({ title, onClick, disabled, isLoading }: CustomButtonParam
         <button
             onClick={onClick}
             disabled={isDisabledOrLoading}
-            className={`
-                w-full py-2.5 px-4 rounded-md text-sm
-                focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors
-                flex items-center justify-center
-                ${
-                    isDisabledOrLoading
-                        ? "bg-gray-300 text-gray-500 cursor-not-allowed opacity-60"
-                        : "bg-black text-white hover:bg-gray-800 focus:ring-gray-900"
-                }
-            `}
+            className={`flex w-full items-center justify-center rounded-md px-4 py-2.5 text-sm transition-colors outline-none font-medium ${
+                isDisabledOrLoading
+                    ? "cursor-not-allowed bg-gray-300 text-gray-500 opacity-60"
+                    : "bg-black text-white hover:bg-gray-800 focus:ring-gray-900"
+            } `}
         >
-            {isLoading ? <ArrowPathIcon className="animate-spin h-5 w-5" /> : title}
+            {isLoading ? <ArrowPathIcon className="h-5 w-5 animate-spin" /> : title}
         </button>
     );
 };
