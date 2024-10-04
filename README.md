@@ -182,7 +182,7 @@ https://www.loom.com/share/da7f7f53608945a69b7fb3dc04862a73?sid=686c75da-f3b0-4a
 
 Update the following values in Your project:
 
-Inside the `api/email-services/send-free-trial-email`, `api/email-services/send-order-confirmation-email`, and `api/email-services/send-pre-order-email` folders, update all required fields like `estimatedLaunchDate`, `companyTitle`, etc.
+Inside the `api/email-services/send-free-trial-email` and `api/email-services/send-order-confirmation-email` folders, update all required fields like `estimatedLaunchDate`, `companyTitle`, etc.
 
 ## DeploYing on Vercel
 
