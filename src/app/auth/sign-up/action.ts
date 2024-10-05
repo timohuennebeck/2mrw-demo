@@ -1,5 +1,6 @@
 "use server";
 
+import { SupabaseErrors } from "@/enums/SupabaseErrors";
 import { checkUserEmailExists } from "@/services/supabase/queries";
 import { createClient } from "@/services/supabase/server";
 import { AuthError } from "@supabase/supabase-js";
@@ -67,7 +68,7 @@ export const sendConfirmationEmail = async ({ email }: { email: string }) => {
     } catch (error) {
         const supabaseError = error as AuthError;
 
-        if (supabaseError.code === "over_email_send_rate_limit") {
+        if (supabaseError.code === SupabaseErrors.EMAIL_LIMIT_REACHED) {
             return { error: "Email rate limit has been reached." };
         }
 
