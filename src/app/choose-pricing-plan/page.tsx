@@ -21,8 +21,8 @@ const ChoosePricingPlanPage = () => {
 
     return (
         <TestimonialBackground>
-            <div className="flex h-full w-full items-center justify-center">
-                <div className="absolute left-8 top-8">
+            <div className="flex flex-col gap-6 w-full">
+                <div className="self-start">
                     <SignOutButton title="Logout" />
                 </div>
 
