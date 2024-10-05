@@ -4,7 +4,7 @@ import { createClient } from "@/services/supabase/client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export const SignOutButton = ({ title, disabled }: { title: string; disabled?: boolean }) => {
+export const SignOutButton = ({ title }: { title: string }) => {
     const router = useRouter();
 
     const supabase = createClient();
@@ -31,16 +31,7 @@ export const SignOutButton = ({ title, disabled }: { title: string; disabled?: b
     return (
         <button
             onClick={handleSignOut}
-            disabled={disabled}
-            className={`
-                w-full py-2.5 px-4 rounded-md text-sm
-                focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors
-                ${
-                    disabled
-                        ? "bg-neutral-300 text-neutral-500 cursor-not-allowed opacity-60"
-                        : "bg-black text-white hover:bg-neutral-800 focus:ring-neutral-900"
-                }
-            `}
+            className={`w-full rounded-md border px-4 py-2.5 text-sm font-medium hover:bg-neutral-100`}
         >
             {title}
         </button>

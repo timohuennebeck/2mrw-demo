@@ -4,7 +4,7 @@ export const PricingPlanCardSkeleton = () => {
             <div className="mb-6">
                 <div className="skeleton-header mb-4">
                     {/* Placeholder for PlanHeader */}
-                    <div className="mb-2 h-6 w-1/2 rounded bg-neutral-200"></div>
+                    <div className="mb-2 h-4 w-1/2 rounded bg-neutral-200"></div>
                     <div className="h-4 w-1/3 rounded bg-neutral-200"></div>
                 </div>
 

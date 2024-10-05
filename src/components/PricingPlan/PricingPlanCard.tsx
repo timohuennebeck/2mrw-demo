@@ -38,7 +38,7 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
     } = props;
 
     return (
-        <div className="relative rounded-md border p-8">
+        <div className="relative rounded-md border p-8 max-w-lg">
             <div className="mb-6">
                 <PlanHeader
                     freeTrialInfo={freeTrialInfo}
