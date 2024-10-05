@@ -16,6 +16,8 @@ export const TextConstants = {
 
     TEXT__CUSTOMER_SUPPORT_EMAIL: "contact@joinforj.com",
 
+    TEXT__FIRST_NAME_PLACEHOLDER: "Timo",
+    TEXT__EMAIL_PLACEHOLDER: "m@example.com",
     TEXT__LOGOUT: "Logout",
     TEXT__LOGOUT_SUCCESSFUL: "Logout successful!",
     TEXT__REDIRECTING_TO_GOOGLE: "Redirecting to Google...",

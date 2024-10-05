@@ -33,7 +33,12 @@ const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm)
         <TestimonialBackground>
             <div className="mx-auto flex w-[448px] flex-col gap-6 rounded-md border p-8 lg:mx-0">
                 <div className="flex justify-center">
-                    <Image src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL ?? ""} alt="logo" width={48} height={48} />
+                    <Image
+                        src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL ?? ""}
+                        alt="logo"
+                        width={48}
+                        height={48}
+                    />
                 </div>
 
                 <div className="grid w-full gap-6">
@@ -58,7 +63,7 @@ const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm)
                                     label="First name"
                                     name="firstName"
                                     type="text"
-                                    placeholder="Timo"
+                                    placeholder={TextConstants.TEXT__FIRST_NAME_PLACEHOLDER}
                                     onChange={setFirstName}
                                 />
                             </div>
@@ -68,7 +73,7 @@ const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm)
                             label="Email"
                             name="email"
                             type="text"
-                            placeholder="m@example.com"
+                            placeholder={TextConstants.TEXT__EMAIL_PLACEHOLDER}
                             onChange={setEmail}
                         />
                         <InputField
@@ -106,7 +111,7 @@ const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm)
                     <div className="text-center text-sm">
                         {mode === "signup"
                             ? TextConstants.TEXT__HAVE_AN_ACCOUNT
-                            : TextConstants.TEXT__DO_NOT_HAVE_AN_ACCOUNT}
+                            : TextConstants.TEXT__DO_NOT_HAVE_AN_ACCOUNT}{" "}
                         <Link
                             href={mode === "signup" ? "/auth/sign-in" : "/auth/sign-up"}
                             className="underline"
