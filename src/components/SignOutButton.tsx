@@ -1,5 +1,6 @@
 "use client";
 
+import { TextConstants } from "@/constants/TextConstants";
 import { createClient } from "@/services/supabase/client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -14,17 +15,14 @@ export const SignOutButton = ({ title }: { title: string }) => {
             const { error } = await supabase.auth.signOut();
 
             if (error) {
-                console.error("Error signing out:", error.message);
-                toast.error(`Error signing out: ${error.message}`);
+                toast.error(`${TextConstants.ERROR_SIGNING_OUT}: ${error.message}`);
             } else {
-                toast.success("Logout successful!");
+                toast.success(TextConstants.TEXT__LOGOUT_SUCCESSFUL);
 
                 router.replace("/auth/sign-in");
             }
         } catch (err) {
-            console.error("Unexpected error during logout:", err);
-
-            toast.error(`There has been an unexpected error: ${err}`);
+            toast.error(`${TextConstants.ERROR__UNEXPECTED_ERROR} ${err}`);
         }
     };
 

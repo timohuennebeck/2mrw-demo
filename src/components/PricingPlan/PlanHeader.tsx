@@ -1,3 +1,4 @@
+import { TextConstants } from "@/constants/TextConstants";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { FreeTrial } from "@/interfaces/FreeTrial";
 import { formatDateToHumanFormat } from "@/lib/helper/formatDateToHumanFormat";
@@ -23,16 +24,17 @@ export const PlanHeader = ({
 
         if (isOnFreeTrial && isCurrentPlan && freeTrialInfo?.end_date) {
             return (
-                <div className="bg-black text-white text-sm px-2.5 py-0.5 rounded-md mb-4 text-center whitespace-nowrap">
-                    Free Trial End Date: {formatDateToHumanFormat(freeTrialInfo.end_date)}
+                <div className="mb-4 whitespace-nowrap rounded-md bg-black px-2.5 py-0.5 text-center text-sm text-white">
+                    `${TextConstants.TEXT__FREE_TRIAL_END_DATE}:{" "}
+                    {formatDateToHumanFormat(freeTrialInfo.end_date)}`
                 </div>
             );
         }
 
         if (isHighlighted) {
             return (
-                <div className="bg-black text-white text-sm px-2.5 py-0.5 rounded-md mb-4 text-center whitespace-nowrap">
-                    Most Popular Option
+                <div className="mb-4 whitespace-nowrap rounded-md bg-black px-2.5 py-0.5 text-center text-sm text-white">
+                    {TextConstants.TEXT__MOST_POPULAR_OPTION}
                 </div>
             );
         }
@@ -42,11 +44,11 @@ export const PlanHeader = ({
 
     return (
         <div className="mb-6">
-            <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
+            <div className="absolute -top-2 left-1/2 -translate-x-1/2 transform">
                 {indicatorText()}
             </div>
 
-            <h2 className="text-lg mb-6 font-medium">{name}</h2>
+            <h2 className="mb-6 text-lg font-medium">{name}</h2>
         </div>
     );
 };

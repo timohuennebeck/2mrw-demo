@@ -10,6 +10,7 @@ import TestimonialBackground from "@/components/TestimonialBackground";
 import googleIcon from "@/assets/icons/logo.jpg";
 import CustomButton from "@/components/CustomButton";
 import { useRouter, useSearchParams } from "next/navigation";
+import { TextConstants } from "@/constants/TextConstants";
 
 const UpdatePassword = () => {
     const [isUpdating, setIsUpdating] = useState(false);
@@ -56,22 +57,22 @@ const UpdatePassword = () => {
                 </div>
 
                 <div className="grid gap-2 text-center">
-                    <h1 className="text-2xl font-medium">Update Password</h1>
+                    <h1 className="text-2xl font-medium">${TextConstants.TEXT__UPDATE_PASSWORD}</h1>
                     <p className="text-sm text-neutral-400">
-                        Enter Your new password below to update Your account.
+                        ${TextConstants.TEXT__ENTER_PASSWORD_BELOW}
                     </p>
                 </div>
 
                 <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
                     <InputField
-                        label="New Password"
+                        label={TextConstants.TEXT__NEW_PASSWORD}
                         id="password"
                         type="password"
                         name="password"
                         onChange={setPassword}
                     />
                     <InputField
-                        label="Confirm New Password"
+                        label={TextConstants.TEXT__CONFIRM_PASSWORD}
                         id="confirmPassword"
                         type="password"
                         name="confirmPassword"
@@ -79,16 +80,20 @@ const UpdatePassword = () => {
                     />
 
                     <CustomButton
-                        title={isUpdating ? "Updating..." : "Update Password"}
+                        title={
+                            isUpdating
+                                ? TextConstants.TEXT__UPDATING
+                                : TextConstants.TEXT__UPDATE_PASSWORD
+                        }
                         disabled={isUpdating}
                         onClick={handleSubmit}
                     />
                 </form>
 
                 <p className="mt-4 text-center text-sm">
-                    Remember password?{" "}
+                    ${TextConstants.TEXT__REMEMBER_PASSWORD}{" "}
                     <Link href="/auth/sign-in" className="underline">
-                        Sign In
+                        {TextConstants.TEXT__SIGN_IN}
                     </Link>
                 </p>
             </div>

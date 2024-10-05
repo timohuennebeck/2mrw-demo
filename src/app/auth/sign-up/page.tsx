@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import RegisterLoginForm from "@/components/RegisterLoginForm";
 import { sendConfirmationEmail, signUp } from "./action";
+import { TextConstants } from "@/constants/TextConstants";
 
 interface PromiseResult {
     success?: boolean | string;
@@ -49,12 +50,12 @@ const SignUpPage = () => {
         const resendPromise = sendConfirmationEmail({ email });
 
         toastPromise(resendPromise, {
-            loading: "Resending email...",
+            loading: TextConstants.TEXT__RESENDING_EMAIL,
             success: (result) => {
                 setTimeout(() => showResendEmailToast({ email }), 1000);
                 return result.success as string;
             },
-            error: (err) => err.error ?? "Failed to resend email.",
+            error: (err) => err.error ?? TextConstants.ERROR__FAILED_TO_RESEND_EMAIL,
         });
     };
 

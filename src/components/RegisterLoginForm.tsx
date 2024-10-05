@@ -9,6 +9,7 @@ import { useState } from "react";
 import InputField from "./InputField";
 import CustomButton from "./CustomButton";
 import TestimonialBackground from "./TestimonialBackground";
+import { TextConstants } from "@/constants/TextConstants";
 
 interface RegisterLoginForm {
     mode: string;
@@ -39,12 +40,14 @@ const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm)
                 <div className="grid w-full gap-6">
                     <div className="grid gap-2 text-center">
                         <h1 className="text-2xl font-medium">
-                            {mode === "signup" ? "Sign Up" : "Login"}
+                            {mode === "signup"
+                                ? TextConstants.TEXT__SIGN_UP
+                                : TextConstants.TEXT__SIGN_IN}
                         </h1>
                         <p className="text-sm text-neutral-400">
                             {mode === "signup"
-                                ? "Sign up using email or another service to continue!"
-                                : "Sign in using email or another service to continue!"}
+                                ? TextConstants.TEXT__SIGN_UP_EMAIIL_OR_ANOTHER_SERVICE
+                                : TextConstants.TEXT__SIGN_IN_EMAIL_OR_ANOTHER_SERVICE}
                         </p>
                     </div>
 
@@ -87,7 +90,11 @@ const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm)
                         </div>
 
                         <CustomButton
-                            title={mode === "signup" ? "Sign Up" : "Login"}
+                            title={
+                                mode === "signup"
+                                    ? TextConstants.TEXT__SIGN_UP
+                                    : TextConstants.TEXT__SIGN_IN
+                            }
                             onClick={() => handleSubmit({ email, password, firstName })}
                             disabled={isLoading}
                         />
@@ -98,12 +105,16 @@ const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm)
                     </form>
 
                     <div className="text-center text-sm">
-                        {mode === "signup" ? "Have an account? " : "Don't have an account? "}
+                        {mode === "signup"
+                            ? TextConstants.TEXT__HAVE_AN_ACCOUNT
+                            : TextConstants.TEXT__DO_NOT_HAVE_AN_ACCOUNT}
                         <Link
                             href={mode === "signup" ? "/auth/sign-in" : "/auth/sign-up"}
                             className="underline"
                         >
-                            {mode === "signup" ? "Log in" : "Sign up"}
+                            {mode === "signup"
+                                ? TextConstants.TEXT__SIGN_IN
+                                : TextConstants.TEXT__SIGN_UP}
                         </Link>
                     </div>
                 </div>

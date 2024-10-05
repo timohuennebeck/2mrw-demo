@@ -9,6 +9,7 @@ import TestimonialBackground from "@/components/TestimonialBackground";
 import Image from "next/image";
 import googleIcon from "@/assets/icons/logo.jpg";
 import CustomButton from "@/components/CustomButton";
+import { TextConstants } from "@/constants/TextConstants";
 
 const ForgotPasswordPage = () => {
     const [isSending, setIsSending] = useState(false);
@@ -48,8 +49,7 @@ const ForgotPasswordPage = () => {
                 <div className="grid gap-2 text-center">
                     <h1 className="text-2xl font-medium">Forgot Password</h1>
                     <p className="text-sm text-neutral-400">
-                        Enter Your email address below and we'll send You a link to reset Your
-                        password.
+                        {TextConstants.TEXT__ENTER_EMAIL_BELOW}
                     </p>
                 </div>
 
@@ -64,16 +64,20 @@ const ForgotPasswordPage = () => {
                     />
 
                     <CustomButton
-                        title={isSending ? "Sending" : "Send Reset Link"}
+                        title={
+                            isSending
+                                ? TextConstants.TEXT__SENDING
+                                : TextConstants.TEXT__SEND_RESET_LINK
+                        }
                         disabled={isSending}
                         onClick={handleSubmit}
                     />
                 </form>
 
                 <p className="mt-4 text-center text-sm">
-                    Remember password?{" "}
+                    ${TextConstants.TEXT__REMEMBER_PASSWORD}{" "}
                     <Link href="/auth/sign-in" className="underline">
-                        Sign In
+                        {TextConstants.TEXT__SIGN_IN}
                     </Link>
                 </p>
             </div>

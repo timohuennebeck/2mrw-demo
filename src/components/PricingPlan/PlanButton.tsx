@@ -11,6 +11,7 @@ import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { createClient } from "@/services/supabase/client";
 import moment from "moment";
+import { TextConstants } from "@/constants/TextConstants";
 
 interface PlanButton {
     stripePriceId: string;
@@ -83,10 +84,10 @@ export const PlanButton = ({
                 },
             });
 
-            toast.success("Free Trial has been started");
+            toast.success(TextConstants.TEXT__FREE_TRIAL_STARTED);
             router.push("/");
         } catch (error) {
-            toast.error("Error starting free trial");
+            toast.error(TextConstants.ERROR__STARTING_FREE_TRIAL);
         }
     };
 
@@ -109,11 +110,11 @@ export const PlanButton = ({
 
         if (hasPurchasedSubscription) {
             return subscriptionInfo?.stripe_price_id === stripePriceId
-                ? { title: "Current Plan", disabled: true }
-                : { ...baseProps, title: "Change Plan", onClick: handleCheckout };
+                ? { title: TextConstants.TEXT__CURRENT_PLAN, disabled: true }
+                : { ...baseProps, title: TextConstants.TEXT__CHANGE_PLAN, onClick: handleCheckout };
         }
 
-        return { ...baseProps, title: "Upgrade Now", onClick: handleCheckout };
+        return { ...baseProps, title: TextConstants.TEXT__UPGRADE_NOW, onClick: handleCheckout };
     };
 
     return <CustomButton {...determineButtonProps()} />;

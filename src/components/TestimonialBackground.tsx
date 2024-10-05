@@ -1,5 +1,7 @@
+import { TextConstants } from "@/constants/TextConstants";
+
 interface TestimonialBackgroundProps {
-    children: any;
+    children: JSX.Element;
 }
 
 const TestimonialBackground = ({ children }: TestimonialBackgroundProps) => {
@@ -8,14 +10,11 @@ const TestimonialBackground = ({ children }: TestimonialBackgroundProps) => {
             {children}
 
             <div className="hidden w-1/2 flex-col justify-between bg-white py-8 lg:flex">
-                <span className="text-xl font-semibold text-black">⌘ Microsoft Inc.</span>
+                <span className="text-xl font-semibold text-black">{TextConstants.TEXT__MICROSOFT}</span>
 
                 <div className="flex flex-col gap-2">
-                    <p className="text-black">
-                        “This lib has saved me countless hours of work and helped me deliver
-                        stunning designs to our clients faster than ever before.”
-                    </p>
-                    <p className="text-sm font-medium text-black">Timo Hünnebeck</p>
+                    <p className="text-black">{TextConstants.TEXT__THIS_LIB_HAS_SAVED_ME}</p>
+                    <p className="text-sm font-medium text-black">{TextConstants.TEXT__TIMO_HUENNEBECK}</p>
                 </div>
             </div>
         </div>

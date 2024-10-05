@@ -1,4 +1,5 @@
 import { signInUsingGoogle } from "@/app/auth/sign-in/action";
+import { TextConstants } from "@/constants/TextConstants";
 import { toast } from "sonner";
 
 function ContinueWithGoogleButton() {
@@ -12,7 +13,7 @@ function ContinueWithGoogleButton() {
         if (success && redirect) {
             window.location.href = redirect;
 
-            toast("Redirecting to Google...");
+            toast(TextConstants.TEXT__REDIRECTING_TO_GOOGLE);
         }
     };
 

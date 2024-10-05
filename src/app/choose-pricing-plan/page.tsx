@@ -23,7 +23,7 @@ const ChoosePricingPlanPage = () => {
         <TestimonialBackground>
             <div className="flex flex-col gap-6 w-full">
                 <div className="self-start">
-                    <SignOutButton title="Logout" />
+                    <SignOutButton title={TextConstants.TEXT__LOGOUT} />
                 </div>
 
                 <div className="grid w-full grid-cols-1 gap-8 md:grid-cols-2">
