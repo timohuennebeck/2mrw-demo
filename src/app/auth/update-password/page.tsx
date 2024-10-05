@@ -10,6 +10,7 @@ import TestimonialBackground from "@/components/TestimonialBackground";
 import CustomButton from "@/components/CustomButton";
 import { useRouter, useSearchParams } from "next/navigation";
 import { TextConstants } from "@/constants/TextConstants";
+import PasswordStrengthChecker from "@/components/PasswordStrengthChecker";
 
 const UpdatePassword = () => {
     const [isUpdating, setIsUpdating] = useState(false);
@@ -50,7 +51,7 @@ const UpdatePassword = () => {
 
     return (
         <TestimonialBackground>
-            <div className="mx-auto flex w-[448px] flex-col gap-6 rounded-md border p-8 lg:mx-0">
+            <div className="mx-auto flex w-[448px] flex-col gap-4 rounded-md border p-8 lg:mx-0">
                 <div className="flex justify-center">
                     <Image
                         src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL ?? ""}
@@ -82,6 +83,10 @@ const UpdatePassword = () => {
                         name="confirmPassword"
                         onChange={setConfirmPassword}
                     />
+
+                    <div className="pb-4">
+                        <PasswordStrengthChecker password={password} />
+                    </div>
 
                     <CustomButton
                         title={

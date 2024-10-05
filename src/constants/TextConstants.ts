@@ -57,6 +57,10 @@ export const TextConstants = {
     TEXT__RESET_PASSWORD_EMAIL_SENT: "Password reset email has been sent.",
     TEXT__PLEASE_ENTER_AN_EMAIL: "Please enter an email address.",
     TEXT__CONFIRMATION_EMAIL_SENT: "Confirmation email has been sent.",
+    TEXT__HAS_SIX_PLUS_CHARACTERS: "Has 6+ characters",
+    TEXT__HAS_ONE_LOWER_CASE_LETTER: "Has at least one lowercase letter",
+    TEXT__HAS_ONE_UPPER_CASE_LETTER: "Has at least one uppercase letter",
+    TEXT__HAS_ONE_DIGIT: "Has at least one digit",
 
     ERROR__UNEXPECTED_ERROR: "There has been an unexpected error.",
     ERROR_SIGNING_OUT: "Error signing out",

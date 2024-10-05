@@ -8,6 +8,8 @@ function InputField({
     name,
     placeholder,
     onChange,
+    onFocus,
+    onBlur,
 }: {
     label: string;
     id: string;
@@ -15,6 +17,8 @@ function InputField({
     name: string;
     placeholder?: string;
     onChange: (value: string) => void;
+    onFocus?: () => void;
+    onBlur?: () => void;
 }) {
     const [showPassword, setShowPassword] = useState(false);
 
@@ -32,6 +36,8 @@ function InputField({
                     placeholder={placeholder}
                     onChange={(e) => onChange(e.target.value)}
                     className={`w-full rounded-md border border-neutral-300 px-3 py-2 text-sm outline-neutral-800 ${type === "password" && "pr-10"}`}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
                 />
 
                 {type === "password" && (

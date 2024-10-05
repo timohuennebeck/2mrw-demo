@@ -40,7 +40,7 @@ const ForgotPasswordPage = () => {
 
     return (
         <TestimonialBackground>
-            <div className="mx-auto flex w-[448px] flex-col gap-6 rounded-md border p-8 lg:mx-0">
+            <div className="mx-auto flex w-[448px] flex-col gap-4 rounded-md border p-8 lg:mx-0">
                 <div className="flex justify-center">
                     <Image
                         src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL ?? ""}

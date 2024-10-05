@@ -9,6 +9,7 @@ import InputField from "./InputField";
 import CustomButton from "./CustomButton";
 import TestimonialBackground from "./TestimonialBackground";
 import { TextConstants } from "@/constants/TextConstants";
+import PasswordStrengthChecker from "./PasswordStrengthChecker";
 
 interface RegisterLoginForm {
     mode: string;
@@ -28,10 +29,11 @@ const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm)
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [firstName, setFirstName] = useState("");
+    const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
     return (
         <TestimonialBackground>
-            <div className="mx-auto flex w-[448px] flex-col gap-6 rounded-md border p-8 lg:mx-0">
+            <div className="mx-auto flex w-[448px] flex-col gap-4 rounded-md border p-8 lg:mx-0">
                 <div className="flex justify-center">
                     <Image
                         src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL ?? ""}
@@ -82,7 +84,13 @@ const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm)
                             name="password"
                             type="password"
                             onChange={setPassword}
+                            onFocus={() => mode === "signup" && setIsPasswordFocused(true)}
+                            onBlur={() => mode === "signup" && setIsPasswordFocused(false)}
                         />
+
+                        {mode === "signup" && isPasswordFocused && (
+                            <PasswordStrengthChecker password={password} />
+                        )}
 
                         <div className="flex items-center">
                             <Link
@@ -103,9 +111,12 @@ const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm)
                             disabled={isLoading}
                         />
 
-                        <FormDivider />
-
-                        <ContinueWithGoogleButton />
+                        {!isPasswordFocused && (
+                            <>
+                                <FormDivider />
+                                <ContinueWithGoogleButton />
+                            </>
+                        )}
                     </form>
 
                     <div className="text-center text-sm">
