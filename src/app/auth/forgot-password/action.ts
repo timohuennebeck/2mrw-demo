@@ -2,7 +2,7 @@
 
 import { createClient } from "@/services/supabase/server";
 
-export const sendResetEmail = async ({ email }: { email: string }) => {
+export const sendPasswordResetEmail = async ({ email }: { email: string }) => {
     const supabase = createClient();
 
     if (!email) {
@@ -16,8 +16,8 @@ export const sendResetEmail = async ({ email }: { email: string }) => {
 
         if (error) throw error;
 
-        return { success: "Password reset email has been sent" };
+        return { success: "Password reset email has been sent." };
     } catch (error) {
-        return { error: "Failed to send password reset email" };
+        return { error: "Failed to send password reset email." };
     }
 };

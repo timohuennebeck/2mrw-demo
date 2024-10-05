@@ -4,7 +4,7 @@ import InputField from "@/components/InputField";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
-import { sendResetEmail } from "./action";
+import { sendPasswordResetEmail } from "./action";
 import TestimonialBackground from "@/components/TestimonialBackground";
 import Image from "next/image";
 import googleIcon from "@/assets/icons/logo.jpg";
@@ -17,7 +17,7 @@ const ForgotPasswordPage = () => {
     const handleSubmit = async () => {
         setIsSending(true);
 
-        const { success, error } = await sendResetEmail({ email });
+        const { success, error } = await sendPasswordResetEmail({ email });
 
         setIsSending(false);
 
