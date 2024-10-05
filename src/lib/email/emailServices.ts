@@ -21,7 +21,7 @@ export const sendPostPurchaseEmail = async ({
         // sends official order confirmation email for live products
         await axios.post(postUrl, {
             userEmail: session.customer_details?.email ?? "",
-            userFullName: session?.customer_details?.name ?? "",
+            userFirstName: session?.customer_details?.name ?? "",
             purchasedPackage: plan?.name ?? "",
         });
     } catch (error) {

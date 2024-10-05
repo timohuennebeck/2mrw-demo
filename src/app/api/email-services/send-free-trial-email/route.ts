@@ -7,9 +7,9 @@ const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_EMAIL_API_KEY ?? "");
 
 export const POST = async (req: request) => {
     try {
-        const { userEmail, userFullName } = await req.json();
+        const { userEmail, userFirstName } = await req.json();
 
-        if (!userEmail || !userFullName) {
+        if (!userEmail || !userFirstName) {
             return response.json({ error: "Missing required fields" }, { status: 400 });
         }
 
@@ -18,7 +18,7 @@ export const POST = async (req: request) => {
             to: userEmail,
             subject: `Welcome to ${TextConstants.TEXT__COMPANY_TITLE}!`,
             react: FreeTrialEmailTemplate({
-                userFirstName: userFullName,
+                userFirstName: userFirstName,
                 companyTitle: TextConstants.TEXT__COMPANY_TITLE,
                 trialDuration: TextConstants.TEXT__FREE_TRIAL_DURATION,
                 trialSignupLink: `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan?welcomeEmail=true`,

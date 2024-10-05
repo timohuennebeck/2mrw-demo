@@ -17,7 +17,7 @@ import {
 import { TextConstants } from "@/constants/TextConstants";
 
 interface OrderConfirmationEmailTemplateProps {
-    userFullName: string;
+    userFirstName: string;
     purchasedPackage: string;
     companyTitle: string;
     gettingStartedLoomUrl: string;
@@ -28,7 +28,7 @@ interface OrderConfirmationEmailTemplateProps {
 }
 
 export const OrderConfirmationEmailTemplate = ({
-    userFullName,
+    userFirstName,
     purchasedPackage,
     companyTitle,
     gettingStartedLoomUrl,
@@ -59,7 +59,7 @@ export const OrderConfirmationEmailTemplate = ({
                             You're all set to go!
                         </Heading>
                         <Text className="text-black text-[14px] leading-[24px]">
-                            Hi {userFullName},
+                            Hi {userFirstName},
                         </Text>
                         <Text className="text-black text-[14px] leading-[24px]">
                             Great news! Your transaction for <strong>{purchasedPackage}</strong> has
@@ -108,7 +108,7 @@ export const OrderConfirmationEmailTemplate = ({
 
 // enable this during development to preview what the email will look like
 OrderConfirmationEmailTemplate.PreviewProps = {
-    userFullName: "Sarah",
+    userFirstName: "Sarah",
     purchasedPackage: "Premium Plan (20% off)",
     companyTitle: TextConstants.TEXT__COMPANY_TITLE,
     gettingStartedLoomUrl: TextConstants.TEXT__LOOM_GETTING_STARTED_URL,

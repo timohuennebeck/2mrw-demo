@@ -7,9 +7,9 @@ const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_EMAIL_API_KEY ?? "");
 
 export const POST = async (req: request) => {
     try {
-        const { userEmail, userFullName, purchasedPackage } = await req.json();
+        const { userEmail, userFirstName, purchasedPackage } = await req.json();
 
-        if (!userEmail || !userFullName || !purchasedPackage) {
+        if (!userEmail || !userFirstName || !purchasedPackage) {
             return response.json({ error: "Missing required fields" }, { status: 400 });
         }
 
@@ -18,7 +18,7 @@ export const POST = async (req: request) => {
             to: userEmail,
             subject: `Order Confirmation - ${purchasedPackage}`,
             react: OrderConfirmationEmailTemplate({
-                userFullName,
+                userFirstName,
                 purchasedPackage,
                 gettingStartedLoomUrl: TextConstants.TEXT__LOOM_GETTING_STARTED_URL,
                 companyTitle: TextConstants.TEXT__COMPANY_TITLE,

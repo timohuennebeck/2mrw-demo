@@ -34,7 +34,7 @@ export const GET = async (request: NextRequest) => {
                         `${process.env.NEXT_PUBLIC_SITE_URL}/api/send-free-trial-email`,
                         {
                             userEmail: user.user_metadata.email ?? "",
-                            userFullName: user.user_metadata.full_name ?? "",
+                            userFirstName: user.user_metadata.full_name ?? "",
                         },
                     );
                 } else {
