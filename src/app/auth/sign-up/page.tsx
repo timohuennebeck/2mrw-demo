@@ -3,8 +3,18 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import RegisterLoginForm from "@/components/RegisterLoginForm";
-import { useRouter } from "next/navigation";
 import { sendConfirmationEmail, signUp } from "./action";
+
+interface PromiseResult {
+    success?: boolean | string;
+    error?: string;
+}
+
+interface ToastMessages {
+    loading: string;
+    success: (result: PromiseResult) => string;
+    error: (error: PromiseResult) => string;
+}
 
 const SignUpPage = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -20,27 +30,31 @@ const SignUpPage = () => {
     };
 
     // TODO: add types for toastPromise
-    const toastPromise = (promise, messages) => {
+    const toastPromise = (promise: Promise<PromiseResult>, messages: ToastMessages) => {
         setIsLoading(true);
         return toast.promise(promise, {
-            ...messages,
+            loading: messages.loading,
+            success: (result: PromiseResult) => {
+                if (result.success) {
+                    return messages.success(result);
+                }
+                throw result;
+            },
+            error: (err: PromiseResult) => messages.error(err),
             finally: () => setIsLoading(false),
         });
     };
 
     const handleResendEmail = async (email: string) => {
         const resendPromise = sendConfirmationEmail({ email });
+
         toastPromise(resendPromise, {
             loading: "Resending email...",
-            success: (result: { success: boolean }) => {
-                if (result.success) {
-                    setTimeout(() => showResendEmailToast({ email }), 1000);
-                    return result.success;
-                }
+            success: (result) => {
+                setTimeout(() => showResendEmailToast({ email }), 1000);
+                return result.success as string;
             },
-            error: (err: { error: string }) => {
-                return "Failed to resend email.";
-            },
+            error: (err) => err.error ?? "Failed to resend email.",
         });
     };
 
@@ -70,18 +84,11 @@ const SignUpPage = () => {
 
         toastPromise(signUp({ firstName, email, password }), {
             loading: "Signing up...",
-            success: (result: { success: boolean; error: string }) => {
-                if (result.success) {
-                    setTimeout(() => showResendEmailToast({ email }), 2000);
-
-                    return "Sign up successful! Please check email inbox.";
-                }
-
-                throw new Error(result.error);
+            success: () => {
+                setTimeout(() => showResendEmailToast({ email }), 2000);
+                return "Sign up successful! Please check email inbox.";
             },
-            error: (err: Error) => {
-                return err.message;
-            },
+            error: (err) => err.error ?? "Unexpected error has occured.",
         });
     };
 

@@ -2,6 +2,7 @@
 
 import { checkUserEmailExists } from "@/services/supabase/queries";
 import { createClient } from "@/services/supabase/server";
+import { AuthError } from "@supabase/supabase-js";
 
 export const signUp = async ({
     firstName,
@@ -64,6 +65,12 @@ export const sendConfirmationEmail = async ({ email }: { email: string }) => {
 
         return { success: "Confirmation email has been sent." };
     } catch (error) {
+        const supabaseError = error as AuthError;
+
+        if (supabaseError.code === "over_email_send_rate_limit") {
+            return { error: "Email rate limit has been reached." };
+        }
+
         return { error: "Failed to resend confirmation email." };
     }
 };
