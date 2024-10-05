@@ -1,12 +1,13 @@
 "use server";
 
+import { TextConstants } from "@/constants/TextConstants";
 import { createClient } from "@/services/supabase/server";
 
 export const sendPasswordResetEmail = async ({ email }: { email: string }) => {
     const supabase = createClient();
 
     if (!email) {
-        return { error: "Please enter an email address" };
+        return { error: TextConstants.TEXT__PLEASE_ENTER_AN_EMAIL };
     }
 
     try {
@@ -16,8 +17,8 @@ export const sendPasswordResetEmail = async ({ email }: { email: string }) => {
 
         if (error) throw error;
 
-        return { success: "Password reset email has been sent." };
+        return { success: TextConstants.TEXT__RESET_PASSWORD_EMAIL_SENT };
     } catch (error) {
-        return { error: "Failed to send password reset email." };
+        return { error: TextConstants.ERROR__FAILED_TO_SEND_PASSWORD_RESET_EMAIL };
     }
 };

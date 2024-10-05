@@ -52,6 +52,9 @@ export const TextConstants = {
     TEXT__SIGN_IN_SUCCESSFUL: "Sign in successful!",
     TEXT__SIGN_UP_SUCCESSFUL_CHECK_EMAIL: "Sign up successful! Please check email inbox.",
     TEXT__PASSWORD_HAS_BEEN_UPDATED: "Password has been updated",
+    TEXT__RESET_PASSWORD_EMAIL_SENT: "Password reset email has been sent.",
+    TEXT__PLEASE_ENTER_AN_EMAIL: "Please enter an email address.",
+    TEXT__CONFIRMATION_EMAIL_SENT: "Confirmation email has been sent.",
 
     ERROR__UNEXPECTED_ERROR: "There has been an unexpected error.",
     ERROR_SIGNING_OUT: "Error signing out",
@@ -63,4 +66,9 @@ export const TextConstants = {
     ERROR__FIRST_NAME_IS_MISSING: "First name is missing.",
     ERROR__CONFIRMATION_PASSWORD_IS_MISSING: "Confirmation password is missing.",
     ERROR__PASSWORDS_DO_NOT_MATCH: "Passwords do not match.",
+    ERROR__FAILED_TO_SEND_PASSWORD_RESET_EMAIL: "Failed to send password reset email.",
+    ERROR__USER_CREATION_FAILED: "User creation failed.",
+    ERRROR__DURING_SIGN_UP: "There has been an error during sign up.",
+    ERROR__EMAIL_LIMIT_REACHED: "Email rate limit has been reached.",
+    ERROR__EMAIL_ALREADY_IN_USE: "This email is in use. Please log in to continue.",
 };

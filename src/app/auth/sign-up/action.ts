@@ -1,5 +1,6 @@
 "use server";
 
+import { TextConstants } from "@/constants/TextConstants";
 import { SupabaseErrors } from "@/enums/SupabaseErrors";
 import { checkUserEmailExists } from "@/services/supabase/queries";
 import { createClient } from "@/services/supabase/server";
@@ -20,7 +21,7 @@ export const signUp = async ({
         const { emailExists } = await checkUserEmailExists({ userEmail: email });
 
         if (emailExists) {
-            return { error: "This email is in use. Please log in to continue." };
+            return { error: TextConstants.ERROR__EMAIL_ALREADY_IN_USE };
         }
 
         const { data, error } = await supabase.auth.signUp({
@@ -40,12 +41,12 @@ export const signUp = async ({
         const { user } = data;
 
         if (!user) {
-            return { error: "User creation failed." };
+            return { error: TextConstants.ERROR__USER_CREATION_FAILED };
         }
 
         return { success: true };
     } catch (err) {
-        return { error: "There has been an error during sign up." };
+        return { error: TextConstants.ERRROR__DURING_SIGN_UP };
     }
 };
 
@@ -53,7 +54,7 @@ export const sendConfirmationEmail = async ({ email }: { email: string }) => {
     const supabase = createClient();
 
     if (!email) {
-        return { error: "Email address is missing" };
+        return { error: TextConstants.ERROR__EMAIL_IS_MISSING };
     }
 
     try {
@@ -64,14 +65,14 @@ export const sendConfirmationEmail = async ({ email }: { email: string }) => {
 
         if (error) throw error;
 
-        return { success: "Confirmation email has been sent." };
+        return { success: TextConstants.TEXT__CONFIRMATION_EMAIL_SENT };
     } catch (error) {
         const supabaseError = error as AuthError;
 
         if (supabaseError.code === SupabaseErrors.EMAIL_LIMIT_REACHED) {
-            return { error: "Email rate limit has been reached." };
+            return { error: TextConstants.ERROR__EMAIL_LIMIT_REACHED };
         }
 
-        return { error: "Failed to resend confirmation email." };
+        return { error: TextConstants.ERROR__FAILED_TO_RESEND_EMAIL };
     }
 };

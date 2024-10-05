@@ -1,5 +1,6 @@
 "use server";
 
+import { TextConstants } from "@/constants/TextConstants";
 import { createClient } from "@/services/supabase/server";
 import { revalidatePath } from "next/cache";
 
@@ -24,7 +25,7 @@ export const updatePassword = async ({ password, authCode }: UpdatePasswordProps
         if (err instanceof Error) {
             return { error: err.message };
         } else {
-            return { error: "There has been an unexpected error." };
+            return { error: TextConstants.ERROR__UNEXPECTED_ERROR };
         }
     }
 };
