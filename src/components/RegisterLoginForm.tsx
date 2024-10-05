@@ -1,6 +1,5 @@
 "use client";
 
-import googleIcon from "@/assets/icons/logo.jpg";
 import ContinueWithGoogleButton from "@/components/ContinueWithGoogleButton";
 import FormDivider from "@/components/FormDivider";
 import Image from "next/image";
@@ -34,7 +33,7 @@ const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm)
         <TestimonialBackground>
             <div className="mx-auto flex w-[448px] flex-col gap-6 rounded-md border p-8 lg:mx-0">
                 <div className="flex justify-center">
-                    <Image src={googleIcon} alt="logo" width={48} height={48} />
+                    <Image src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL ?? ""} alt="logo" width={48} height={48} />
                 </div>
 
                 <div className="grid w-full gap-6">

@@ -7,7 +7,6 @@ import { Suspense, useState } from "react";
 import { toast } from "sonner";
 import { updatePassword } from "./action";
 import TestimonialBackground from "@/components/TestimonialBackground";
-import googleIcon from "@/assets/icons/logo.jpg";
 import CustomButton from "@/components/CustomButton";
 import { useRouter, useSearchParams } from "next/navigation";
 import { TextConstants } from "@/constants/TextConstants";
@@ -53,7 +52,7 @@ const UpdatePassword = () => {
         <TestimonialBackground>
             <div className="mx-auto flex w-[448px] flex-col gap-6 rounded-md border p-8 lg:mx-0">
                 <div className="flex justify-center">
-                    <Image src={googleIcon} alt="logo" width={48} height={48} />
+                    <Image src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL ?? ""} alt="logo" width={48} height={48} />
                 </div>
 
                 <div className="grid gap-2 text-center">
