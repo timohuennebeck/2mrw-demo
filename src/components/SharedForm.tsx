@@ -10,7 +10,7 @@ import { useState } from "react";
 import InputField from "./InputField";
 import CustomButton from "./CustomButton";
 
-type SharedFormProps = {
+interface SharedFormProps {
     mode: string;
     handleSubmit: ({
         email,
@@ -22,7 +22,7 @@ type SharedFormProps = {
         name: string;
     }) => {};
     isLoading: boolean;
-};
+}
 
 const SharedForm = ({ mode, handleSubmit, isLoading }: SharedFormProps) => {
     const [email, setEmail] = useState("");
@@ -41,7 +41,7 @@ const SharedForm = ({ mode, handleSubmit, isLoading }: SharedFormProps) => {
                         <h1 className="text-2xl font-medium">
                             {mode === "signup" ? "Sign Up" : "Login"}
                         </h1>
-                        <p className="text-balance text-sm text-muted-foreground text-neutral-400">
+                        <p className="text-muted-foreground text-balance text-sm text-neutral-400">
                             {mode === "signup"
                                 ? "Sign up using email or another service to continue!"
                                 : "Sign in using email or another service to continue!"}

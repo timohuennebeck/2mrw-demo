@@ -3,7 +3,7 @@
 import { createClient } from "@/services/supabase/server";
 import { redirect } from "next/navigation";
 
-type UpdatePasswordProps = {
+interface UpdatePasswordProps {
     password: string;
     confirmPassword: string;
 };

@@ -13,7 +13,7 @@ const UpdatePasswordPage = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
-    const handleSubmit = async (formData: FormData) => {
+    const handleSubmit = async () => {
         setIsUpdating(true);
         const { error } = await updatePassword({ password, confirmPassword });
         setIsUpdating(false);
