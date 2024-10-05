@@ -1,6 +1,5 @@
 "use client";
 
-import FormButton from "@/components/FormButton";
 import InputField from "@/components/InputField";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,6 +8,7 @@ import { toast } from "sonner";
 import { updatePassword } from "./action";
 import TestimonialBackground from "@/components/TestimonialBackground";
 import googleIcon from "@/assets/icons/logo.jpg";
+import CustomButton from "@/components/CustomButton";
 
 const UpdatePasswordPage = () => {
     const [isUpdating, setIsUpdating] = useState(false);
@@ -58,7 +58,7 @@ const UpdatePasswordPage = () => {
                         onChange={setConfirmPassword}
                     />
 
-                    <FormButton
+                    <CustomButton
                         title={isUpdating ? "Updating..." : "Update Password"}
                         disabled={isUpdating}
                         onClick={handleSubmit}

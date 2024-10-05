@@ -1,6 +1,5 @@
 "use client";
 
-import FormButton from "@/components/FormButton";
 import InputField from "@/components/InputField";
 import Link from "next/link";
 import { useState } from "react";
@@ -9,6 +8,7 @@ import { sendResetEmail } from "./action";
 import TestimonialBackground from "@/components/TestimonialBackground";
 import Image from "next/image";
 import googleIcon from "@/assets/icons/logo.jpg";
+import CustomButton from "@/components/CustomButton";
 
 const ForgotPasswordPage = () => {
     const [isSending, setIsSending] = useState(false);
@@ -52,10 +52,10 @@ const ForgotPasswordPage = () => {
                         onChange={setEmail}
                     />
 
-                    <FormButton
+                    <CustomButton
                         title={isSending ? "Sending" : "Send Reset Link"}
-                        onClick={handleSubmit}
                         disabled={isSending}
+                        onClick={handleSubmit}
                     />
                 </form>
 
