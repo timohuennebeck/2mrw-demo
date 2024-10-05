@@ -37,8 +37,8 @@ export const SignOutButton = ({ title, disabled }: { title: string; disabled?: b
                 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors
                 ${
                     disabled
-                        ? "bg-gray-300 text-gray-500 cursor-not-allowed opacity-60"
-                        : "bg-black text-white hover:bg-gray-800 focus:ring-gray-900"
+                        ? "bg-neutral-300 text-neutral-500 cursor-not-allowed opacity-60"
+                        : "bg-black text-white hover:bg-neutral-800 focus:ring-neutral-900"
                 }
             `}
         >

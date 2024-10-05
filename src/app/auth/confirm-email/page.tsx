@@ -39,12 +39,12 @@ const EmailConfirmationContent = () => {
 
             <h1 className="text-2xl font-semibold text-center mb-6">Email Verification Required</h1>
 
-            <p className="text-center text-gray-600 mb-2 text-sm">
+            <p className="text-center text-neutral-600 mb-2 text-sm">
                 The confirmation email was sent to:
             </p>
             <p className="text-center font-semibold mb-4">{email}</p>
 
-            <p className="text-center text-gray-600 mb-8 text-sm">
+            <p className="text-center text-neutral-600 mb-8 text-sm">
                 Please click the verification link in the email to activate your account and get
                 started.
             </p>
@@ -55,7 +55,7 @@ const EmailConfirmationContent = () => {
                 disabled={isResending}
             />
 
-            <p className="text-center text-sm text-gray-600 mt-4">
+            <p className="text-center text-sm text-neutral-600 mt-4">
                 Didn't receive the email? Have a look into your junk folder.
             </p>
         </div>
@@ -64,7 +64,7 @@ const EmailConfirmationContent = () => {
 
 const EmailConfirmationPage = () => {
     return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-neutral-50 flex items-center justify-center p-4">
             <Suspense>
                 <EmailConfirmationContent />
             </Suspense>

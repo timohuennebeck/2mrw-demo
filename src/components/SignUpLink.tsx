@@ -11,11 +11,11 @@ function SignUpLink({
     link: string;
 }) {
     return (
-        <p className="text-center text-sm text-gray-600 mb-4">
+        <p className="text-center text-sm text-neutral-600 mb-4">
             {title}{" "}
             <Link
                 href={link ?? ""}
-                className="font-medium text-black hover:text-gray-800 transition-colors"
+                className="font-medium text-black hover:text-neutral-800 transition-colors"
             >
                 {buttonText}
             </Link>

@@ -27,11 +27,11 @@ const ForgotPasswordPage = () => {
     };
 
     return (
-        <div className="bg-gray flex min-h-screen items-center justify-center p-4">
+        <div className="bg-neutral flex min-h-screen items-center justify-center p-4">
             <div className="w-full max-w-md rounded-md border border-input bg-white p-8">
                 <h1 className="mb-4 text-2xl font-semibold">Forgot Password</h1>
 
-                <p className="mb-6 text-sm text-gray-600">
+                <p className="mb-6 text-sm text-neutral-600">
                     Enter your email address below and we'll send you a link to reset your password.
                 </p>
 

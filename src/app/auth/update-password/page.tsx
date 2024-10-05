@@ -25,7 +25,7 @@ const UpdatePasswordPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-neutral-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-2xl shadow-lg border p-8 max-w-md w-full">
                 <div className="flex justify-center mb-6">
                     <Image
@@ -38,7 +38,7 @@ const UpdatePasswordPage = () => {
 
                 <h1 className="text-2xl font-semibold text-center mb-4">Update Password</h1>
 
-                <p className="text-center text-gray-600 mb-6 text-sm">
+                <p className="text-center text-neutral-600 mb-6 text-sm">
                     Enter your new password below to update your account.
                 </p>
 
@@ -63,11 +63,11 @@ const UpdatePasswordPage = () => {
                     />
                 </form>
 
-                <p className="text-center text-sm text-gray-600 mt-4">
+                <p className="text-center text-sm text-neutral-600 mt-4">
                     Remember your password?{" "}
                     <Link
                         href="/auth/sign-in"
-                        className="font-medium text-black hover:text-gray-800 transition-colors"
+                        className="font-medium text-black hover:text-neutral-800 transition-colors"
                     >
                         Sign In
                     </Link>

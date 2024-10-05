@@ -40,7 +40,7 @@ export const FreeTrialEmailTemplate = ({
             <Preview>{previewText}</Preview>
             <Tailwind>
                 <Body className="bg-white my-auto mx-auto font-sans px-2">
-                    <Container className="border border-solid border-gray-200 rounded my-[40px] mx-auto p-[20px] max-w-[465px]">
+                    <Container className="border border-solid border-neutral-200 rounded my-[40px] mx-auto p-[20px] max-w-[465px]">
                         <Img
                             src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL}
                             width="48"
@@ -86,8 +86,8 @@ export const FreeTrialEmailTemplate = ({
                             , where I regularly share updates about {companyTitle} and engage with
                             our users.
                         </Text>
-                        <Hr className="border border-solid border-gray-200 my-[26px] mx-0 w-full" />
-                        <Text className="text-gray-500 text-[12px] leading-[24px]">
+                        <Hr className="border border-solid border-neutral-200 my-[26px] mx-0 w-full" />
+                        <Text className="text-neutral-500 text-[12px] leading-[24px]">
                             Much love,
                             <br />
                             Timo Hünnebeck

@@ -9,9 +9,9 @@ export const PlanFeatures = ({ features }: { features: Feature[] }) => (
                 {included ? (
                     <CheckBadgeIcon className="w-5 h-5 text-black" aria-hidden="true" />
                 ) : (
-                    <XMarkIcon className="w-5 h-5 text-gray-400" aria-hidden="true" />
+                    <XMarkIcon className="w-5 h-5 text-neutral-400" aria-hidden="true" />
                 )}
-                <span className={`text-sm ${included ? "text-gray-600" : "text-gray-400"}`}>
+                <span className={`text-sm ${included ? "text-neutral-600" : "text-neutral-400"}`}>
                     {name}
                 </span>
             </li>
