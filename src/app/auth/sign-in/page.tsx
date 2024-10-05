@@ -15,13 +15,13 @@ const SignInPage = () => {
         setIsLoading(true);
 
         if (email === "") {
-            toast.error("Email is missing");
+            toast.error("Email is missing.");
             setIsLoading(false);
             return;
         }
 
         if (password === "") {
-            toast.error("Password is missing");
+            toast.error("Password is missing.");
             setIsLoading(false);
             return;
         }

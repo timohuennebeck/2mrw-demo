@@ -4,11 +4,11 @@ import { checkUserEmailExists } from "@/services/supabase/queries";
 import { createClient } from "@/services/supabase/server";
 
 export const signUp = async ({
-    name,
+    firstName,
     email,
     password,
 }: {
-    name: string;
+    firstName: string;
     email: string;
     password: string;
 }) => {
@@ -26,7 +26,7 @@ export const signUp = async ({
             password,
             options: {
                 data: {
-                    full_name: name,
+                    full_name: firstName,
                 },
             },
         });
@@ -43,8 +43,6 @@ export const signUp = async ({
 
         return { success: true };
     } catch (err) {
-        console.error("Unexpected error during sign up:", err);
-
         return { error: "There has been an error during sign up." };
     }
 };

@@ -17,12 +17,12 @@ export const SignOutButton = ({ title }: { title: string }) => {
                 console.error("Error signing out:", error.message);
                 toast.error(`Error signing out: ${error.message}`);
             } else {
-                toast.success("Sign out successful!");
+                toast.success("Logout successful!");
 
                 router.replace("/auth/sign-in");
             }
         } catch (err) {
-            console.error("Unexpected error during sign out:", err);
+            console.error("Unexpected error during logout:", err);
 
             toast.error(`There has been an unexpected error: ${err}`);
         }

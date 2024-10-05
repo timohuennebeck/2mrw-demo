@@ -5,7 +5,7 @@ CREATE TYPE SubscriptionTierEnums AS ENUM ('TIER_ZERO', 'TIER_ONE', 'TIER_TWO');
 CREATE TABLE users (
     id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid(),
     email TEXT,
-    full_name TEXT,
+    first_name TEXT,
     user_id UUID UNIQUE,
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ

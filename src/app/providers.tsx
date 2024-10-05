@@ -15,6 +15,8 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         const fetchInitialInformation = async () => {
             try {
+
+                // TODO: ONLY FETCH WHEN LOGGED IN
                 const { user } = await queryClient.fetchQuery({
                     queryKey: ["supabaseUser"],
                     queryFn: () => fetchSupabaseUser(),

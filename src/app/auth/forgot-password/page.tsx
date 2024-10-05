@@ -49,6 +49,7 @@ const ForgotPasswordPage = () => {
                         id="email"
                         type="email"
                         name="email"
+                        placeholder="m@example.com"
                         onChange={setEmail}
                     />
 

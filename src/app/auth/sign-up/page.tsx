@@ -9,8 +9,6 @@ import { sendConfirmationEmail, signUp } from "./action";
 const SignUpPage = () => {
     const [isLoading, setIsLoading] = useState(false);
 
-    const router = useRouter();
-
     const showResendEmailToast = ({ email }: { email: string }) => {
         return toast("Didn't receive the email?", {
             duration: 45000,
@@ -40,35 +38,42 @@ const SignUpPage = () => {
                     return result.success;
                 }
             },
-            error: "Failed to resend email.",
+            error: (err: { error: string }) => {
+                return "Failed to resend email.";
+            },
         });
     };
 
     const handleSubmit = async ({
         email,
         password,
-        name,
+        firstName,
     }: {
         email: string;
         password: string;
-        name: string;
+        firstName: string;
     }) => {
-        if (email === "") {
-            toast.error("Email is missing!");
+        if (firstName === "") {
+            toast.error("Username is missing.");
             return;
         }
 
-        toastPromise(signUp({ name, email, password }), {
-            loading: "Signing up...",
-            success: (result: { success: boolean }) => {
-                if (result.success) {
-                    router.push(`/auth/sign-up?email=${encodeURIComponent(email)}`);
-                    setTimeout(() => showResendEmailToast({ email }), 2000);
+        if (email === "") {
+            toast.error("Email is missing.");
+            return;
+        }
 
-                    return "Sign up successful! Please check email inbox.";
-                }
+        toastPromise(signUp({ firstName, email, password }), {
+            loading: "Signing up...",
+            success: (result: { success: boolean; error: string }) => {
+                if (result.error) throw new Error(result.error);
+                setTimeout(() => showResendEmailToast({ email }), 2000);
+
+                return "Sign up successful! Please check email inbox.";
             },
-            error: "There has been an error during sign up.",
+            error: (err: Error) => {
+                return err.message;
+            },
         });
     };
 

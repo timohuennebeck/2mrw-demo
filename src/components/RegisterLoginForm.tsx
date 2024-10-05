@@ -15,11 +15,11 @@ interface RegisterLoginForm {
     handleSubmit: ({
         email,
         password,
-        name,
+        firstName,
     }: {
         email: string;
         password: string;
-        name: string;
+        firstName: string;
     }) => {};
     isLoading: boolean;
 }
@@ -27,7 +27,7 @@ interface RegisterLoginForm {
 const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [name, setName] = useState("");
+    const [firstName, setFirstName] = useState("");
 
     return (
         <TestimonialBackground>
@@ -52,12 +52,12 @@ const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm)
                         {mode === "signup" && (
                             <div className="grid gap-2">
                                 <InputField
-                                    id="name"
-                                    label="First"
-                                    name="name"
+                                    id="firstName"
+                                    label="First name"
+                                    name="firstName"
                                     type="text"
                                     placeholder="Timo"
-                                    onChange={setName}
+                                    onChange={setFirstName}
                                 />
                             </div>
                         )}
@@ -88,7 +88,7 @@ const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm)
 
                         <CustomButton
                             title={mode === "signup" ? "Sign Up" : "Login"}
-                            onClick={() => handleSubmit({ email, password, name })}
+                            onClick={() => handleSubmit({ email, password, firstName })}
                             disabled={isLoading}
                         />
 
