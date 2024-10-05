@@ -15,7 +15,7 @@ function FormButton({
             className={`w-full py-2.5 text-sm px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${
                 disabled
                     ? "bg-neutral-300 text-neutral-500 cursor-not-allowed"
-                    : "bg-black text-white hover:bg-neutral-800 focus:ring-neutral-900"
+                    : "bg-black text-white hover:bg-neutral-700"
             }`}
             formAction={onClick}
         >

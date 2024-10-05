@@ -109,7 +109,7 @@ export const PlanButton = ({
         if (hasPurchasedSubscription) {
             return subscriptionInfo?.stripe_price_id === stripePriceId
                 ? { title: "Current Plan", disabled: true }
-                : { ...baseProps, title: "Get Started Now", onClick: handleCheckout };
+                : { ...baseProps, title: "Change Plan", onClick: handleCheckout };
         }
 
         return { ...baseProps, title: "Upgrade Now", onClick: handleCheckout };
