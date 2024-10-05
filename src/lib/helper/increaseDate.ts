@@ -1,6 +1,9 @@
-export const increaseDate = ({ date, days }: { date: Date; days: number }) => {
-    let result = new Date(date);
-    result.setDate(result.getDate() + days);
+import moment, { Moment } from "moment";
+
+export const increaseDate = ({ date, days }: { date: Moment; days: number }) => {
+    let result = moment(date);
+
+    result.add(days, "days");
 
     return result;
 };

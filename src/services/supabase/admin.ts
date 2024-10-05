@@ -10,6 +10,7 @@ import {
 import { createClient } from "./server";
 import { User } from "@supabase/supabase-js";
 import { handleSupabaseError } from "../../lib/helper/handleSupabaseError";
+import moment from "moment";
 
 export const createUserTable = async ({ user }: { user: User }) => {
     const supabase = createClient();
@@ -17,8 +18,8 @@ export const createUserTable = async ({ user }: { user: User }) => {
     try {
         const { error } = await supabase.from("users").insert({
             user_id: user.id,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
+            created_at: moment().toISOString(),
+            updated_at: moment().toISOString(),
             full_name: user.user_metadata.full_name,
             email: user.email,
         });
@@ -41,8 +42,8 @@ export const createPurchasedSubscriptionTable = async ({
     try {
         const { error } = await supabase.from("purchased_subscriptions").insert({
             user_id: userId,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
+            created_at: moment().toISOString(),
+            updated_at: moment().toISOString(),
             stripe_price_id: stripePriceId,
             status: SubscriptionStatus.ACTIVE,
             subscription_tier: subscriptionTier,
@@ -71,7 +72,7 @@ export const updateUserPurchasedSubscription = async ({
         const { error } = await supabase
             .from("purchased_subscriptions")
             .update({
-                updated_at: new Date().toISOString(),
+                updated_at: moment().toISOString(),
                 stripe_price_id: stripePriceId,
                 status,
                 subscription_tier: subscriptionTier,
@@ -99,7 +100,7 @@ export const createFreeTrialTable = async ({
     try {
         const { error } = await supabase.from("free_trials").insert({
             user_id: userId,
-            start_date: new Date().toISOString(),
+            start_date: moment().toISOString(),
             end_date: freeTrialEndDate.toISOString(),
             stripe_price_id: stripePriceId,
             status: FreeTrialStatus.ACTIVE,
@@ -123,7 +124,7 @@ export const endUserFreeTrial = async ({ userId }: { userId: string }) => {
         const { error } = await supabase
             .from("free_trials")
             .update({
-                end_date: new Date().toISOString(),
+                end_date: moment().toISOString(),
                 status: FreeTrialStatus.EXPIRED,
             })
             .eq("user_id", userId);

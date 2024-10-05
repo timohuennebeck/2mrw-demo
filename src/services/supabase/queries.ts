@@ -9,6 +9,7 @@ import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
 import { User } from "@/interfaces/UserInterfaces";
 import { createClient } from "./server";
 import { handleSupabaseError } from "../../lib/helper/handleSupabaseError";
+import moment from "moment";
 
 export const checkUserRowExists = async ({
     tableId,
@@ -211,9 +212,9 @@ export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
         if (error) throw error;
 
         const freeTrial = data as FreeTrial;
-        const now = new Date();
-        const startDate = new Date(freeTrial.start_date);
-        const endDate = new Date(freeTrial.end_date);
+        const now = moment();
+        const startDate = moment(freeTrial.start_date);
+        const endDate = moment(freeTrial.end_date);
 
         if (now >= startDate && now <= endDate) {
             return { status: FreeTrialStatus.ACTIVE, freeTrial, error: null };

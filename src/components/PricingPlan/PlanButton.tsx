@@ -10,6 +10,7 @@ import { initiateStripeCheckoutProcess } from "@/lib/stripe/stripeUtils";
 import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { createClient } from "@/services/supabase/client";
+import moment from "moment";
 
 interface PlanButton {
     stripePriceId: string;
@@ -19,6 +20,9 @@ interface PlanButton {
     isLoading: boolean;
     supabaseUser: User | null;
 }
+
+const FOURTEEN_DAYS = 14;
+const SEVEN_DAYS = 7;
 
 export const PlanButton = ({
     stripePriceId,
@@ -61,8 +65,8 @@ export const PlanButton = ({
 
     const startFreeTrial = async () => {
         const freeTrialEndDate = increaseDate({
-            date: new Date(),
-            days: welcomeEmail === "true" ? 14 : 7,
+            date: moment(),
+            days: welcomeEmail === "true" ? FOURTEEN_DAYS : SEVEN_DAYS,
         });
 
         try {
