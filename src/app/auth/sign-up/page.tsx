@@ -1,14 +1,48 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { signUp } from "./action";
 import RegisterLoginForm from "@/components/RegisterLoginForm";
+import { useRouter } from "next/navigation";
+import { sendConfirmationEmail, signUp } from "./action";
 
 const SignUpPage = () => {
     const [isLoading, setIsLoading] = useState(false);
+
     const router = useRouter();
+
+    const showResendEmailToast = ({ email }: { email: string }) => {
+        return toast("Didn't receive the email?", {
+            duration: 45000,
+            action: {
+                label: "Resend email",
+                onClick: () => handleResendEmail(email),
+            },
+        });
+    };
+
+    // TODO: add types for toastPromise
+    const toastPromise = (promise, messages) => {
+        setIsLoading(true);
+        return toast.promise(promise, {
+            ...messages,
+            finally: () => setIsLoading(false),
+        });
+    };
+
+    const handleResendEmail = async (email: string) => {
+        const resendPromise = sendConfirmationEmail({ email });
+        toastPromise(resendPromise, {
+            loading: "Resending email...",
+            success: (result: { success: boolean }) => {
+                if (result.success) {
+                    setTimeout(() => showResendEmailToast({ email }), 1000);
+                    return result.success;
+                }
+            },
+            error: "Failed to resend email.",
+        });
+    };
 
     const handleSubmit = async ({
         email,
@@ -19,28 +53,22 @@ const SignUpPage = () => {
         password: string;
         name: string;
     }) => {
-        setIsLoading(true);
-
         if (email === "") {
-            toast.error("Email is missing");
-            setIsLoading(false);
+            toast.error("Email is missing!");
             return;
         }
 
-        toast.promise(signUp({ name, email, password }), {
+        toastPromise(signUp({ name, email, password }), {
             loading: "Signing up...",
-            success: (result) => {
+            success: (result: { success: boolean }) => {
                 if (result.success) {
-                    setIsLoading(false);
-                    router.push(`/auth/confirm-email?email=${encodeURIComponent(email)}`);
-                    return "Sign up successful! There's just one last step.";
+                    router.push(`/auth/sign-up?email=${encodeURIComponent(email)}`);
+                    setTimeout(() => showResendEmailToast({ email }), 2000);
+
+                    return "Sign up successful! Please check email inbox.";
                 }
-                throw new Error(result.error);
             },
-            error: (err) => {
-                setIsLoading(false);
-                return err.message;
-            },
+            error: "There has been an error during sign up.",
         });
     };
 

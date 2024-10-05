@@ -64,8 +64,8 @@ export const sendConfirmationEmail = async ({ email }: { email: string }) => {
 
         if (error) throw error;
 
-        return { success: "Confirmation email has been sent" };
+        return { success: "Confirmation email has been sent." };
     } catch (error) {
-        return { error: "Failed to resend confirmation email" };
+        return { error: "Failed to resend confirmation email." };
     }
 };
