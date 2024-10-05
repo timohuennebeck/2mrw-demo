@@ -18,6 +18,7 @@ import { sendPostPurchaseEmail } from "../email/emailServices";
 import { UpsertUserSubscriptionParams } from "@/interfaces/SubscriptionInterfaces";
 import { EndOnGoingUserFreeTrialParams } from "@/interfaces/FreeTrial";
 import { createClient } from "@/services/supabase/server";
+import moment from "moment";
 
 export const endOnGoingUserFreeTrial = async ({
     status,
@@ -27,8 +28,6 @@ export const endOnGoingUserFreeTrial = async ({
         const { error } = await endUserFreeTrial({ userId });
 
         if (error) throw new Error("Failed to end free trial");
-
-        console.log("Free Trial has been ended");
     }
 };
 
@@ -84,6 +83,7 @@ export const handleCheckoutSessionCompleted = async ({
             data: {
                 subscription_status: SubscriptionStatus.ACTIVE,
                 free_trial_status: FreeTrialStatus.EXPIRED,
+                free_trial_end_date: moment().toISOString(),
             },
         });
 

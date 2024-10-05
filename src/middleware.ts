@@ -3,6 +3,7 @@ import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest as nextRequest, NextResponse as nextResponse } from "next/server";
 import { SupabaseClient, User } from "@supabase/supabase-js";
+import moment from "moment";
 
 const HIDE_ON_PREMIUM_PLAN = ["/choose-pricing-plan"];
 
@@ -43,6 +44,7 @@ const getSubscriptionStatus = async (supabaseClient: SupabaseClient, user: User)
         return {
             subscription_status: user.user_metadata.subscription_status,
             free_trial_status: user.user_metadata.free_trial_status,
+            free_trial_end_date: user.user_metadata.free_trial_end_date,
         };
     }
 
@@ -54,7 +56,7 @@ const getSubscriptionStatus = async (supabaseClient: SupabaseClient, user: User)
 
     const { data: freeTrialData, error: freeTrialError } = await supabaseClient
         .from("free_trials")
-        .select("status")
+        .select("status, end_date")
         .eq("user_id", user.id)
         .single();
 
@@ -63,18 +65,21 @@ const getSubscriptionStatus = async (supabaseClient: SupabaseClient, user: User)
             data: {
                 subscription_status: subscriptionData.status,
                 free_trial_status: freeTrialData.status,
+                free_trial_end_date: freeTrialData.end_date,
             },
         });
 
         return {
             subscription_status: subscriptionData.status,
             free_trial_status: freeTrialData.status,
+            free_trial_end_date: freeTrialData.end_date,
         };
     }
 
     const fallbackStatus = {
         subscription_status: SubscriptionStatus.NOT_PURCHASED,
         free_trial_status: FreeTrialStatus.NOT_STARTED,
+        free_trial_end_date: moment().toISOString(),
     };
 
     await supabaseClient.auth.updateUser({ data: fallbackStatus });
@@ -116,13 +121,20 @@ export const middleware = async (request: nextRequest) => {
 
     if (!user) return nextResponse.next();
 
-    const { subscription_status, free_trial_status } = await getSubscriptionStatus(
-        supabaseClient,
-        user,
-    );
+    const { subscription_status, free_trial_status, free_trial_end_date } =
+        await getSubscriptionStatus(supabaseClient, user);
+
+    const isFreeTrialOngoing = () => {
+        if (!free_trial_end_date) return false;
+
+        const now = moment();
+        const endDate = moment(free_trial_end_date);
+
+        return now.isSameOrBefore(endDate);
+    };
 
     const hasPremiumSubscription = subscription_status === SubscriptionStatus.ACTIVE;
-    const isOnFreeTrial = free_trial_status === FreeTrialStatus.ACTIVE;
+    const isOnFreeTrial = free_trial_status === FreeTrialStatus.ACTIVE && !isFreeTrialOngoing();
     const hasPremiumOrFreeTrial = hasPremiumSubscription || isOnFreeTrial;
 
     const currentPath = request.nextUrl.pathname;

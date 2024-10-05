@@ -79,6 +79,7 @@ export const PlanButton = ({
             await supabase.auth.updateUser({
                 data: {
                     free_trial_status: FreeTrialStatus.ACTIVE,
+                    free_trial_end_date: moment().toISOString(),
                 },
             });
 
