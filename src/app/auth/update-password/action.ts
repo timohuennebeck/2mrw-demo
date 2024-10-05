@@ -3,10 +3,13 @@
 import { createClient } from "@/services/supabase/server";
 import { redirect } from "next/navigation";
 
-export const updatePassword = async (formData: FormData) => {
+type UpdatePasswordProps = {
+    password: string;
+    confirmPassword: string;
+};
+
+export const updatePassword = async ({ password, confirmPassword }: UpdatePasswordProps) => {
     const supabase = createClient();
-    const password = formData.get("password") as string;
-    const confirmPassword = formData.get("confirmPassword") as string;
 
     if (password !== confirmPassword) {
         return { error: "Passwords do not match" };
