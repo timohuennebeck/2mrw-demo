@@ -48,3 +48,24 @@ export const signUp = async ({
         return { error: "There has been an error during sign up." };
     }
 };
+
+export const sendConfirmationEmail = async ({ email }: { email: string }) => {
+    const supabase = createClient();
+
+    if (!email) {
+        return { error: "Email address is missing" };
+    }
+
+    try {
+        const { error } = await supabase.auth.resend({
+            type: "signup",
+            email: email,
+        });
+
+        if (error) throw error;
+
+        return { success: "Confirmation email has been sent" };
+    } catch (error) {
+        return { error: "Failed to resend confirmation email" };
+    }
+};
