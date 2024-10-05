@@ -2,12 +2,7 @@ import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest as nextRequest, NextResponse as nextResponse } from "next/server";
-import {
-    checkFreeTrialStatus,
-    checkPurchasedSubscriptionStatus,
-} from "./services/supabase/queries";
 import { SupabaseClient, User } from "@supabase/supabase-js";
-import moment from "moment";
 
 const HIDE_ON_PREMIUM_PLAN = ["/choose-pricing-plan"];
 
