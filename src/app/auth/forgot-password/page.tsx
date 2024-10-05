@@ -17,12 +17,12 @@ const ForgotPasswordPage = () => {
 
     const handleSubmit = async () => {
         if (email === "") {
-            toast.error("Email is missing.");
+            toast.error(TextConstants.ERROR__EMAIL_IS_MISSING);
             return;
         }
 
         if (!email.includes("@")) {
-            toast.error("Email is missing an '@'.");
+            toast.error(TextConstants.ERROR__EMAIL_IS_MISSING_AT_SIGN);
             return;
         }
 

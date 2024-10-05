@@ -69,27 +69,27 @@ const SignUpPage = () => {
         firstName: string;
     }) => {
         if (firstName === "") {
-            toast.error("Username is missing.");
+            toast.error(TextConstants.ERROR__FIRST_NAME_IS_MISSING);
             return;
         }
 
         if (email === "") {
-            toast.error("Email is missing.");
+            toast.error(TextConstants.ERROR__EMAIL_IS_MISSING);
             return;
         }
 
         if (password === "") {
-            toast.error("Password is missing.");
+            toast.error(TextConstants.ERROR__PASSWORD_IS_MISSING);
             return;
         }
 
         toastPromise(signUp({ firstName, email, password }), {
-            loading: "Signing up...",
+            loading: TextConstants.TEXT__SIGNING_UP,
             success: () => {
                 setTimeout(() => showResendEmailToast({ email }), 2000);
-                return "Sign up successful! Please check email inbox.";
+                return TextConstants.TEXT__SIGN_UP_SUCCESSFUL_CHECK_EMAIL;
             },
-            error: (err) => err.error ?? "Unexpected error has occured.",
+            error: (err) => err.error ?? TextConstants.ERROR__UNEXPECTED_ERROR,
         });
     };
 

@@ -23,17 +23,17 @@ const UpdatePassword = () => {
 
     const handleSubmit = async () => {
         if (password === "") {
-            toast.error("Password is missing.");
+            toast.error(TextConstants.ERROR__PASSWORD_IS_MISSING);
             return;
         }
 
         if (confirmPassword === "") {
-            toast.error("Confirmation password is missing.");
+            toast.error(TextConstants.ERROR__CONFIRMATION_PASSWORD_IS_MISSING);
             return;
         }
 
         if (password !== confirmPassword) {
-            toast.error("Passwords do not match.");
+            toast.error(TextConstants.ERROR__PASSWORDS_DO_NOT_MATCH);
             return;
         }
 
@@ -43,7 +43,7 @@ const UpdatePassword = () => {
 
         if (result.success) {
             router.replace(result.redirect ?? "/");
-            toast.success("Password has been updated");
+            toast.success(TextConstants.TEXT__PASSWORD_HAS_BEEN_UPDATED);
         } else {
             toast.error(result.error);
         }

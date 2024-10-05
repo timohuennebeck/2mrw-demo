@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { signIn } from "./action";
 import RegisterLoginForm from "@/components/RegisterLoginForm";
+import { TextConstants } from "@/constants/TextConstants";
 
 const SignInPage = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -15,24 +16,24 @@ const SignInPage = () => {
         setIsLoading(true);
 
         if (email === "") {
-            toast.error("Email is missing.");
+            toast.error(TextConstants.ERROR__EMAIL_IS_MISSING);
             setIsLoading(false);
             return;
         }
 
         if (password === "") {
-            toast.error("Password is missing.");
+            toast.error(TextConstants.ERROR__PASSWORD_IS_MISSING);
             setIsLoading(false);
             return;
         }
 
         toast.promise(signIn({ email, password }), {
-            loading: "Signing in...",
+            loading: TextConstants.TEXT__SIGNING_IN,
             success: (result) => {
                 if (result.success) {
                     setIsLoading(false);
                     router.replace(result.redirect ?? "/");
-                    return "Sign in successful!";
+                    return TextConstants.TEXT__SIGN_IN_SUCCESSFUL;
                 }
                 throw new Error(result.error);
             },
