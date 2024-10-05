@@ -50,7 +50,7 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
 
                 <PlanPricing currentPrice={current_price} previousPrice={previous_price} />
 
-                <p className="mb-4 text-sm text-gray-600">{description}</p>
+                <p className="mb-4 text-sm text-neutral-500">{description}</p>
 
                 <PlanFeatures features={features} />
             </div>
@@ -64,7 +64,7 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
                 supabaseUser={supabaseUser ?? null}
             />
 
-            <p className="mt-4 text-center text-sm text-gray-600">Purchase Once. Forever Yours.</p>
+            <p className="mt-4 text-center text-sm text-neutral-500">Purchase Once. Forever Yours.</p>
         </div>
     );
 };
