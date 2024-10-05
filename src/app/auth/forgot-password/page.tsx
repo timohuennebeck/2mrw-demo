@@ -15,6 +15,16 @@ const ForgotPasswordPage = () => {
     const [email, setEmail] = useState("");
 
     const handleSubmit = async () => {
+        if (email === "") {
+            toast.error("Email is missing.");
+            return;
+        }
+
+        if (!email.includes("@")) {
+            toast.error("Email is missing an '@'.");
+            return;
+        }
+
         setIsSending(true);
 
         const { success, error } = await sendPasswordResetEmail({ email });
@@ -43,7 +53,7 @@ const ForgotPasswordPage = () => {
                     </p>
                 </div>
 
-                <form className="flex flex-col gap-4">
+                <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
                     <InputField
                         label="Email"
                         id="email"

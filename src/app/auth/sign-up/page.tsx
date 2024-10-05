@@ -63,13 +63,21 @@ const SignUpPage = () => {
             return;
         }
 
+        if (password === "") {
+            toast.error("Password is missing.");
+            return;
+        }
+
         toastPromise(signUp({ firstName, email, password }), {
             loading: "Signing up...",
             success: (result: { success: boolean; error: string }) => {
-                if (result.error) throw new Error(result.error);
-                setTimeout(() => showResendEmailToast({ email }), 2000);
+                if (result.success) {
+                    setTimeout(() => showResendEmailToast({ email }), 2000);
 
-                return "Sign up successful! Please check email inbox.";
+                    return "Sign up successful! Please check email inbox.";
+                }
+
+                throw new Error(result.error);
             },
             error: (err: Error) => {
                 return err.message;

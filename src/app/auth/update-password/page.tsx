@@ -9,22 +9,42 @@ import { updatePassword } from "./action";
 import TestimonialBackground from "@/components/TestimonialBackground";
 import googleIcon from "@/assets/icons/logo.jpg";
 import CustomButton from "@/components/CustomButton";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const UpdatePasswordPage = () => {
     const [isUpdating, setIsUpdating] = useState(false);
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const authCode = searchParams.get("code") ?? "";
+
     const handleSubmit = async () => {
+        if (password === "") {
+            toast.error("Password is missing.");
+            return;
+        }
+
+        if (confirmPassword === "") {
+            toast.error("Confirmation password is missing.");
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            toast.error("Passwords do not match.");
+            return;
+        }
+
         setIsUpdating(true);
-        const { error } = await updatePassword({ password, confirmPassword });
+        const result = await updatePassword({ password, authCode });
         setIsUpdating(false);
 
-        if (error) {
-            toast.error(error);
-        } else {
-            // the redirect is handled on the server side
+        if (result.success) {
+            router.replace(result.redirect ?? "/");
             toast.success("Password has been updated");
+        } else {
+            toast.error(result.error);
         }
     };
 
@@ -42,7 +62,7 @@ const UpdatePasswordPage = () => {
                     </p>
                 </div>
 
-                <form className="flex flex-col gap-4">
+                <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
                     <InputField
                         label="New Password"
                         id="password"
