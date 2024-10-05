@@ -3,7 +3,7 @@
 import InputField from "@/components/InputField";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { toast } from "sonner";
 import { updatePassword } from "./action";
 import TestimonialBackground from "@/components/TestimonialBackground";
@@ -11,7 +11,7 @@ import googleIcon from "@/assets/icons/logo.jpg";
 import CustomButton from "@/components/CustomButton";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const UpdatePasswordPage = () => {
+const UpdatePassword = () => {
     const [isUpdating, setIsUpdating] = useState(false);
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -93,6 +93,14 @@ const UpdatePasswordPage = () => {
                 </p>
             </div>
         </TestimonialBackground>
+    );
+};
+
+const UpdatePasswordPage = () => {
+    return (
+        <Suspense>
+            <UpdatePassword />
+        </Suspense>
     );
 };
 
