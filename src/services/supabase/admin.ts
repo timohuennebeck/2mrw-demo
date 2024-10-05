@@ -101,7 +101,7 @@ export const createFreeTrialTable = async ({
         const { error } = await supabase.from("free_trials").insert({
             user_id: userId,
             start_date: moment().toISOString(),
-            end_date: freeTrialEndDate.toISOString(),
+            end_date: moment(freeTrialEndDate).toISOString(),
             stripe_price_id: stripePriceId,
             status: FreeTrialStatus.ACTIVE,
         });
