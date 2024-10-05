@@ -42,7 +42,12 @@ const ForgotPasswordPage = () => {
         <TestimonialBackground>
             <div className="mx-auto flex w-[448px] flex-col gap-6 rounded-md border p-8 lg:mx-0">
                 <div className="flex justify-center">
-                    <Image src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL ?? ""} alt="logo" width={48} height={48} />
+                    <Image
+                        src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL ?? ""}
+                        alt="logo"
+                        width={48}
+                        height={48}
+                    />
                 </div>
 
                 <div className="grid gap-2 text-center">
@@ -74,7 +79,7 @@ const ForgotPasswordPage = () => {
                 </form>
 
                 <p className="mt-4 text-center text-sm">
-                    ${TextConstants.TEXT__REMEMBER_PASSWORD}{" "}
+                    {TextConstants.TEXT__REMEMBER_PASSWORD}{" "}
                     <Link href="/auth/sign-in" className="underline">
                         {TextConstants.TEXT__SIGN_IN}
                     </Link>
