@@ -3,14 +3,14 @@
 import googleIcon from "@/assets/icons/logo.jpg";
 import ContinueWithGoogleButton from "@/components/ContinueWithGoogleButton";
 import FormDivider from "@/components/FormDivider";
-import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import InputField from "./InputField";
 import CustomButton from "./CustomButton";
+import TestimonialBackground from "./TestimonialBackground";
 
-interface SharedFormProps {
+interface RegisterLoginForm {
     mode: string;
     handleSubmit: ({
         email,
@@ -24,13 +24,13 @@ interface SharedFormProps {
     isLoading: boolean;
 }
 
-const SharedForm = ({ mode, handleSubmit, isLoading }: SharedFormProps) => {
+const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
 
     return (
-        <div className="flex h-screen gap-8 p-8">
+        <TestimonialBackground>
             <div className="mx-auto flex w-[448px] flex-col gap-6 rounded-md border p-8 lg:mx-0">
                 <div className="flex justify-center">
                     <Image src={googleIcon} alt="logo" width={48} height={48} />
@@ -41,7 +41,7 @@ const SharedForm = ({ mode, handleSubmit, isLoading }: SharedFormProps) => {
                         <h1 className="text-2xl font-medium">
                             {mode === "signup" ? "Sign Up" : "Login"}
                         </h1>
-                        <p className="text-muted-foreground text-balance text-sm text-neutral-400">
+                        <p className="text-sm text-neutral-400">
                             {mode === "signup"
                                 ? "Sign up using email or another service to continue!"
                                 : "Sign in using email or another service to continue!"}
@@ -108,20 +108,8 @@ const SharedForm = ({ mode, handleSubmit, isLoading }: SharedFormProps) => {
                     </div>
                 </div>
             </div>
-
-            <div className="hidden w-1/2 flex-col justify-between bg-white py-8 lg:flex">
-                <span className="text-xl font-semibold text-black">⌘ Microsoft Inc.</span>
-
-                <div className="flex flex-col gap-2">
-                    <p className="text-black">
-                        “This lib has saved me countless hours of work and helped me deliver
-                        stunning designs to our clients faster than ever before.”
-                    </p>
-                    <p className="text-sm font-medium text-black">Timo Hünnebeck</p>
-                </div>
-            </div>
-        </div>
+        </TestimonialBackground>
     );
 };
 
-export default SharedForm;
+export default RegisterLoginForm;

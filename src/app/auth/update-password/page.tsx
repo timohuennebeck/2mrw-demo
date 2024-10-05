@@ -7,6 +7,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { updatePassword } from "./action";
+import TestimonialBackground from "@/components/TestimonialBackground";
+import googleIcon from "@/assets/icons/logo.jpg";
 
 const UpdatePasswordPage = () => {
     const [isUpdating, setIsUpdating] = useState(false);
@@ -27,24 +29,20 @@ const UpdatePasswordPage = () => {
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-neutral-50 p-4">
-            <div className="w-full max-w-md rounded-2xl border bg-white p-8 shadow-lg">
-                <div className="mb-6 flex justify-center">
-                    <Image
-                        src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL ?? ""}
-                        alt="Logo"
-                        width={48}
-                        height={48}
-                    />
+        <TestimonialBackground>
+            <div className="mx-auto flex w-[448px] flex-col gap-6 rounded-md border p-8 lg:mx-0">
+                <div className="flex justify-center">
+                    <Image src={googleIcon} alt="logo" width={48} height={48} />
                 </div>
 
-                <h1 className="mb-4 text-center text-2xl font-semibold">Update Password</h1>
+                <div className="grid gap-2 text-center">
+                    <h1 className="text-2xl font-medium">Update Password</h1>
+                    <p className="text-sm text-neutral-400">
+                        Enter Your new password below to update Your account.
+                    </p>
+                </div>
 
-                <p className="mb-6 text-center text-sm text-neutral-600">
-                    Enter your new password below to update your account.
-                </p>
-
-                <form>
+                <form className="flex flex-col gap-4">
                     <InputField
                         label="New Password"
                         id="password"
@@ -67,17 +65,14 @@ const UpdatePasswordPage = () => {
                     />
                 </form>
 
-                <p className="mt-4 text-center text-sm text-neutral-600">
-                    Remember your password?{" "}
-                    <Link
-                        href="/auth/sign-in"
-                        className="font-medium text-black transition-colors hover:text-neutral-800"
-                    >
+                <p className="mt-4 text-center text-sm">
+                    Remember password?{" "}
+                    <Link href="/auth/sign-in" className="underline">
                         Sign In
                     </Link>
                 </p>
             </div>
-        </div>
+        </TestimonialBackground>
     );
 };
 

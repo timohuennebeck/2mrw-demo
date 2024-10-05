@@ -6,6 +6,9 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { sendResetEmail } from "./action";
+import TestimonialBackground from "@/components/TestimonialBackground";
+import Image from "next/image";
+import googleIcon from "@/assets/icons/logo.jpg";
 
 const ForgotPasswordPage = () => {
     const [isSending, setIsSending] = useState(false);
@@ -26,13 +29,19 @@ const ForgotPasswordPage = () => {
     };
 
     return (
-        <div className="bg-neutral flex min-h-screen items-center justify-center p-4">
-            <div className="w-full max-w-md rounded-md border border-input bg-white p-8">
-                <h1 className="mb-4 text-2xl font-semibold">Forgot Password</h1>
+        <TestimonialBackground>
+            <div className="mx-auto flex w-[448px] flex-col gap-6 rounded-md border p-8 lg:mx-0">
+                <div className="flex justify-center">
+                    <Image src={googleIcon} alt="logo" width={48} height={48} />
+                </div>
 
-                <p className="mb-6 text-sm text-neutral-600">
-                    Enter your email address below and we'll send you a link to reset your password.
-                </p>
+                <div className="grid gap-2 text-center">
+                    <h1 className="text-2xl font-medium">Forgot Password</h1>
+                    <p className="text-sm text-neutral-400">
+                        Enter Your email address below and we'll send You a link to reset Your
+                        password.
+                    </p>
+                </div>
 
                 <form className="flex flex-col gap-4">
                     <InputField
@@ -57,7 +66,7 @@ const ForgotPasswordPage = () => {
                     </Link>
                 </p>
             </div>
-        </div>
+        </TestimonialBackground>
     );
 };
 

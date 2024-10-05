@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { signIn } from "./action";
-import SharedForm from "@/components/SharedForm";
+import RegisterLoginForm from "@/components/RegisterLoginForm";
 
 const SignInPage = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +43,7 @@ const SignInPage = () => {
         });
     };
 
-    return <SharedForm mode="signin" handleSubmit={handleSubmit} isLoading={isLoading} />;
+    return <RegisterLoginForm mode="signin" handleSubmit={handleSubmit} isLoading={isLoading} />;
 };
 
 export default SignInPage;
