@@ -68,7 +68,7 @@ const LeftNavigationBar = () => {
                 {iconsToUse.map((i, index) => {
                     return (
                         <div
-                            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md text-neutral-600 hover:bg-neutral-100"
+                            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100"
                             key={index}
                         >
                             {i.icon}
@@ -81,7 +81,7 @@ const LeftNavigationBar = () => {
                 {bottomIcons.map((i, index) => {
                     return (
                         <div
-                            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md text-neutral-600 hover:bg-neutral-100"
+                            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100"
                             key={index}
                         >
                             {i.icon}
