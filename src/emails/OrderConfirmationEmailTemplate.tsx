@@ -110,11 +110,11 @@ export const OrderConfirmationEmailTemplate = ({
 OrderConfirmationEmailTemplate.PreviewProps = {
     userFirstName: "Sarah",
     purchasedPackage: "Premium Plan (20% off)",
-    companyTitle: TextConstants.TEXT__COMPANY_TITLE,
-    gettingStartedLoomUrl: TextConstants.TEXT__LOOM_GETTING_STARTED_URL,
-    twitterCompanyUrl: TextConstants.TEXT__TWITTER_COMPANY_URL,
-    twitterCompanyTag: TextConstants.TEXT__TWITTER_COMPANY_TAG,
-    twitterFounderUrl: TextConstants.TEXT__TWITTER_FOUNDER_URL,
+    companyTitle: TextConstants.EMAIL__COMPANY_TITLE,
+    gettingStartedLoomUrl: TextConstants.EMAIL__LOOM_GETTING_STARTED_URL,
+    twitterCompanyUrl: TextConstants.EMAIL__TWITTER_COMPANY_URL,
+    twitterCompanyTag: TextConstants.EMAIL__TWITTER_COMPANY_TAG,
+    twitterFounderUrl: TextConstants.EMAIL__TWITTER_FOUNDER_URL,
     twitterFounderTag: TextConstants.TEXT__TWITTER_FOUNDER_TAG,
 } as OrderConfirmationEmailTemplateProps;
 

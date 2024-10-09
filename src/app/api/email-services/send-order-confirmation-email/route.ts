@@ -14,18 +14,18 @@ export const POST = async (req: request) => {
         }
 
         const { data, error } = await resend.emails.send({
-            from: TextConstants.TEXT__EMAIL_SEND_FROM,
+            from: TextConstants.EMAIL__SEND_FROM,
             to: userEmail,
             subject: `Order Confirmation - ${purchasedPackage}`,
             react: OrderConfirmationEmailTemplate({
                 userFirstName,
                 purchasedPackage,
-                gettingStartedLoomUrl: TextConstants.TEXT__LOOM_GETTING_STARTED_URL,
-                companyTitle: TextConstants.TEXT__COMPANY_TITLE,
-                twitterCompanyTag: TextConstants.TEXT__TWITTER_COMPANY_TAG,
-                twitterCompanyUrl: TextConstants.TEXT__TWITTER_COMPANY_URL,
+                gettingStartedLoomUrl: TextConstants.EMAIL__LOOM_GETTING_STARTED_URL,
+                companyTitle: TextConstants.EMAIL__COMPANY_TITLE,
+                twitterCompanyTag: TextConstants.EMAIL__TWITTER_COMPANY_TAG,
+                twitterCompanyUrl: TextConstants.EMAIL__TWITTER_COMPANY_URL,
                 twitterFounderTag: TextConstants.TEXT__TWITTER_FOUNDER_TAG,
-                twitterFounderUrl: TextConstants.TEXT__TWITTER_FOUNDER_URL,
+                twitterFounderUrl: TextConstants.EMAIL__TWITTER_FOUNDER_URL,
             }),
         });
 

@@ -102,10 +102,10 @@ export const FreeTrialEmailTemplate = ({
 // enable this during development to preview what the email will look like
 FreeTrialEmailTemplate.PreviewProps = {
     userFirstName: "Sarah",
-    companyTitle: TextConstants.TEXT__COMPANY_TITLE,
-    trialDuration: TextConstants.TEXT__FREE_TRIAL_DURATION,
+    companyTitle: TextConstants.EMAIL__COMPANY_TITLE,
+    trialDuration: TextConstants.EMAIL__FREE_TRIAL_DURATION,
     trialSignupLink: `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan?welcomeEmail=true`,
-    twitterFounderUrl: TextConstants.TEXT__TWITTER_FOUNDER_URL,
+    twitterFounderUrl: TextConstants.EMAIL__TWITTER_FOUNDER_URL,
     twitterFounderTag: TextConstants.TEXT__TWITTER_FOUNDER_TAG,
 } as FreeTrialEmailTemplateProps;
 

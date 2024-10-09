@@ -14,15 +14,15 @@ export const POST = async (req: request) => {
         }
 
         const { data, error } = await resend.emails.send({
-            from: TextConstants.TEXT__EMAIL_SEND_FROM,
+            from: TextConstants.EMAIL__SEND_FROM,
             to: userEmail,
-            subject: `Welcome to ${TextConstants.TEXT__COMPANY_TITLE}!`,
+            subject: `Welcome to ${TextConstants.EMAIL__COMPANY_TITLE}!`,
             react: FreeTrialEmailTemplate({
                 userFirstName: userFirstName,
-                companyTitle: TextConstants.TEXT__COMPANY_TITLE,
-                trialDuration: TextConstants.TEXT__FREE_TRIAL_DURATION,
+                companyTitle: TextConstants.EMAIL__COMPANY_TITLE,
+                trialDuration: TextConstants.EMAIL__FREE_TRIAL_DURATION,
                 trialSignupLink: `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan?welcomeEmail=true`,
-                twitterFounderUrl: TextConstants.TEXT__TWITTER_FOUNDER_URL,
+                twitterFounderUrl: TextConstants.EMAIL__TWITTER_FOUNDER_URL,
                 twitterFounderTag: TextConstants.TEXT__TWITTER_FOUNDER_TAG,
             }),
         });
