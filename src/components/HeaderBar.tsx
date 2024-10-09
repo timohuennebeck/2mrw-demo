@@ -12,10 +12,10 @@ const HeaderBar = () => {
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <button className="flex items-center gap-2 rounded-md border border-neutral-300 px-3 py-1 text-xs text-neutral-800 hover:bg-neutral-50">
+                    <button className="flex items-center gap-2 rounded-md border border-neutral-300 px-3 py-1 text-xs text-neutral-600 hover:bg-neutral-50">
                         Feedback
                     </button>
-                    <button className="flex items-center gap-2 rounded-md border border-neutral-300 px-3 py-1 text-xs text-neutral-800 hover:bg-neutral-50">
+                    <button className="flex items-center gap-2 rounded-md border border-neutral-300 px-3 py-1 text-xs text-neutral-600 hover:bg-neutral-50">
                         <FileText strokeWidth={1.25} size={16} />
                         Documentation
                     </button>

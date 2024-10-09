@@ -9,7 +9,7 @@ const DropdownSelection = ({ dropDownItems }: DropdownSelectionProps) => {
                 return (
                     <button
                         key={index}
-                        className="cursor-pointer whitespace-nowrap rounded px-2 py-1 text-start text-xs hover:bg-neutral-100"
+                        className="cursor-pointer whitespace-nowrap rounded px-2 py-1 text-start text-xs hover:bg-neutral-100 text-neutral-600"
                         onClick={i.onClick}
                     >
                         {i.name}
