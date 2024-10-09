@@ -87,6 +87,21 @@ const getSubscriptionStatus = async (supabaseClient: SupabaseClient, user: User)
     return fallbackStatus;
 };
 
+const updateExpiredFreeTrial = async (supabaseClient: SupabaseClient, user: User) => {
+    const { data, error } = await supabaseClient
+        .from("free_trials")
+        .update({ status: FreeTrialStatus.EXPIRED })
+        .eq("user_id", user.id);
+
+    if (!error && data) {
+        await supabaseClient.auth.updateUser({
+            data: {
+                free_trial_status: FreeTrialStatus.EXPIRED,
+            },
+        });
+    }
+};
+
 export const middleware = async (request: nextRequest) => {
     let supabaseResponse = nextResponse.next({
         request,
@@ -133,8 +148,12 @@ export const middleware = async (request: nextRequest) => {
         return now.isSameOrBefore(endDate);
     };
 
+    if (free_trial_status === FreeTrialStatus.ACTIVE && !isFreeTrialOngoing()) {
+        await updateExpiredFreeTrial(supabaseClient, user);
+    }
+
     const hasPremiumSubscription = subscription_status === SubscriptionStatus.ACTIVE;
-    const isOnFreeTrial = free_trial_status === FreeTrialStatus.ACTIVE && !isFreeTrialOngoing();
+    const isOnFreeTrial = free_trial_status === FreeTrialStatus.ACTIVE && isFreeTrialOngoing();
     const hasPremiumOrFreeTrial = hasPremiumSubscription || isOnFreeTrial;
 
     const currentPath = request.nextUrl.pathname;
