@@ -1,3 +1,6 @@
+"use client";
+
+import React, { useState } from "react";
 import {
     CircleGauge,
     FileSearch,
@@ -9,41 +12,75 @@ import {
     Search,
     CircleUserRound,
 } from "lucide-react";
+import DropdownSelection from "./ui/DropdownSelection";
+import { toast } from "sonner";
+import { TextConstants } from "@/constants/TextConstants";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/services/supabase/client";
+import { handleSignOut } from "@/lib/helper/logoutUser";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+
+interface HandleSignOutProps {
+    supabaseClient: SupabaseClient;
+    router: AppRouterInstance;
+}
+
+export const _handleSignOut = async ({ supabaseClient, router }: HandleSignOutProps) => {
+    try {
+        const { error } = await supabaseClient.auth.signOut();
+
+        if (error) {
+            toast.error(`${TextConstants.ERROR_SIGNING_OUT}: ${error.message}`);
+        } else {
+            toast.success(TextConstants.TEXT__LOGOUT_SUCCESSFUL);
+
+            router.replace("/auth/sign-in");
+        }
+    } catch (err) {
+        toast.error(`${TextConstants.ERROR__UNEXPECTED_ERROR} ${err}`);
+    }
+};
 
 const LeftNavigationBar = () => {
+    const [showDropdown, setShowDropdown] = useState(false);
+
+    const supabaseClient = createClient();
+    const router = useRouter();
+
     const iconsToUse = [
         {
-            name: "",
+            name: "Dashboard",
             icon: <CircleGauge size={20} strokeWidth={1.5} />,
             link: "",
         },
         {
-            name: "",
+            name: "Files",
             icon: <FileSearch size={20} strokeWidth={1.5} />,
             link: "",
         },
         {
-            name: "",
+            name: "Database",
             icon: <Database size={20} strokeWidth={1.5} />,
             link: "",
         },
         {
-            name: "",
+            name: "SecuritY",
             icon: <ShieldOff size={20} strokeWidth={1.5} />,
             link: "",
         },
         {
-            name: "",
+            name: "Mail",
             icon: <Mail size={20} strokeWidth={1.5} />,
             link: "",
         },
         {
-            name: "",
+            name: "Tags",
             icon: <Tag size={20} strokeWidth={1.5} />,
             link: "",
         },
         {
-            name: "",
+            name: "Documents",
             icon: <FileText size={20} strokeWidth={1.5} />,
             link: "",
         },
@@ -51,43 +88,61 @@ const LeftNavigationBar = () => {
 
     const bottomIcons = [
         {
-            name: "",
+            name: "Search",
             icon: <Search size={20} strokeWidth={1.5} />,
             link: "",
         },
         {
-            name: "",
+            name: "User",
             icon: <CircleUserRound size={20} strokeWidth={1.5} />,
             link: "",
+            onClick: () => setShowDropdown((prev) => !prev),
+        },
+    ];
+
+    const dropDownItems = [
+        {
+            name: "Personal Profile",
+            onClick: () => {},
+        },
+        {
+            name: "Logout",
+            onClick: () => _handleSignOut({ supabaseClient, router }),
         },
     ];
 
     return (
         <nav className="flex w-14 flex-col items-center justify-between gap-2 border-r border-gray-200 bg-white px-2 py-2">
             <div>
-                {iconsToUse.map((i, index) => {
-                    return (
-                        <div
-                            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100"
-                            key={index}
-                        >
-                            {i.icon}
-                        </div>
-                    );
-                })}
+                {iconsToUse.map((i, index) => (
+                    <div
+                        className="group relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100"
+                        key={index}
+                    >
+                        {i.icon}
+                        <span className="absolute left-full ml-1 rounded border px-2 py-1 text-xs text-neutral-400 opacity-0 transition-opacity group-hover:opacity-100 bg-white cursor-default">
+                            {i.name}
+                        </span>
+                    </div>
+                ))}
             </div>
 
-            <div>
-                {bottomIcons.map((i, index) => {
-                    return (
-                        <div
-                            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100"
-                            key={index}
-                        >
-                            {i.icon}
-                        </div>
-                    );
-                })}
+            <div className="relative">
+                {bottomIcons.map((i, index) => (
+                    <div
+                        className="group relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100"
+                        key={index}
+                        onClick={i.onClick}
+                    >
+                        {i.icon}
+                    </div>
+                ))}
+
+                {showDropdown && (
+                    <div className="absolute">
+                        <DropdownSelection dropDownItems={dropDownItems} />
+                    </div>
+                )}
             </div>
         </nav>
     );

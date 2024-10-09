@@ -1,10 +1,8 @@
 "use client";
 
 import { PricingPlanCard } from "@/components/PricingPlan/PricingPlanCard";
-import SignOutButton from "@/components/SignOutButton";
 import TestimonialBackground from "@/components/TestimonialBackground";
 import { PricingPlanCardSkeleton } from "@/components/ui/PricingPlanCardSkeleton";
-import { TextConstants } from "@/constants/TextConstants";
 import { useSubscriptionFreeTrialStatus } from "@/hooks/useSubscriptionFreeTrialStatus";
 import { Product } from "@/interfaces/ProductInterfaces";
 import { fetchProducts } from "@/services/supabase/queries";
@@ -22,10 +20,6 @@ const ChoosePricingPlanPage = () => {
     return (
         <TestimonialBackground>
             <div className="flex flex-col gap-6 w-full">
-                <div className="self-start">
-                    <SignOutButton title={TextConstants.TEXT__LOGOUT} />
-                </div>
-
                 <div className="grid w-full grid-cols-1 gap-8 md:grid-cols-2">
                     {subscriptionFreeTrialStatus.isLoading
                         ? [1, 2].map((_, index) => <PricingPlanCardSkeleton key={index} />)
