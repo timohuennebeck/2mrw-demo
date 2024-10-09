@@ -19,18 +19,6 @@ const HeaderBar = () => {
                         <FileText strokeWidth={1.25} size={16} />
                         Documentation
                     </button>
-
-                    <div className="cursor-pointer rounded-md p-1 hover:bg-neutral-100">
-                        <Inbox className="text-neutral-600" strokeWidth={1.25} size={16} />
-                    </div>
-
-                    <div className="cursor-pointer rounded-md p-1 hover:bg-neutral-100">
-                        <CircleUserRound
-                            className="text-neutral-600"
-                            strokeWidth={1.25}
-                            size={16}
-                        />
-                    </div>
                 </div>
             </div>
         </header>
