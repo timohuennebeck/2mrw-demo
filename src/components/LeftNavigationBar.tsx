@@ -120,29 +120,18 @@ const LeftNavigationBar = () => {
                         key={index}
                     >
                         {i.icon}
-                        <span className="absolute left-full ml-1 rounded border px-2 py-1 text-xs text-neutral-400 opacity-0 transition-opacity group-hover:opacity-100 bg-white cursor-default">
+                        <span className="absolute left-full ml-1 cursor-default rounded border bg-white px-2 py-1 text-xs text-neutral-400 opacity-0 transition-opacity group-hover:opacity-100">
                             {i.name}
                         </span>
                     </div>
                 ))}
             </div>
 
-            <div className="relative">
-                {bottomIcons.map((i, index) => (
-                    <div
-                        className="group relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100"
-                        key={index}
-                        onClick={i.onClick}
-                    >
-                        {i.icon}
-                    </div>
-                ))}
-
-                {showDropdown && (
-                    <div className="absolute">
-                        <DropdownSelection dropDownItems={dropDownItems} />
-                    </div>
-                )}
+            <div>
+                <div className="group relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100">
+                    <Search size={20} strokeWidth={1.5} />
+                </div>
+                <DropdownSelection />
             </div>
         </nav>
     );
