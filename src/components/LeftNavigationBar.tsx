@@ -17,7 +17,6 @@ import { toast } from "sonner";
 import { TextConstants } from "@/constants/TextConstants";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/services/supabase/client";
-import { handleSignOut } from "@/lib/helper/logoutUser";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
@@ -43,8 +42,6 @@ export const _handleSignOut = async ({ supabaseClient, router }: HandleSignOutPr
 };
 
 const LeftNavigationBar = () => {
-    const [showDropdown, setShowDropdown] = useState(false);
-
     const supabaseClient = createClient();
     const router = useRouter();
 
@@ -86,20 +83,6 @@ const LeftNavigationBar = () => {
         },
     ];
 
-    const bottomIcons = [
-        {
-            name: "Search",
-            icon: <Search size={20} strokeWidth={1.5} />,
-            link: "",
-        },
-        {
-            name: "User",
-            icon: <CircleUserRound size={20} strokeWidth={1.5} />,
-            link: "",
-            onClick: () => setShowDropdown((prev) => !prev),
-        },
-    ];
-
     const dropDownItems = [
         {
             name: "Personal Profile",
@@ -131,7 +114,7 @@ const LeftNavigationBar = () => {
                 <div className="group relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100">
                     <Search size={20} strokeWidth={1.5} />
                 </div>
-                <DropdownSelection />
+                <DropdownSelection dropDownItems={dropDownItems} />
             </div>
         </nav>
     );
