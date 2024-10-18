@@ -18,9 +18,9 @@ const ChoosePricingPlanPage = () => {
     const subscriptionFreeTrialStatus = useSubscriptionFreeTrialStatus();
 
     return (
-        <TestimonialBackground>
-            <div className="flex flex-col gap-6 w-full">
-                <div className="grid w-full grid-cols-1 gap-8 md:grid-cols-2">
+        <div className="flex h-full min-h-screen w-full items-center justify-center">
+            <div className="container px-4 py-8">
+                <div className="mx-auto grid w-full max-w-4xl grid-cols-1 gap-8 md:grid-cols-2">
                     {subscriptionFreeTrialStatus.isLoading
                         ? [1, 2].map((_, index) => <PricingPlanCardSkeleton key={index} />)
                         : products?.products?.map((product: Product, index) => (
@@ -35,7 +35,7 @@ const ChoosePricingPlanPage = () => {
                           ))}
                 </div>
             </div>
-        </TestimonialBackground>
+        </div>
     );
 };
 
