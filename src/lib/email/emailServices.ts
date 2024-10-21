@@ -16,7 +16,7 @@ export const sendPostPurchaseEmail = async ({
         const plan = products?.find((plan: Product) => plan.stripe_price_id === stripePriceId);
         if (!plan) throw new Error("Plan not found");
 
-        const postUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/email-services/send-order-confirmation-email`;
+        const postUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/email-services/send-purchased-paid-plan-email`;
 
         // sends official order confirmation email for live products
         await axios.post(postUrl, {
