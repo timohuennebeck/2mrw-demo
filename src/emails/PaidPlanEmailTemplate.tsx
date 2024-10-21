@@ -16,7 +16,7 @@ import {
 } from "@react-email/components";
 import { TextConstants } from "@/constants/TextConstants";
 
-interface OrderConfirmationEmailTemplateProps {
+interface PaidPlanEmailTemplateProps {
     userFirstName: string;
     purchasedPackage: string;
     companyTitle: string;
@@ -27,7 +27,7 @@ interface OrderConfirmationEmailTemplateProps {
     twitterFounderTag: string;
 }
 
-export const OrderConfirmationEmailTemplate = ({
+export const PaidPlanEmailTemplate = ({
     userFirstName,
     purchasedPackage,
     companyTitle,
@@ -36,7 +36,7 @@ export const OrderConfirmationEmailTemplate = ({
     twitterCompanyTag,
     twitterFounderUrl,
     twitterFounderTag,
-}: OrderConfirmationEmailTemplateProps) => {
+}: PaidPlanEmailTemplateProps) => {
     const previewText = `Thank you for your order of ${purchasedPackage}!`;
 
     return (
@@ -107,7 +107,7 @@ export const OrderConfirmationEmailTemplate = ({
 };
 
 // enable this during development to preview what the email will look like
-OrderConfirmationEmailTemplate.PreviewProps = {
+PaidPlanEmailTemplate.PreviewProps = {
     userFirstName: "Sarah",
     purchasedPackage: "Premium Plan (20% off)",
     companyTitle: TextConstants.EMAIL__COMPANY_TITLE,
@@ -116,6 +116,6 @@ OrderConfirmationEmailTemplate.PreviewProps = {
     twitterCompanyTag: TextConstants.EMAIL__TWITTER_COMPANY_TAG,
     twitterFounderUrl: TextConstants.EMAIL__TWITTER_FOUNDER_URL,
     twitterFounderTag: TextConstants.TEXT__TWITTER_FOUNDER_TAG,
-} as OrderConfirmationEmailTemplateProps;
+} as PaidPlanEmailTemplateProps;
 
-export default OrderConfirmationEmailTemplate;
+export default PaidPlanEmailTemplate;

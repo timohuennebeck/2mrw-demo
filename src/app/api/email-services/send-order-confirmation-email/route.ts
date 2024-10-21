@@ -1,5 +1,5 @@
 import { TextConstants } from "@/constants/TextConstants";
-import OrderConfirmationEmailTemplate from "@/emails/OrderConfirmationEmailTemplate";
+import PaidPlanEmailTemplate from "@/emails/PaidPlanEmailTemplate";
 import { NextRequest as request, NextResponse as response } from "next/server";
 import { Resend } from "resend";
 
@@ -17,7 +17,7 @@ export const POST = async (req: request) => {
             from: TextConstants.EMAIL__SEND_FROM,
             to: userEmail,
             subject: `Order Confirmation - ${purchasedPackage}`,
-            react: OrderConfirmationEmailTemplate({
+            react: PaidPlanEmailTemplate({
                 userFirstName,
                 purchasedPackage,
                 gettingStartedLoomUrl: TextConstants.EMAIL__LOOM_GETTING_STARTED_URL,
