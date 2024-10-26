@@ -25,8 +25,8 @@ export const PlanHeader = ({
         if (isOnFreeTrial && isCurrentPlan && freeTrialInfo?.end_date) {
             return (
                 <div className="mb-4 whitespace-nowrap rounded-md bg-black px-2.5 py-0.5 text-center text-sm text-white">
-                    `${TextConstants.TEXT__FREE_TRIAL_END_DATE}:{" "}
-                    {formatDateToHumanFormat(freeTrialInfo.end_date)}`
+                    {TextConstants.TEXT__FREE_TRIAL_END_DATE}:{" "}
+                    {formatDateToHumanFormat(freeTrialInfo.end_date)}
                 </div>
             );
         }
