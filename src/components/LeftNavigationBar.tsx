@@ -1,14 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-    Users,
-    CreditCard,
-    FileText,
-    MapPinHouse,
-    SquareArrowOutUpRight,
-    Settings2,
-} from "lucide-react";
+import { CreditCard, FileText, MapPinHouse, SquareArrowOutUpRight, Settings2 } from "lucide-react";
 import { toast } from "sonner";
 import { TextConstants } from "@/constants/TextConstants";
 import { useRouter, usePathname } from "next/navigation";
@@ -49,11 +42,6 @@ const LeftNavigationBar = () => {
         {
             category: "ADMINISTRATION",
             items: [
-                {
-                    name: "User management",
-                    icon: <Users size={20} strokeWidth={2} />,
-                    link: "/user-management",
-                },
                 {
                     name: "Billing",
                     icon: <CreditCard size={20} strokeWidth={2} />,
