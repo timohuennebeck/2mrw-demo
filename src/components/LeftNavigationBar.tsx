@@ -1,24 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import {
-    CircleGauge,
-    FileSearch,
-    Database,
-    ShieldOff,
-    Mail,
-    Tag,
+    Users,
+    CreditCard,
     FileText,
-    Search,
-    CircleUserRound,
+    MapPinHouse,
+    SquareArrowOutUpRight,
+    Settings2,
 } from "lucide-react";
-import DropdownSelection from "./ui/DropdownSelection";
 import { toast } from "sonner";
 import { TextConstants } from "@/constants/TextConstants";
-import { useRouter } from "next/navigation";
-import { createClient } from "@/services/supabase/client";
+import { useRouter, usePathname } from "next/navigation";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import Image from "next/image";
 
 interface HandleSignOutProps {
     supabaseClient: SupabaseClient;
@@ -42,79 +38,123 @@ export const _handleSignOut = async ({ supabaseClient, router }: HandleSignOutPr
 };
 
 const LeftNavigationBar = () => {
-    const supabaseClient = createClient();
     const router = useRouter();
+    const pathname = usePathname();
 
-    const iconsToUse = [
+    const navigationItems = [
         {
-            name: "Dashboard",
-            icon: <CircleGauge size={20} strokeWidth={1.5} />,
-            link: "",
+            category: "MENU",
+            items: [{ name: "Home", icon: <MapPinHouse size={20} strokeWidth={2} />, link: "/" }],
         },
         {
-            name: "Files",
-            icon: <FileSearch size={20} strokeWidth={1.5} />,
-            link: "",
+            category: "ADMINISTRATION",
+            items: [
+                {
+                    name: "User management",
+                    icon: <Users size={20} strokeWidth={2} />,
+                    link: "/user-management",
+                },
+                {
+                    name: "Billing",
+                    icon: <CreditCard size={20} strokeWidth={2} />,
+                    link: "/billing",
+                },
+            ],
         },
         {
-            name: "Database",
-            icon: <Database size={20} strokeWidth={1.5} />,
-            link: "",
-        },
-        {
-            name: "SecuritY",
-            icon: <ShieldOff size={20} strokeWidth={1.5} />,
-            link: "",
-        },
-        {
-            name: "Mail",
-            icon: <Mail size={20} strokeWidth={1.5} />,
-            link: "",
-        },
-        {
-            name: "Tags",
-            icon: <Tag size={20} strokeWidth={1.5} />,
-            link: "",
-        },
-        {
-            name: "Documents",
-            icon: <FileText size={20} strokeWidth={1.5} />,
-            link: "",
-        },
-    ];
-
-    const dropDownItems = [
-        {
-            name: "Personal Profile",
-            onClick: () => {},
-        },
-        {
-            name: "Logout",
-            onClick: () => _handleSignOut({ supabaseClient, router }),
+            category: "SETTINGS",
+            items: [
+                {
+                    name: "Settings",
+                    icon: <Settings2 size={20} strokeWidth={2} />,
+                    link: "/settings",
+                },
+                {
+                    name: "Documentation",
+                    icon: <FileText size={20} strokeWidth={2} />,
+                    link: "/documentation",
+                    isExternal: true,
+                },
+            ],
         },
     ];
 
     return (
-        <nav className="flex w-14 flex-col items-center justify-between gap-2 border-r border-gray-200 bg-white px-2 py-2">
-            <div>
-                {iconsToUse.map((i, index) => (
-                    <div
-                        className="group relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100"
-                        key={index}
-                    >
-                        {i.icon}
-                        <span className="absolute left-full ml-1 cursor-default rounded border bg-white px-2 py-1 text-xs text-neutral-400 opacity-0 transition-opacity group-hover:opacity-100">
-                            {i.name}
-                        </span>
+        <nav className="flex h-full flex-col items-start justify-start gap-2 overflow-y-auto bg-neutral-50 px-4 py-2">
+            {/* Logo */}
+            <div className="mb-4 flex w-full items-center py-2">
+                <div className="mr-2">
+                    <Image
+                        src="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
+                        alt="Untitled UI"
+                        width={24}
+                        height={24}
+                    />
+                </div>
+                <span className="text-sm font-semibold">Untitled UI</span>
+                <span className="ml-auto text-xs text-neutral-400">v4.0</span>
+            </div>
+
+            {/* Navigation Items */}
+            <div className="w-full">
+                {navigationItems.map((section, sectionIndex) => (
+                    <div key={sectionIndex} className="w-full">
+                        {section.category && (
+                            <h3 className="mb-2 mt-4 text-xs font-semibold text-neutral-400">
+                                {section.category}
+                            </h3>
+                        )}
+                        {section.items.map((item, itemIndex) => (
+                            <div
+                                key={itemIndex}
+                                className={`group flex h-10 cursor-pointer items-center justify-between rounded-md px-3 ${
+                                    pathname === item.link
+                                        ? "bg-neutral-100 text-neutral-900"
+                                        : "text-neutral-500 hover:bg-neutral-100"
+                                }`}
+                                onClick={() =>
+                                    item.isExternal
+                                        ? window.open(item.link, "_blank")
+                                        : router.push(item.link)
+                                }
+                            >
+                                <div className="flex items-center">
+                                    <div className="mr-3">{item.icon}</div>
+                                    <span className="text-sm font-medium">{item.name}</span>
+                                </div>
+                                {item.isExternal && (
+                                    <SquareArrowOutUpRight
+                                        size={16}
+                                        strokeWidth={2}
+                                        className="ml-2"
+                                    />
+                                )}
+                            </div>
+                        ))}
                     </div>
                 ))}
             </div>
 
-            <div>
-                <div className="group relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-md text-neutral-500 hover:bg-neutral-100">
-                    <Search size={20} strokeWidth={1.5} />
+            {/* User Profile */}
+            <div
+                className="mt-auto w-full cursor-pointer pt-4"
+                onClick={() => router.push("/user-profile")}
+            >
+                <div className="flex items-center rounded-md px-3 py-2 hover:bg-neutral-100">
+                    <div className="relative h-8 w-8 rounded-full border-2 border-neutral-200">
+                        <Image
+                            src="https://framerusercontent.com/images/bFuS8dh0c2VYIBRtknYJJUJnq8.jpg?scale-down-to=1024"
+                            alt="User"
+                            layout="fill"
+                            objectFit="cover"
+                            className="rounded-full"
+                        />
+                    </div>
+                    <div className="ml-3">
+                        <p className="text-sm font-medium text-neutral-900">Timo Huennebeck</p>
+                        <p className="text-xs text-neutral-500">m@example.com</p>
+                    </div>
                 </div>
-                <DropdownSelection dropDownItems={dropDownItems} />
             </div>
         </nav>
     );
