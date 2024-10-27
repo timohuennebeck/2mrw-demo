@@ -102,7 +102,10 @@ const SettingsPage = () => {
                 </section>
 
                 <section className="mb-8">
-                    <h3 className="mb-4 text-lg font-medium">Preferences</h3>
+                    <h3 className="mb-2 text-lg font-medium">Preferences</h3>
+                    <p className="mb-6 text-sm text-gray-500">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    </p>
                     <div className="space-y-4">
                         <div className="flex items-center justify-between">
                             <label htmlFor="theme" className="text-sm font-medium text-gray-700">
@@ -136,7 +139,15 @@ const SettingsPage = () => {
                     </div>
                 </section>
 
-                <div className="mt-6">
+                <div className="mt-6 flex space-x-4">
+                    <button
+                        onClick={() => {
+                            /* Add cancel logic here */
+                        }}
+                        className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                    >
+                        Cancel
+                    </button>
                     <button
                         onClick={handleSaveSettings}
                         className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
