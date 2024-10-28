@@ -13,7 +13,7 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
     // enabling 'suppressHydrationWarning' disables this in the console
 
     return (
-        <html className="h-full bg-white" lang="en" suppressHydrationWarning={true}>
+        <html className="h-full" lang="en" suppressHydrationWarning={true}>
             <body className={`h-full`}>
                 <Providers>{children}</Providers>
                 <Toaster position="bottom-right" />

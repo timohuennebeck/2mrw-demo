@@ -6,7 +6,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return (
         <div className="flex h-screen overflow-hidden">
             <LeftNavigationBar />
-            <div className="h-full flex-1 bg-neutral-50 p-2 pl-0">
+            <div className="h-full flex-1 p-2 pl-0">
                 <main className="h-full overflow-scroll scrollbar-hide rounded-lg border border-neutral-200 bg-white p-6">
                     <div className="mb-4 flex items-center space-x-2 text-sm text-gray-500">
                         <span className="font-medium text-neutral-500">Home</span>
