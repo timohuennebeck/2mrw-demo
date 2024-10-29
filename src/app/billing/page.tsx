@@ -1,11 +1,57 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DashboardLayout from "../DashboardLayout";
+import {
+    getStripeCustomerCreditCardDetails,
+    getStripeCustomerId,
+    handleStripePortalSession,
+} from "@/lib/stripe/stripeUtils";
+import { createClient } from "@/services/supabase/client";
+import { User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
+
+interface CreditCardDetails {
+    brand: string;
+    last4Digits: string;
+    expirationMonth: number;
+    expirationYear: number;
+}
 
 const BillingPage = () => {
     const [selectedPlan, setSelectedPlan] = useState("");
     const [selectedBillingCycle, setSelectedBillingCycle] = useState("monthly");
+    const [user, setUser] = useState<User | null>(null);
+    const [stripeCustomerId, setStripeCustomerId] = useState<string | null>(null);
+    const [creditCardDetails, setCreditCardDetails] = useState<CreditCardDetails | null>(null);
+
+    const router = useRouter();
+
+    useEffect(() => {
+        const supabase = createClient();
+
+        const getUser = async () => {
+            const {
+                data: { user },
+            } = await supabase.auth.getUser();
+            setUser(user);
+        };
+
+        getUser();
+    }, []);
+
+    useEffect(() => {
+        const fetchStripeCustomerCreditCardDetails = async () => {
+            if (!user?.email) return;
+
+            const customerId = await getStripeCustomerId(user.email);
+            setStripeCustomerId(customerId);
+            const creditCardDetails = await getStripeCustomerCreditCardDetails(customerId);
+            setCreditCardDetails(creditCardDetails);
+        };
+
+        fetchStripeCustomerCreditCardDetails();
+    }, [user]);
 
     const handleSubscriptionChange = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -32,12 +78,12 @@ const BillingPage = () => {
                             <p className="text-sm font-medium text-gray-700">
                                 Current Billing Method
                             </p>
-                            <p className="text-sm text-gray-500">Mastercard ending in 4242</p>
+                            <p className="text-sm text-gray-500">{`${creditCardDetails?.brand.toUpperCase() ?? "Unknown"} ending in ${creditCardDetails?.last4Digits ?? "Unknown"}`}</p>
                         </div>
                         <button
-                            onClick={() => {
-                                // Implement logic to redirect to Stripe Customer Portal
-                                console.log("Redirecting to Stripe Customer Portal");
+                            onClick={async () => {
+                                const url = await handleStripePortalSession(stripeCustomerId ?? "");
+                                window.open(url ?? "", "_blank");
                             }}
                             className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
                         >
