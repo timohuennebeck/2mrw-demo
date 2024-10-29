@@ -59,37 +59,53 @@ export const handleCheckoutSessionCompleted = async ({
 }: {
     session: Stripe.Checkout.Session;
 }) => {
+    const userId = session.metadata?.user_id;
+    if (!userId) throw new Error("No user ID in session metadata");
+
     const supabase = createClient();
 
-    const userEmail = session?.customer_details?.email;
     const stripePriceId = session.line_items?.data[0].price?.id;
 
-    if (userEmail && stripePriceId) {
-        const { user } = await fetchUser({ userEmail });
-        if (!user) throw new Error("User not found");
-
-        const { status } = await checkFreeTrialStatus({ userId: user.user_id });
-
+    try {
+        // 1. Check and end any on-going free trials
+        const { status } = await checkFreeTrialStatus({ userId });
         if (status) {
-            await endOnGoingUserFreeTrial({ status: status, userId: user.user_id });
+            await endOnGoingUserFreeTrial({ status, userId });
         }
 
-        const { subscriptionTier } = await fetchSubscriptionTier({ stripePriceId });
+        // 2. Fetch the subscription tier, so we can update the user subscription with it
+        const { subscriptionTier } = await fetchSubscriptionTier({
+            stripePriceId: stripePriceId ?? "",
+        });
+
         if (!subscriptionTier) throw new Error("SubscriptionTier not found");
 
-        await upsertUserSubscription({ stripePriceId, subscriptionTier, userId: user.user_id });
+        // 3. Update the user subscription or create a new table and then update it
+        await upsertUserSubscription({
+            stripePriceId: stripePriceId ?? "",
+            subscriptionTier,
+            userId,
+        });
 
+        // 4. Update the user metadata
         await supabase.auth.updateUser({
             data: {
                 subscription_status: SubscriptionStatus.ACTIVE,
+                subscription_updated_at: new Date().toISOString(),
                 free_trial_status: FreeTrialStatus.EXPIRED,
                 free_trial_end_date: moment().toISOString(),
             },
         });
 
+        // 5. Send confirmation email
         await sendPostPurchaseEmail({
             session,
             stripePriceId: stripePriceId ?? "",
         });
+
+        return { success: true };
+    } catch (error) {
+        console.error("Error in handleCheckoutSessionCompleted:", error);
+        throw error;
     }
 };

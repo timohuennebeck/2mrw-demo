@@ -14,13 +14,21 @@ export const POST = async (req: request) => {
             return response.json({ error: "There was no signature provided" }, { status: 400 });
         }
 
+        // construct the event and check if the webhook is valid
         const event = await verifyStripeWebhook({ body, signature });
 
-        if (event.type === StripeWebhookEvents.CHECKOUT_SESSION_COMPLETED) {
-            const session = await retrieveCheckoutSession({ sessionId: event.data.object.id });
-            await handleCheckoutSessionCompleted({ session });
-        } else {
-            console.log(`Unhandled event: ${event.type}`);
+        switch (event.type) {
+            case StripeWebhookEvents.CHECKOUT_SESSION_COMPLETED:
+                const session = await retrieveCheckoutSession({ sessionId: event.data.object.id });
+                await handleCheckoutSessionCompleted({ session });
+                break;
+
+            case StripeWebhookEvents.CUSTOMER_SUBSCRIPTION_UPDATED:
+                break;
+
+            case StripeWebhookEvents.CUSTOMER_SUBSCRIPTION_DELETED:
+            default:
+                break;
         }
 
         return response.json({ received: true }, { status: 200 });
