@@ -1,9 +1,30 @@
 "use server";
 
 import { StripeWebhookEvents } from "@/enums/StripeWebhookEvents";
-import { retrieveCheckoutSession, verifyStripeWebhook } from "@/lib/stripe/stripeUtils";
+import { VerifyStripeWebhookParams } from "@/interfaces/StripeInterfaces";
 import { handleCheckoutSessionCompleted } from "@/lib/subscriptions/subscriptionManagement";
 import { NextRequest as request, NextResponse as response } from "next/server";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY ?? "");
+
+const _verifyStripeWebhook = async ({ body, signature }: VerifyStripeWebhookParams) => {
+    try {
+        return stripe.webhooks.constructEvent(
+            body,
+            signature,
+            process.env.NEXT_PUBLIC_STRIPE_WEBHOOK_SECRET!,
+        );
+    } catch (err: unknown) {
+        throw new Error("Invalid signature");
+    }
+};
+
+const _retrieveCheckoutSession = async ({ sessionId }: { sessionId: string }) => {
+    return await stripe.checkout.sessions.retrieve(sessionId, {
+        expand: ["line_items"],
+    });
+};
 
 export const POST = async (req: request) => {
     try {
@@ -15,11 +36,11 @@ export const POST = async (req: request) => {
         }
 
         // construct the event and check if the webhook is valid
-        const event = await verifyStripeWebhook({ body, signature });
+        const event = await _verifyStripeWebhook({ body, signature });
 
         switch (event.type) {
             case StripeWebhookEvents.CHECKOUT_SESSION_COMPLETED:
-                const session = await retrieveCheckoutSession({ sessionId: event.data.object.id });
+                const session = await _retrieveCheckoutSession({ sessionId: event.data.object.id });
                 await handleCheckoutSessionCompleted({ session });
                 break;
 

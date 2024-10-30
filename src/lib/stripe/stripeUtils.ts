@@ -1,32 +1,10 @@
 "use server";
 
-import {
-    InitiateStripeCheckoutProcessParams,
-    VerifyStripeWebhookParams,
-} from "@/interfaces/StripeInterfaces";
+import { InitiateStripeCheckoutProcessParams } from "@/interfaces/StripeInterfaces";
 import axios from "axios";
-import { redirect } from "next/navigation";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY ?? "");
-
-export const verifyStripeWebhook = async ({ body, signature }: VerifyStripeWebhookParams) => {
-    try {
-        return stripe.webhooks.constructEvent(
-            body,
-            signature,
-            process.env.NEXT_PUBLIC_STRIPE_WEBHOOK_SECRET!,
-        );
-    } catch (err: unknown) {
-        throw new Error("Invalid signature");
-    }
-};
-
-export const retrieveCheckoutSession = async ({ sessionId }: { sessionId: string }) => {
-    return await stripe.checkout.sessions.retrieve(sessionId, {
-        expand: ["line_items"],
-    });
-};
 
 export const initiateStripeCheckoutProcess = async ({
     userId,

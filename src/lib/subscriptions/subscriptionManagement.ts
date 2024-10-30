@@ -9,27 +9,14 @@ import {
     checkFreeTrialStatus,
     checkUserRowExists,
     fetchSubscriptionTier,
-    fetchUser,
 } from "@/services/supabase/queries";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import Stripe from "stripe";
 import { sendPostPurchaseEmail } from "../email/emailServices";
 import { UpsertUserSubscriptionParams } from "@/interfaces/SubscriptionInterfaces";
-import { EndOnGoingUserFreeTrialParams } from "@/interfaces/FreeTrial";
 import { createClient } from "@/services/supabase/server";
 import moment from "moment";
-
-export const endOnGoingUserFreeTrial = async ({
-    status,
-    userId,
-}: EndOnGoingUserFreeTrialParams) => {
-    if (status === FreeTrialStatus.ACTIVE) {
-        const { error } = await endUserFreeTrial({ userId });
-
-        if (error) throw new Error("Failed to end free trial");
-    }
-};
 
 export async function upsertUserSubscription({
     userId,
@@ -69,8 +56,10 @@ export const handleCheckoutSessionCompleted = async ({
     try {
         // 1. Check and end any on-going free trials
         const { status } = await checkFreeTrialStatus({ userId });
-        if (status) {
-            await endOnGoingUserFreeTrial({ status, userId });
+
+        if (status && status === FreeTrialStatus.ACTIVE) {
+            const { error } = await endUserFreeTrial({ userId });
+            if (error) throw new Error("Failed to end free trial");
         }
 
         // 2. Fetch the subscription tier, so we can update the user subscription with it

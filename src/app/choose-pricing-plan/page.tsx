@@ -1,7 +1,6 @@
 "use client";
 
 import { PricingPlanCard } from "@/components/PricingPlan/PricingPlanCard";
-import TestimonialBackground from "@/components/TestimonialBackground";
 import { PricingPlanCardSkeleton } from "@/components/ui/PricingPlanCardSkeleton";
 import { useSubscriptionFreeTrialStatus } from "@/hooks/useSubscriptionFreeTrialStatus";
 import { Product } from "@/interfaces/ProductInterfaces";
