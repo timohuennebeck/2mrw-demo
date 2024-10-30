@@ -124,7 +124,7 @@ export const endUserFreeTrial = async ({ userId }: { userId: string }) => {
         const { error } = await supabase
             .from("free_trials")
             .update({
-                end_date: moment().toISOString(),
+                updated_at: moment().toISOString(),
                 status: FreeTrialStatus.EXPIRED,
             })
             .eq("user_id", userId);
@@ -136,6 +136,29 @@ export const endUserFreeTrial = async ({ userId }: { userId: string }) => {
         return {
             success: null,
             error: handleSupabaseError({ error, fnTitle: "endUserFreeTrial" }),
+        };
+    }
+};
+
+export const endUserSubscription = async ({ userId }: { userId: string }) => {
+    const supabase = createClient();
+
+    try {
+        const { error } = await supabase
+            .from("purchased_subscriptions")
+            .update({
+                updated_at: moment().toISOString(),
+                status: SubscriptionStatus.EXPIRED,
+            })
+            .eq("user_id", userId);
+
+        if (error) throw error;
+
+        return { success: true, error: null };
+    } catch (error) {
+        return {
+            success: null,
+            error: handleSupabaseError({ error, fnTitle: "endUserSubscription" }),
         };
     }
 };

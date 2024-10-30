@@ -1,0 +1,12 @@
+{
+    "crons": [
+        {
+            "path": "/api/cron/update-free-trial",
+            "schedule": "0 0 * * *"
+        },
+        {
+            "path": "/api/cron/update-subscriptions",
+            "schedule": "0 0 * * *"
+        }
+    ]
+}

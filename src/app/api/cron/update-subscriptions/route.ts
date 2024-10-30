@@ -1,0 +1,44 @@
+import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
+import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
+import { endUserFreeTrial, endUserSubscription } from "@/services/supabase/admin";
+import { createClient } from "@/services/supabase/server";
+import moment from "moment";
+import { NextResponse as response } from "next/server";
+
+export const GET = async () => {
+    const supabase = createClient();
+
+    try {
+        const { data: activeSubscriptions, error: fetchError } = await supabase
+            .from("purchased_subscriptions")
+            .select("*")
+            .eq("status", SubscriptionStatus.ACTIVE);
+
+        if (fetchError) throw fetchError;
+
+        const updatePromise = activeSubscriptions.map(
+            async (subscription: PurchasedSubscription) => {
+                const now = moment();
+                const endDate = moment(subscription.end_date);
+                if (endDate.isBefore(now)) {
+                    const { error } = await endUserSubscription({ userId: subscription.user_id });
+                    if (error) throw error;
+
+                    await supabase.auth.updateUser({
+                        data: {
+                            subscription_status: SubscriptionStatus.EXPIRED,
+                        },
+                    });
+                }
+            },
+        );
+
+        if (updatePromise) {
+            await Promise.all(updatePromise);
+        }
+
+        return response.json({ success: true });
+    } catch (error) {
+        return response.json({ success: false, error: error });
+    }
+};

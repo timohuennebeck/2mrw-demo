@@ -11,7 +11,8 @@ export interface PurchasedSubscription {
     id: number;
     created_at: string;
     updated_at: string;
-    user_id: number;
+    end_date: string;
+    user_id: string;
     stripe_price_id: string;
     status: SubscriptionStatus;
     subscription_tier: SubscriptionTier;
