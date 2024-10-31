@@ -5,6 +5,8 @@ import { createClient } from "@/services/supabase/server";
 import moment from "moment";
 import { NextResponse as response } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export const GET = async () => {
     const supabase = createClient();
 
