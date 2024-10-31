@@ -129,6 +129,12 @@ export const endUserFreeTrial = async ({ userId }: { userId: string }) => {
             })
             .eq("user_id", userId);
 
+        await supabase.auth.updateUser({
+            data: {
+                free_trial_status: FreeTrialStatus.EXPIRED,
+            },
+        });
+
         if (error) throw error;
 
         return { success: true, error: null };

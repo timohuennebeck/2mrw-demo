@@ -203,7 +203,7 @@ export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
         }
 
         // if the row exists, proceed with fetching the data
-        const { data, error } = await supabase
+        const { data: freeTrial, error } = await supabase
             .from("free_trials")
             .select("*")
             .eq("user_id", userId)
@@ -211,16 +211,7 @@ export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
 
         if (error) throw error;
 
-        const freeTrial = data as FreeTrial;
-        const now = moment();
-        const startDate = moment(freeTrial.start_date);
-        const endDate = moment(freeTrial.end_date);
-
-        if (now >= startDate && now <= endDate) {
-            return { status: FreeTrialStatus.ACTIVE, freeTrial, error: null };
-        } else {
-            return { status: FreeTrialStatus.EXPIRED, freeTrial, error: null };
-        }
+        return { status: freeTrial.status ?? FreeTrialStatus.EXPIRED };
     } catch (error) {
         return {
             status: null,
