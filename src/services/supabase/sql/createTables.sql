@@ -46,6 +46,7 @@ CREATE TABLE
         stripe_price_id TEXT REFERENCES public.products (stripe_price_id) ON DELETE CASCADE NOT NULL,
         user_id UNIQUE UUID REFERENCES public.users (user_id) ON DELETE CASCADE NOT NULL,
         status SubscriptionStatusEnums NOT NULL,
+        end_date TIMESTAMPTZ,
         subscription_tier SubscriptionTierEnums NOT NULL,
         payment_type PaymentEnums NOT NULL,
         created_at TIMESTAMPTZ NOT NULL,

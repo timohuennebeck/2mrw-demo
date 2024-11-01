@@ -1,23 +1,75 @@
 "use server";
 
+import { getCurrentPaymentSettings } from "@/config/paymentConfig";
+import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
+import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
+import { UpsertUserSubscriptionParams } from "@/interfaces/SubscriptionInterfaces";
 import {
-    endUserFreeTrial,
-    updateUserPurchasedSubscription,
     createPurchasedSubscriptionTable,
+    endUserFreeTrial,
+    endUserSubscription,
+    updateUserPurchasedSubscription,
 } from "@/services/supabase/admin";
 import {
     checkFreeTrialStatus,
     checkUserRowExists,
     fetchSubscriptionTier,
 } from "@/services/supabase/queries";
-import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
-import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
-import Stripe from "stripe";
-import { sendPostPurchaseEmail } from "../email/emailServices";
-import { UpsertUserSubscriptionParams } from "@/interfaces/SubscriptionInterfaces";
 import { createClient } from "@/services/supabase/server";
 import moment from "moment";
-import { getCurrentPaymentSettings } from "@/config/paymentConfig";
+import Stripe from "stripe";
+
+export const handleSubscriptionUpdated = async (subscription: Stripe.Subscription) => {
+    const userId = subscription.metadata.user_id;
+    if (!userId) throw new Error("No user ID in subscription metadata");
+
+    const supabase = createClient();
+    const stripePriceId = subscription.items.data[0].price.id;
+
+    try {
+        const { subscriptionTier } = await fetchSubscriptionTier(stripePriceId);
+        if (!subscriptionTier) throw new Error("SubscriptionTier not found");
+
+        // update subscription end date based on current period end
+        await supabase
+            .from("purchased_subscriptions")
+            .update({
+                end_date: moment.unix(subscription.current_period_end).toISOString(),
+                status: SubscriptionStatus.ACTIVE,
+                updated_at: moment().toISOString(),
+            })
+            .eq("user_id", userId);
+
+        await supabase.auth.updateUser({
+            data: {
+                subscription_status: SubscriptionStatus.ACTIVE,
+                subscription_updated_at: moment().toISOString(),
+                free_trial_status: FreeTrialStatus.EXPIRED,
+                free_trial_end_date: moment().toISOString(),
+            },
+        });
+
+        return { success: true };
+    } catch (error) {
+        console.error("Error in handleSubscriptionUpdated:", error);
+        throw error;
+    }
+};
+
+export const handleSubscriptionDeleted = async (subscription: Stripe.Subscription) => {
+    const userId = subscription.metadata.user_id;
+    if (!userId) throw new Error("No user ID in subscription metadata");
+
+    try {
+        const { error } = await endUserSubscription(userId);
+        if (error) throw error;
+
+        return { success: true };
+    } catch (error) {
+        console.error("Error in handleSubscriptionDeleted:", error);
+        throw error;
+    }
+};
 
 const upsertUserSubscription = async ({
     userId,
@@ -51,7 +103,7 @@ const endOnGoingFreeTrial = async (userId: string) => {
     }
 };
 
-export const handleOneTimePayment = async ({ session }: { session: Stripe.Checkout.Session }) => {
+export const handleOneTimePayment = async (session: Stripe.Checkout.Session) => {
     const userId = session.metadata?.user_id;
     if (!userId) throw new Error("No user ID in session metadata");
 

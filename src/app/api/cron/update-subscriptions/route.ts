@@ -23,7 +23,7 @@ export const GET = async () => {
                 const now = moment();
                 const endDate = moment(subscription.end_date);
                 if (endDate.isBefore(now)) {
-                    const { error } = await endUserSubscription({ userId: subscription.user_id });
+                    const { error } = await endUserSubscription(subscription.user_id);
                     if (error) throw error;
 
                     await supabase.auth.updateUser({

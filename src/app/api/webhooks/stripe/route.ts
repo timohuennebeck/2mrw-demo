@@ -3,7 +3,11 @@
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { StripeWebhookEvents } from "@/enums/StripeWebhookEvents";
 import { VerifyStripeWebhookParams } from "@/interfaces/StripeInterfaces";
-import { handleOneTimePayment } from "@/lib/subscriptions/subscriptionManagement";
+import {
+    handleOneTimePayment,
+    handleSubscriptionDeleted,
+    handleSubscriptionUpdated,
+} from "@/lib/subscriptions/subscriptionManagement";
 import { NextRequest as request, NextResponse as response } from "next/server";
 import Stripe from "stripe";
 
@@ -43,17 +47,16 @@ export const POST = async (req: request) => {
             case StripeWebhookEvents.CHECKOUT_SESSION_COMPLETED:
                 const session = await _retrieveCheckoutSession({ sessionId: event.data.object.id });
 
-                if (isOneTimePaymentEnabled()) {
-                    await handleOneTimePayment({ session });
-                } else {
-                    // TODO: handle subscription payment
-                }
+                await handleOneTimePayment(session);
                 break;
 
             case StripeWebhookEvents.CUSTOMER_SUBSCRIPTION_UPDATED:
+                await handleSubscriptionUpdated(event.data.object);
                 break;
 
             case StripeWebhookEvents.CUSTOMER_SUBSCRIPTION_DELETED:
+                await handleSubscriptionDeleted(event.data.object);
+                break;
             default:
                 break;
         }

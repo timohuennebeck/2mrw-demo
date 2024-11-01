@@ -149,7 +149,7 @@ export const endUserFreeTrial = async ({ userId }: { userId: string }) => {
     }
 };
 
-export const endUserSubscription = async ({ userId }: { userId: string }) => {
+export const endUserSubscription = async (userId: string) => {
     const supabase = createClient();
 
     try {
@@ -160,6 +160,12 @@ export const endUserSubscription = async ({ userId }: { userId: string }) => {
                 status: SubscriptionStatus.EXPIRED,
             })
             .eq("user_id", userId);
+
+        await supabase.auth.updateUser({
+            data: {
+                subscription_status: SubscriptionStatus.EXPIRED,
+            },
+        });
 
         if (error) throw error;
 
