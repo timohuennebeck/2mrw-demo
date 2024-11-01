@@ -73,7 +73,7 @@ const ChoosePricingPlanPage = () => {
                                   freeTrialData={freeTrialData}
                                   subscriptionStatus={subscriptionStatus}
                                   subscriptionData={subscriptionData}
-                                  supabaseUser={user?.user ?? null}
+                                  supabaseUser={user ?? null}
                                   isLoading={isLoading}
                                   billingCycle={billingCycle}
                                   setBillingCycle={setBillingCycle}

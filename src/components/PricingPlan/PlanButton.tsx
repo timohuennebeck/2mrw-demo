@@ -14,7 +14,6 @@ import moment from "moment";
 import { TextConstants } from "@/constants/TextConstants";
 import { getCurrentPaymentSettings } from "@/config/paymentConfig";
 import { emailConfig } from "@/config/emailConfig";
-import { QueryClient } from "@tanstack/react-query";
 import { queryClient } from "@/lib/qClient/qClient";
 
 interface PlanButton {

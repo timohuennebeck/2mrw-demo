@@ -10,7 +10,11 @@ import {
     endUserFreeTrial,
     updateUserSubscription,
 } from "@/services/supabase/admin";
-import { checkUserRowExists, fetchSubscriptionTier } from "@/services/supabase/queries";
+import {
+    checkUserRowExists,
+    fetchSubscriptionTier,
+    fetchUserFreeTrial,
+} from "@/services/supabase/queries";
 import { createClient } from "@/services/supabase/server";
 import moment from "moment";
 import Stripe from "stripe";
@@ -91,9 +95,9 @@ const upsertUserSubscription = async ({
 };
 
 const endOnGoingFreeTrial = async (userId: string) => {
-    const { status } = await checkFreeTrialStatus({ userId });
+    const { freeTrial } = await fetchUserFreeTrial(userId);
 
-    if (status === FreeTrialStatus.ACTIVE) {
+    if (freeTrial?.status === FreeTrialStatus.ACTIVE) {
         const { error } = await endUserFreeTrial({ userId });
         if (error) throw new Error("Failed to end free trial");
     }
