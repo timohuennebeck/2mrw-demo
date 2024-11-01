@@ -13,25 +13,19 @@ import {
     Link,
     Button,
 } from "@react-email/components";
-import { TextConstants } from "@/constants/TextConstants";
+import { emailConfig } from "@/config/emailConfig";
 
 interface FreeTrialEmailTemplateProps {
     userFirstName: string;
-    companyTitle: string;
-    trialDuration: number;
     trialSignupLink: string;
-    twitterFounderUrl: string;
-    twitterFounderTag: string;
 }
 
 export const FreeTrialEmailTemplate = ({
     userFirstName,
-    companyTitle,
-    trialDuration,
     trialSignupLink,
-    twitterFounderUrl,
-    twitterFounderTag,
 }: FreeTrialEmailTemplateProps) => {
+    const { companyInformation, socialLinks, settings } = emailConfig;
+
     const previewText = `Here's a little gift inside`;
 
     return (
@@ -39,55 +33,58 @@ export const FreeTrialEmailTemplate = ({
             <Head />
             <Preview>{previewText}</Preview>
             <Tailwind>
-                <Body className="bg-white my-auto mx-auto font-sans px-2">
-                    <Container className="border border-solid border-neutral-200 rounded my-[40px] mx-auto p-[20px] max-w-[465px]">
+                <Body className="mx-auto my-auto bg-white px-2 font-sans">
+                    <Container className="mx-auto my-[40px] max-w-[465px] rounded border border-solid border-neutral-200 p-[20px]">
                         <Img
                             src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL}
                             width="48"
                             height="48"
-                            alt={companyTitle}
-                            className="my-0 mx-auto"
+                            alt={companyInformation.name}
+                            className="mx-auto my-0"
                         />
-                        <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">
-                            Welcome to {companyTitle}!
+                        <Heading className="mx-0 my-[30px] p-0 text-center text-[24px] font-normal text-black">
+                            Welcome to {companyInformation.name}!
                         </Heading>
-                        <Text className="text-black text-[14px] leading-[24px]">
+                        <Text className="text-[14px] leading-[24px] text-black">
                             Hi {userFirstName},
                         </Text>
-                        <Text className="text-black text-[14px] leading-[24px]">
-                            I'm thrilled you've decided to check out {companyTitle}! It's always
-                            exciting to welcome someone new to our gang! 🤩
+                        <Text className="text-[14px] leading-[24px] text-black">
+                            I'm thrilled you've decided to check out {companyInformation.name}! It's
+                            always exciting to welcome someone new to our gang! 🤩
                         </Text>
-                        <Text className="text-black text-[14px] leading-[24px]">
+                        <Text className="text-[14px] leading-[24px] text-black">
                             P.S. Here's a special welcome gift: a{" "}
-                            <strong>Full-Access {trialDuration}-Day Free Trial </strong> of{" "}
-                            {companyTitle}. You don't even need to enter a credit card. It's
-                            risk-free and commitment-free.
+                            <strong>
+                                Full-Access {settings.freeTrialEmail.freeTrialDuration}-Day Free
+                                Trial{" "}
+                            </strong>{" "}
+                            of {companyInformation.name}. You don't even need to enter a credit
+                            card. It's risk-free and commitment-free.
                         </Text>
                         <Button
-                            className="bg-black rounded text-white text-[14px] font-semibold no-underline text-center w-full py-2.5"
+                            className="w-full rounded bg-black py-2.5 text-center text-[14px] font-semibold text-white no-underline"
                             href={trialSignupLink}
                         >
                             Start Free Trial Now
                         </Button>
-                        <Text className="text-[12px] leading-[18px] mt-4 mb-0 text-center italic">
+                        <Text className="mb-0 mt-4 text-center text-[12px] italic leading-[18px]">
                             You can also copy and paste this link into your browser:{" "}
                             {trialSignupLink}
                         </Text>
-                        <Text className="text-black text-[14px] leading-[24px]">
+                        <Text className="text-[14px] leading-[24px] text-black">
                             If you have any questions or need clarification about our services,
                             please don't hesitate to reach out to me.
                         </Text>
                         <Text className="text-[14px] leading-[24px]">
                             You can find me on Twitter at{" "}
-                            <Link href={twitterFounderUrl} className="text-blue-500">
-                                {twitterFounderTag}
+                            <Link href={socialLinks.twitter.founder.url} className="text-blue-500">
+                                {socialLinks.twitter.founder.tag}
                             </Link>
-                            , where I regularly share updates about {companyTitle} and engage with
-                            our users.
+                            , where I regularly share updates about {companyInformation.name} and
+                            engage with our users.
                         </Text>
-                        <Hr className="border border-solid border-neutral-200 my-[26px] mx-0 w-full" />
-                        <Text className="text-neutral-500 text-[12px] leading-[24px]">
+                        <Hr className="mx-0 my-[26px] w-full border border-solid border-neutral-200" />
+                        <Text className="text-[12px] leading-[24px] text-neutral-500">
                             Much love,
                             <br />
                             Timo Hünnebeck
@@ -102,11 +99,7 @@ export const FreeTrialEmailTemplate = ({
 // enable this during development to preview what the email will look like
 FreeTrialEmailTemplate.PreviewProps = {
     userFirstName: "Sarah",
-    companyTitle: TextConstants.EMAIL__COMPANY_TITLE,
-    trialDuration: TextConstants.EMAIL__FREE_TRIAL_DURATION,
     trialSignupLink: `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan?welcomeEmail=true`,
-    twitterFounderUrl: TextConstants.EMAIL__TWITTER_FOUNDER_URL,
-    twitterFounderTag: TextConstants.TEXT__TWITTER_FOUNDER_TAG,
 } as FreeTrialEmailTemplateProps;
 
 export default FreeTrialEmailTemplate;

@@ -14,29 +14,19 @@ import {
     Button,
     Link,
 } from "@react-email/components";
-import { TextConstants } from "@/constants/TextConstants";
+import { emailConfig } from "@/config/emailConfig";
 
 interface PaidPlanEmailTemplateProps {
     userFirstName: string;
     purchasedPackage: string;
-    companyTitle: string;
-    gettingStartedLoomUrl: string;
-    twitterCompanyUrl: string;
-    twitterCompanyTag: string;
-    twitterFounderUrl: string;
-    twitterFounderTag: string;
 }
 
 export const PaidPlanEmailTemplate = ({
     userFirstName,
     purchasedPackage,
-    companyTitle,
-    gettingStartedLoomUrl,
-    twitterCompanyUrl,
-    twitterCompanyTag,
-    twitterFounderUrl,
-    twitterFounderTag,
 }: PaidPlanEmailTemplateProps) => {
+    const { companyInformation, socialLinks } = emailConfig;
+
     const previewText = `Thank you for your order of ${purchasedPackage}!`;
 
     return (
@@ -44,57 +34,57 @@ export const PaidPlanEmailTemplate = ({
             <Head />
             <Preview>{previewText}</Preview>
             <Tailwind>
-                <Body className="bg-white my-auto mx-auto font-sans px-2">
-                    <Container className="border border-solid border-neutral-200 rounded my-[40px] mx-auto p-[20px] max-w-[465px]">
+                <Body className="mx-auto my-auto bg-white px-2 font-sans">
+                    <Container className="mx-auto my-[40px] max-w-[465px] rounded border border-solid border-neutral-200 p-[20px]">
                         <Section className="mt-[32px]">
                             <Img
-                                src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL}
+                                src={companyInformation.logoUrl}
                                 width="48"
                                 height="48"
-                                alt={companyTitle}
-                                className="my-0 mx-auto"
+                                alt={companyInformation.name}
+                                className="mx-auto my-0"
                             />
                         </Section>
-                        <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">
+                        <Heading className="mx-0 my-[30px] p-0 text-center text-[24px] font-normal text-black">
                             You're all set to go!
                         </Heading>
-                        <Text className="text-black text-[14px] leading-[24px]">
+                        <Text className="text-[14px] leading-[24px] text-black">
                             Hi {userFirstName},
                         </Text>
-                        <Text className="text-black text-[14px] leading-[24px]">
+                        <Text className="text-[14px] leading-[24px] text-black">
                             Great news! Your transaction for <strong>{purchasedPackage}</strong> has
                             been successfully processed.
                         </Text>
-                        <Text className="text-black text-[14px] leading-[24px] mt-4">
+                        <Text className="mt-4 text-[14px] leading-[24px] text-black">
                             To help you get the most out our product, I've created a quick video
                             walkthrough.
                         </Text>
-                        <Text className="text-black text-[14px] leading-[24px] mt-4">
+                        <Text className="mt-4 text-[14px] leading-[24px] text-black">
                             It covers everything you need to know to hit the ground running with{" "}
-                            {companyTitle}.
+                            {companyInformation.name}.
                         </Text>
-                        <Button
-                            className="bg-black rounded text-white text-[14px] font-semibold no-underline text-center w-full py-2.5 mb-3"
-                            href={gettingStartedLoomUrl}
+                        {/* <Button
+                            className="mb-3 w-full rounded bg-black py-2.5 text-center text-[14px] font-semibold text-white no-underline"
+                            href={emailConfig.gettingStartedLoomUrl}
                         >
                             Watch the Getting Started Video
-                        </Button>
-                        <Text className="text-black text-[14px] leading-[24px]">
+                        </Button> */}
+                        <Text className="text-[14px] leading-[24px] text-black">
                             P.S.: This is sooo exciting! I'd love to hear about how you're using{" "}
-                            {companyTitle}. Feel free to share it with me on Twitter! 😃
+                            {companyInformation.name}. Feel free to share it with me on Twitter! 😃
                         </Text>
-                        <Text className="text-[14px] leading-[22px] mt-2">
+                        <Text className="mt-2 text-[14px] leading-[22px]">
                             Tag us{" "}
-                            <Link href={twitterCompanyUrl} className="text-blue-500">
-                                {twitterCompanyTag}
+                            <Link href={socialLinks.twitter.company.url} className="text-blue-500">
+                                {socialLinks.twitter.company.tag}
                             </Link>{" "}
                             or me, the founder,{" "}
-                            <Link href={twitterFounderUrl} className="text-blue-500">
-                                {twitterFounderTag}
+                            <Link href={socialLinks.twitter.founder.url} className="text-blue-500">
+                                {socialLinks.twitter.founder.tag}
                             </Link>
                         </Text>
-                        <Hr className="border border-solid border-neutral-200 my-[26px] mx-0 w-full" />
-                        <Text className="text-neutral-500 text-[12px] leading-[24px]">
+                        <Hr className="mx-0 my-[26px] w-full border border-solid border-neutral-200" />
+                        <Text className="text-[12px] leading-[24px] text-neutral-500">
                             Much love,
                             <br />
                             Timo Hünnebeck
@@ -110,12 +100,6 @@ export const PaidPlanEmailTemplate = ({
 PaidPlanEmailTemplate.PreviewProps = {
     userFirstName: "Sarah",
     purchasedPackage: "Premium Plan (20% off)",
-    companyTitle: TextConstants.EMAIL__COMPANY_TITLE,
-    gettingStartedLoomUrl: TextConstants.EMAIL__LOOM_GETTING_STARTED_URL,
-    twitterCompanyUrl: TextConstants.EMAIL__TWITTER_COMPANY_URL,
-    twitterCompanyTag: TextConstants.EMAIL__TWITTER_COMPANY_TAG,
-    twitterFounderUrl: TextConstants.EMAIL__TWITTER_FOUNDER_URL,
-    twitterFounderTag: TextConstants.TEXT__TWITTER_FOUNDER_TAG,
 } as PaidPlanEmailTemplateProps;
 
 export default PaidPlanEmailTemplate;
