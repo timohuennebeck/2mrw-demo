@@ -22,6 +22,12 @@ export const initiateStripeCheckoutProcess = async ({
             user_id: userId,
             payment_type: isOneTimePaymentEnabled() ? "one-time" : "subscription",
         },
+        subscription_data: {
+            metadata: {
+                user_id: userId,
+                payment_type: isOneTimePaymentEnabled() ? "one-time" : "subscription",
+            },
+        },
     });
 
     return { checkoutUrl: session.url };

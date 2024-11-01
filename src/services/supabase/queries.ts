@@ -174,7 +174,7 @@ export const fetchSubscriptionTier = async (stripePriceId: string) => {
         const { data: monthlyData, error: monthlyError } = await supabase
             .from("products")
             .select("subscription_tier")
-            .eq("pricing->>subscription->monthly->>stripe_price_id", stripePriceId)
+            .eq("pricing->subscription->monthly->>stripe_price_id", stripePriceId)
             .single();
 
         if (!monthlyError && monthlyData) {
