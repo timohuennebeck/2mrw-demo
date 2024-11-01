@@ -12,10 +12,6 @@ export const TextConstants = {
     TEXT__SIGN_IN: "Log In",
     TEXT__HAVE_AN_ACCOUNT: "Have an account?",
     TEXT__DO_NOT_HAVE_AN_ACCOUNT: "Don't have an account?",
-    TEXT__THIS_LIB_HAS_SAVED_ME:
-        '"This lib has saved me countless hours of work and helped me deliver stunning designs to our clients faster than ever before."',
-    TEXT__TIMO_HUENNEBECK: "Timo Hünnebeck",
-    TEXT__MICROSOFT: "⌘ Microsoft Inc.",
     TEXT__FREE_TRIAL_STARTED: "Free Trial has been started",
     TEXT__CURRENT_PLAN: "Current Plan",
     TEXT__CHANGE_PLAN: "Change Plan",
