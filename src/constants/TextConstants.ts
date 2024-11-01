@@ -1,14 +1,5 @@
 export const TextConstants = {
-    EMAIL__COMPANY_TITLE: "2mrw",
-    EMAIL__TWITTER_FOUNDER_URL: "www.x.com/timohuennebeck",
-    TEXT__TWITTER_FOUNDER_TAG: "@timohuennebeck",
-    EMAIL__TWITTER_COMPANY_URL: "www.x.com/joinforj",
-    EMAIL__TWITTER_COMPANY_TAG: "@joinforj",
-    EMAIL__SEND_FROM: "info@updates.joinforj.com",
-    EMAIL__FREE_TRIAL_DURATION: 14,
-    EMAIL__LOOM_GETTING_STARTED_URL: "loom.com",
-    EMAIL__CUSTOMER_SUPPORT_EMAIL: "contact@joinforj.com",
-
+    TEXT__COMPANY_TITLE: "2mrw",
     TEXT__FIRST_NAME_PLACEHOLDER: "Timo",
     TEXT__EMAIL_PLACEHOLDER: "m@example.com",
     TEXT__LOGOUT: "Logout",

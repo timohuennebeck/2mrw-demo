@@ -66,7 +66,7 @@ const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm)
                             {mode === "signup"
                                 ? TextConstants.TEXT__SIGN_UP
                                 : TextConstants.TEXT__SIGN_IN}{" "}
-                            to {TextConstants.EMAIL__COMPANY_TITLE}
+                            to {TextConstants.TEXT__COMPANY_TITLE}
                         </h1>
                         <p className="text-sm text-neutral-400">
                             {mode === "signup"
