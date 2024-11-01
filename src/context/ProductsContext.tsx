@@ -20,8 +20,12 @@ export const ProductsProvider = ({ children }: { children: React.ReactNode }) =>
     const { data, isLoading } = useQuery({
         queryKey: ["products"],
         queryFn: () => fetchProducts(),
-        staleTime: 30 * 60 * 1000,
+        staleTime: 12 * 60 * 60 * 1000, // 12 hours
+        gcTime: 24 * 60 * 60 * 1000, // 24 hours
         enabled: userIsLoggedIn,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
     });
 
     return (
