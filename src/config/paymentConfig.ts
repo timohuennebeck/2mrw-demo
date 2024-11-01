@@ -1,4 +1,4 @@
-import { PaymentEnum } from "@/enums/PaymentEnum";
+import { PaymentEnums } from "@/enums/PaymentEnums";
 
 interface SubscriptionSettings {
     enableFreeTrial: boolean;
@@ -13,13 +13,13 @@ interface OneTimeSettings {
 }
 
 interface CompletePaymentConfig {
-    paymentType: PaymentEnum;
+    paymentType: PaymentEnums;
     subscriptionSettings: SubscriptionSettings;
     oneTimeSettings: OneTimeSettings;
 }
 
 export const paymentConfig: CompletePaymentConfig = {
-    paymentType: PaymentEnum.ONE_TIME, // set which payment type is active
+    paymentType: PaymentEnums.ONE_TIME, // set which payment type is active
 
     // subscription settings: used when paymentType is SUBSCRIPTION
     subscriptionSettings: {
@@ -38,10 +38,10 @@ export const paymentConfig: CompletePaymentConfig = {
 
 // helper functions to get the active settings
 export const getCurrentPaymentSettings = () => {
-    return paymentConfig.paymentType === PaymentEnum.SUBSCRIPTION
+    return paymentConfig.paymentType === PaymentEnums.SUBSCRIPTION
         ? paymentConfig.subscriptionSettings
         : paymentConfig.oneTimeSettings;
 };
 
 // helper to check if subscription features are enabled
-export const isOneTimePaymentEnabled = () => paymentConfig.paymentType === PaymentEnum.ONE_TIME;
+export const isOneTimePaymentEnabled = () => paymentConfig.paymentType === PaymentEnums.ONE_TIME;

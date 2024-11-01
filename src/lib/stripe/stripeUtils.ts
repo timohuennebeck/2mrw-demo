@@ -1,5 +1,6 @@
 "use server";
 
+import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { InitiateStripeCheckoutProcessParams } from "@/interfaces/StripeInterfaces";
 import axios from "axios";
 import Stripe from "stripe";
@@ -14,10 +15,13 @@ export const initiateStripeCheckoutProcess = async ({
     const session = await stripe.checkout.sessions.create({
         customer_email: userEmail,
         line_items: [{ price: stripePriceId, quantity: 1 }],
-        mode: "payment",
+        mode: isOneTimePaymentEnabled() ? "payment" : "subscription",
         success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan`,
-        metadata: { userId: userId },
+        metadata: {
+            userId: userId,
+            paymentType: isOneTimePaymentEnabled() ? "one-time" : "subscription",
+        },
     });
 
     return { checkoutUrl: session.url };

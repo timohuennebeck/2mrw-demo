@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/services/supabase/client";
 import moment from "moment";
 import { TextConstants } from "@/constants/TextConstants";
+import { getCurrentPaymentSettings } from "@/config/paymentConfig";
 
 interface PlanButton {
     stripePriceId: string;
@@ -20,6 +21,7 @@ interface PlanButton {
     subscriptionInfo: PurchasedSubscription;
     isLoading: boolean;
     supabaseUser: User | null;
+    name: string;
 }
 
 const FOURTEEN_DAYS = 14;
@@ -32,6 +34,7 @@ export const PlanButton = ({
     subscriptionInfo,
     isLoading: dataIsLoading,
     supabaseUser,
+    name,
 }: PlanButton) => {
     const supabase = createClient();
 
@@ -99,11 +102,16 @@ export const PlanButton = ({
             isLoading,
         };
 
-        if (!hasPurchasedSubscription && freeTrialStatus === null) {
-            const freeTrialDuration = welcomeEmail === "true" ? 14 : 7;
+        if (
+            !hasPurchasedSubscription &&
+            freeTrialStatus === null &&
+            getCurrentPaymentSettings().enableFreeTrial
+        ) {
+            const freeTrialDuration =
+                welcomeEmail === "true" ? 14 : getCurrentPaymentSettings().freeTrialDays;
             return {
                 ...baseProps,
-                title: `Start Free Trial (${freeTrialDuration} Days)`,
+                title: `${TextConstants.TEXT__START_FREE_TRIAL} (${freeTrialDuration} ${TextConstants.TEXT__DAYS})`,
                 onClick: startFreeTrial,
             };
         }
@@ -114,7 +122,11 @@ export const PlanButton = ({
                 : { ...baseProps, title: TextConstants.TEXT__CHANGE_PLAN, onClick: handleCheckout };
         }
 
-        return { ...baseProps, title: TextConstants.TEXT__UPGRADE_NOW, onClick: handleCheckout };
+        return {
+            ...baseProps,
+            title: `${TextConstants.TEXT__UNLOCK} ${name}`,
+            onClick: handleCheckout,
+        };
     };
 
     return <CustomButton {...determineButtonProps()} />;

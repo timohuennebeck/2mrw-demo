@@ -10,6 +10,7 @@ import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { FreeTrial } from "@/interfaces/FreeTrial";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
+import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 
 interface PricingPlanCardProps extends Product {
     supabaseUser: User | null;
@@ -22,11 +23,9 @@ interface PricingPlanCardProps extends Product {
 
 export const PricingPlanCard = (props: PricingPlanCardProps) => {
     const {
-        stripe_price_id,
         is_highlighted,
         name,
-        previous_price,
-        current_price,
+        pricing,
         description,
         features,
         freeTrialStatus,
@@ -38,17 +37,21 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
     } = props;
 
     return (
-        <div className="relative rounded-md border p-8 max-w-lg">
+        <div className="relative max-w-lg rounded-md border p-8">
             <div className="mb-6">
                 <PlanHeader
                     freeTrialInfo={freeTrialInfo}
                     freeTrialStatus={freeTrialStatus}
                     isHighlighted={is_highlighted}
                     name={name}
-                    stripePriceId={stripe_price_id}
+                    stripePriceId={
+                        isOneTimePaymentEnabled()
+                            ? (pricing?.one_time?.stripe_price_id ?? "")
+                            : (pricing?.subscription?.monthly?.stripe_price_id ?? "")
+                    }
                 />
 
-                <PlanPricing currentPrice={current_price} previousPrice={previous_price} />
+                <PlanPricing pricing={pricing} />
 
                 <p className="mb-4 text-sm text-neutral-500">{description}</p>
 
@@ -58,13 +61,20 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
             <PlanButton
                 freeTrialStatus={freeTrialStatus}
                 isLoading={isLoading}
-                stripePriceId={stripe_price_id}
                 subscriptionInfo={subscriptionInfo}
                 subscriptionStatus={subscriptionStatus}
                 supabaseUser={supabaseUser ?? null}
+                name={name}
+                stripePriceId={
+                    isOneTimePaymentEnabled()
+                        ? (pricing?.one_time?.stripe_price_id ?? "")
+                        : (pricing?.subscription?.monthly?.stripe_price_id ?? "")
+                }
             />
 
-            <p className="mt-4 text-center text-sm text-neutral-500">Purchase Once. Forever Yours.</p>
+            <p className="mt-4 text-center text-sm text-neutral-500">
+                Purchase Once. Forever Yours.
+            </p>
         </div>
     );
 };

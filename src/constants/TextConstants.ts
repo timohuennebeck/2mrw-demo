@@ -28,7 +28,9 @@ export const TextConstants = {
     TEXT__FREE_TRIAL_STARTED: "Free Trial has been started",
     TEXT__CURRENT_PLAN: "Current Plan",
     TEXT__CHANGE_PLAN: "Change Plan",
-    TEXT__UPGRADE_NOW: "Upgrade Now",
+    TEXT__UNLOCK: "Unlock",
+    TEXT__START_FREE_TRIAL: "Start Free Trial",
+    TEXT__DAYS: "Days",
     TEXT__FREE_TRIAL_END_DATE: "Free Trial End Date",
     TEXT__MOST_POPULAR_OPTION: "Most Popular Option",
     TEXT__ENTER_EMAIL_BELOW:

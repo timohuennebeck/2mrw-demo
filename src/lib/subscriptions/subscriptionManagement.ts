@@ -17,12 +17,13 @@ import { sendPostPurchaseEmail } from "../email/emailServices";
 import { UpsertUserSubscriptionParams } from "@/interfaces/SubscriptionInterfaces";
 import { createClient } from "@/services/supabase/server";
 import moment from "moment";
+import { getCurrentPaymentSettings } from "@/config/paymentConfig";
 
-export async function upsertUserSubscription({
+const upsertUserSubscription = async ({
     userId,
     stripePriceId,
     subscriptionTier,
-}: UpsertUserSubscriptionParams) {
+}: UpsertUserSubscriptionParams) => {
     const { rowExists } = await checkUserRowExists({ tableId: "purchased_subscriptions", userId });
 
     if (rowExists) {
@@ -39,7 +40,7 @@ export async function upsertUserSubscription({
             subscriptionTier,
         });
     }
-}
+};
 
 const endOnGoingFreeTrial = async (userId: string) => {
     const { status } = await checkFreeTrialStatus({ userId });
@@ -60,11 +61,13 @@ export const handleOneTimePayment = async ({ session }: { session: Stripe.Checko
     const supabase = createClient();
 
     try {
-        await endOnGoingFreeTrial(userId);
+        const { enableFreeTrial } = getCurrentPaymentSettings();
+        if (enableFreeTrial) await endOnGoingFreeTrial(userId); // if free trial is not enabled, we don't need to check for an on-going free trial
 
         const { subscriptionTier } = await fetchSubscriptionTier(stripePriceId);
         if (!subscriptionTier) throw new Error("SubscriptionTier not found");
 
+        // updates the user subscription or creates a new table and then updates it
         await upsertUserSubscription({ stripePriceId, subscriptionTier, userId });
 
         await supabase.auth.updateUser({

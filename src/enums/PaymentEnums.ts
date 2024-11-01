@@ -1,4 +1,4 @@
-export enum PaymentEnum {
+export enum PaymentEnums {
     ONE_TIME = "ONE_TIME",
     SUBSCRIPTION = "SUBSCRIPTION",
 }
