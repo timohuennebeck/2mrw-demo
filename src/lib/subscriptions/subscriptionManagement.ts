@@ -41,38 +41,32 @@ export async function upsertUserSubscription({
     }
 }
 
+const endOnGoingFreeTrial = async (userId: string) => {
+    const { status } = await checkFreeTrialStatus({ userId });
+
+    if (status === FreeTrialStatus.ACTIVE) {
+        const { error } = await endUserFreeTrial({ userId });
+        if (error) throw new Error("Failed to end free trial");
+    }
+};
+
 export const handleOneTimePayment = async ({ session }: { session: Stripe.Checkout.Session }) => {
     const userId = session.metadata?.user_id;
     if (!userId) throw new Error("No user ID in session metadata");
 
+    const stripePriceId = session.line_items?.data[0].price?.id;
+    if (!stripePriceId) throw new Error("No stripe price ID found in session");
+
     const supabase = createClient();
 
-    const stripePriceId = session.line_items?.data[0].price?.id;
-
     try {
-        // 1. Check and end any on-going free trials
-        const { status } = await checkFreeTrialStatus({ userId });
+        await endOnGoingFreeTrial(userId);
 
-        if (status && status === FreeTrialStatus.ACTIVE) {
-            const { error } = await endUserFreeTrial({ userId });
-            if (error) throw new Error("Failed to end free trial");
-        }
-
-        // 2. Fetch the subscription tier, so we can update the user subscription with it
-        const { subscriptionTier } = await fetchSubscriptionTier({
-            stripePriceId: stripePriceId ?? "",
-        });
-
+        const { subscriptionTier } = await fetchSubscriptionTier(stripePriceId);
         if (!subscriptionTier) throw new Error("SubscriptionTier not found");
 
-        // 3. Update the user subscription or create a new table and then update it
-        await upsertUserSubscription({
-            stripePriceId: stripePriceId ?? "",
-            subscriptionTier,
-            userId,
-        });
+        await upsertUserSubscription({ stripePriceId, subscriptionTier, userId });
 
-        // 4. Update the user metadata
         await supabase.auth.updateUser({
             data: {
                 subscription_status: SubscriptionStatus.ACTIVE,
@@ -80,12 +74,6 @@ export const handleOneTimePayment = async ({ session }: { session: Stripe.Checko
                 free_trial_status: FreeTrialStatus.EXPIRED,
                 free_trial_end_date: moment().toISOString(),
             },
-        });
-
-        // 5. Send confirmation email
-        await sendPostPurchaseEmail({
-            session,
-            stripePriceId: stripePriceId ?? "",
         });
 
         return { success: true };

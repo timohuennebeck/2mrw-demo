@@ -221,7 +221,7 @@ export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
     }
 };
 
-export const fetchSubscriptionTier = async ({ stripePriceId }: { stripePriceId: string }) => {
+export const fetchSubscriptionTier = async (stripePriceId: string) => {
     const supabase = createClient();
 
     try {
