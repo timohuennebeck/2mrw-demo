@@ -14,7 +14,7 @@ export const GET = async () => {
         const { data: activeSubscriptions, error: fetchError } = await supabase
             .from("purchased_subscriptions")
             .select("*")
-            .eq("status", SubscriptionStatus.ACTIVE);
+            .in("status", [SubscriptionStatus.ACTIVE, SubscriptionStatus.CANCELLED]);
 
         if (fetchError) throw fetchError;
 
@@ -22,6 +22,7 @@ export const GET = async () => {
             async (subscription: PurchasedSubscription) => {
                 const now = moment();
                 const endDate = moment(subscription.end_date);
+
                 if (endDate.isBefore(now)) {
                     const { error } = await endUserSubscription(subscription.user_id);
                     if (error) throw error;

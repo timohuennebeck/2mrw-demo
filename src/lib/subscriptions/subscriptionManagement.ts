@@ -60,9 +60,22 @@ export const handleSubscriptionDeleted = async (subscription: Stripe.Subscriptio
     const userId = subscription.metadata.user_id;
     if (!userId) throw new Error("No user ID in subscription metadata");
 
+    const supabase = createClient();
+
     try {
-        const { error } = await endUserSubscription(userId);
-        if (error) throw error;
+        await supabase
+            .from("purchased_subscriptions")
+            .update({
+                status: SubscriptionStatus.CANCELLED,
+                updated_at: moment().toISOString(),
+            })
+            .eq("user_id", userId);
+
+        await supabase.auth.updateUser({
+            data: {
+                subscription_status: SubscriptionStatus.CANCELLED,
+            },
+        });
 
         return { success: true };
     } catch (error) {
