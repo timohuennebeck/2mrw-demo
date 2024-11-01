@@ -29,6 +29,24 @@ const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm)
     const [password, setPassword] = useState("");
     const [firstName, setFirstName] = useState("");
     const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+    const [showStrengthChecker, setShowStrengthChecker] = useState(false);
+
+    const handlePasswordFocus = () => {
+        if (mode === "signup") {
+            setIsPasswordFocused(true);
+            setShowStrengthChecker(true);
+        }
+    };
+
+    const handlePasswordBlur = () => {
+        if (mode === "signup") {
+            // keep the strength checker visible for 2 more seconds, so that the user can click the sign up button without it jumping
+            setTimeout(() => {
+                setIsPasswordFocused(false);
+                setShowStrengthChecker(false);
+            }, 2000);
+        }
+    };
 
     return (
         <div className="flex h-full items-center justify-center">
@@ -84,11 +102,11 @@ const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm)
                             name="password"
                             type="password"
                             onChange={setPassword}
-                            onFocus={() => mode === "signup" && setIsPasswordFocused(true)}
-                            onBlur={() => mode === "signup" && setIsPasswordFocused(false)}
+                            onFocus={() => mode === "signup" && handlePasswordFocus()}
+                            onBlur={() => mode === "signup" && handlePasswordBlur()}
                         />
 
-                        {mode === "signup" && isPasswordFocused && (
+                        {mode === "signup" && (isPasswordFocused || showStrengthChecker) && (
                             <PasswordStrengthChecker password={password} />
                         )}
 
