@@ -58,6 +58,8 @@ export const TextConstants = {
     TEXT__HAS_ONE_DIGIT: "Has at least one digit",
 
     ERROR__UNEXPECTED_ERROR: "There has been an unexpected error.",
+    ERROR__STRIPE_CHECKOUT:
+        "Failed to initiate checkout process! Please contact us if the issue persists.",
     ERROR_SIGNING_OUT: "Error signing out",
     ERROR__STARTING_FREE_TRIAL: "Error starting free trial",
     ERROR__FAILED_TO_RESEND_EMAIL: "Failed to resend email.",

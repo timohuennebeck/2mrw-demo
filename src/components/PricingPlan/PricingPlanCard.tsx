@@ -19,6 +19,8 @@ interface PricingPlanCardProps extends Product {
     subscriptionStatus: SubscriptionStatus;
     subscriptionInfo: PurchasedSubscription;
     isLoading: boolean;
+    billingCycle: "monthly" | "yearly";
+    setBillingCycle: (cycle: "monthly" | "yearly") => void;
 }
 
 export const PricingPlanCard = (props: PricingPlanCardProps) => {
@@ -34,7 +36,34 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
         subscriptionInfo,
         isLoading,
         supabaseUser,
+        billingCycle,
     } = props;
+
+    const getStripePriceId = () => {
+        if (isOneTimePaymentEnabled()) {
+            return pricing?.one_time?.stripe_price_id ?? "";
+        }
+
+        return billingCycle === "yearly"
+            ? (pricing?.subscription?.yearly?.stripe_price_id ?? "")
+            : (pricing?.subscription?.monthly?.stripe_price_id ?? "");
+    };
+
+    const renderPaymentTypeText = () => {
+        if (isOneTimePaymentEnabled()) {
+            return (
+                <div className="flex flex-col items-center gap-1 text-sm text-neutral-500">
+                    <p>Purchase once, own forever</p>
+                </div>
+            );
+        }
+
+        return (
+            <div className="flex flex-col items-center gap-1 text-sm text-neutral-500">
+                <p>You can cancel ANYTIME!</p>
+            </div>
+        );
+    };
 
     return (
         <div className="relative max-w-lg rounded-md border p-8">
@@ -44,14 +73,10 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
                     freeTrialStatus={freeTrialStatus}
                     isHighlighted={is_highlighted}
                     name={name}
-                    stripePriceId={
-                        isOneTimePaymentEnabled()
-                            ? (pricing?.one_time?.stripe_price_id ?? "")
-                            : (pricing?.subscription?.monthly?.stripe_price_id ?? "")
-                    }
+                    stripePriceId={getStripePriceId()}
                 />
 
-                <PlanPricing pricing={pricing} />
+                <PlanPricing pricing={pricing} billingCycle={billingCycle} />
 
                 <p className="mb-4 text-sm text-neutral-500">{description}</p>
 
@@ -65,16 +90,10 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
                 subscriptionStatus={subscriptionStatus}
                 supabaseUser={supabaseUser ?? null}
                 name={name}
-                stripePriceId={
-                    isOneTimePaymentEnabled()
-                        ? (pricing?.one_time?.stripe_price_id ?? "")
-                        : (pricing?.subscription?.monthly?.stripe_price_id ?? "")
-                }
+                stripePriceId={getStripePriceId()}
             />
 
-            <p className="mt-4 text-center text-sm text-neutral-500">
-                Purchase Once. Forever Yours.
-            </p>
+            <div className="mt-4">{renderPaymentTypeText()}</div>
         </div>
     );
 };

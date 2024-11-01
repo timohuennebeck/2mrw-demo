@@ -25,7 +25,6 @@ interface PlanButton {
 }
 
 const FOURTEEN_DAYS = 14;
-const SEVEN_DAYS = 7;
 
 export const PlanButton = ({
     stripePriceId,
@@ -63,6 +62,8 @@ export const PlanButton = ({
                 setIsLoading(false);
             }
         } catch (error) {
+            toast.error(TextConstants.ERROR__STRIPE_CHECKOUT);
+        } finally {
             setIsLoading(false);
         }
     };
@@ -70,7 +71,8 @@ export const PlanButton = ({
     const startFreeTrial = async () => {
         const freeTrialEndDate = increaseDate({
             date: moment(),
-            days: welcomeEmail === "true" ? FOURTEEN_DAYS : SEVEN_DAYS,
+            days:
+                welcomeEmail === "true" ? FOURTEEN_DAYS : getCurrentPaymentSettings().freeTrialDays,
         });
 
         try {
