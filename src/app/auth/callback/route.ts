@@ -51,8 +51,8 @@ export const GET = async (request: Request) => {
                     await createUserTable({ user });
                 }
 
-                axios.post("/api/email-services", {
-                    template: EmailTemplate.FREE_TRIAL,
+                await axios.post("/api/email-services", {
+                    template: EmailTemplate.WELCOME,
                     userEmail: user.user_metadata.email ?? "",
                     userFirstName: user.user_metadata.full_name ?? "",
                 });

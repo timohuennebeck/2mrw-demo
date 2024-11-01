@@ -35,9 +35,11 @@ interface EmailSettings {
     };
 }
 
+const COMPANY_NAME = "2mrw";
+
 export const emailConfig = {
     companyInformation: {
-        name: "2mrw",
+        name: COMPANY_NAME,
         supportEmail: "contact@joinforj.com",
         senderEmail: "info@updates.joinforj.com",
         logoUrl: process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL,
@@ -57,10 +59,10 @@ export const emailConfig = {
     } as SocialLinks,
 
     settings: {
-        freeTrialEmail: {
-            subject: "Welcome to Your Free Trial!",
+        welcomeEmail: {
+            subject: `Welcome to ${COMPANY_NAME}!`,
             isEnabled: false,
-            freeTrialDuration: 7,
+            freeTrialDuration: 24, // its recommended to set this higher than the paymentConfig's freeTrialDays
             template: FreeTrialEmailTemplate,
         },
         postPurchaseEmail: {
