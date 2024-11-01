@@ -1,5 +1,5 @@
 import { useSession } from "@/context/SessionContext";
-import { fetchFreeTrial, fetchProducts, fetchSubscription } from "@/services/supabase/queries";
+import { fetchFreeTrial, fetchSubscription } from "@/services/supabase/queries";
 import { QueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 
@@ -14,11 +14,6 @@ const useUserInfoPreloader = () => {
 
             try {
                 await Promise.all([
-                    queryClient.prefetchQuery({
-                        queryKey: ["products"],
-                        queryFn: () => fetchProducts(),
-                        staleTime: 5 * 60 * 1000,
-                    }),
                     queryClient.prefetchQuery({
                         queryKey: ["freeTrial", user.id],
                         queryFn: () => fetchFreeTrial(user.id),

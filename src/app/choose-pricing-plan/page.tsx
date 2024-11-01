@@ -6,15 +6,15 @@ import { useSupabaseUser } from "@/hooks/useSupabaseUser";
 import { useFreeTrial } from "@/hooks/useFreeTrial";
 import { useSubscription } from "@/hooks/useSubscription";
 import { Product } from "@/interfaces/ProductInterfaces";
-import { fetchProducts } from "@/services/supabase/queries";
-import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { isOneTimePaymentEnabled, paymentConfig } from "@/config/paymentConfig";
 import { TextConstants } from "@/constants/TextConstants";
+import { useProducts } from "@/context/ProductsContext";
 
 const ChoosePricingPlanPage = () => {
     const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
 
+    const { products } = useProducts();
     const { data: user, isLoading: isUserLoading } = useSupabaseUser();
     const userId = user?.user?.id;
 
@@ -29,12 +29,6 @@ const ChoosePricingPlanPage = () => {
         subscription: subscriptionData,
         isLoading: isSubscriptionLoading,
     } = useSubscription(userId ?? "");
-
-    const { data: products } = useQuery({
-        queryKey: ["products"],
-        queryFn: () => fetchProducts(),
-        staleTime: 5 * 60 * 1000,
-    });
 
     const isLoading = isUserLoading || isFreeTrialLoading || isSubscriptionLoading;
 
@@ -70,7 +64,7 @@ const ChoosePricingPlanPage = () => {
                 <div className="mx-auto grid w-full max-w-4xl grid-cols-1 gap-8 md:grid-cols-2">
                     {isLoading
                         ? [1, 2].map((_, index) => <PricingPlanCardSkeleton key={index} />)
-                        : products?.products?.map((product: Product, index) => (
+                        : products?.map((product: Product, index) => (
                               <PricingPlanCard
                                   key={index}
                                   {...product}
