@@ -1,6 +1,5 @@
 "use server";
 
-import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { StripeWebhookEvents } from "@/enums/StripeWebhookEvents";
 import { VerifyStripeWebhookParams } from "@/interfaces/StripeInterfaces";
 import { queryClient } from "@/lib/qClient/qClient";
@@ -9,7 +8,6 @@ import {
     handleSubscriptionDeleted,
     handleSubscriptionUpdated,
 } from "@/lib/subscriptions/subscriptionManagement";
-import { QueryClient } from "@tanstack/react-query";
 import { NextRequest as request, NextResponse as response } from "next/server";
 import Stripe from "stripe";
 

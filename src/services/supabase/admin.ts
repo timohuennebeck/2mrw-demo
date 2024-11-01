@@ -94,12 +94,12 @@ export const startUserSubscription = async ({
 
         const purchasedPackage = await getProductNameByTier(subscriptionTier);
 
-        await axios.post("/api/email-services", {
-            template: EmailTemplate.ONBOARDING,
-            userEmail: userData.email,
-            userFirstName: userData.first_name,
-            purchasedPackage: purchasedPackage,
-        });
+        // await axios.post("/api/email-services", {
+        //     template: EmailTemplate.ONBOARDING,
+        //     userEmail: userData.email,
+        //     userFirstName: userData.first_name,
+        //     purchasedPackage: purchasedPackage,
+        // });
 
         return { success: true, error: null };
     } catch (error) {

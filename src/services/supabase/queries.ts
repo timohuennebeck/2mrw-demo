@@ -159,15 +159,41 @@ export const fetchSubscriptionTier = async (stripePriceId: string) => {
     const supabase = createClient();
 
     try {
-        const { data, error } = await supabase
+        // query for one-time price id
+        const { data: oneTimeData, error: oneTimeError } = await supabase
             .from("products")
             .select("subscription_tier")
-            .eq("stripe_price_id", stripePriceId)
+            .eq("pricing->one_time->>stripe_price_id", stripePriceId)
             .single();
 
-        if (error) throw error;
+        if (!oneTimeError && oneTimeData) {
+            return { subscriptionTier: oneTimeData.subscription_tier, error: null };
+        }
 
-        return { subscriptionTier: data.subscription_tier, error: null };
+        // query for monthly subscription price id
+        const { data: monthlyData, error: monthlyError } = await supabase
+            .from("products")
+            .select("subscription_tier")
+            .eq("pricing->>subscription->monthly->>stripe_price_id", stripePriceId)
+            .single();
+
+        if (!monthlyError && monthlyData) {
+            return { subscriptionTier: monthlyData.subscription_tier, error: null };
+        }
+
+        // query for yearly subscription price id
+        const { data: yearlyData, error: yearlyError } = await supabase
+            .from("products")
+            .select("subscription_tier")
+            .eq("pricing->subscription->yearly->>stripe_price_id", stripePriceId)
+            .single();
+
+        if (!yearlyError && yearlyData) {
+            return { subscriptionTier: yearlyData.subscription_tier, error: null };
+        }
+
+        // if no match found in any pricing structure
+        throw new Error("No product found with the given stripe_price_id");
     } catch (error) {
         return {
             subscriptionTier: null,
