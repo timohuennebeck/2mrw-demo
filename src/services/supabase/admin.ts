@@ -13,6 +13,28 @@ import { handleSupabaseError } from "../../lib/helper/handleSupabaseError";
 import moment from "moment";
 import { PaymentEnums } from "@/enums/PaymentEnums";
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
+import { fetchProducts } from "./queries";
+
+const getEndDate = async (stripePriceId: string) => {
+    if (isOneTimePaymentEnabled()) {
+        return null; // one-time payments don't have an end date
+    }
+
+    // fetch products to check price IDs
+    const { products } = await fetchProducts();
+    if (!products) throw new Error("Failed to fetch products");
+
+    // check if the stripePriceId matches any yearly subscription
+    const isYearlySubscription = products.some(
+        (product) => product.pricing.subscription?.yearly?.stripe_price_id === stripePriceId,
+    );
+
+    const currentDate = moment();
+
+    return isYearlySubscription
+        ? currentDate.add(1, "year").toISOString()
+        : currentDate.add(1, "month").toISOString();
+};
 
 export const createUserTable = async ({ user }: { user: User }) => {
     const supabase = createClient();
@@ -42,12 +64,17 @@ export const createPurchasedSubscriptionTable = async ({
     const supabase = createClient();
 
     try {
+        const endDate = await getEndDate(stripePriceId);
+
         const { error } = await supabase.from("purchased_subscriptions").insert({
             user_id: userId,
             stripe_price_id: stripePriceId,
             status: SubscriptionStatus.ACTIVE,
             subscription_tier: subscriptionTier,
-            payment_type: isOneTimePaymentEnabled() ? PaymentEnums.ONE_TIME : PaymentEnums.SUBSCRIPTION,
+            payment_type: isOneTimePaymentEnabled()
+                ? PaymentEnums.ONE_TIME
+                : PaymentEnums.SUBSCRIPTION,
+            end_date: endDate,
             updated_at: moment().toISOString(),
             created_at: moment().toISOString(),
         });
@@ -72,12 +99,18 @@ export const updateUserPurchasedSubscription = async ({
     const supabase = createClient();
 
     try {
+        const endDate = await getEndDate(stripePriceId);
+
         const { error } = await supabase
             .from("purchased_subscriptions")
             .update({
                 stripe_price_id: stripePriceId,
                 status,
                 subscription_tier: subscriptionTier,
+                payment_type: isOneTimePaymentEnabled()
+                    ? PaymentEnums.ONE_TIME
+                    : PaymentEnums.SUBSCRIPTION,
+                end_date: endDate,
                 updated_at: moment().toISOString(),
             })
             .eq("user_id", userId);
