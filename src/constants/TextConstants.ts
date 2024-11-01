@@ -1,5 +1,5 @@
 export const TextConstants = {
-    EMAIL__COMPANY_TITLE: "Forj",
+    EMAIL__COMPANY_TITLE: "2mrw",
     EMAIL__TWITTER_FOUNDER_URL: "www.x.com/timohuennebeck",
     TEXT__TWITTER_FOUNDER_TAG: "@timohuennebeck",
     EMAIL__TWITTER_COMPANY_URL: "www.x.com/joinforj",
@@ -18,7 +18,7 @@ export const TextConstants = {
     TEXT__SIGN_UP_EMAIIL_OR_ANOTHER_SERVICE: "Sign up using email or another service to continue!",
     TEXT__SIGN_IN_EMAIL_OR_ANOTHER_SERVICE: "Sign in using email or another service to continue!",
     TEXT__SIGN_UP: "Sign Up",
-    TEXT__SIGN_IN: "Sign In",
+    TEXT__SIGN_IN: "Log In",
     TEXT__HAVE_AN_ACCOUNT: "Have an account?",
     TEXT__DO_NOT_HAVE_AN_ACCOUNT: "Don't have an account?",
     TEXT__THIS_LIB_HAS_SAVED_ME:

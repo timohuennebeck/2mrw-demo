@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowPathIcon } from "@heroicons/react/24/solid";
+import { ArrowRight, Loader } from "lucide-react";
 
 interface CustomButtonParams {
     title: string;
@@ -22,7 +22,7 @@ const CustomButton = ({ title, onClick, disabled, isLoading }: CustomButtonParam
                     : "bg-black text-white hover:bg-neutral-700"
             } `}
         >
-            {isLoading ? <ArrowPathIcon className="h-5 w-5 animate-spin" /> : title}
+            {isLoading ? <Loader size={20} strokeWidth={2} className="animate-spin" /> : title}
         </button>
     );
 };

@@ -7,7 +7,6 @@ import Link from "next/link";
 import { useState } from "react";
 import InputField from "./InputField";
 import CustomButton from "./CustomButton";
-import TestimonialBackground from "./TestimonialBackground";
 import { TextConstants } from "@/constants/TextConstants";
 import PasswordStrengthChecker from "./PasswordStrengthChecker";
 
@@ -32,23 +31,24 @@ const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm)
     const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
     return (
-        <TestimonialBackground>
-            <div className="mx-auto flex w-[448px] flex-col gap-4 rounded-md border p-8 lg:mx-0">
-                <div className="flex justify-center">
+        <div className="flex h-full items-center justify-center">
+            <div className="mx-auto flex w-[448px] flex-col gap-4 rounded-md border p-8 shadow-sm lg:mx-0">
+                <div className="mb-4 flex items-center gap-2">
                     <Image
-                        src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL ?? ""}
+                        src="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
                         alt="logo"
-                        width={48}
-                        height={48}
+                        width={40}
+                        height={40}
                     />
                 </div>
 
                 <div className="grid w-full gap-6">
-                    <div className="grid gap-2 text-center">
+                    <div className="grid gap-2">
                         <h1 className="text-2xl font-medium">
                             {mode === "signup"
                                 ? TextConstants.TEXT__SIGN_UP
-                                : TextConstants.TEXT__SIGN_IN}
+                                : TextConstants.TEXT__SIGN_IN}{" "}
+                            to {TextConstants.EMAIL__COMPANY_TITLE}
                         </h1>
                         <p className="text-sm text-neutral-400">
                             {mode === "signup"
@@ -134,7 +134,7 @@ const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm)
                     </div>
                 </div>
             </div>
-        </TestimonialBackground>
+        </div>
     );
 };
 

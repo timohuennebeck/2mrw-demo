@@ -75,7 +75,7 @@ export const middleware = async (request: nextRequest) => {
 
     const currentPath = request.nextUrl.pathname;
 
-    if (!hasPremiumOrFreeTrial) {
+    if (hasPremiumOrFreeTrial) {
         return HIDE_ON_PREMIUM_PLAN.includes(currentPath)
             ? nextResponse.redirect(new URL("/", request.url))
             : nextResponse.next();

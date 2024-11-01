@@ -6,7 +6,6 @@ import Link from "next/link";
 import { Suspense, useState } from "react";
 import { toast } from "sonner";
 import { updatePassword } from "./action";
-import TestimonialBackground from "@/components/TestimonialBackground";
 import CustomButton from "@/components/CustomButton";
 import { useRouter, useSearchParams } from "next/navigation";
 import { TextConstants } from "@/constants/TextConstants";
@@ -50,18 +49,18 @@ const UpdatePassword = () => {
     };
 
     return (
-        <TestimonialBackground>
+        <div className="flex h-full items-center justify-center">
             <div className="mx-auto flex w-[448px] flex-col gap-4 rounded-md border p-8 lg:mx-0">
-                <div className="flex justify-center">
+                <div className="mb-4 flex items-center gap-2">
                     <Image
-                        src={process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL ?? ""}
+                        src="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
                         alt="logo"
-                        width={48}
-                        height={48}
+                        width={40}
+                        height={40}
                     />
                 </div>
 
-                <div className="grid gap-2 text-center">
+                <div className="grid gap-2">
                     <h1 className="text-2xl font-medium">{TextConstants.TEXT__UPDATE_PASSWORD}</h1>
                     <p className="text-sm text-neutral-400">
                         {TextConstants.TEXT__ENTER_PASSWORD_BELOW}
@@ -106,7 +105,7 @@ const UpdatePassword = () => {
                     </Link>
                 </p>
             </div>
-        </TestimonialBackground>
+        </div>
     );
 };
 
