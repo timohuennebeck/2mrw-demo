@@ -22,12 +22,10 @@ CREATE TABLE
         name TEXT NOT NULL,
         description TEXT NOT NULL,
         pricing JSONB NOT NULL,
-        stripe_price_id TEXT UNIQUE NOT NULL,
         is_highlighted BOOLEAN NOT NULL,
         is_active BOOLEAN NOT NULL,
         features JSONB NOT NULL,
         subscription_tier SubscriptionTierEnums NOT NULL,
-        payment_type PaymentEnums NOT NULL,
         created_at TIMESTAMPTZ NOT NULL,
         updated_at TIMESTAMPTZ NOT NULL
     );
@@ -49,6 +47,7 @@ CREATE TABLE
         user_id UNIQUE UUID REFERENCES public.users (user_id) ON DELETE CASCADE NOT NULL,
         status SubscriptionStatusEnums NOT NULL,
         subscription_tier SubscriptionTierEnums NOT NULL,
+        payment_type PaymentEnums NOT NULL,
         created_at TIMESTAMPTZ NOT NULL,
         updated_at TIMESTAMPTZ NOT NULL
     );

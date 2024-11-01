@@ -11,6 +11,8 @@ import { createClient } from "./server";
 import { User } from "@supabase/supabase-js";
 import { handleSupabaseError } from "../../lib/helper/handleSupabaseError";
 import moment from "moment";
+import { PaymentEnums } from "@/enums/PaymentEnums";
+import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 
 export const createUserTable = async ({ user }: { user: User }) => {
     const supabase = createClient();
@@ -42,11 +44,12 @@ export const createPurchasedSubscriptionTable = async ({
     try {
         const { error } = await supabase.from("purchased_subscriptions").insert({
             user_id: userId,
-            created_at: moment().toISOString(),
-            updated_at: moment().toISOString(),
             stripe_price_id: stripePriceId,
             status: SubscriptionStatus.ACTIVE,
             subscription_tier: subscriptionTier,
+            payment_type: isOneTimePaymentEnabled() ? PaymentEnums.ONE_TIME : PaymentEnums.SUBSCRIPTION,
+            updated_at: moment().toISOString(),
+            created_at: moment().toISOString(),
         });
 
         if (error) throw error;
@@ -72,10 +75,10 @@ export const updateUserPurchasedSubscription = async ({
         const { error } = await supabase
             .from("purchased_subscriptions")
             .update({
-                updated_at: moment().toISOString(),
                 stripe_price_id: stripePriceId,
                 status,
                 subscription_tier: subscriptionTier,
+                updated_at: moment().toISOString(),
             })
             .eq("user_id", userId);
 

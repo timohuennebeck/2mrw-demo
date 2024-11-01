@@ -1,3 +1,4 @@
+import { PaymentEnums } from "@/enums/PaymentEnums";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
 
@@ -13,6 +14,7 @@ export interface PurchasedSubscription {
     user_id: string;
     status: SubscriptionStatus;
     subscription_tier: SubscriptionTier;
+    payment_type: PaymentEnums;
     end_date: string;
     updated_at: Date;
     created_at: Date;
