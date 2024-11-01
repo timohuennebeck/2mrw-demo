@@ -4,6 +4,7 @@ import axios from "axios";
 import { fetchProducts } from "@/services/supabase/queries";
 import { Product } from "@/interfaces/ProductInterfaces";
 import { SendPostPurchaseEmailParams } from "@/interfaces/EmailInterfaces";
+import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 
 export const sendPostPurchaseEmail = async ({
     session,
@@ -13,7 +14,15 @@ export const sendPostPurchaseEmail = async ({
         const { products, error } = await fetchProducts();
         if (error) throw new Error("Failed to fetch products");
 
-        const plan = products?.find((plan: Product) => plan.stripe_price_id === stripePriceId);
+        const plan = products?.find((plan: Product) => {
+            if (isOneTimePaymentEnabled()) {
+                return plan.pricing.one_time?.stripe_price_id === stripePriceId;
+            }
+            return (
+                plan.pricing.subscription?.monthly?.stripe_price_id === stripePriceId ||
+                plan.pricing.subscription?.yearly?.stripe_price_id === stripePriceId
+            );
+        });
         if (!plan) throw new Error("Plan not found");
 
         const postUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/email-services/send-purchased-paid-plan-email`;
