@@ -14,6 +14,9 @@ import moment from "moment";
 import { PaymentEnums } from "@/enums/PaymentEnums";
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { fetchProducts } from "./queries";
+import { EmailTemplate } from "@/lib/email/emailService";
+import axios from "axios";
+import { getPurchasedProductName } from "@/lib/helper/PackagesHelper";
 
 const getEndDate = async (stripePriceId: string) => {
     if (isOneTimePaymentEnabled()) {
@@ -80,6 +83,23 @@ export const startUserSubscription = async ({
         });
 
         if (error) throw error;
+
+        const { data: userData, error: userError } = await supabase
+            .from("users")
+            .select("first_name, email")
+            .eq("user_id", userId)
+            .single();
+
+        if (userError) throw userError;
+
+        const purchasedPackage = await getPurchasedProductName(subscriptionTier);
+
+        await axios.post("/api/email-services", {
+            template: EmailTemplate.ONBOARDING,
+            userEmail: userData.email,
+            userFirstName: userData.first_name,
+            purchasedPackage: purchasedPackage,
+        });
 
         return { success: true, error: null };
     } catch (error) {
