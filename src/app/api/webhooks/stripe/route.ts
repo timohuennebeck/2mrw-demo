@@ -46,7 +46,6 @@ export const POST = async (req: request) => {
         switch (event.type) {
             case StripeWebhookEvents.CHECKOUT_SESSION_COMPLETED:
                 const session = await _retrieveCheckoutSession({ sessionId: event.data.object.id });
-
                 await handleCheckoutSessionCompleted(session);
                 break;
 
