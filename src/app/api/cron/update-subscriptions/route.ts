@@ -1,6 +1,5 @@
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
-import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
-import { endUserFreeTrial, endUserSubscription } from "@/services/supabase/admin";
+import { endUserSubscription } from "@/services/supabase/admin";
 import { createClient } from "@/services/supabase/server";
 import moment from "moment";
 import { NextResponse as response } from "next/server";
@@ -13,28 +12,26 @@ export const GET = async () => {
     try {
         const { data: activeSubscriptions, error: fetchError } = await supabase
             .from("purchased_subscriptions")
-            .select("*")
+            .select("user_id, status, end_date")
             .in("status", [SubscriptionStatus.ACTIVE, SubscriptionStatus.CANCELLED]);
 
         if (fetchError) throw fetchError;
 
-        const updatePromise = activeSubscriptions.map(
-            async (subscription: PurchasedSubscription) => {
-                const now = moment();
-                const endDate = moment(subscription.end_date);
+        const updatePromise = activeSubscriptions.map(async (subscription) => {
+            const now = moment();
+            const endDate = moment(subscription.end_date);
 
-                if (endDate.isBefore(now)) {
-                    const { error } = await endUserSubscription(subscription.user_id);
-                    if (error) throw error;
+            if (endDate.isBefore(now)) {
+                const { error } = await endUserSubscription(subscription.user_id);
+                if (error) throw error;
 
-                    await supabase.auth.updateUser({
-                        data: {
-                            subscription_status: SubscriptionStatus.EXPIRED,
-                        },
-                    });
-                }
-            },
-        );
+                await supabase.auth.updateUser({
+                    data: {
+                        subscription_status: SubscriptionStatus.EXPIRED,
+                    },
+                });
+            }
+        });
 
         if (updatePromise) {
             await Promise.all(updatePromise);

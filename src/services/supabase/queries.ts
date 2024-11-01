@@ -17,7 +17,11 @@ export const checkUserRowExists = async ({
     const supabase = createClient();
 
     try {
-        const { error } = await supabase.from(tableId).select("*").eq("user_id", userId).single();
+        const { error } = await supabase
+            .from(tableId)
+            .select("user_id")
+            .eq("user_id", userId)
+            .single();
 
         if (error) {
             if (error.code === "PGRST116") {
@@ -30,26 +34,6 @@ export const checkUserRowExists = async ({
         return { rowExists: true, error: null };
     } catch (error) {
         return { rowExists: false, error }; // unexpected errors (e.g., network issues, etc.)
-    }
-};
-
-export const fetchUser = async ({ userEmail }: { userEmail: string }) => {
-    const supabase = createClient();
-
-    try {
-        const { data, error } = await supabase
-            .from("users")
-            .select("*")
-            .eq("email", userEmail)
-            .single();
-
-        if (error) throw error;
-
-        const user: User = data;
-
-        return { user, error: null };
-    } catch (error) {
-        return { user: null, error: handleSupabaseError({ error, fnTitle: "fetchUser" }) };
     }
 };
 
@@ -78,7 +62,11 @@ export const checkUserEmailExists = async ({ userEmail }: { userEmail: string })
     const supabase = createClient();
 
     try {
-        const { error } = await supabase.from("users").select("*").eq("email", userEmail).single();
+        const { error } = await supabase
+            .from("users")
+            .select("email")
+            .eq("email", userEmail)
+            .single();
 
         if (error) throw error;
 
@@ -173,15 +161,13 @@ export const fetchSubscriptionTier = async (stripePriceId: string) => {
     try {
         const { data, error } = await supabase
             .from("products")
-            .select("*")
+            .select("subscription_tier")
             .eq("stripe_price_id", stripePriceId)
             .single();
 
         if (error) throw error;
 
-        const product: Product = data;
-
-        return { subscriptionTier: product.subscription_tier, error: null };
+        return { subscriptionTier: data.subscription_tier, error: null };
     } catch (error) {
         return {
             subscriptionTier: null,

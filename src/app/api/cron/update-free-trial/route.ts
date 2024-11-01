@@ -12,7 +12,7 @@ export const GET = async () => {
     try {
         const { data: activeTrials, error: fetchError } = await supabase
             .from("free_trials")
-            .select("*")
+            .select("user_id, status, end_date")
             .in("status", [FreeTrialStatus.ACTIVE, FreeTrialStatus.CANCELLED]);
 
         if (fetchError) throw fetchError;
