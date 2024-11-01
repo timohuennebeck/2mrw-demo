@@ -1,3 +1,4 @@
+import { PaymentEnum } from "@/enums/PaymentEnum";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
 
 export interface Feature {
@@ -16,6 +17,7 @@ export interface Product {
     features: Feature[];
     is_active: boolean;
     subscription_tier: SubscriptionTier;
+    payment_type: PaymentEnum;
     updated_at: Date;
     created_at: Date;
 }

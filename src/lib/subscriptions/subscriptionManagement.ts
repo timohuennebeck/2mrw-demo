@@ -41,11 +41,7 @@ export async function upsertUserSubscription({
     }
 }
 
-export const handleCheckoutSessionCompleted = async ({
-    session,
-}: {
-    session: Stripe.Checkout.Session;
-}) => {
+export const handleOneTimePayment = async ({ session }: { session: Stripe.Checkout.Session }) => {
     const userId = session.metadata?.user_id;
     if (!userId) throw new Error("No user ID in session metadata");
 
@@ -94,7 +90,7 @@ export const handleCheckoutSessionCompleted = async ({
 
         return { success: true };
     } catch (error) {
-        console.error("Error in handleCheckoutSessionCompleted:", error);
+        console.error("Error in handleOneTimePayment:", error);
         throw error;
     }
 };
