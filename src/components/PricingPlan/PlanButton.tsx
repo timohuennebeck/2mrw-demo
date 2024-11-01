@@ -19,7 +19,7 @@ interface PlanButton {
     stripePriceId: string;
     freeTrialStatus: FreeTrialStatus | null;
     subscriptionStatus: SubscriptionStatus | null;
-    subscriptionInfo: PurchasedSubscription;
+    subscriptionData: PurchasedSubscription;
     isLoading: boolean;
     supabaseUser: User | null;
     name: string;
@@ -29,7 +29,7 @@ export const PlanButton = ({
     stripePriceId,
     freeTrialStatus,
     subscriptionStatus,
-    subscriptionInfo,
+    subscriptionData,
     isLoading: dataIsLoading,
     supabaseUser,
     name,
@@ -120,7 +120,7 @@ export const PlanButton = ({
         }
 
         if (hasPurchasedSubscription) {
-            return subscriptionInfo?.stripe_price_id === stripePriceId
+            return subscriptionData?.stripe_price_id === stripePriceId
                 ? { title: TextConstants.TEXT__CURRENT_PLAN, disabled: true }
                 : { ...baseProps, title: TextConstants.TEXT__CHANGE_PLAN, onClick: handleCheckout };
         }

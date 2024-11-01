@@ -16,9 +16,9 @@ import { TextConstants } from "@/constants/TextConstants";
 interface PricingPlanCardProps extends Product {
     supabaseUser: User | null;
     freeTrialStatus: FreeTrialStatus;
-    freeTrialInfo: FreeTrial;
+    freeTrialData: FreeTrial;
     subscriptionStatus: SubscriptionStatus;
-    subscriptionInfo: PurchasedSubscription;
+    subscriptionData: PurchasedSubscription;
     isLoading: boolean;
     billingCycle: "monthly" | "yearly";
     setBillingCycle: (cycle: "monthly" | "yearly") => void;
@@ -32,9 +32,9 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
         description,
         features,
         freeTrialStatus,
-        freeTrialInfo,
+        freeTrialData: freeTrialInfo,
         subscriptionStatus,
-        subscriptionInfo,
+        subscriptionData,
         isLoading,
         supabaseUser,
         billingCycle,
@@ -87,7 +87,7 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
             <PlanButton
                 freeTrialStatus={freeTrialStatus}
                 isLoading={isLoading}
-                subscriptionInfo={subscriptionInfo}
+                subscriptionData={subscriptionData}
                 subscriptionStatus={subscriptionStatus}
                 supabaseUser={supabaseUser ?? null}
                 name={name}

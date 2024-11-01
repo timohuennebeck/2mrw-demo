@@ -112,31 +112,25 @@ export const checkUserEmailExists = async ({ userEmail }: { userEmail: string })
     }
 };
 
-export const checkPurchasedSubscriptionStatus = async ({ userId }: { userId: string }) => {
+export const fetchSubscription = async (userId: string) => {
     const supabase = createClient();
 
     try {
+        const defaultResponse = {
+            subscription: null,
+            error: null,
+        };
+
         const { rowExists, error: rowCheckError } = await checkUserRowExists({
             tableId: "purchased_subscriptions",
             userId,
         });
 
-        if (rowCheckError) {
-            throw rowCheckError;
-        }
+        if (rowCheckError) throw rowCheckError;
 
-        if (!rowExists) {
-            // if the row doesn't exist, the user hasn't started a free trial
-            return {
-                status: null,
-                subscriptionTier: null,
-                subscription: null,
-                error: null,
-            };
-        }
+        if (!rowExists) return defaultResponse;
 
-        // if the row exists, proceed with fetching the data
-        const { data, error } = await supabase
+        const { data: subscription, error } = await supabase
             .from("purchased_subscriptions")
             .select("*")
             .eq("user_id", userId)
@@ -144,43 +138,19 @@ export const checkPurchasedSubscriptionStatus = async ({ userId }: { userId: str
 
         if (error) throw error;
 
-        const subscription: PurchasedSubscription = data;
-
-        switch (subscription.status) {
-            case SubscriptionStatus.ACTIVE:
-                return {
-                    status: SubscriptionStatus.ACTIVE,
-                    subscriptionTier: subscription.subscription_tier,
-                    subscription: subscription,
-                    error: null,
-                };
-
-            case SubscriptionStatus.NOT_PURCHASED:
-                return {
-                    status: SubscriptionStatus.NOT_PURCHASED,
-                    subscriptionTier: SubscriptionTier.TIER_ZERO,
-                    subscription: null,
-                    error: null,
-                };
-            default:
-                return {
-                    status: null,
-                    subscriptionTier: null,
-                    subscription: null,
-                    error: null,
-                };
-        }
+        return {
+            subscription: subscription as PurchasedSubscription,
+            error: null,
+        };
     } catch (error) {
         return {
-            status: null,
-            subscriptionTier: null,
             subscription: null,
-            error: handleSupabaseError({ error, fnTitle: "checkPurchasedSubscriptionStatus" }),
+            error: handleSupabaseError({ error, fnTitle: "fetchSubscription" }),
         };
     }
 };
 
-export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
+export const fetchFreeTrial = async (userId: string) => {
     const supabase = createClient();
 
     try {
@@ -189,20 +159,15 @@ export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
             userId,
         });
 
-        if (rowCheckError) {
-            throw rowCheckError;
-        }
+        if (rowCheckError) throw rowCheckError;
 
         if (!rowExists) {
-            // if the row doesn't exist, the user hasn't started a free trial
             return {
-                status: null,
                 freeTrial: null,
                 error: null,
             };
         }
 
-        // if the row exists, proceed with fetching the data
         const { data: freeTrial, error } = await supabase
             .from("free_trials")
             .select("*")
@@ -211,12 +176,14 @@ export const checkFreeTrialStatus = async ({ userId }: { userId: string }) => {
 
         if (error) throw error;
 
-        return { status: freeTrial.status ?? FreeTrialStatus.EXPIRED };
+        return {
+            freeTrial: freeTrial as FreeTrial,
+            error: null,
+        };
     } catch (error) {
         return {
-            status: null,
             freeTrial: null,
-            error: handleSupabaseError({ error, fnTitle: "checkFreeTrialStatus" }),
+            error: handleSupabaseError({ error, fnTitle: "fetchFreeTrial" }),
         };
     }
 };

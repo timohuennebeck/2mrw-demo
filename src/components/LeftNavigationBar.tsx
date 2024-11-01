@@ -95,7 +95,7 @@ const LeftNavigationBar = () => {
                         {section.items.map((item, itemIndex) => (
                             <div
                                 key={itemIndex}
-                                className={`group flex h-10 cursor-pointer items-center justify-between rounded-md px-3 bg-red-200 ${
+                                className={`group flex h-10 cursor-pointer items-center justify-between rounded-md px-3 ${
                                     pathname === item.link
                                         ? "bg-neutral-100 text-neutral-900"
                                         : "text-neutral-500 hover:bg-neutral-100"

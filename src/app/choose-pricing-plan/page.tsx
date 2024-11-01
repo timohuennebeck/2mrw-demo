@@ -2,7 +2,9 @@
 
 import { PricingPlanCard } from "@/components/PricingPlan/PricingPlanCard";
 import { PricingPlanCardSkeleton } from "@/components/ui/PricingPlanCardSkeleton";
-import { useSubscriptionFreeTrialStatus } from "@/hooks/useSubscriptionFreeTrialStatus";
+import { useSupabaseUser } from "@/hooks/useSupabaseUser";
+import { useFreeTrial } from "@/hooks/useFreeTrial";
+import { useSubscription } from "@/hooks/useSubscription";
 import { Product } from "@/interfaces/ProductInterfaces";
 import { fetchProducts } from "@/services/supabase/queries";
 import { useQuery } from "@tanstack/react-query";
@@ -13,13 +15,28 @@ import { TextConstants } from "@/constants/TextConstants";
 const ChoosePricingPlanPage = () => {
     const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
 
+    const { data: user, isLoading: isUserLoading } = useSupabaseUser();
+    const userId = user?.user?.id;
+
+    const {
+        status: freeTrialStatus,
+        freeTrial: freeTrialData,
+        isLoading: isFreeTrialLoading,
+    } = useFreeTrial(userId ?? "");
+
+    const {
+        status: subscriptionStatus,
+        subscription: subscriptionData,
+        isLoading: isSubscriptionLoading,
+    } = useSubscription(userId ?? "");
+
     const { data: products } = useQuery({
         queryKey: ["products"],
         queryFn: () => fetchProducts(),
         staleTime: 5 * 60 * 1000,
     });
 
-    const subscriptionFreeTrialStatus = useSubscriptionFreeTrialStatus();
+    const isLoading = isUserLoading || isFreeTrialLoading || isSubscriptionLoading;
 
     return (
         <div className="flex h-full min-h-screen w-full items-center justify-center">
@@ -51,16 +68,18 @@ const ChoosePricingPlanPage = () => {
                     </div>
                 )}
                 <div className="mx-auto grid w-full max-w-4xl grid-cols-1 gap-8 md:grid-cols-2">
-                    {subscriptionFreeTrialStatus.isLoading
+                    {isLoading
                         ? [1, 2].map((_, index) => <PricingPlanCardSkeleton key={index} />)
                         : products?.products?.map((product: Product, index) => (
                               <PricingPlanCard
                                   key={index}
                                   {...product}
-                                  {...subscriptionFreeTrialStatus}
-                                  supabaseUser={
-                                      subscriptionFreeTrialStatus.supabaseUser?.user ?? null
-                                  }
+                                  freeTrialStatus={freeTrialStatus}
+                                  freeTrialData={freeTrialData}
+                                  subscriptionStatus={subscriptionStatus}
+                                  subscriptionData={subscriptionData}
+                                  supabaseUser={user?.user ?? null}
+                                  isLoading={isLoading}
                                   billingCycle={billingCycle}
                                   setBillingCycle={setBillingCycle}
                               />

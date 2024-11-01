@@ -1,9 +1,5 @@
 import { useSession } from "@/context/SessionContext";
-import {
-    checkFreeTrialStatus,
-    checkPurchasedSubscriptionStatus,
-    fetchProducts,
-} from "@/services/supabase/queries";
+import { fetchFreeTrial, fetchProducts, fetchSubscription } from "@/services/supabase/queries";
 import { QueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 
@@ -24,12 +20,12 @@ const useUserInfoPreloader = () => {
                         staleTime: 5 * 60 * 1000,
                     }),
                     queryClient.prefetchQuery({
-                        queryKey: ["freeTrialStatus", { userId: user.id }],
-                        queryFn: () => checkFreeTrialStatus({ userId: user.id }),
+                        queryKey: ["freeTrial", user.id],
+                        queryFn: () => fetchFreeTrial(user.id),
                     }),
                     queryClient.prefetchQuery({
-                        queryKey: ["subscriptionStatus", { userId: user.id }],
-                        queryFn: () => checkPurchasedSubscriptionStatus({ userId: user.id }),
+                        queryKey: ["subscription", user.id],
+                        queryFn: () => fetchSubscription(user.id),
                     }),
                 ]);
             } catch (error) {

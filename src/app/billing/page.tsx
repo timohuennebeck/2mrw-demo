@@ -9,7 +9,6 @@ import {
 } from "@/lib/stripe/stripeUtils";
 import { createClient } from "@/services/supabase/client";
 import { User } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
 import { TextConstants } from "@/constants/TextConstants";
 import { paymentConfig } from "@/config/paymentConfig";
 
@@ -26,8 +25,6 @@ const BillingPage = () => {
     const [user, setUser] = useState<User | null>(null);
     const [stripeCustomerId, setStripeCustomerId] = useState<string | null>(null);
     const [creditCardDetails, setCreditCardDetails] = useState<CreditCardDetails | null>(null);
-
-    const router = useRouter();
 
     useEffect(() => {
         const supabase = createClient();
