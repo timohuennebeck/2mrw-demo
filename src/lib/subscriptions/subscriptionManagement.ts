@@ -106,7 +106,7 @@ const endOnGoingFreeTrial = async (userId: string) => {
     }
 };
 
-export const handleOneTimePayment = async (session: Stripe.Checkout.Session) => {
+export const handleCheckoutSessionCompleted = async (session: Stripe.Checkout.Session) => {
     const userId = session.metadata?.user_id;
     if (!userId) throw new Error("No user ID in session metadata");
 
@@ -136,7 +136,7 @@ export const handleOneTimePayment = async (session: Stripe.Checkout.Session) => 
 
         return { success: true };
     } catch (error) {
-        console.error("Error in handleOneTimePayment:", error);
+        console.error("Error in handleCheckoutSessionCompleted:", error);
         throw error;
     }
 };
