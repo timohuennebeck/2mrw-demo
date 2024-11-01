@@ -16,6 +16,6 @@ export interface Product {
     features: Feature[];
     is_active: boolean;
     subscription_tier: SubscriptionTier;
-    created_at: Date;
     updated_at: Date;
+    created_at: Date;
 }

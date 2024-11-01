@@ -6,6 +6,6 @@ export interface FreeTrial {
     stripe_price_id: string;
     user_id: string;
     status: FreeTrialStatus;
-    created_at: string;
-    updated_at: string;
+    updated_at: Date;
+    created_at: Date;
 }

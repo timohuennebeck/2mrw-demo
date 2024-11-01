@@ -9,11 +9,11 @@ export interface UpsertUserSubscriptionParams {
 
 export interface PurchasedSubscription {
     id: number;
-    created_at: string;
-    updated_at: string;
-    end_date: string;
-    user_id: string;
     stripe_price_id: string;
+    user_id: string;
     status: SubscriptionStatus;
     subscription_tier: SubscriptionTier;
+    end_date: string;
+    updated_at: Date;
+    created_at: Date;
 }
