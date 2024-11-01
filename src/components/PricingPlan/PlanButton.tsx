@@ -14,6 +14,7 @@ import moment from "moment";
 import { TextConstants } from "@/constants/TextConstants";
 import { getCurrentPaymentSettings } from "@/config/paymentConfig";
 import { emailConfig } from "@/config/emailConfig";
+import { QueryClient } from "@tanstack/react-query";
 
 interface PlanButton {
     stripePriceId: string;
@@ -68,6 +69,8 @@ export const PlanButton = ({
     };
 
     const startFreeTrial = async () => {
+        const queryClient = new QueryClient();
+
         const freeTrialEndDate = increaseDate({
             date: moment(),
             days:
@@ -88,6 +91,10 @@ export const PlanButton = ({
                     free_trial_status: FreeTrialStatus.ACTIVE,
                     free_trial_end_date: moment().toISOString(),
                 },
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: ["freeTrial", supabaseUser?.id],
             });
 
             toast.success(TextConstants.TEXT__FREE_TRIAL_STARTED);

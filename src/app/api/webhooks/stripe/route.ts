@@ -8,6 +8,7 @@ import {
     handleSubscriptionDeleted,
     handleSubscriptionUpdated,
 } from "@/lib/subscriptions/subscriptionManagement";
+import { QueryClient } from "@tanstack/react-query";
 import { NextRequest as request, NextResponse as response } from "next/server";
 import Stripe from "stripe";
 
@@ -43,18 +44,38 @@ export const POST = async (req: request) => {
         // construct the event and check if the webhook is valid
         const event = await _verifyStripeWebhook({ body, signature });
 
+        const queryClient = new QueryClient();
+
         switch (event.type) {
             case StripeWebhookEvents.CHECKOUT_SESSION_COMPLETED:
                 const session = await _retrieveCheckoutSession({ sessionId: event.data.object.id });
                 await handleCheckoutSessionCompleted(session);
-                break;
 
+                const userId = session.metadata?.user_id;
+                if (userId) {
+                    queryClient.invalidateQueries({ queryKey: ["freeTrial", userId] });
+                    queryClient.invalidateQueries({ queryKey: ["subscription", userId] });
+                }
+                break;
             case StripeWebhookEvents.CUSTOMER_SUBSCRIPTION_UPDATED:
-                await handleSubscriptionUpdated(event.data.object);
-                break;
+                const updatedSubscription = event.data.object as Stripe.Subscription;
+                await handleSubscriptionUpdated(updatedSubscription);
 
+                if (updatedSubscription.metadata.user_id) {
+                    queryClient.invalidateQueries({
+                        queryKey: ["subscription", updatedSubscription.metadata.user_id],
+                    });
+                }
+                break;
             case StripeWebhookEvents.CUSTOMER_SUBSCRIPTION_DELETED:
-                await handleSubscriptionDeleted(event.data.object);
+                const deletedSubscription = event.data.object as Stripe.Subscription;
+                await handleSubscriptionDeleted(deletedSubscription);
+
+                if (deletedSubscription.metadata.user_id) {
+                    queryClient.invalidateQueries({
+                        queryKey: ["subscription", deletedSubscription.metadata.user_id],
+                    });
+                }
                 break;
             default:
                 break;

@@ -8,14 +8,9 @@ import {
     cancelUserSubscription,
     startUserSubscription,
     endUserFreeTrial,
-    endUserSubscription,
     updateUserSubscription,
 } from "@/services/supabase/admin";
-import {
-    checkFreeTrialStatus,
-    checkUserRowExists,
-    fetchSubscriptionTier,
-} from "@/services/supabase/queries";
+import { checkUserRowExists, fetchSubscriptionTier } from "@/services/supabase/queries";
 import { createClient } from "@/services/supabase/server";
 import moment from "moment";
 import Stripe from "stripe";
@@ -60,8 +55,6 @@ export const handleSubscriptionUpdated = async (subscription: Stripe.Subscriptio
 export const handleSubscriptionDeleted = async (subscription: Stripe.Subscription) => {
     const userId = subscription.metadata.user_id;
     if (!userId) throw new Error("No user ID in subscription metadata");
-
-    const supabase = createClient();
 
     try {
         const { error } = await cancelUserSubscription(userId);
