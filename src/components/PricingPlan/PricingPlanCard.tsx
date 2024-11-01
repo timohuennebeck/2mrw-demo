@@ -11,6 +11,7 @@ import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { FreeTrial } from "@/interfaces/FreeTrial";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
+import { TextConstants } from "@/constants/TextConstants";
 
 interface PricingPlanCardProps extends Product {
     supabaseUser: User | null;
@@ -53,14 +54,14 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
         if (isOneTimePaymentEnabled()) {
             return (
                 <div className="flex flex-col items-center gap-1 text-sm text-neutral-500">
-                    <p>Purchase once, own forever</p>
+                    <p>Purchase once, own forever.</p>
                 </div>
             );
         }
 
         return (
             <div className="flex flex-col items-center gap-1 text-sm text-neutral-500">
-                <p>Flexible cancellation, no strings attached!</p>
+                <p>{TextConstants.TEXT__FLEXIBLE_CANCELLATION}</p>
             </div>
         );
     };
