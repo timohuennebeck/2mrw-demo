@@ -13,13 +13,14 @@ export const GET = async () => {
         const { data: activeTrials, error: fetchError } = await supabase
             .from("free_trials")
             .select("*")
-            .eq("status", FreeTrialStatus.ACTIVE);
+            .in("status", [FreeTrialStatus.ACTIVE, FreeTrialStatus.CANCELLED]);
 
         if (fetchError) throw fetchError;
 
         const now = moment();
         const updatePromise = activeTrials.map(async (trial) => {
             const endDate = moment(trial.end_date);
+
             if (endDate.isBefore(now)) {
                 const { error } = await endUserFreeTrial({ userId: trial.user_id });
                 if (error) throw error;

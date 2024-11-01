@@ -177,3 +177,61 @@ export const endUserSubscription = async (userId: string) => {
         };
     }
 };
+
+export const cancelUserFreeTrial = async ({ userId }: { userId: string }) => {
+    const supabase = createClient();
+
+    try {
+        const { error } = await supabase
+            .from("free_trials")
+            .update({
+                updated_at: moment().toISOString(),
+                status: FreeTrialStatus.CANCELLED,
+            })
+            .eq("user_id", userId);
+
+        await supabase.auth.updateUser({
+            data: {
+                free_trial_status: FreeTrialStatus.CANCELLED,
+            },
+        });
+
+        if (error) throw error;
+
+        return { success: true, error: null };
+    } catch (error) {
+        return {
+            success: null,
+            error: handleSupabaseError({ error, fnTitle: "cancelUserFreeTrial" }),
+        };
+    }
+};
+
+export const cancelUserSubscription = async (userId: string) => {
+    const supabase = createClient();
+
+    try {
+        const { error } = await supabase
+            .from("purchased_subscriptions")
+            .update({
+                updated_at: moment().toISOString(),
+                status: SubscriptionStatus.CANCELLED,
+            })
+            .eq("user_id", userId);
+
+        await supabase.auth.updateUser({
+            data: {
+                subscription_status: SubscriptionStatus.CANCELLED,
+            },
+        });
+
+        if (error) throw error;
+
+        return { success: true, error: null };
+    } catch (error) {
+        return {
+            success: null,
+            error: handleSupabaseError({ error, fnTitle: "cancelUserSubscription" }),
+        };
+    }
+};

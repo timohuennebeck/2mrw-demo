@@ -5,6 +5,7 @@ import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { UpsertUserSubscriptionParams } from "@/interfaces/SubscriptionInterfaces";
 import {
+    cancelUserSubscription,
     createPurchasedSubscriptionTable,
     endUserFreeTrial,
     endUserSubscription,
@@ -63,19 +64,8 @@ export const handleSubscriptionDeleted = async (subscription: Stripe.Subscriptio
     const supabase = createClient();
 
     try {
-        await supabase
-            .from("purchased_subscriptions")
-            .update({
-                status: SubscriptionStatus.CANCELLED,
-                updated_at: moment().toISOString(),
-            })
-            .eq("user_id", userId);
-
-        await supabase.auth.updateUser({
-            data: {
-                subscription_status: SubscriptionStatus.CANCELLED,
-            },
-        });
+        const { error } = await cancelUserSubscription(userId);
+        if (error) throw error;
 
         return { success: true };
     } catch (error) {
