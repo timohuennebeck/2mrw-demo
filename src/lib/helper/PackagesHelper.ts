@@ -1,6 +1,6 @@
 import { createClient } from "@/services/supabase/client";
 
-export const getPurchasedProductName = async (subscriptionTier: string) => {
+export const getProductNameByTier = async (subscriptionTier: string) => {
     const supabase = createClient();
 
     const { data: packageData, error: packageError } = await supabase

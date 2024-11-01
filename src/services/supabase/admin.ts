@@ -16,7 +16,7 @@ import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { fetchProducts } from "./queries";
 import { EmailTemplate } from "@/lib/email/emailService";
 import axios from "axios";
-import { getPurchasedProductName } from "@/lib/helper/PackagesHelper";
+import { getProductNameByTier } from "@/lib/helper/PackagesHelper";
 
 const getEndDate = async (stripePriceId: string) => {
     if (isOneTimePaymentEnabled()) {
@@ -92,7 +92,7 @@ export const startUserSubscription = async ({
 
         if (userError) throw userError;
 
-        const purchasedPackage = await getPurchasedProductName(subscriptionTier);
+        const purchasedPackage = await getProductNameByTier(subscriptionTier);
 
         await axios.post("/api/email-services", {
             template: EmailTemplate.ONBOARDING,
