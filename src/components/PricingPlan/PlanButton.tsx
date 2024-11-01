@@ -2,7 +2,7 @@ import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
 import { increaseDate } from "@/lib/helper/increaseDate";
-import { createFreeTrialTable } from "@/services/supabase/admin";
+import { startUserFreeTrial } from "@/services/supabase/admin";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import CustomButton from "../CustomButton";
@@ -13,6 +13,7 @@ import { createClient } from "@/services/supabase/client";
 import moment from "moment";
 import { TextConstants } from "@/constants/TextConstants";
 import { getCurrentPaymentSettings } from "@/config/paymentConfig";
+import { emailConfig } from "@/config/emailConfig";
 
 interface PlanButton {
     stripePriceId: string;
@@ -23,8 +24,6 @@ interface PlanButton {
     supabaseUser: User | null;
     name: string;
 }
-
-const FOURTEEN_DAYS = 14;
 
 export const PlanButton = ({
     stripePriceId,
@@ -72,11 +71,13 @@ export const PlanButton = ({
         const freeTrialEndDate = increaseDate({
             date: moment(),
             days:
-                welcomeEmail === "true" ? FOURTEEN_DAYS : getCurrentPaymentSettings().freeTrialDays,
+                welcomeEmail === "true"
+                    ? emailConfig.settings.freeTrialEmail.freeTrialDuration
+                    : getCurrentPaymentSettings().freeTrialDays,
         });
 
         try {
-            await createFreeTrialTable({
+            await startUserFreeTrial({
                 userId: supabaseUser?.id ?? "",
                 stripePriceId: stripePriceId,
                 freeTrialEndDate,

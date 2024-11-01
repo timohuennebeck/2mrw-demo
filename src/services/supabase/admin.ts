@@ -42,10 +42,10 @@ export const createUserTable = async ({ user }: { user: User }) => {
     try {
         const { error } = await supabase.from("users").insert({
             user_id: user.id,
-            created_at: moment().toISOString(),
-            updated_at: moment().toISOString(),
             first_name: user.user_metadata.full_name,
             email: user.email,
+            updated_at: moment().toISOString(),
+            created_at: moment().toISOString(),
         });
 
         if (error) throw error;
@@ -56,7 +56,7 @@ export const createUserTable = async ({ user }: { user: User }) => {
     }
 };
 
-export const createPurchasedSubscriptionTable = async ({
+export const startUserSubscription = async ({
     userId,
     stripePriceId,
     subscriptionTier,
@@ -85,12 +85,12 @@ export const createPurchasedSubscriptionTable = async ({
     } catch (error) {
         return {
             success: null,
-            error: handleSupabaseError({ error, fnTitle: "createPurchasedSubscriptionTable" }),
+            error: handleSupabaseError({ error, fnTitle: "startUserSubscription" }),
         };
     }
 };
 
-export const updateUserPurchasedSubscription = async ({
+export const updateUserSubscription = async ({
     userId,
     stripePriceId,
     status,
@@ -121,12 +121,12 @@ export const updateUserPurchasedSubscription = async ({
     } catch (error) {
         return {
             success: null,
-            error: handleSupabaseError({ error, fnTitle: "updateUserPurchasedSubscription" }),
+            error: handleSupabaseError({ error, fnTitle: "updateUserSubscription" }),
         };
     }
 };
 
-export const createFreeTrialTable = async ({
+export const startUserFreeTrial = async ({
     userId,
     stripePriceId,
     freeTrialEndDate,
@@ -140,6 +140,8 @@ export const createFreeTrialTable = async ({
             end_date: moment(freeTrialEndDate).toISOString(),
             stripe_price_id: stripePriceId,
             status: FreeTrialStatus.ACTIVE,
+            updated_at: moment().toISOString(),
+            created_at: moment().toISOString(),
         });
 
         if (error) throw error;
@@ -148,7 +150,7 @@ export const createFreeTrialTable = async ({
     } catch (error) {
         return {
             success: null,
-            error: handleSupabaseError({ error, fnTitle: "createFreeTrialTable" }),
+            error: handleSupabaseError({ error, fnTitle: "startUserFreeTrial" }),
         };
     }
 };

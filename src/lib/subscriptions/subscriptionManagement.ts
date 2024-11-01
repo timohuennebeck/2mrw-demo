@@ -6,10 +6,10 @@ import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { UpsertUserSubscriptionParams } from "@/interfaces/SubscriptionInterfaces";
 import {
     cancelUserSubscription,
-    createPurchasedSubscriptionTable,
+    startUserSubscription,
     endUserFreeTrial,
     endUserSubscription,
-    updateUserPurchasedSubscription,
+    updateUserSubscription,
 } from "@/services/supabase/admin";
 import {
     checkFreeTrialStatus,
@@ -82,14 +82,14 @@ const upsertUserSubscription = async ({
     const { rowExists } = await checkUserRowExists({ tableId: "purchased_subscriptions", userId });
 
     if (rowExists) {
-        await updateUserPurchasedSubscription({
+        await updateUserSubscription({
             userId,
             stripePriceId,
             status: SubscriptionStatus.ACTIVE,
             subscriptionTier,
         });
     } else {
-        await createPurchasedSubscriptionTable({
+        await startUserSubscription({
             userId,
             stripePriceId,
             subscriptionTier,

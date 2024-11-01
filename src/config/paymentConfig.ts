@@ -18,7 +18,7 @@ interface CompletePaymentConfig {
 }
 
 export const paymentConfig: CompletePaymentConfig = {
-    paymentType: PaymentEnums.SUBSCRIPTION, // set which payment type is active
+    paymentType: PaymentEnums.ONE_TIME, // set which payment type is active
 
     // subscription settings: used when paymentType is SUBSCRIPTION
     subscriptionSettings: {
