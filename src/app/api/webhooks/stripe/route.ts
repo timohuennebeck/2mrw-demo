@@ -3,6 +3,7 @@
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { StripeWebhookEvents } from "@/enums/StripeWebhookEvents";
 import { VerifyStripeWebhookParams } from "@/interfaces/StripeInterfaces";
+import { queryClient } from "@/lib/qClient/qClient";
 import {
     handleCheckoutSessionCompleted,
     handleSubscriptionDeleted,
@@ -43,8 +44,6 @@ export const POST = async (req: request) => {
 
         // construct the event and check if the webhook is valid
         const event = await _verifyStripeWebhook({ body, signature });
-
-        const queryClient = new QueryClient();
 
         switch (event.type) {
             case StripeWebhookEvents.CHECKOUT_SESSION_COMPLETED:

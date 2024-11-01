@@ -1,9 +1,7 @@
 import { useSession } from "@/context/SessionContext";
+import { queryClient } from "@/lib/qClient/qClient";
 import { fetchUserFreeTrial, fetchUserSubscription } from "@/services/supabase/queries";
-import { QueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-
-const queryClient = new QueryClient();
 
 const useUserInfoPreloader = () => {
     const { userIsLoggedIn, user } = useSession();
