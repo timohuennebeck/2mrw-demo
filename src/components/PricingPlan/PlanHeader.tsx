@@ -6,7 +6,7 @@ import { formatDateToHumanFormat } from "@/lib/helper/formatDateToHumanFormat";
 interface PlanHeaderParams {
     name: string;
     isHighlighted: boolean;
-    freeTrialInfo: FreeTrial | null;
+    freeTrialData: FreeTrial | null;
     freeTrialStatus: FreeTrialStatus | null;
     stripePriceId: string;
 }
@@ -14,19 +14,19 @@ interface PlanHeaderParams {
 export const PlanHeader = ({
     name,
     isHighlighted,
-    freeTrialInfo,
+    freeTrialData,
     freeTrialStatus,
     stripePriceId,
 }: PlanHeaderParams) => {
     const indicatorText = () => {
-        const isCurrentPlan = freeTrialInfo?.stripe_price_id === stripePriceId;
+        const isCurrentPlan = freeTrialData?.stripe_price_id === stripePriceId;
         const isOnFreeTrial = freeTrialStatus === FreeTrialStatus.ACTIVE;
 
-        if (isOnFreeTrial && isCurrentPlan && freeTrialInfo?.end_date) {
+        if (isOnFreeTrial && isCurrentPlan && freeTrialData?.end_date) {
             return (
                 <div className="mb-4 whitespace-nowrap rounded-md bg-black px-2.5 py-0.5 text-center text-sm text-white">
                     {TextConstants.TEXT__FREE_TRIAL_END_DATE}:{" "}
-                    {formatDateToHumanFormat(freeTrialInfo.end_date)}
+                    {formatDateToHumanFormat(freeTrialData.end_date)}
                 </div>
             );
         }

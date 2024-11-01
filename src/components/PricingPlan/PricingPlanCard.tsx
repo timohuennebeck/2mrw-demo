@@ -32,7 +32,7 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
         description,
         features,
         freeTrialStatus,
-        freeTrialData: freeTrialInfo,
+        freeTrialData,
         subscriptionStatus,
         subscriptionData,
         isLoading,
@@ -70,7 +70,7 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
         <div className="relative max-w-lg rounded-md border p-8">
             <div className="mb-6">
                 <PlanHeader
-                    freeTrialInfo={freeTrialInfo}
+                    freeTrialData={freeTrialData}
                     freeTrialStatus={freeTrialStatus}
                     isHighlighted={is_highlighted}
                     name={name}
