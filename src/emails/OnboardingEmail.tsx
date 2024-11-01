@@ -21,7 +21,7 @@ interface PaidPlanEmailTemplateProps {
     purchasedPackage: string;
 }
 
-export const PaidPlanEmailTemplate = ({
+export const OnboardingEmail = ({
     userFirstName,
     purchasedPackage,
 }: PaidPlanEmailTemplateProps) => {
@@ -46,48 +46,47 @@ export const PaidPlanEmailTemplate = ({
                             />
                         </Section>
                         <Heading className="mx-0 my-[30px] p-0 text-center text-[24px] font-normal text-black">
-                            You're all set to go!
+                            You just made my day, {userFirstName}! 😃
                         </Heading>
+
                         <Text className="text-[14px] leading-[24px] text-black">
-                            Hi {userFirstName},
+                            I literally did a little happy dance when I saw you joined us! Thank you
+                            for choosing the <strong>{purchasedPackage}</strong> package - you're
+                            going to love what's in store.
                         </Text>
+
                         <Text className="text-[14px] leading-[24px] text-black">
-                            Great news! Your transaction for <strong>{purchasedPackage}</strong> has
-                            been successfully processed.
+                            I know you're probably excited to dive in (I would be too!), so I've put
+                            together a quick 5-minute video showing you exactly how to get the most
+                            out of {companyInformation.name}.
                         </Text>
-                        <Text className="mt-4 text-[14px] leading-[24px] text-black">
-                            To help you get the most out our product, I've created a quick video
-                            walkthrough.
-                        </Text>
-                        <Text className="mt-4 text-[14px] leading-[24px] text-black">
-                            It covers everything you need to know to hit the ground running with{" "}
-                            {companyInformation.name}.
-                        </Text>
-                        {/* <Button
-                            className="mb-3 w-full rounded bg-black py-2.5 text-center text-[14px] font-semibold text-white no-underline"
-                            href={emailConfig.gettingStartedLoomUrl}
+
+                        <Button
+                            className="my-6 w-full rounded bg-black py-2.5 text-center text-[14px] font-semibold text-white no-underline"
+                            href={emailConfig.settings.onboardingEmail.gettingStartedLoomUrl}
                         >
-                            Watch the Getting Started Video
-                        </Button> */}
+                            SHOW ME THE GOOD STUFF →
+                        </Button>
+
                         <Text className="text-[14px] leading-[24px] text-black">
-                            P.S.: This is sooo exciting! I'd love to hear about how you're using{" "}
-                            {companyInformation.name}. Feel free to share it with me on Twitter! 😃
+                            Got questions? Don't be shy! I'd love to help you personally - just hit
+                            reply to this email. Seriously, I read and respond to every message!
                         </Text>
-                        <Text className="mt-2 text-[14px] leading-[22px]">
-                            Tag us{" "}
-                            <Link href={socialLinks.twitter.company.url} className="text-blue-500">
-                                {socialLinks.twitter.company.tag}
-                            </Link>{" "}
-                            or me, the founder,{" "}
+
+                        <Text className="mt-4 text-[14px] leading-[24px] text-black">
+                            Oh, and if you're on Twitter, come say hi! I'm at{" "}
                             <Link href={socialLinks.twitter.founder.url} className="text-blue-500">
                                 {socialLinks.twitter.founder.tag}
                             </Link>
+                            . I'd love to hear what made you decide to join us!
                         </Text>
+
                         <Hr className="mx-0 my-[26px] w-full border border-solid border-neutral-200" />
+
                         <Text className="text-[12px] leading-[24px] text-neutral-500">
-                            Much love,
+                            Rooting for your success!
                             <br />
-                            Timo Hünnebeck
+                            Timo
                         </Text>
                     </Container>
                 </Body>
@@ -97,9 +96,9 @@ export const PaidPlanEmailTemplate = ({
 };
 
 // enable this during development to preview what the email will look like
-PaidPlanEmailTemplate.PreviewProps = {
+OnboardingEmail.PreviewProps = {
     userFirstName: "Sarah",
     purchasedPackage: "Premium Plan (20% off)",
 } as PaidPlanEmailTemplateProps;
 
-export default PaidPlanEmailTemplate;
+export default OnboardingEmail;

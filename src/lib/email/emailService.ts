@@ -1,8 +1,7 @@
 import { Resend } from "resend";
-import { TextConstants } from "@/constants/TextConstants";
 import FreeTrialEmailTemplate from "@/emails/FreeTrialEmailTemplate";
-import PaidPlanEmailTemplate from "@/emails/PaidPlanEmailTemplate";
 import { emailConfig as actualEmailConfig } from "@/config/emailConfig";
+import OnboardingEmail from "@/emails/OnboardingEmail";
 
 const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_EMAIL_API_KEY ?? "");
 
@@ -14,7 +13,7 @@ interface EmailTemplateProps {
 
 export enum EmailTemplate {
     FREE_TRIAL = "FREE_TRIAL",
-    PAID_PLAN = "PAID_PLAN",
+    ONBOARDING = "ONBOARDING",
 }
 
 const getEmailConfig = (template: EmailTemplate, props: EmailTemplateProps) => {
@@ -34,14 +33,14 @@ const getEmailConfig = (template: EmailTemplate, props: EmailTemplateProps) => {
                 }),
             };
 
-        case EmailTemplate.PAID_PLAN:
-            if (!settings.postPurchaseEmail.isEnabled) {
-                throw new Error("Post purchase email is disabled");
+        case EmailTemplate.ONBOARDING:
+            if (!settings.onboardingEmail.isEnabled) {
+                throw new Error("Onboarding email is disabled");
             }
 
             return {
-                subject: `${settings.postPurchaseEmail.subject} - ${props.purchasedPackage}`,
-                react: PaidPlanEmailTemplate({
+                subject: `${settings.onboardingEmail.subject} - ${props.purchasedPackage}`,
+                react: OnboardingEmail({
                     userFirstName: props.userFirstName,
                     purchasedPackage: props.purchasedPackage!,
                 }),

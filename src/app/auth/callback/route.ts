@@ -5,8 +5,6 @@ import { NextResponse as response } from "next/server";
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
 import { checkUserEmailExists } from "@/services/supabase/queries";
 import { createUserTable } from "@/services/supabase/admin";
-import axios from "axios";
-import { EmailTemplate } from "@/lib/email/emailService";
 
 export const GET = async (request: Request) => {
     const { searchParams, origin } = new URL(request.url);
@@ -50,12 +48,6 @@ export const GET = async (request: Request) => {
                 if (!emailExists) {
                     await createUserTable({ user });
                 }
-
-                await axios.post("/api/email-services", {
-                    template: EmailTemplate.WELCOME,
-                    userEmail: user.user_metadata.email ?? "",
-                    userFirstName: user.user_metadata.full_name ?? "",
-                });
 
                 return response.redirect(`${origin}${next}`);
             } catch (err) {

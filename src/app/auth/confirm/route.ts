@@ -4,9 +4,7 @@ import { type EmailOtpType } from "@supabase/supabase-js";
 import { type NextRequest } from "next/server";
 import { redirect } from "next/navigation";
 import { createClient } from "@/services/supabase/server";
-import axios from "axios";
 import { createUserTable } from "@/services/supabase/admin";
-import { EmailTemplate } from "@/lib/email/emailService";
 
 export const GET = async (request: NextRequest) => {
     // this route is used for email authentication when the user needs to confirm their email via email
@@ -30,12 +28,6 @@ export const GET = async (request: NextRequest) => {
 
                 if (user) {
                     await createUserTable({ user });
-
-                    await axios.post("/api/email-services", {
-                        template: EmailTemplate.WELCOME,
-                        userEmail: user.user_metadata.email ?? "",
-                        userFirstName: user.user_metadata.full_name ?? "",
-                    });
                 } else {
                     console.error("User data not available");
                 }

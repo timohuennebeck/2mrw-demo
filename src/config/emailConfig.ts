@@ -1,5 +1,5 @@
 import FreeTrialEmailTemplate from "@/emails/FreeTrialEmailTemplate";
-import PaidPlanEmailTemplate from "@/emails/PaidPlanEmailTemplate";
+import OnboardingEmail from "@/emails/OnboardingEmail";
 
 interface SocialLinks {
     twitter: {
@@ -28,9 +28,10 @@ interface EmailSettings {
         freeTrialDuration: number;
         template: any;
     };
-    postPurchaseEmail: {
+    onboardingEmail: {
         subject: string;
         isEnabled: boolean;
+        gettingStartedLoomUrl: string;
         template: any;
     };
 }
@@ -59,16 +60,17 @@ export const emailConfig = {
     } as SocialLinks,
 
     settings: {
-        welcomeEmail: {
+        freeTrialEmail: {
             subject: `Welcome to ${COMPANY_NAME}!`,
             isEnabled: false,
             freeTrialDuration: 24, // its recommended to set this higher than the paymentConfig's freeTrialDays
             template: FreeTrialEmailTemplate,
         },
-        postPurchaseEmail: {
+        onboardingEmail: {
             subject: "Order Confirmation",
             isEnabled: false,
-            template: PaidPlanEmailTemplate,
+            gettingStartedLoomUrl: "",
+            template: OnboardingEmail,
         },
     } as EmailSettings,
 };
