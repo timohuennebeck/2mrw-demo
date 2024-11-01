@@ -10,6 +10,8 @@ import {
 import { createClient } from "@/services/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
+import { TextConstants } from "@/constants/TextConstants";
+import { paymentConfig } from "@/config/paymentConfig";
 
 interface CreditCardDetails {
     brand: string;
@@ -136,7 +138,7 @@ const BillingPage = () => {
                                     : "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
                             }`}
                         >
-                            MONTHLY
+                            {TextConstants.TEXT__MONTHLY.toUpperCase()}
                         </button>
                         <button
                             type="button"
@@ -147,7 +149,7 @@ const BillingPage = () => {
                                     : "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
                             }`}
                         >
-                            YEARLY (SAVE 20%)
+                            {`${TextConstants.TEXT__YEARLY.toUpperCase()} (${paymentConfig.subscriptionSettings.yearlyDiscountPercentage}%)`}
                         </button>
                     </div>
                     <form onSubmit={handleSubscriptionChange}>

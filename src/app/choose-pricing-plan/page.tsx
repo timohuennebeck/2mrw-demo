@@ -7,7 +7,8 @@ import { Product } from "@/interfaces/ProductInterfaces";
 import { fetchProducts } from "@/services/supabase/queries";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
+import { isOneTimePaymentEnabled, paymentConfig } from "@/config/paymentConfig";
+import { TextConstants } from "@/constants/TextConstants";
 
 const ChoosePricingPlanPage = () => {
     const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
@@ -34,7 +35,7 @@ const ChoosePricingPlanPage = () => {
                                         : "bg-neutral-100"
                                 }`}
                             >
-                                MONTHLY
+                                {TextConstants.TEXT__MONTHLY.toUpperCase()}
                             </button>
                             <button
                                 onClick={() => setBillingCycle("yearly")}
@@ -44,7 +45,7 @@ const ChoosePricingPlanPage = () => {
                                         : "bg-neutral-100"
                                 }`}
                             >
-                                YEARLY (SAVE 20%)
+                                {`${TextConstants.TEXT__YEARLY.toUpperCase()} (${paymentConfig.subscriptionSettings.yearlyDiscountPercentage}%)`}
                             </button>
                         </div>
                     </div>

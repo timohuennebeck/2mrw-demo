@@ -3,7 +3,6 @@ import { PaymentEnums } from "@/enums/PaymentEnums";
 interface SubscriptionSettings {
     enableFreeTrial: boolean;
     freeTrialDays: number;
-    enableYearlyPlans: boolean;
     yearlyDiscountPercentage: number;
 }
 
@@ -25,7 +24,6 @@ export const paymentConfig: CompletePaymentConfig = {
     subscriptionSettings: {
         enableFreeTrial: false,
         freeTrialDays: 0,
-        enableYearlyPlans: true,
         yearlyDiscountPercentage: 20,
     },
 

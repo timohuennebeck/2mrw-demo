@@ -10,6 +10,8 @@ export const TextConstants = {
     TEXT__SIGN_IN_EMAIL_OR_ANOTHER_SERVICE: "Sign in using email or another service to continue!",
     TEXT__SIGN_UP: "Sign Up",
     TEXT__SIGN_IN: "Log In",
+    TEXT__MONTHLY: "Monthly",
+    TEXT__YEARLY: "Yearly",
     TEXT__HAVE_AN_ACCOUNT: "Have an account?",
     TEXT__DO_NOT_HAVE_AN_ACCOUNT: "Don't have an account?",
     TEXT__FREE_TRIAL_STARTED: "Free Trial has been started",
