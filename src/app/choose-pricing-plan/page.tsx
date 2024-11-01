@@ -2,7 +2,6 @@
 
 import { PricingPlanCard } from "@/components/PricingPlan/PricingPlanCard";
 import { PricingPlanCardSkeleton } from "@/components/ui/PricingPlanCardSkeleton";
-import { useSupabaseUser } from "@/hooks/useSupabaseUser";
 import { useFreeTrial } from "@/hooks/useFreeTrial";
 import { useSubscription } from "@/hooks/useSubscription";
 import { Product } from "@/interfaces/ProductInterfaces";
@@ -10,13 +9,15 @@ import { useState } from "react";
 import { isOneTimePaymentEnabled, paymentConfig } from "@/config/paymentConfig";
 import { TextConstants } from "@/constants/TextConstants";
 import { useProducts } from "@/context/ProductsContext";
+import { useSession } from "@/context/SessionContext";
 
 const ChoosePricingPlanPage = () => {
     const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
 
     const { products } = useProducts();
-    const { data: user, isLoading: isUserLoading } = useSupabaseUser();
-    const userId = user?.user?.id;
+    const { user } = useSession();
+
+    const userId = user?.id;
 
     const {
         status: freeTrialStatus,
@@ -30,7 +31,7 @@ const ChoosePricingPlanPage = () => {
         isLoading: isSubscriptionLoading,
     } = useSubscription(userId ?? "");
 
-    const isLoading = isUserLoading || isFreeTrialLoading || isSubscriptionLoading;
+    const isLoading = isFreeTrialLoading || isSubscriptionLoading;
 
     return (
         <div className="flex h-full min-h-screen w-full items-center justify-center">

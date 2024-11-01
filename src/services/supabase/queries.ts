@@ -53,23 +53,6 @@ export const fetchUser = async ({ userEmail }: { userEmail: string }) => {
     }
 };
 
-export const fetchSupabaseUser = async () => {
-    const supabase = createClient();
-
-    try {
-        const {
-            data: { user },
-            error,
-        } = await supabase.auth.getUser();
-
-        if (!user) throw error;
-
-        return { user, error: null };
-    } catch (error) {
-        return { user: null, error: handleSupabaseError({ error, fnTitle: "fetchSupabaseUser" }) };
-    }
-};
-
 export const fetchProducts = async () => {
     const supabase = createClient();
 

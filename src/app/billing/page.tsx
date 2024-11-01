@@ -11,6 +11,7 @@ import { createClient } from "@/services/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { TextConstants } from "@/constants/TextConstants";
 import { paymentConfig } from "@/config/paymentConfig";
+import { useSession } from "@/context/SessionContext";
 
 interface CreditCardDetails {
     brand: string;
@@ -20,24 +21,12 @@ interface CreditCardDetails {
 }
 
 const BillingPage = () => {
+    const { user } = useSession();
+
     const [selectedPlan, setSelectedPlan] = useState("");
     const [selectedBillingCycle, setSelectedBillingCycle] = useState("monthly");
-    const [user, setUser] = useState<User | null>(null);
     const [stripeCustomerId, setStripeCustomerId] = useState<string | null>(null);
     const [creditCardDetails, setCreditCardDetails] = useState<CreditCardDetails | null>(null);
-
-    useEffect(() => {
-        const supabase = createClient();
-
-        const getUser = async () => {
-            const {
-                data: { user },
-            } = await supabase.auth.getUser();
-            setUser(user);
-        };
-
-        getUser();
-    }, []);
 
     useEffect(() => {
         const fetchStripeCustomerCreditCardDetails = async () => {

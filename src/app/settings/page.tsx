@@ -1,13 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { createClient } from "@/services/supabase/client";
-import { User } from "@supabase/supabase-js";
+import { useState } from "react";
 import DashboardLayout from "../DashboardLayout";
 
 const SettingsPage = () => {
-    const [user, setUser] = useState<User | null>(null);
-    const [emailNotifications, setEmailNotifications] = useState(true);
     const [theme, setTheme] = useState("light");
     const [language, setLanguage] = useState("en");
     const [colorTheme, setColorTheme] = useState("#3B82F6");
@@ -23,52 +19,6 @@ const SettingsPage = () => {
         "#10B981", // Green
         "#F5F5F5", // Light Gray
     ];
-
-    const supabase = createClient();
-
-    useEffect(() => {
-        const getUser = async () => {
-            const {
-                data: { user },
-            } = await supabase.auth.getUser();
-            setUser(user);
-            if (user) {
-                // Load user preferences from Supabase
-                const { data, error } = await supabase
-                    .from("user_preferences")
-                    .select("email_notifications, theme, language")
-                    .eq("user_id", user.id)
-                    .single();
-
-                if (data && !error) {
-                    setEmailNotifications(data.email_notifications);
-                    setTheme(data.theme);
-                    setLanguage(data.language);
-                }
-            }
-        };
-        getUser();
-    }, []);
-
-    const handleSaveSettings = async () => {
-        if (!user) return;
-
-        const { data, error } = await supabase.from("user_preferences").upsert(
-            {
-                user_id: user.id,
-                email_notifications: emailNotifications,
-                theme,
-                language,
-            },
-            { onConflict: "user_id" },
-        );
-
-        if (error) {
-            console.error("Error saving settings:", error);
-        } else {
-            console.log("Settings saved successfully");
-        }
-    };
 
     return (
         <DashboardLayout>
@@ -141,15 +91,13 @@ const SettingsPage = () => {
 
                 <div className="mt-6 flex space-x-4">
                     <button
-                        onClick={() => {
-                            /* Add cancel logic here */
-                        }}
+                        onClick={() => {}}
                         className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                     >
                         Cancel
                     </button>
                     <button
-                        onClick={handleSaveSettings}
+                        onClick={() => {}}
                         className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
                         style={{ backgroundColor: colorTheme }}
                     >
