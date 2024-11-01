@@ -5,6 +5,7 @@ export interface PricePoint {
     previous?: number;
     current: number;
     stripe_price_id: string;
+    currency: string;
 }
 
 export interface ProductPricing {
