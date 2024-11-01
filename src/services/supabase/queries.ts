@@ -108,7 +108,7 @@ export const checkUserEmailExists = async ({ userEmail }: { userEmail: string })
     }
 };
 
-export const fetchSubscription = async (userId: string) => {
+export const fetchUserSubscription = async (userId: string) => {
     const supabase = createClient();
 
     try {
@@ -141,12 +141,12 @@ export const fetchSubscription = async (userId: string) => {
     } catch (error) {
         return {
             subscription: null,
-            error: handleSupabaseError({ error, fnTitle: "fetchSubscription" }),
+            error: handleSupabaseError({ error, fnTitle: "fetchUserSubscription" }),
         };
     }
 };
 
-export const fetchFreeTrial = async (userId: string) => {
+export const fetchUserFreeTrial = async (userId: string) => {
     const supabase = createClient();
 
     try {
@@ -179,7 +179,7 @@ export const fetchFreeTrial = async (userId: string) => {
     } catch (error) {
         return {
             freeTrial: null,
-            error: handleSupabaseError({ error, fnTitle: "fetchFreeTrial" }),
+            error: handleSupabaseError({ error, fnTitle: "fetchUserFreeTrial" }),
         };
     }
 };
