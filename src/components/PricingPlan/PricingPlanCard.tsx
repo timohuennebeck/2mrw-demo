@@ -60,7 +60,7 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
 
         return (
             <div className="flex flex-col items-center gap-1 text-sm text-neutral-500">
-                <p>You can cancel ANYTIME!</p>
+                <p>Flexible cancellation, no strings attached!</p>
             </div>
         );
     };
