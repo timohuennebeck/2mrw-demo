@@ -5,6 +5,11 @@ import { fetchProducts } from "@/services/supabase/queries";
 import { Product } from "@/interfaces/ProductInterfaces";
 import { SendPostPurchaseEmailParams } from "@/interfaces/EmailInterfaces";
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
+import { emailConfig } from "@/config/emailConfig";
+import { TextConstants } from "@/constants/TextConstants";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_EMAIL_API_KEY ?? "");
 
 export const sendPostPurchaseEmail = async ({
     session,
@@ -25,10 +30,13 @@ export const sendPostPurchaseEmail = async ({
         });
         if (!plan) throw new Error("Plan not found");
 
-        const postUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/email-services/send-purchased-paid-plan-email`;
+        if (!emailConfig.settings.postPurchaseEmail.isEnabled) {
+            console.log("Post purchase email is disabled");
+            return;
+        }
 
         // sends official order confirmation email for live products
-        await axios.post(postUrl, {
+        await axios.post("/api/email-services/send-purchased-paid-plan-email", {
             userEmail: session.customer_details?.email ?? "",
             userFirstName: session?.customer_details?.name ?? "",
             purchasedPackage: plan?.name ?? "",

@@ -6,6 +6,7 @@ import { type CookieOptions, createServerClient } from "@supabase/ssr";
 import { checkUserEmailExists } from "@/services/supabase/queries";
 import { createUserTable } from "@/services/supabase/admin";
 import axios from "axios";
+import { emailConfig } from "@/config/emailConfig";
 
 export const GET = async (request: Request) => {
     const { searchParams, origin } = new URL(request.url);
@@ -49,13 +50,14 @@ export const GET = async (request: Request) => {
                 if (!emailExists) {
                     await createUserTable({ user });
 
-                    axios.post(
-                        `${process.env.NEXT_PUBLIC_SITE_URL}/api/email-services/send-free-trial-email`,
-                        {
+                    if (emailConfig.settings.freeTrial.isEnabled) {
+                        axios.post("/api/email-services/send-free-trial-email", {
                             userEmail: user.user_metadata.email ?? "",
                             userFirstName: user.user_metadata.full_name ?? "",
-                        },
-                    );
+                        });
+                    } else {
+                        console.log("Free trial email is disabled");
+                    }
                 }
 
                 return response.redirect(`${origin}${next}`);
