@@ -14,6 +14,7 @@ import {
     getStripePriceIdBasedOnSelectedPlan,
 } from "@/lib/helper/priceHelper";
 import { initiateStripeCheckoutProcess } from "@/lib/stripe/stripeUtils";
+import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 
 const ChangeSubscriptionPlan = () => {
     const { products } = useProducts();
@@ -26,6 +27,7 @@ const ChangeSubscriptionPlan = () => {
 
     const [selectedPlan, setSelectedPlan] = useState("");
     const [selectedBillingCycle, setSelectedBillingCycle] = useState("monthly");
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -42,6 +44,7 @@ const ChangeSubscriptionPlan = () => {
 
     if (!products) return null;
 
+    const isOnFreeTrial = freeTrial?.status === FreeTrialStatus.ACTIVE;
     const activeStripePriceId = subscription?.stripe_price_id || freeTrial?.stripe_price_id;
     const activeProductDetails = activeStripePriceId
         ? getProductDetailsByStripePriceId(products, activeStripePriceId)
@@ -65,6 +68,8 @@ const ChangeSubscriptionPlan = () => {
                 return;
             }
 
+            setIsLoading(true);
+
             const stripePriceId = getStripePriceIdBasedOnSelectedPlan({
                 products,
                 selectedPlan,
@@ -78,9 +83,10 @@ const ChangeSubscriptionPlan = () => {
             }
 
             const { checkoutUrl } = await initiateStripeCheckoutProcess({
-                userId: user.id,
                 userEmail: user.email,
                 stripePriceId,
+                successUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/billing?session_id={CHECKOUT_SESSION_ID}`,
+                cancelUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/billing`,
             });
 
             if (checkoutUrl) {
@@ -89,6 +95,8 @@ const ChangeSubscriptionPlan = () => {
         } catch (error) {
             console.error("Error changing subscription:", error);
             toast.error("Failed to change subscription plan");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -125,6 +133,7 @@ const ChangeSubscriptionPlan = () => {
 
                         // check if this is the current active plan
                         const isCurrentPlan = activeProductDetails?.id === product.id;
+                        const isDisabled = isCurrentPlan && !isOnFreeTrial;
 
                         return (
                             <div
@@ -133,8 +142,8 @@ const ChangeSubscriptionPlan = () => {
                                     selectedPlan === product.id
                                         ? "border-blue-500 bg-blue-50"
                                         : "border-gray-200 bg-white"
-                                } ${isCurrentPlan ? "cursor-not-allowed opacity-50" : "cursor-pointer"} p-4`}
-                                onClick={() => !isCurrentPlan && setSelectedPlan(product.id)}
+                                } ${isDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"} p-4`}
+                                onClick={() => !isDisabled && setSelectedPlan(product.id)}
                             >
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center">
@@ -145,15 +154,13 @@ const ChangeSubscriptionPlan = () => {
                                             value={product.id}
                                             checked={selectedPlan === product.id}
                                             onChange={() => {}}
-                                            disabled={isCurrentPlan}
+                                            disabled={isDisabled}
                                             className="mr-3 h-4 w-4 text-blue-600 disabled:opacity-50"
                                         />
                                         <label
                                             htmlFor={`${product.id}-plan`}
                                             className={`text-sm ${
-                                                isCurrentPlan
-                                                    ? "cursor-not-allowed"
-                                                    : "cursor-pointer"
+                                                isDisabled ? "cursor-not-allowed" : "cursor-pointer"
                                             }`}
                                         >
                                             <div className="font-medium text-gray-700">
@@ -184,7 +191,11 @@ const ChangeSubscriptionPlan = () => {
                 </div>
 
                 <div className="mt-6 flex items-start justify-start">
-                    <CustomButton title="Change Plan" disabled={!selectedPlan} isLoading={false} />
+                    <CustomButton
+                        title={isOnFreeTrial ? "Upgrade Plan" : "Change Plan"}
+                        disabled={!selectedPlan || isLoading}
+                        isLoading={isLoading}
+                    />
                 </div>
             </form>
         </div>

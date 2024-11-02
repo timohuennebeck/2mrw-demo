@@ -16,7 +16,7 @@ const CurrentSubscriptionPlan = () => {
     const { subscription } = useSubscription(user?.id ?? "");
     const { freeTrial } = useFreeTrial(user?.id ?? "");
 
-    const activePriceId = freeTrial?.stripe_price_id || subscription?.stripe_price_id;
+    const activePriceId = subscription?.stripe_price_id || freeTrial?.stripe_price_id;
 
     if (!products) return null;
 
@@ -63,16 +63,19 @@ const CurrentSubscriptionPlan = () => {
     };
 
     const getSubscriptionStatusMessage = () => {
-        switch (true) {
-            case freeTrial?.status === FreeTrialStatus.ACTIVE:
-                return `Your FREE TRIAL will end on ${formatDateToHumanFormat(freeTrial?.end_date)}.`;
-            case subscription?.status === SubscriptionStatus.ACTIVE:
-                return `Your subscription will renew on ${formatDateToHumanFormat(subscription?.end_date)}.`;
-            case subscription?.status === SubscriptionStatus.CANCELLED:
-                return `Your subscription has been cancelled and will end on ${formatDateToHumanFormat(subscription?.end_date)}.`;
-            default:
-                return null;
+        if (freeTrial?.end_date === null || subscription?.end_date === null) {
+            return null;
         }
+
+        if (freeTrial?.status === FreeTrialStatus.ACTIVE) {
+            return `Your FREE TRIAL will end on ${formatDateToHumanFormat(freeTrial?.end_date)}.`;
+        } else if (subscription?.status === SubscriptionStatus.ACTIVE) {
+            return `Your subscription will renew on ${formatDateToHumanFormat(subscription?.end_date)}.`;
+        } else if (subscription?.status === SubscriptionStatus.CANCELLED) {
+            return `Your subscription has been cancelled and will end on ${formatDateToHumanFormat(subscription?.end_date)}.`;
+        }
+
+        return null;
     };
 
     return (

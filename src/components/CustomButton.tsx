@@ -19,7 +19,7 @@ const CustomButton = ({ title, onClick, disabled, isLoading, isSecondary }: Cust
             type="submit"
             className={`flex items-center justify-center rounded-md px-4 py-2.5 text-sm font-medium outline-none transition-colors ${
                 isDisabledOrLoading
-                    ? "cursor-not-allowed bg-neutral-300 text-neutral-500 opacity-60"
+                    ? "cursor-not-allowed bg-neutral-300 text-neutral-500 opacity-60 border border-transparent"
                     : isSecondary
                       ? "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
                       : "bg-black border border-transparent text-white hover:bg-neutral-700"
