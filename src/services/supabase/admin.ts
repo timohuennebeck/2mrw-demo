@@ -217,8 +217,8 @@ export const endUserFreeTrial = async ({ userId }: { userId: string }) => {
             })
             .eq("user_id", userId);
 
-        await supabase.auth.updateUser({
-            data: {
+        await supabase.auth.admin.updateUserById(userId, {
+            user_metadata: {
                 free_trial_status: FreeTrialStatus.EXPIRED,
             },
         });
@@ -246,8 +246,8 @@ export const endUserSubscription = async (userId: string) => {
             })
             .eq("user_id", userId);
 
-        await supabase.auth.updateUser({
-            data: {
+        await supabase.auth.admin.updateUserById(userId, {
+            user_metadata: {
                 subscription_status: SubscriptionStatus.EXPIRED,
             },
         });
@@ -275,8 +275,8 @@ export const cancelUserFreeTrial = async ({ userId }: { userId: string }) => {
             })
             .eq("user_id", userId);
 
-        await supabase.auth.updateUser({
-            data: {
+        await supabase.auth.admin.updateUserById(userId, {
+            user_metadata: {
                 free_trial_status: FreeTrialStatus.CANCELLED,
             },
         });
@@ -304,8 +304,8 @@ export const cancelUserSubscription = async (userId: string) => {
             })
             .eq("user_id", userId);
 
-        await supabase.auth.updateUser({
-            data: {
+        await supabase.auth.admin.updateUserById(userId, {
+            user_metadata: {
                 subscription_status: SubscriptionStatus.CANCELLED,
             },
         });
