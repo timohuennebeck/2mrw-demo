@@ -24,12 +24,9 @@ interface PaidPlanEmailTemplateProps {
 const OnboardingEmail = ({ userFirstName, purchasedPackage }: PaidPlanEmailTemplateProps) => {
     const { companyInformation, socialLinks } = emailConfig;
 
-    const previewText = `Thank you for your order of ${purchasedPackage}!`;
-
     return (
         <Html>
             <Head />
-            <Preview>{previewText}</Preview>
             <Tailwind>
                 <Body className="mx-auto my-auto bg-white px-2 font-sans">
                     <Container className="mx-auto my-[40px] max-w-[528px] rounded border border-solid border-neutral-200 p-[20px]">
