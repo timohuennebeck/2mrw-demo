@@ -1,16 +1,19 @@
 import { TextConstants } from "@/constants/TextConstants";
 import CustomButton from "../CustomButton";
 import HeaderWithDescription from "../HeaderWithDescription";
-import { isOneTimePaymentEnabled, paymentConfig } from "@/config/paymentConfig";
+import { paymentConfig } from "@/config/paymentConfig";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSession } from "@/context/SessionContext";
 import { useProducts } from "@/context/ProductsContext";
 import useFreeTrial from "@/hooks/useFreeTrial";
 import useSubscription from "@/hooks/useSubscription";
 import { Product } from "@/interfaces/ProductInterfaces";
-import { PaymentEnums } from "@/enums/PaymentEnums";
-import { getProductDetailsByStripePriceId } from "@/lib/helper/priceHelper";
+import {
+    getProductDetailsByStripePriceId,
+    getStripePriceIdBasedOnSelectedPlan,
+} from "@/lib/helper/priceHelper";
+import { initiateStripeCheckoutProcess } from "@/lib/stripe/stripeUtils";
 
 const ChangeSubscriptionPlan = () => {
     const { products } = useProducts();
@@ -19,8 +22,23 @@ const ChangeSubscriptionPlan = () => {
     const { subscription } = useSubscription(user?.id ?? "");
     const { freeTrial } = useFreeTrial(user?.id ?? "");
 
+    const formRef = useRef<HTMLFormElement>(null);
+
     const [selectedPlan, setSelectedPlan] = useState("");
     const [selectedBillingCycle, setSelectedBillingCycle] = useState("monthly");
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (formRef.current && !formRef.current.contains(event.target as Node)) {
+                setSelectedPlan("");
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     if (!products) return null;
 
@@ -47,15 +65,27 @@ const ChangeSubscriptionPlan = () => {
                 return;
             }
 
-            // const { checkoutUrl } = await initiateStripeCheckoutProcess({
-            //     userId: user.id,
-            //     userEmail: user.email,
-            //     stripePriceId: getStripePriceId(selectedPlan, selectedBillingCycle),
-            // });
+            const stripePriceId = getStripePriceIdBasedOnSelectedPlan({
+                products,
+                selectedPlan,
+                selectedBillingCycle,
+                isOneTimePaymentPlan,
+            });
 
-            // if (checkoutUrl) {
-            //     window.location.href = checkoutUrl;
-            // }
+            if (!stripePriceId) {
+                toast.error("Invalid plan selection");
+                return;
+            }
+
+            const { checkoutUrl } = await initiateStripeCheckoutProcess({
+                userId: user.id,
+                userEmail: user.email,
+                stripePriceId,
+            });
+
+            if (checkoutUrl) {
+                window.location.href = checkoutUrl;
+            }
         } catch (error) {
             console.error("Error changing subscription:", error);
             toast.error("Failed to change subscription plan");
@@ -84,7 +114,7 @@ const ChangeSubscriptionPlan = () => {
                 </div>
             )}
 
-            <form onSubmit={handleSubscriptionChange}>
+            <form onSubmit={handleSubscriptionChange} ref={formRef}>
                 <div className="space-y-4">
                     {filteredProducts?.map((product) => {
                         const price = isOneTimePaymentPlan

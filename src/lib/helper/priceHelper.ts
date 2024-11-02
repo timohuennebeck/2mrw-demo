@@ -1,3 +1,5 @@
+import { Product } from "@/interfaces/ProductInterfaces";
+
 export const formatPriceDisplay = (price: {
     current: number;
     previous?: number;
@@ -11,7 +13,29 @@ export const formatPriceDisplay = (price: {
     return `${price.current} ${price.currency}/${price.interval.toUpperCase()}`;
 };
 
-import { Product } from "@/interfaces/ProductInterfaces";
+export const getStripePriceIdBasedOnSelectedPlan = ({
+    products,
+    selectedPlan,
+    selectedBillingCycle,
+    isOneTimePaymentPlan,
+}: {
+    products: Product[];
+    selectedPlan: string;
+    selectedBillingCycle: string;
+    isOneTimePaymentPlan: boolean;
+}) => {
+    const selectedProduct = products.find((product) => product.id === selectedPlan);
+
+    if (!selectedProduct) return null;
+
+    if (isOneTimePaymentPlan) {
+        return selectedProduct.pricing.one_time?.stripe_price_id;
+    }
+
+    return selectedBillingCycle === "monthly"
+        ? selectedProduct.pricing.subscription?.monthly?.stripe_price_id
+        : selectedProduct.pricing.subscription?.yearly?.stripe_price_id;
+};
 
 export const getProductDetailsByStripePriceId = (products: Product[], stripePriceId: string) => {
     const product = products.find((product) => {
