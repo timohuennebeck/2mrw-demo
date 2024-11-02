@@ -16,15 +16,15 @@ import {
 } from "@react-email/components";
 import { emailConfig } from "@/config/emailConfig";
 
-interface PaidPlanEmailTemplateProps {
+interface FreeTrialEmailTemplateProps {
     userFirstName: string;
-    purchasedPackage: string;
+    freeTrialEndDate: string;
 }
 
-const OnboardingEmail = ({ userFirstName, purchasedPackage }: PaidPlanEmailTemplateProps) => {
+const FreeTrialEmail = ({ userFirstName, freeTrialEndDate }: FreeTrialEmailTemplateProps) => {
     const { companyInformation, socialLinks } = emailConfig;
 
-    const previewText = `Thank you for your order of ${purchasedPackage}!`;
+    const previewText = `Welcome to your free trial of ${companyInformation.name}!`;
 
     return (
         <Html>
@@ -43,27 +43,18 @@ const OnboardingEmail = ({ userFirstName, purchasedPackage }: PaidPlanEmailTempl
                             />
                         </Section>
                         <Heading className="mx-0 my-[30px] p-0 text-center text-[24px] font-normal text-black">
-                            You just made mY daY, {userFirstName}! 😃
+                            You're in, {userFirstName}! 🌟
                         </Heading>
-
                         <Text className="text-[14px] leading-[24px] text-black">
-                            I literallY did a little happY dance when I saw You joined us! Thank You
-                            for purchasing the <strong>{purchasedPackage}</strong>.
+                            I'm thrilled You've decided to give {companyInformation.name} a trY!
+                            Your free trial is now active and will run until{" "}
+                            <strong>{freeTrialEndDate}</strong>.
                         </Text>
-
                         <Text className="text-[14px] leading-[24px] text-black">
-                            I know You're probablY excited to dive in (I would be too!), so I've put
-                            together a quick 5-minute video showing You exactlY how to get the most
-                            out of <strong>{companyInformation.name}</strong>.
+                            Don't worrY - I'll send You a reminder{" "}
+                            <strong>2 daYs before Your free trial ends</strong> so You can decide if
+                            You'd like to continue with a full subscription.
                         </Text>
-
-                        <Button
-                            className="my-6 w-full rounded bg-black py-2.5 text-center text-[14px] font-semibold text-white no-underline"
-                            href={emailConfig.settings.onboardingEmail.gettingStartedLoomUrl}
-                        >
-                            SHOW ME THE GOOD STUFF →
-                        </Button>
-
                         <Text className="mt-4 text-[14px] leading-[24px] text-black">
                             P.S. If You're on Twitter, come saY hi! You can find me at{" "}
                             <Link href={socialLinks.twitter.founder.url} className="text-blue-500">
@@ -90,9 +81,9 @@ const OnboardingEmail = ({ userFirstName, purchasedPackage }: PaidPlanEmailTempl
 };
 
 // enable this during development to preview what the email will look like
-OnboardingEmail.PreviewProps = {
+FreeTrialEmail.PreviewProps = {
     userFirstName: "Katja",
-    purchasedPackage: "Premium Plan (20% off)",
-} as PaidPlanEmailTemplateProps;
+    freeTrialEndDate: "December 31, 2024",
+} as FreeTrialEmailTemplateProps;
 
-export default OnboardingEmail;
+export default FreeTrialEmail;

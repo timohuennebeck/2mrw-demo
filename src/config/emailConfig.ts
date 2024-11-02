@@ -40,7 +40,7 @@ export const emailConfig = {
         name: COMPANY_NAME,
         supportEmail: "contact@joinforj.com",
         senderEmail: "info@updates.joinforj.com",
-        logoUrl: "https://i.imgur.com/ugoKURb.png",
+        logoUrl: "https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg",
     } as CompanyInfo,
 
     socialLinks: {

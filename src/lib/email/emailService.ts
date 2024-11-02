@@ -1,7 +1,7 @@
 import { Resend } from "resend";
-import FreeTrialEmailTemplate from "@/emails/FreeTrialEmailTemplate";
 import { emailConfig as actualEmailConfig } from "@/config/emailConfig";
 import OnboardingEmail from "@/emails/OnboardingEmail";
+import FreeTrialEmail from "@/emails/FreeTrialEmail";
 
 const resend = new Resend(process.env.RESEND_EMAIL_API_KEY ?? "");
 
@@ -9,6 +9,7 @@ interface EmailTemplateProps {
     userEmail: string;
     userFirstName: string;
     purchasedPackage?: string;
+    freeTrialEndDate?: string;
 }
 
 export enum EmailTemplate {
@@ -27,9 +28,9 @@ const getEmailConfig = (template: EmailTemplate, props: EmailTemplateProps) => {
 
             return {
                 subject: settings.freeTrialEmail.subject,
-                react: FreeTrialEmailTemplate({
+                react: FreeTrialEmail({
                     userFirstName: props.userFirstName,
-                    trialSignupLink: `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan?welcomeEmail=true`,
+                    freeTrialEndDate: props.freeTrialEndDate!,
                 }),
             };
 

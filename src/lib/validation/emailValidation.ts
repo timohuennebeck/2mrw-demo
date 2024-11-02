@@ -8,4 +8,8 @@ export const validateEmailProps = (template: EmailTemplate, props: any) => {
     if (template === EmailTemplate.ONBOARDING && !props.purchasedPackage) {
         throw new Error("Missing purchasedPackage field");
     }
+
+    if (template === EmailTemplate.FREE_TRIAL && !props.freeTrialEndDate) {
+        throw new Error("Missing freeTrialEndDate field");
+    }
 };
