@@ -40,7 +40,7 @@ export const emailConfig = {
         name: COMPANY_NAME,
         supportEmail: "contact@joinforj.com",
         senderEmail: "info@updates.joinforj.com",
-        logoUrl: process.env.NEXT_PUBLIC_EMAIL_LOGO_BASE_URL,
+        logoUrl: "https://i.imgur.com/ugoKURb.png",
     } as CompanyInfo,
 
     socialLinks: {

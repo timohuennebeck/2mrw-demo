@@ -12,14 +12,14 @@ import { getUserId } from "@/services/supabase/queries";
 import { NextRequest as request, NextResponse as response } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY ?? "");
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 
 const _verifyStripeWebhook = async ({ body, signature }: VerifyStripeWebhookParams) => {
     try {
         return stripe.webhooks.constructEvent(
             body,
             signature,
-            process.env.NEXT_PUBLIC_STRIPE_WEBHOOK_SECRET!,
+            process.env.STRIPE_WEBHOOK_SECRET!,
         );
     } catch (err: unknown) {
         throw new Error("Invalid signature");

@@ -5,7 +5,7 @@ import { InitiateStripeCheckoutProcessParams } from "@/interfaces/StripeInterfac
 import axios from "axios";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY ?? "");
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 
 export const initiateStripeCheckoutProcess = async ({
     userId,
