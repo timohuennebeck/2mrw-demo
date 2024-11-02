@@ -66,7 +66,7 @@ export const emailConfig = {
         },
         freeTrialReminderEmail: {
             subject: "Your free trial is ending soon!",
-            isEnabled: false,
+            isEnabled: true,
         },
         onboardingEmail: {
             subject: "Order Confirmation",
