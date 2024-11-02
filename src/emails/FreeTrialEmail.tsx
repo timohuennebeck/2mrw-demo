@@ -7,11 +7,9 @@ import {
     Hr,
     Html,
     Img,
-    Preview,
     Section,
     Text,
     Tailwind,
-    Button,
     Link,
 } from "@react-email/components";
 import { emailConfig } from "@/config/emailConfig";

@@ -7,7 +7,6 @@ import {
     Hr,
     Html,
     Img,
-    Preview,
     Section,
     Text,
     Tailwind,

@@ -15,6 +15,9 @@ import { TextConstants } from "@/constants/TextConstants";
 import { getCurrentPaymentSettings } from "@/config/paymentConfig";
 import { emailConfig } from "@/config/emailConfig";
 import { queryClient } from "@/lib/qClient/qClient";
+import { sendEmail } from "@/lib/email/emailService";
+import { EmailTemplate } from "@/lib/email/emailService";
+import { validateEmailProps } from "@/lib/validation/emailValidation";
 
 interface PlanButton {
     stripePriceId: string;
@@ -90,6 +93,32 @@ export const PlanButton = ({
                     free_trial_end_date: moment().toISOString(),
                 },
             });
+
+            const { data: userData, error: userError } = await supabase
+                .from("users")
+                .select("first_name, email")
+                .eq("id", supabaseUser?.id)
+                .single();
+
+            if (userError) {
+                console.error("Failed to fetch user data for email:", userError);
+            } else {
+                try {
+                    validateEmailProps(EmailTemplate.FREE_TRIAL, {
+                        userEmail: userData.email,
+                        userFirstName: userData.first_name,
+                        freeTrialEndDate: moment(freeTrialEndDate).format("MMMM D, YYYY"),
+                    });
+
+                    await sendEmail(EmailTemplate.FREE_TRIAL, {
+                        userEmail: userData.email,
+                        userFirstName: userData.first_name,
+                        freeTrialEndDate: moment(freeTrialEndDate).format("MMMM D, YYYY"),
+                    });
+                } catch (emailError) {
+                    console.error("Failed to send free trial email:", emailError);
+                }
+            }
 
             queryClient.invalidateQueries({
                 queryKey: ["freeTrial", supabaseUser?.id],
