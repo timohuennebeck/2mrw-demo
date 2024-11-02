@@ -61,7 +61,7 @@ export const emailConfig = {
 
     settings: {
         freeTrialEmail: {
-            subject: `Welcome to ${COMPANY_NAME}!`,
+            subject: "Your free trial has started!",
             isEnabled: true,
         },
         freeTrialReminderEmail: {
