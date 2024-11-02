@@ -43,19 +43,18 @@ const OnboardingEmail = ({ userFirstName, purchasedPackage }: PaidPlanEmailTempl
                             />
                         </Section>
                         <Heading className="mx-0 my-[30px] p-0 text-center text-[24px] font-normal text-black">
-                            You just made my day, {userFirstName}! 😃
+                            You just made mY daY, {userFirstName}! 😃
                         </Heading>
 
                         <Text className="text-[14px] leading-[24px] text-black">
-                            I literally did a little happy dance when I saw you joined us! Thank you
-                            for choosing the <strong>{purchasedPackage}</strong> package - you're
-                            going to love what's in store.
+                            I literallY did a little happY dance when I saw You joined us! Thank You
+                            for choosing the <strong>{purchasedPackage}</strong>.
                         </Text>
 
                         <Text className="text-[14px] leading-[24px] text-black">
-                            I know you're probably excited to dive in (I would be too!), so I've put
-                            together a quick 5-minute video showing you exactly how to get the most
-                            out of {companyInformation.name}.
+                            I know You're probablY excited to dive in (I would be too!), so I've put
+                            together a quick 5-minute video showing You exactlY how to get the most
+                            out of <strong>{companyInformation.name}</strong>.
                         </Text>
 
                         <Button
@@ -65,23 +64,21 @@ const OnboardingEmail = ({ userFirstName, purchasedPackage }: PaidPlanEmailTempl
                             SHOW ME THE GOOD STUFF →
                         </Button>
 
-                        <Text className="text-[14px] leading-[24px] text-black">
-                            Got questions? Don't be shy! I'd love to help you personally - just hit
-                            reply to this email. Seriously, I read and respond to every message!
-                        </Text>
-
                         <Text className="mt-4 text-[14px] leading-[24px] text-black">
-                            Oh, and if you're on Twitter, come say hi! I'm at{" "}
+                            P.S. If You're on Twitter, come saY hi! You can find me at{" "}
                             <Link href={socialLinks.twitter.founder.url} className="text-blue-500">
                                 {socialLinks.twitter.founder.tag}
+                            </Link>{" "}
+                            or{" "}
+                            <Link href={socialLinks.twitter.company.url} className="text-blue-500">
+                                {socialLinks.twitter.company.tag}.
                             </Link>
-                            . I'd love to hear what made you decide to join us!
                         </Text>
 
                         <Hr className="mx-0 my-[26px] w-full border border-solid border-neutral-200" />
 
                         <Text className="text-[12px] leading-[24px] text-neutral-500">
-                            Rooting for your success!
+                            Thanks again,
                             <br />
                             Timo
                         </Text>
@@ -94,7 +91,7 @@ const OnboardingEmail = ({ userFirstName, purchasedPackage }: PaidPlanEmailTempl
 
 // enable this during development to preview what the email will look like
 OnboardingEmail.PreviewProps = {
-    userFirstName: "Sarah",
+    userFirstName: "Katja",
     purchasedPackage: "Premium Plan (20% off)",
 } as PaidPlanEmailTemplateProps;
 
