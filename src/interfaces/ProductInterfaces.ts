@@ -22,7 +22,7 @@ export interface Feature {
 }
 
 export interface Product {
-    id: number;
+    id: string;
     name: string;
     description: string;
     pricing: ProductPricing;

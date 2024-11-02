@@ -39,6 +39,7 @@ export const getProductDetailsByStripePriceId = (products: Product[], stripePric
     const priceDetails = getProductPriceByStripePriceId(product, stripePriceId);
 
     return {
+        id: product.id,
         name: product.name,
         features: product.features,
         description: product.description,

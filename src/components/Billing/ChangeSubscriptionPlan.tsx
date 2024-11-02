@@ -9,6 +9,8 @@ import { useProducts } from "@/context/ProductsContext";
 import useFreeTrial from "@/hooks/useFreeTrial";
 import useSubscription from "@/hooks/useSubscription";
 import { Product } from "@/interfaces/ProductInterfaces";
+import { PaymentEnums } from "@/enums/PaymentEnums";
+import { getProductDetailsByStripePriceId } from "@/lib/helper/priceHelper";
 
 const ChangeSubscriptionPlan = () => {
     const { products } = useProducts();
@@ -20,13 +22,20 @@ const ChangeSubscriptionPlan = () => {
     const [selectedPlan, setSelectedPlan] = useState("");
     const [selectedBillingCycle, setSelectedBillingCycle] = useState("monthly");
 
+    if (!products) return null;
+
+    const activeStripePriceId = subscription?.stripe_price_id || freeTrial?.stripe_price_id;
+    const activeProductDetails = activeStripePriceId
+        ? getProductDetailsByStripePriceId(products, activeStripePriceId)
+        : null;
+    const isOneTimePaymentPlan = activeProductDetails?.price?.interval === "one-time";
+
     const filteredProducts = products?.filter((product: Product) => {
-        // If user is on OTP, only show OTP plans
-        if (isOneTimePaymentEnabled()) {
-            return product.pricing.one_time;
+        if (isOneTimePaymentPlan) {
+            return product.pricing.one_time; // if user is on OTP, only show OTP plans
         }
-        // If user is on subscription, only show subscription plans
-        return product.pricing.subscription;
+
+        return product.pricing.subscription; // if user is on subscription, only show subscription plans
     });
 
     const handleSubscriptionChange = async (e: React.FormEvent) => {
@@ -60,8 +69,7 @@ const ChangeSubscriptionPlan = () => {
                 description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam et odit autem alias aut praesentium vel nisi repudiandae saepe consectetur!"
             />
 
-            {/* Only show billing cycle toggle for subscription plans */}
-            {!isOneTimePaymentEnabled() && (
+            {!isOneTimePaymentPlan && (
                 <div className="mb-6 flex space-x-4">
                     <CustomButton
                         title={TextConstants.TEXT__MONTHLY.toUpperCase()}
@@ -79,27 +87,24 @@ const ChangeSubscriptionPlan = () => {
             <form onSubmit={handleSubscriptionChange}>
                 <div className="space-y-4">
                     {filteredProducts?.map((product) => {
-                        const price = isOneTimePaymentEnabled()
+                        const price = isOneTimePaymentPlan
                             ? product.pricing.one_time
                             : selectedBillingCycle === "monthly"
                               ? product.pricing.subscription?.monthly
                               : product.pricing.subscription?.yearly;
 
-                        // Check if this is the current active plan
-                        const isCurrentPlan =
-                            subscription?.stripe_price_id === product.id.toString();
+                        // check if this is the current active plan
+                        const isCurrentPlan = activeProductDetails?.id === product.id;
 
                         return (
                             <div
                                 key={product.id}
                                 className={`relative rounded-lg border ${
-                                    selectedPlan === product.id.toString()
+                                    selectedPlan === product.id
                                         ? "border-blue-500 bg-blue-50"
                                         : "border-gray-200 bg-white"
-                                } ${isCurrentPlan ? "opacity-50" : ""} cursor-pointer p-4`}
-                                onClick={() =>
-                                    !isCurrentPlan && setSelectedPlan(product.id.toString())
-                                }
+                                } ${isCurrentPlan ? "cursor-not-allowed opacity-50" : "cursor-pointer"} p-4`}
+                                onClick={() => !isCurrentPlan && setSelectedPlan(product.id)}
                             >
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center">
@@ -107,16 +112,18 @@ const ChangeSubscriptionPlan = () => {
                                             type="radio"
                                             id={`${product.id}-plan`}
                                             name="subscription-plan"
-                                            value={product.id.toString()}
-                                            checked={selectedPlan === product.id.toString()}
+                                            value={product.id}
+                                            checked={selectedPlan === product.id}
                                             onChange={() => {}}
                                             disabled={isCurrentPlan}
                                             className="mr-3 h-4 w-4 text-blue-600 disabled:opacity-50"
                                         />
                                         <label
                                             htmlFor={`${product.id}-plan`}
-                                            className={`cursor-pointer text-sm ${
-                                                isCurrentPlan ? "cursor-not-allowed" : ""
+                                            className={`text-sm ${
+                                                isCurrentPlan
+                                                    ? "cursor-not-allowed"
+                                                    : "cursor-pointer"
                                             }`}
                                         >
                                             <div className="font-medium text-gray-700">
@@ -133,7 +140,7 @@ const ChangeSubscriptionPlan = () => {
                                             {price ? `${price.current} ${price.currency}` : "N/A"}
                                         </div>
                                         <div className="whitespace-nowrap text-sm text-gray-500">
-                                            {isOneTimePaymentEnabled()
+                                            {isOneTimePaymentPlan
                                                 ? "ONE-TIME PAYMENT"
                                                 : selectedBillingCycle === "monthly"
                                                   ? "PER MONTH"
