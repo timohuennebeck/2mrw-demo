@@ -1,7 +1,7 @@
 {
     "crons": [
         {
-            "path": "/api/cron/update-free-trial",
+            "path": "/api/cron/manage-free-trials",
             "schedule": "0 0 * * *"
         },
         {

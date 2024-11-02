@@ -2,6 +2,7 @@ import { Resend } from "resend";
 import { emailConfig as actualEmailConfig } from "@/config/emailConfig";
 import OnboardingEmail from "@/emails/OnboardingEmail";
 import FreeTrialEmail from "@/emails/FreeTrialEmail";
+import FreeTrialReminder from "@/emails/FreeTrialReminder";
 
 const resend = new Resend(process.env.RESEND_EMAIL_API_KEY ?? "");
 
@@ -10,10 +11,12 @@ interface EmailTemplateProps {
     userFirstName: string;
     purchasedPackage?: string;
     freeTrialEndDate?: string;
+    upgradeUrl?: string;
 }
 
 export enum EmailTemplate {
     FREE_TRIAL = "FREE_TRIAL",
+    FREE_TRIAL_REMINDER = "FREE_TRIAL_REMINDER",
     ONBOARDING = "ONBOARDING",
 }
 
@@ -31,6 +34,20 @@ const getEmailConfig = (template: EmailTemplate, props: EmailTemplateProps) => {
                 react: FreeTrialEmail({
                     userFirstName: props.userFirstName,
                     freeTrialEndDate: props.freeTrialEndDate!,
+                }),
+            };
+
+        case EmailTemplate.FREE_TRIAL_REMINDER:
+            if (!settings.freeTrialReminderEmail.isEnabled) {
+                throw new Error("Free trial reminder email is disabled");
+            }
+
+            return {
+                subject: settings.freeTrialReminderEmail.subject,
+                react: FreeTrialReminder({
+                    userFirstName: props.userFirstName,
+                    freeTrialEndDate: props.freeTrialEndDate!,
+                    upgradeUrl: props.upgradeUrl!,
                 }),
             };
 
