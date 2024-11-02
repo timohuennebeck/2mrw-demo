@@ -19,9 +19,14 @@ import { createClient } from "@/services/supabase/server";
 import moment from "moment";
 import Stripe from "stripe";
 
-export const handleSubscriptionUpdated = async (subscription: Stripe.Subscription) => {
-    const userId = subscription.metadata.user_id;
-    if (!userId) throw new Error("No user ID in subscription metadata");
+export const handleSubscriptionUpdated = async ({
+    subscription,
+    userId,
+}: {
+    subscription: Stripe.Subscription;
+    userId: string;
+}) => {
+    if (!userId) throw new Error("No user ID provided");
 
     const supabase = createClient();
     const stripePriceId = subscription.items.data[0].price.id;
@@ -56,9 +61,8 @@ export const handleSubscriptionUpdated = async (subscription: Stripe.Subscriptio
     }
 };
 
-export const handleSubscriptionDeleted = async (subscription: Stripe.Subscription) => {
-    const userId = subscription.metadata.user_id;
-    if (!userId) throw new Error("No user ID in subscription metadata");
+export const handleSubscriptionDeleted = async (userId: string) => {
+    if (!userId) throw new Error("No user ID provided");
 
     try {
         const { error } = await cancelUserSubscription(userId);
@@ -103,9 +107,14 @@ const endOnGoingFreeTrial = async (userId: string) => {
     }
 };
 
-export const handleCheckoutSessionCompleted = async (session: Stripe.Checkout.Session) => {
-    const userId = session.metadata?.user_id;
-    if (!userId) throw new Error("No user ID in session metadata");
+export const handleCheckoutSessionCompleted = async ({
+    session,
+    userId,
+}: {
+    session: Stripe.Checkout.Session;
+    userId: string;
+}) => {
+    if (!userId) throw new Error("No user ID provided");
 
     const stripePriceId = session.line_items?.data[0].price?.id;
     if (!stripePriceId) throw new Error("No stripe price ID found in session");

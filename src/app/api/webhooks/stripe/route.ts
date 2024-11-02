@@ -8,6 +8,7 @@ import {
     handleSubscriptionDeleted,
     handleSubscriptionUpdated,
 } from "@/lib/subscriptions/subscriptionManagement";
+import { getUserId } from "@/services/supabase/queries";
 import { NextRequest as request, NextResponse as response } from "next/server";
 import Stripe from "stripe";
 
@@ -42,35 +43,39 @@ export const POST = async (req: request) => {
 
         // construct the event and check if the webhook is valid
         const event = await _verifyStripeWebhook({ body, signature });
+        const userId = await getUserId();
 
         switch (event.type) {
             case StripeWebhookEvents.CHECKOUT_SESSION_COMPLETED:
                 const session = await _retrieveCheckoutSession({ sessionId: event.data.object.id });
-                await handleCheckoutSessionCompleted(session);
+                await handleCheckoutSessionCompleted({
+                    session,
+                    userId: userId ?? "",
+                });
 
-                const userId = session.metadata?.user_id;
                 if (userId) {
                     queryClient.invalidateQueries({ queryKey: ["freeTrial", userId] });
                     queryClient.invalidateQueries({ queryKey: ["subscription", userId] });
                 }
                 break;
             case StripeWebhookEvents.CUSTOMER_SUBSCRIPTION_UPDATED:
-                const updatedSubscription = event.data.object as Stripe.Subscription;
-                await handleSubscriptionUpdated(updatedSubscription);
+                await handleSubscriptionUpdated({
+                    subscription: event.data.object,
+                    userId: userId ?? "",
+                });
 
-                if (updatedSubscription.metadata.user_id) {
+                if (userId) {
                     queryClient.invalidateQueries({
-                        queryKey: ["subscription", updatedSubscription.metadata.user_id],
+                        queryKey: ["subscription", userId],
                     });
                 }
                 break;
             case StripeWebhookEvents.CUSTOMER_SUBSCRIPTION_DELETED:
-                const deletedSubscription = event.data.object as Stripe.Subscription;
-                await handleSubscriptionDeleted(deletedSubscription);
+                await handleSubscriptionDeleted(userId ?? "");
 
-                if (deletedSubscription.metadata.user_id) {
+                if (userId) {
                     queryClient.invalidateQueries({
-                        queryKey: ["subscription", deletedSubscription.metadata.user_id],
+                        queryKey: ["subscription", userId],
                     });
                 }
                 break;

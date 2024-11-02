@@ -3,7 +3,6 @@
 import { FreeTrial } from "@/interfaces/FreeTrial";
 import { Product } from "@/interfaces/ProductInterfaces";
 import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
-import { User } from "@/interfaces/UserInterfaces";
 import { createClient } from "./server";
 import { handleSupabaseError } from "../../lib/helper/handleSupabaseError";
 
@@ -199,5 +198,19 @@ export const fetchSubscriptionTier = async (stripePriceId: string) => {
             subscriptionTier: null,
             error: handleSupabaseError({ error, fnTitle: "fetchSubscriptionTier" }),
         };
+    }
+};
+
+export const getUserId = async () => {
+    const supabase = createClient();
+
+    try {
+        const { data, error } = await supabase.from("users").select("user_id").single();
+
+        if (error) throw error;
+
+        return data?.user_id;
+    } catch (error) {
+        return null;
     }
 };
