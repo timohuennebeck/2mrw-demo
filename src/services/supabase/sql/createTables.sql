@@ -34,16 +34,16 @@ CREATE TABLE
         id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid (),
         start_date TIMESTAMPTZ NOT NULL,
         end_date TIMESTAMPTZ NOT NULL,
-        stripe_price_id TEXT REFERENCES public.products (stripe_price_id) ON DELETE CASCADE NOT NULL,
-        user_id UNIQUE UUID REFERENCES public.users (user_id) ON DELETE CASCADE NOT NULL,
+        stripe_price_id TEXT NOT NULL,
+        user_id UNIQUE UUID REFERENCES public.users (id) ON DELETE CASCADE NOT NULL,
         status FreeTrialStatusEnums NOT NULL
     );
 
 CREATE TABLE
     purchased_subscriptions (
         id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid (),
-        stripe_price_id TEXT REFERENCES public.products (stripe_price_id) ON DELETE CASCADE NOT NULL,
-        user_id UNIQUE UUID REFERENCES public.users (user_id) ON DELETE CASCADE NOT NULL,
+        stripe_price_id TEXT NOT NULL,
+        user_id UNIQUE UUID REFERENCES public.users (id) ON DELETE CASCADE NOT NULL,
         status SubscriptionStatusEnums NOT NULL,
         end_date TIMESTAMPTZ,
         subscription_tier SubscriptionTierEnums NOT NULL,
