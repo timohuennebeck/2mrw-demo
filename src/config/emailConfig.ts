@@ -1,6 +1,3 @@
-import FreeTrialEmailTemplate from "@/emails/FreeTrialEmailTemplate";
-import OnboardingEmail from "@/emails/OnboardingEmail";
-
 interface SocialLinks {
     twitter: {
         founder: {
@@ -64,13 +61,11 @@ export const emailConfig = {
             subject: `Welcome to ${COMPANY_NAME}!`,
             isEnabled: false,
             freeTrialDuration: 24, // its recommended to set this higher than the paymentConfig's freeTrialDays
-            template: FreeTrialEmailTemplate,
         },
         onboardingEmail: {
             subject: "Order Confirmation",
-            isEnabled: false,
-            gettingStartedLoomUrl: "",
-            template: OnboardingEmail,
+            isEnabled: true,
+            gettingStartedLoomUrl: "https://www.loom.com/share/1234567890?sid=1234567890",
         },
     } as EmailSettings,
 };

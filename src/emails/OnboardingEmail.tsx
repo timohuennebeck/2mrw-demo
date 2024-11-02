@@ -21,10 +21,7 @@ interface PaidPlanEmailTemplateProps {
     purchasedPackage: string;
 }
 
-export const OnboardingEmail = ({
-    userFirstName,
-    purchasedPackage,
-}: PaidPlanEmailTemplateProps) => {
+const OnboardingEmail = ({ userFirstName, purchasedPackage }: PaidPlanEmailTemplateProps) => {
     const { companyInformation, socialLinks } = emailConfig;
 
     const previewText = `Thank you for your order of ${purchasedPackage}!`;

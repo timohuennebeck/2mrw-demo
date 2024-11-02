@@ -14,9 +14,10 @@ import moment from "moment";
 import { PaymentEnums } from "@/enums/PaymentEnums";
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { fetchProducts } from "./queries";
-import { EmailTemplate } from "@/lib/email/emailService";
+import { EmailTemplate, sendEmail } from "@/lib/email/emailService";
 import axios from "axios";
 import { getProductNameByTier } from "@/lib/helper/PackagesHelper";
+import { validateEmailProps } from "@/lib/validation/emailValidation";
 
 const getEndDate = async (stripePriceId: string) => {
     if (isOneTimePaymentEnabled()) {
@@ -84,22 +85,34 @@ export const startUserSubscription = async ({
 
         if (error) throw error;
 
-        const { data: userData, error: userError } = await supabase
-            .from("users")
-            .select("first_name, email")
-            .eq("user_id", userId)
-            .single();
+        try {
+            const { data: userData, error: userError } = await supabase
+                .from("users")
+                .select("first_name, email")
+                .eq("user_id", userId)
+                .single();
 
-        if (userError) throw userError;
+            if (userError) {
+                console.error("Failed to fetch user data for email:", userError);
+                return { success: true, error: null }; // return success even if database call fails as we still want to create the subscription
+            }
 
-        const purchasedPackage = await getProductNameByTier(subscriptionTier);
+            const purchasedPackage = await getProductNameByTier(subscriptionTier);
 
-        // await axios.post("/api/email-services", {
-        //     template: EmailTemplate.ONBOARDING,
-        //     userEmail: userData.email,
-        //     userFirstName: userData.first_name,
-        //     purchasedPackage: purchasedPackage,
-        // });
+            validateEmailProps(EmailTemplate.ONBOARDING, {
+                userEmail: userData.email,
+                userFirstName: userData.first_name,
+                purchasedPackage,
+            });
+
+            await sendEmail(EmailTemplate.ONBOARDING, {
+                userEmail: userData.email,
+                userFirstName: userData.first_name,
+                purchasedPackage,
+            });
+        } catch (emailError) {
+            console.error("Failed to send onboarding email:", emailError);
+        }
 
         return { success: true, error: null };
     } catch (error) {

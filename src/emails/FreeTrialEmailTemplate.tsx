@@ -20,7 +20,7 @@ interface FreeTrialEmailTemplateProps {
     trialSignupLink: string;
 }
 
-export const FreeTrialEmailTemplate = ({
+const FreeTrialEmailTemplate = ({
     userFirstName,
     trialSignupLink,
 }: FreeTrialEmailTemplateProps) => {
