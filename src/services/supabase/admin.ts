@@ -45,7 +45,7 @@ export const createUserTable = async ({ user }: { user: User }) => {
 
     try {
         const { error } = await supabase.from("users").insert({
-            user_id: user.id,
+            id: user.id,
             first_name: user.user_metadata.full_name,
             email: user.email,
             updated_at: moment().toISOString(),
@@ -89,7 +89,7 @@ export const startUserSubscription = async ({
             const { data: userData, error: userError } = await supabase
                 .from("users")
                 .select("first_name, email")
-                .eq("user_id", userId)
+                .eq("id", userId)
                 .single();
 
             if (userError) {

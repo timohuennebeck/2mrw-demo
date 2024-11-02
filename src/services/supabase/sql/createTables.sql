@@ -8,10 +8,9 @@ CREATE TYPE PaymentEnums AS ENUM ('SUBSCRIPTION', 'ONE_TIME');
 
 CREATE TABLE
     users (
-        id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid (),
+        id UUID PRIMARY KEY UNIQUE DEFAULT NOT NULL,
         email TEXT NOT NULL,
         first_name TEXT NOT NULL,
-        user_id UUID UNIQUE NOT NULL,
         created_at TIMESTAMPTZ NOT NULL,
         updated_at TIMESTAMPTZ NOT NULL
     );

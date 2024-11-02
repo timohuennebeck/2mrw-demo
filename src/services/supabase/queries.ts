@@ -205,11 +205,11 @@ export const getUserId = async () => {
     const supabase = createClient();
 
     try {
-        const { data, error } = await supabase.from("users").select("user_id").single();
+        const { data, error } = await supabase.from("users").select("id").single();
 
         if (error) throw error;
 
-        return data?.user_id;
+        return data?.id;
     } catch (error) {
         return null;
     }
