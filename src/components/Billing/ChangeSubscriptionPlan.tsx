@@ -16,6 +16,51 @@ import {
 import { initiateStripeCheckoutProcess } from "@/lib/stripe/stripeUtils";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 
+const _isExactPlanMatch = ({
+    activeStripePriceId,
+    isOneTimePaymentPlan,
+    selectedBillingCycle,
+    product,
+}: {
+    activeStripePriceId: string;
+    isOneTimePaymentPlan: boolean;
+    selectedBillingCycle: string;
+    product: Product;
+}) => {
+    if (!activeStripePriceId) return false;
+
+    const currentPlanPriceId = isOneTimePaymentPlan
+        ? product.pricing.one_time?.stripe_price_id
+        : selectedBillingCycle === "monthly"
+          ? product.pricing.subscription?.monthly?.stripe_price_id
+          : product.pricing.subscription?.yearly?.stripe_price_id;
+
+    return (
+        _isProductSubscribed({ activeStripePriceId, product }) &&
+        activeStripePriceId === currentPlanPriceId
+    );
+};
+
+const _isProductSubscribed = ({
+    activeStripePriceId,
+    product,
+}: {
+    activeStripePriceId: string;
+    product: Product;
+}) => {
+    if (!activeStripePriceId) return false;
+
+    // get all possible price IDs for this product
+    const productPriceIds = [
+        product.pricing.subscription?.monthly?.stripe_price_id,
+        product.pricing.subscription?.yearly?.stripe_price_id,
+        product.pricing.one_time?.stripe_price_id,
+    ].filter(Boolean);
+
+    // check if the active price ID matches any of the product's price IDs
+    return productPriceIds.includes(activeStripePriceId);
+};
+
 const ChangeSubscriptionPlan = () => {
     const { products } = useProducts();
     const { user } = useSession();
@@ -132,7 +177,13 @@ const ChangeSubscriptionPlan = () => {
                               : product.pricing.subscription?.yearly;
 
                         // check if this is the current active plan
-                        const isCurrentPlan = activeProductDetails?.id === product.id;
+                        const isCurrentPlan = _isExactPlanMatch({
+                            activeStripePriceId,
+                            isOneTimePaymentPlan,
+                            selectedBillingCycle,
+                            product,
+                        });
+
                         const isDisabled = isCurrentPlan && !isOnFreeTrial;
 
                         return (
