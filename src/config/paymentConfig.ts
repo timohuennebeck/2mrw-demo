@@ -29,8 +29,8 @@ export const paymentConfig: CompletePaymentConfig = {
 
     // one-time settings: used when paymentType is ONE_TIME
     oneTimeSettings: {
-        enableFreeTrial: false,
-        freeTrialDays: 0,
+        enableFreeTrial: true,
+        freeTrialDays: 7,
     },
 };
 

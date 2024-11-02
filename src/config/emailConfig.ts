@@ -22,7 +22,6 @@ interface EmailSettings {
     freeTrialEmail: {
         subject: string;
         isEnabled: boolean;
-        freeTrialDuration: number;
         template: any;
     };
     freeTrialReminderEmail: {
@@ -63,8 +62,7 @@ export const emailConfig = {
     settings: {
         freeTrialEmail: {
             subject: `Welcome to ${COMPANY_NAME}!`,
-            isEnabled: false,
-            freeTrialDuration: 24, // its recommended to set this higher than the paymentConfig's freeTrialDays
+            isEnabled: true,
         },
         freeTrialReminderEmail: {
             subject: "Your free trial is ending soon!",

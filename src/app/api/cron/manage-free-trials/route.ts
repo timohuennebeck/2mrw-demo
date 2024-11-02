@@ -52,12 +52,17 @@ export const GET = async () => {
                 }
 
                 try {
-                    validateEmailProps(EmailTemplate.FREE_TRIAL_REMINDER, {
+                    const { error: validationError } = validateEmailProps(EmailTemplate.FREE_TRIAL_REMINDER, {
                         userEmail: userData.email,
                         userFirstName: userData.first_name,
                         freeTrialEndDate: endDate.format("MMMM D, YYYY"),
                         upgradeUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan`,
                     });
+
+                    if (validationError) {
+                        console.error("Invalid email props:", validationError);
+                        return;
+                    }
 
                     await sendEmail(EmailTemplate.FREE_TRIAL_REMINDER, {
                         userEmail: userData.email,

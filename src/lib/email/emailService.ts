@@ -4,7 +4,7 @@ import OnboardingEmail from "@/emails/OnboardingEmail";
 import FreeTrialEmail from "@/emails/FreeTrialEmail";
 import FreeTrialReminder from "@/emails/FreeTrialReminder";
 
-const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_EMAIL_API_KEY ?? "");
+const resend = new Resend(process.env.RESEND_EMAIL_API_KEY ?? "");
 
 interface EmailTemplateProps {
     userEmail: string;

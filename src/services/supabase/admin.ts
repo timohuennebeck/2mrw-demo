@@ -99,11 +99,16 @@ export const startUserSubscription = async ({
 
             const purchasedPackage = await getProductNameByTier(subscriptionTier);
 
-            validateEmailProps(EmailTemplate.ONBOARDING, {
+            const { error: validationError } = validateEmailProps(EmailTemplate.ONBOARDING, {
                 userEmail: userData.email,
                 userFirstName: userData.first_name,
                 purchasedPackage,
             });
+
+            if (validationError) {
+                console.error("Invalid email props:", validationError);
+                return { success: true, error: null };
+            }
 
             await sendEmail(EmailTemplate.ONBOARDING, {
                 userEmail: userData.email,

@@ -102,7 +102,7 @@ Resend is used for sending emails in this project. Here's how to set it up:
 4. Include the `API KEY` in Your `.env.local` file:
 
     ```
-    NEXT_PUBLIC_RESEND_EMAIL_API_KEY=Your_resend_api_keY_here
+    RESEND_EMAIL_API_KEY=Your_resend_api_keY_here
     ```
 
 5. Upload Your CompanY logo to [[Imgur]](https://imgur.com) or anY other image hosting service.

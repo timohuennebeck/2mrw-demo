@@ -3,7 +3,7 @@ import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
 import { increaseDate } from "@/lib/helper/increaseDate";
 import { startUserFreeTrial } from "@/services/supabase/admin";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import CustomButton from "../CustomButton";
 import { initiateStripeCheckoutProcess } from "@/lib/stripe/stripeUtils";
@@ -13,11 +13,11 @@ import { createClient } from "@/services/supabase/client";
 import moment from "moment";
 import { TextConstants } from "@/constants/TextConstants";
 import { getCurrentPaymentSettings } from "@/config/paymentConfig";
-import { emailConfig } from "@/config/emailConfig";
 import { queryClient } from "@/lib/qClient/qClient";
 import { sendEmail } from "@/lib/email/emailService";
 import { EmailTemplate } from "@/lib/email/emailService";
 import { validateEmailProps } from "@/lib/validation/emailValidation";
+import axios from "axios";
 
 interface PlanButton {
     stripePriceId: string;
@@ -47,8 +47,6 @@ export const PlanButton = ({
     }, [dataIsLoading]);
 
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const welcomeEmail = searchParams.get("welcomeEmail");
 
     const handleCheckout = async () => {
         try {
@@ -74,11 +72,8 @@ export const PlanButton = ({
     const startFreeTrial = async () => {
         const freeTrialEndDate = increaseDate({
             date: moment(),
-            days:
-                welcomeEmail === "true"
-                    ? emailConfig.settings.freeTrialEmail.freeTrialDuration
-                    : getCurrentPaymentSettings().freeTrialDays,
-        });
+            days: getCurrentPaymentSettings().freeTrialDays,
+        }).toISOString();
 
         try {
             await startUserFreeTrial({
@@ -90,7 +85,7 @@ export const PlanButton = ({
             await supabase.auth.updateUser({
                 data: {
                     free_trial_status: FreeTrialStatus.ACTIVE,
-                    free_trial_end_date: moment().toISOString(),
+                    free_trial_end_date: freeTrialEndDate,
                 },
             });
 
@@ -104,13 +99,8 @@ export const PlanButton = ({
                 console.error("Failed to fetch user data for email:", userError);
             } else {
                 try {
-                    validateEmailProps(EmailTemplate.FREE_TRIAL, {
-                        userEmail: userData.email,
-                        userFirstName: userData.first_name,
-                        freeTrialEndDate: moment(freeTrialEndDate).format("MMMM D, YYYY"),
-                    });
-
-                    await sendEmail(EmailTemplate.FREE_TRIAL, {
+                    await axios.post("/api/email-services", {
+                        template: EmailTemplate.FREE_TRIAL,
                         userEmail: userData.email,
                         userFirstName: userData.first_name,
                         freeTrialEndDate: moment(freeTrialEndDate).format("MMMM D, YYYY"),
@@ -141,11 +131,10 @@ export const PlanButton = ({
 
         if (
             !hasPurchasedSubscription &&
-            freeTrialStatus === null &&
+            !freeTrialStatus &&
             getCurrentPaymentSettings().enableFreeTrial
         ) {
-            const freeTrialDuration =
-                welcomeEmail === "true" ? 14 : getCurrentPaymentSettings().freeTrialDays;
+            const freeTrialDuration = getCurrentPaymentSettings().freeTrialDays;
             return {
                 ...baseProps,
                 title: `${TextConstants.TEXT__START_FREE_TRIAL} (${freeTrialDuration} ${TextConstants.TEXT__DAYS})`,
