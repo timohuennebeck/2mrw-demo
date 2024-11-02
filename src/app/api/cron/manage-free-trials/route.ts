@@ -1,6 +1,5 @@
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
-import { endUserFreeTrial } from "@/services/supabase/admin";
-import { createClient } from "@/services/supabase/server";
+import { endUserFreeTrial, getSupabasePowerUser } from "@/services/supabase/admin";
 import moment from "moment";
 import { NextResponse as response } from "next/server";
 import { EmailTemplate, sendEmail } from "@/lib/email/emailService";
@@ -9,7 +8,7 @@ import { validateEmailProps } from "@/lib/validation/emailValidation";
 export const dynamic = "force-dynamic";
 
 export const GET = async () => {
-    const supabase = createClient();
+    const supabase = getSupabasePowerUser();
 
     try {
         const { data: activeTrials, error: fetchError } = await supabase
@@ -30,8 +29,8 @@ export const GET = async () => {
                 const { error } = await endUserFreeTrial({ userId: trial.user_id });
                 if (error) throw error;
 
-                await supabase.auth.updateUser({
-                    data: {
+                await supabase.auth.admin.updateUserById(trial.user_id, {
+                    user_metadata: {
                         free_trial_status: FreeTrialStatus.EXPIRED,
                     },
                 });
@@ -52,12 +51,15 @@ export const GET = async () => {
                 }
 
                 try {
-                    const { error: validationError } = validateEmailProps(EmailTemplate.FREE_TRIAL_REMINDER, {
-                        userEmail: userData.email,
-                        userFirstName: userData.first_name,
-                        freeTrialEndDate: endDate.format("MMMM D, YYYY"),
-                        upgradeUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan`,
-                    });
+                    const { error: validationError } = validateEmailProps(
+                        EmailTemplate.FREE_TRIAL_REMINDER,
+                        {
+                            userEmail: userData.email,
+                            userFirstName: userData.first_name,
+                            freeTrialEndDate: endDate.format("MMMM D, YYYY"),
+                            upgradeUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan`,
+                        },
+                    );
 
                     if (validationError) {
                         console.error("Invalid email props:", validationError);

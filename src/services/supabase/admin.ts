@@ -7,7 +7,6 @@ import {
     StartUserFreeTrialParams,
     UpdateUserSubscriptionStatusParams,
 } from "./supabaseInterfaces";
-import { createClient } from "./server";
 import { User } from "@supabase/supabase-js";
 import { handleSupabaseError } from "../../lib/helper/handleSupabaseError";
 import moment from "moment";
@@ -15,9 +14,22 @@ import { PaymentEnums } from "@/enums/PaymentEnums";
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { fetchProducts } from "./queries";
 import { EmailTemplate, sendEmail } from "@/lib/email/emailService";
-import axios from "axios";
 import { getProductNameByTier } from "@/lib/helper/PackagesHelper";
 import { validateEmailProps } from "@/lib/validation/emailValidation";
+import { createClient as createServerClient } from "@supabase/supabase-js";
+
+export const getSupabasePowerUser = () => {
+    return createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        {
+            auth: {
+                autoRefreshToken: false,
+                persistSession: false,
+            },
+        },
+    );
+};
 
 const getEndDate = async (stripePriceId: string) => {
     if (isOneTimePaymentEnabled()) {
@@ -41,7 +53,7 @@ const getEndDate = async (stripePriceId: string) => {
 };
 
 export const createUserTable = async ({ user }: { user: User }) => {
-    const supabase = createClient();
+    const supabase = getSupabasePowerUser();
 
     try {
         const { error } = await supabase.from("users").insert({
@@ -65,7 +77,7 @@ export const startUserSubscription = async ({
     stripePriceId,
     subscriptionTier,
 }: CreatePurchasedSubscriptionTableParams) => {
-    const supabase = createClient();
+    const supabase = getSupabasePowerUser();
 
     try {
         const endDate = await getEndDate(stripePriceId);
@@ -134,7 +146,7 @@ export const updateUserSubscription = async ({
     status,
     subscriptionTier,
 }: UpdateUserSubscriptionStatusParams) => {
-    const supabase = createClient();
+    const supabase = getSupabasePowerUser();
 
     try {
         const endDate = await getEndDate(stripePriceId);
@@ -169,7 +181,7 @@ export const startUserFreeTrial = async ({
     stripePriceId,
     freeTrialEndDate,
 }: StartUserFreeTrialParams) => {
-    const supabase = createClient();
+    const supabase = getSupabasePowerUser();
 
     try {
         const { error } = await supabase.from("free_trials").insert({
@@ -194,7 +206,7 @@ export const startUserFreeTrial = async ({
 };
 
 export const endUserFreeTrial = async ({ userId }: { userId: string }) => {
-    const supabase = createClient();
+    const supabase = getSupabasePowerUser();
 
     try {
         const { error } = await supabase
@@ -223,7 +235,7 @@ export const endUserFreeTrial = async ({ userId }: { userId: string }) => {
 };
 
 export const endUserSubscription = async (userId: string) => {
-    const supabase = createClient();
+    const supabase = getSupabasePowerUser();
 
     try {
         const { error } = await supabase
@@ -252,7 +264,7 @@ export const endUserSubscription = async (userId: string) => {
 };
 
 export const cancelUserFreeTrial = async ({ userId }: { userId: string }) => {
-    const supabase = createClient();
+    const supabase = getSupabasePowerUser();
 
     try {
         const { error } = await supabase
@@ -281,7 +293,7 @@ export const cancelUserFreeTrial = async ({ userId }: { userId: string }) => {
 };
 
 export const cancelUserSubscription = async (userId: string) => {
-    const supabase = createClient();
+    const supabase = getSupabasePowerUser();
 
     try {
         const { error } = await supabase

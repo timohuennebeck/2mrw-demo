@@ -1,13 +1,12 @@
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
-import { endUserSubscription } from "@/services/supabase/admin";
-import { createClient } from "@/services/supabase/server";
+import { endUserSubscription, getSupabasePowerUser } from "@/services/supabase/admin";
 import moment from "moment";
 import { NextResponse as response } from "next/server";
 
 export const dynamic = "force-dynamic";
 
 export const GET = async () => {
-    const supabase = createClient();
+    const supabase = getSupabasePowerUser();
 
     try {
         const { data: activeSubscriptions, error: fetchError } = await supabase
@@ -25,8 +24,8 @@ export const GET = async () => {
                 const { error } = await endUserSubscription(subscription.user_id);
                 if (error) throw error;
 
-                await supabase.auth.updateUser({
-                    data: {
+                await supabase.auth.admin.updateUserById(subscription.user_id, {
+                    user_metadata: {
                         subscription_status: SubscriptionStatus.EXPIRED,
                     },
                 });
