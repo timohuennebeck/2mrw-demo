@@ -1,8 +1,7 @@
-import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
-import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest as nextRequest, NextResponse as nextResponse } from "next/server";
 import { User } from "@supabase/supabase-js";
+import { hasUserPremiumOrFreeTrial } from "./lib/helper/subscriptionHelper";
 
 const HIDE_ON_PREMIUM_PLAN = ["/choose-pricing-plan"];
 
@@ -63,16 +62,11 @@ export const middleware = async (request: nextRequest) => {
     } = await supabaseClient.auth.getUser();
 
     const routingResponse = await _handleRedirection({ request, user });
-
     if (routingResponse) return routingResponse;
 
     if (!user) return nextResponse.next();
 
-    const hasPremiumSubscription =
-        user.user_metadata?.subscription_status === SubscriptionStatus.ACTIVE;
-    const isOnFreeTrial = user.user_metadata?.free_trial_status === FreeTrialStatus.ACTIVE;
-    const hasPremiumOrFreeTrial = hasPremiumSubscription || isOnFreeTrial;
-
+    const hasPremiumOrFreeTrial = hasUserPremiumOrFreeTrial(user);
     const currentPath = request.nextUrl.pathname;
 
     if (hasPremiumOrFreeTrial) {
