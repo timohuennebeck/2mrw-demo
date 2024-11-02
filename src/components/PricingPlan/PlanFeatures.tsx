@@ -3,7 +3,7 @@ import { CheckBadgeIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { Feature } from "@/interfaces/ProductInterfaces";
 
 export const PlanFeatures = ({ features }: { features: Feature[] }) => (
-    <ul className="flex flex-col gap-3 mb-10" aria-label="Plan features">
+    <ul className="flex flex-col gap-3" aria-label="Plan features">
         {features.map(({ name, included }, index) => (
             <li key={index} className="flex items-center gap-2">
                 {included ? (

@@ -1,14 +1,14 @@
 import { TextConstants } from "@/constants/TextConstants";
 import CustomButton from "../CustomButton";
-
 import HeaderWithDescription from "../HeaderWithDescription";
-import { paymentConfig } from "@/config/paymentConfig";
+import { isOneTimePaymentEnabled, paymentConfig } from "@/config/paymentConfig";
 import { toast } from "sonner";
 import { useState } from "react";
 import { useSession } from "@/context/SessionContext";
 import { useProducts } from "@/context/ProductsContext";
 import useFreeTrial from "@/hooks/useFreeTrial";
 import useSubscription from "@/hooks/useSubscription";
+import { Product } from "@/interfaces/ProductInterfaces";
 
 const ChangeSubscriptionPlan = () => {
     const { products } = useProducts();
@@ -19,6 +19,15 @@ const ChangeSubscriptionPlan = () => {
 
     const [selectedPlan, setSelectedPlan] = useState("");
     const [selectedBillingCycle, setSelectedBillingCycle] = useState("monthly");
+
+    const filteredProducts = products?.filter((product: Product) => {
+        // If user is on OTP, only show OTP plans
+        if (isOneTimePaymentEnabled()) {
+            return product.pricing.one_time;
+        }
+        // If user is on subscription, only show subscription plans
+        return product.pricing.subscription;
+    });
 
     const handleSubscriptionChange = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -50,84 +59,91 @@ const ChangeSubscriptionPlan = () => {
                 title="Change Your Plan"
                 description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam et odit autem alias aut praesentium vel nisi repudiandae saepe consectetur!"
             />
-            <div className="mb-6 flex space-x-4">
-                <CustomButton
-                    title={TextConstants.TEXT__MONTHLY.toUpperCase()}
-                    onClick={() => setSelectedBillingCycle("monthly")}
-                    isSecondary={selectedBillingCycle !== "monthly"}
-                />
-                <CustomButton
-                    title={`${TextConstants.TEXT__YEARLY.toUpperCase()} (${paymentConfig.subscriptionSettings.yearlyDiscountPercentage}%)`}
-                    onClick={() => setSelectedBillingCycle("yearly")}
-                    isSecondary={selectedBillingCycle !== "yearly"}
-                />
-            </div>
+
+            {/* Only show billing cycle toggle for subscription plans */}
+            {!isOneTimePaymentEnabled() && (
+                <div className="mb-6 flex space-x-4">
+                    <CustomButton
+                        title={TextConstants.TEXT__MONTHLY.toUpperCase()}
+                        onClick={() => setSelectedBillingCycle("monthly")}
+                        isSecondary={selectedBillingCycle !== "monthly"}
+                    />
+                    <CustomButton
+                        title={`${TextConstants.TEXT__YEARLY.toUpperCase()} (${paymentConfig.subscriptionSettings.yearlyDiscountPercentage}%)`}
+                        onClick={() => setSelectedBillingCycle("yearly")}
+                        isSecondary={selectedBillingCycle !== "yearly"}
+                    />
+                </div>
+            )}
+
             <form onSubmit={handleSubscriptionChange}>
                 <div className="space-y-4">
-                    {[
-                        {
-                            name: "Individual",
-                            description: "Perfect for individuals and small projects.",
-                            monthlyPrice: "$9.99",
-                            yearlyPrice: "$95.90",
-                        },
-                        {
-                            name: "Teams",
-                            description: "Ideal for growing businesses and teams.",
-                            monthlyPrice: "$19.99",
-                            yearlyPrice: "$191.90",
-                        },
-                    ].map((plan) => (
-                        <div
-                            key={plan.name}
-                            className={`relative rounded-lg border ${
-                                selectedPlan === plan.name.toLowerCase()
-                                    ? "border-blue-500 bg-blue-50"
-                                    : "border-gray-200 bg-white"
-                            } p-4 ${plan.name === "Teams" ? "opacity-50" : "cursor-pointer"}`}
-                            onClick={() =>
-                                plan.name !== "Teams" && setSelectedPlan(plan.name.toLowerCase())
-                            }
-                        >
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center">
-                                    <input
-                                        type="radio"
-                                        id={`${plan.name.toLowerCase()}-plan`}
-                                        name="subscription-plan"
-                                        value={plan.name.toLowerCase()}
-                                        checked={selectedPlan === plan.name.toLowerCase()}
-                                        onChange={() => {}}
-                                        className="mr-3 h-4 w-4 text-blue-600"
-                                        disabled={plan.name === "Teams"}
-                                    />
-                                    <label
-                                        htmlFor={`${plan.name.toLowerCase()}-plan`}
-                                        className={`cursor-pointer text-sm ${
-                                            plan.name === "Teams"
-                                                ? "pointer-events-none opacity-50"
-                                                : ""
-                                        }`}
-                                    >
-                                        <div className="font-medium text-gray-700">{plan.name}</div>
-                                        <div className="text-gray-500">{plan.description}</div>
-                                    </label>
-                                </div>
-                                <div className="text-right">
-                                    <div className="font-medium text-gray-700">
-                                        {selectedBillingCycle === "monthly"
-                                            ? plan.monthlyPrice
-                                            : plan.yearlyPrice}
+                    {filteredProducts?.map((product) => {
+                        const price = isOneTimePaymentEnabled()
+                            ? product.pricing.one_time
+                            : selectedBillingCycle === "monthly"
+                              ? product.pricing.subscription?.monthly
+                              : product.pricing.subscription?.yearly;
+
+                        // Check if this is the current active plan
+                        const isCurrentPlan =
+                            subscription?.stripe_price_id === product.id.toString();
+
+                        return (
+                            <div
+                                key={product.id}
+                                className={`relative rounded-lg border ${
+                                    selectedPlan === product.id.toString()
+                                        ? "border-blue-500 bg-blue-50"
+                                        : "border-gray-200 bg-white"
+                                } ${isCurrentPlan ? "opacity-50" : ""} cursor-pointer p-4`}
+                                onClick={() =>
+                                    !isCurrentPlan && setSelectedPlan(product.id.toString())
+                                }
+                            >
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center">
+                                        <input
+                                            type="radio"
+                                            id={`${product.id}-plan`}
+                                            name="subscription-plan"
+                                            value={product.id.toString()}
+                                            checked={selectedPlan === product.id.toString()}
+                                            onChange={() => {}}
+                                            disabled={isCurrentPlan}
+                                            className="mr-3 h-4 w-4 text-blue-600 disabled:opacity-50"
+                                        />
+                                        <label
+                                            htmlFor={`${product.id}-plan`}
+                                            className={`cursor-pointer text-sm ${
+                                                isCurrentPlan ? "cursor-not-allowed" : ""
+                                            }`}
+                                        >
+                                            <div className="font-medium text-gray-700">
+                                                {product.name}
+                                                {isCurrentPlan && " (Current Plan)"}
+                                            </div>
+                                            <div className="text-gray-500">
+                                                {product.description}
+                                            </div>
+                                        </label>
                                     </div>
-                                    <div className="text-sm text-gray-500">
-                                        {selectedBillingCycle === "monthly"
-                                            ? "per month"
-                                            : "per year"}
+                                    <div className="text-right">
+                                        <div className="whitespace-nowrap font-medium text-gray-700">
+                                            {price ? `${price.current} ${price.currency}` : "N/A"}
+                                        </div>
+                                        <div className="whitespace-nowrap text-sm text-gray-500">
+                                            {isOneTimePaymentEnabled()
+                                                ? "ONE-TIME PAYMENT"
+                                                : selectedBillingCycle === "monthly"
+                                                  ? "PER MONTH"
+                                                  : "PER YEAR"}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
 
                 <div className="mt-6 flex items-start justify-start">
