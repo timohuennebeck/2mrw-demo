@@ -24,8 +24,6 @@ const CurrentSubscriptionPlan = () => {
         ? getProductDetailsByStripePriceId(products, activePriceId)
         : null;
 
-    console.log("→ [LOG] productDetails", productDetails);
-
     const renderStatusBadge = (text: string, variant: "green" | "yellow" | "red") => {
         const colors = {
             green: "bg-green-100 text-green-800",
@@ -64,6 +62,19 @@ const CurrentSubscriptionPlan = () => {
         return null;
     };
 
+    const getSubscriptionStatusMessage = () => {
+        switch (true) {
+            case freeTrial?.status === FreeTrialStatus.ACTIVE:
+                return `Your FREE TRIAL will end on ${formatDateToHumanFormat(freeTrial?.end_date)}.`;
+            case subscription?.status === SubscriptionStatus.ACTIVE:
+                return `Your subscription will renew on ${formatDateToHumanFormat(subscription?.end_date)}.`;
+            case subscription?.status === SubscriptionStatus.CANCELLED:
+                return `Your subscription has been cancelled and will end on ${formatDateToHumanFormat(subscription?.end_date)}.`;
+            default:
+                return null;
+        }
+    };
+
     return (
         <div>
             <HeaderWithDescription
@@ -92,15 +103,7 @@ const CurrentSubscriptionPlan = () => {
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Et odit autem alias
                     aut.
                 </p>
-                <p className="text-sm font-medium">
-                    {freeTrial?.status === FreeTrialStatus.ACTIVE
-                        ? `Your FREE TRIAL will end on ${formatDateToHumanFormat(freeTrial?.end_date)}.`
-                        : subscription?.status === SubscriptionStatus.ACTIVE
-                          ? `Your subscription will renew on ${formatDateToHumanFormat(subscription?.end_date)}.`
-                          : `Your subscription has been cancelled and will end on ${formatDateToHumanFormat(
-                                subscription?.end_date,
-                            )}.`}
-                </p>
+                <p className="text-sm font-medium">{getSubscriptionStatusMessage()}</p>
 
                 <div className="mt-4">
                     <PlanFeatures features={productDetails?.features ?? []} />
