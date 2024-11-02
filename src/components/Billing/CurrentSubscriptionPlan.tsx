@@ -7,79 +7,8 @@ import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { formatDateToHumanFormat } from "@/lib/helper/formatDateToHumanFormat";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { useProducts } from "@/context/ProductsContext";
-import { Product } from "@/interfaces/ProductInterfaces";
 import { PlanFeatures } from "../PricingPlan/PlanFeatures";
-
-const _getProductDetailsByPriceId = (products: Product[], stripePriceId: string) => {
-    const product = products.find((product) => {
-        // Check one-time price
-        if (product.pricing.one_time?.stripe_price_id === stripePriceId) {
-            return true;
-        }
-
-        // Check monthly subscription price
-        if (product.pricing.subscription?.monthly?.stripe_price_id === stripePriceId) {
-            return true;
-        }
-
-        // Check yearly subscription price
-        if (product.pricing.subscription?.yearly?.stripe_price_id === stripePriceId) {
-            return true;
-        }
-
-        return false;
-    });
-
-    if (!product) return null;
-
-    // get the price details
-    const priceDetails = _getPriceByStripePriceId(product, stripePriceId);
-
-    return {
-        name: product.name,
-        features: product.features,
-        description: product.description,
-        price: priceDetails,
-    };
-};
-
-const _getPriceByStripePriceId = (product: Product, stripePriceId: string) => {
-    // check one-time price
-    if (product.pricing.one_time?.stripe_price_id === stripePriceId) {
-        return {
-            amount: product.pricing.one_time.current,
-            currency: product.pricing.one_time.currency,
-            interval: "one-time",
-        };
-    }
-
-    // check monthly subscription price
-    if (product.pricing.subscription?.monthly?.stripe_price_id === stripePriceId) {
-        return {
-            amount: product.pricing.subscription.monthly.current,
-            currency: product.pricing.subscription.monthly.currency,
-            interval: "month",
-        };
-    }
-
-    // check yearly subscription price
-    if (product.pricing.subscription?.yearly?.stripe_price_id === stripePriceId) {
-        return {
-            amount: product.pricing.subscription.yearly.current,
-            currency: product.pricing.subscription.yearly.currency,
-            interval: "year",
-        };
-    }
-
-    return null;
-};
-
-const _formatPriceDisplay = (price: { amount: number; currency: string; interval: string }) => {
-    if (price.interval === "one-time") {
-        return `${price.amount} ${price.currency} (OTP)`;
-    }
-    return `${price.amount} ${price.currency}/${price.interval}`;
-};
+import { formatPriceDisplay, getProductDetailsByStripePriceId } from "@/lib/helper/priceHelper";
 
 const CurrentSubscriptionPlan = () => {
     const { user } = useSession();
@@ -92,8 +21,10 @@ const CurrentSubscriptionPlan = () => {
     if (!products) return null;
 
     const productDetails = activePriceId
-        ? _getProductDetailsByPriceId(products, activePriceId)
+        ? getProductDetailsByStripePriceId(products, activePriceId)
         : null;
+
+    console.log("→ [LOG] productDetails", productDetails);
 
     const renderStatusBadge = (text: string, variant: "green" | "yellow" | "red") => {
         const colors = {
@@ -154,7 +85,7 @@ const CurrentSubscriptionPlan = () => {
                     </div>
 
                     <p className="text-2xl font-medium text-gray-700">
-                        {productDetails?.price && _formatPriceDisplay(productDetails?.price)}
+                        {productDetails?.price && formatPriceDisplay(productDetails.price)}
                     </p>
                 </div>
                 <p className="mb-4 text-sm text-gray-500">
