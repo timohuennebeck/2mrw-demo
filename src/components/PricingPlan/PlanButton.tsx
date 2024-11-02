@@ -70,6 +70,8 @@ export const PlanButton = ({
     };
 
     const startFreeTrial = async () => {
+        setIsLoading(true);
+
         const freeTrialEndDate = increaseDate({
             date: moment(),
             days: getCurrentPaymentSettings().freeTrialDays,
@@ -118,6 +120,8 @@ export const PlanButton = ({
             router.push("/");
         } catch (error) {
             toast.error(TextConstants.ERROR__STARTING_FREE_TRIAL);
+        } finally {
+            setIsLoading(false);
         }
     };
 
