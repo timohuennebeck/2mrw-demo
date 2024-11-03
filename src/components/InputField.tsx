@@ -3,7 +3,10 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
 function InputField({
     label,
+    hideLabel = false,
+    disabled = false,
     id,
+    value,
     type,
     name,
     placeholder,
@@ -12,7 +15,10 @@ function InputField({
     onBlur,
 }: {
     label: string;
+    hideLabel?: boolean;
+    disabled?: boolean;
     id: string;
+    value?: string;
     type: string;
     name: string;
     placeholder?: string;
@@ -24,9 +30,11 @@ function InputField({
 
     return (
         <div className="">
-            <label htmlFor={id} className="mb-1 block text-sm font-medium text-neutral-700">
-                {`${label}*`}
-            </label>
+            {!hideLabel && (
+                <label htmlFor={id} className="mb-1 block text-sm font-medium text-neutral-700">
+                    {`${label}*`}
+                </label>
+            )}
 
             <div className="relative">
                 <input
@@ -34,13 +42,15 @@ function InputField({
                     id={id}
                     name={name}
                     placeholder={placeholder}
+                    value={value}
                     onChange={(e) => onChange(e.target.value)}
-                    className={`w-full rounded-md border border-neutral-300 px-3 py-2.5 text-sm outline-neutral-800 ${type === "password" && "pr-10"}`}
+                    className={`w-full rounded-md border border-neutral-300 px-3 py-2.5 text-sm outline-neutral-800 ${type === "password" && "pr-10"} ${disabled && "bg-neutral-100"}`}
                     onFocus={onFocus}
                     onBlur={onBlur}
+                    disabled={disabled}
                 />
 
-                {type === "password" && (
+                {type === "password" && !disabled && (
                     <div
                         className="absolute inset-y-0 right-3.5 flex h-full w-5 cursor-pointer"
                         onClick={() => setShowPassword(!showPassword)}

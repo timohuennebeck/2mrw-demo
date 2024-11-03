@@ -16,7 +16,7 @@ export const useUser = (userId: string) => {
     };
 
     return {
-        user: data?.user as User,
+        dbUser: data?.user as User,
         isLoading,
         invalidateUser,
     };
