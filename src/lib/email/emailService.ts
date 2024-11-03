@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 import { emailConfig as actualEmailConfig } from "@/config/emailConfig";
-import OnboardingEmail from "@/emails/OnboardingEmail";
+import SubscriptionConfirmationEmail from "@/emails/SubscriptionConfirmationEmail";
 import FreeTrialEmail from "@/emails/FreeTrialEmail";
 import FreeTrialReminder from "@/emails/FreeTrialReminder";
 
@@ -58,7 +58,7 @@ const getEmailConfig = (template: EmailTemplate, props: EmailTemplateProps) => {
 
             return {
                 subject: `${settings.onboardingEmail.subject} - ${props.purchasedPackage}`,
-                react: OnboardingEmail({
+                react: SubscriptionConfirmationEmail({
                     userFirstName: props.userFirstName,
                     purchasedPackage: props.purchasedPackage!,
                 }),

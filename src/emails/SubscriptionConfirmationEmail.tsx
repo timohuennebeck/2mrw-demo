@@ -10,17 +10,19 @@ import {
     Section,
     Text,
     Tailwind,
-    Button,
     Link,
 } from "@react-email/components";
 import { emailConfig } from "@/config/emailConfig";
 
-interface PaidPlanEmailTemplateProps {
+interface SubscriptionConfirmationEmailProps {
     userFirstName: string;
     purchasedPackage: string;
 }
 
-const OnboardingEmail = ({ userFirstName, purchasedPackage }: PaidPlanEmailTemplateProps) => {
+const SubscriptionConfirmationEmail = ({
+    userFirstName,
+    purchasedPackage,
+}: SubscriptionConfirmationEmailProps) => {
     const { companyInformation, socialLinks } = emailConfig;
 
     return (
@@ -48,17 +50,10 @@ const OnboardingEmail = ({ userFirstName, purchasedPackage }: PaidPlanEmailTempl
                         </Text>
 
                         <Text className="text-[14px] leading-[24px] text-black">
-                            I know You're probablY excited to dive in (I would be too!), so I've put
-                            together a quick 5-minute video showing You exactlY how to get the most
-                            out of <strong>{companyInformation.name}</strong>.
+                            I'm thrilled to welcome You as a member of{" "}
+                            <strong>{companyInformation.name}</strong> fam! Your trust in me means
+                            the absolute world to me, and I can't wait to see what You will create!
                         </Text>
-
-                        <Button
-                            className="my-6 w-full rounded bg-black py-2.5 text-center text-[14px] font-semibold text-white no-underline"
-                            href={emailConfig.settings.onboardingEmail.gettingStartedLoomUrl}
-                        >
-                            SHOW ME THE GOOD STUFF →
-                        </Button>
 
                         <Text className="mt-4 text-[14px] leading-[24px] text-black">
                             P.S. If You're on Twitter, come saY hi! You can find me at{" "}
@@ -86,9 +81,9 @@ const OnboardingEmail = ({ userFirstName, purchasedPackage }: PaidPlanEmailTempl
 };
 
 // enable this during development to preview what the email will look like
-OnboardingEmail.PreviewProps = {
+SubscriptionConfirmationEmail.PreviewProps = {
     userFirstName: "Katja",
     purchasedPackage: "Premium Plan (20% off)",
 } as PaidPlanEmailTemplateProps;
 
-export default OnboardingEmail;
+export default SubscriptionConfirmationEmail;
