@@ -5,21 +5,21 @@ import { useEffect, useState } from "react";
 import { useSession } from "@/context/SessionContext";
 
 const BillingPortal = () => {
-    const { user } = useSession();
+    const { authUser } = useSession();
 
     const [stripeCustomerId, setStripeCustomerId] = useState<string | null>(null);
     const [isOpeningBillingPortal, setIsOpeningBillingPortal] = useState(false);
 
     useEffect(() => {
         const fetchStripeCustomerCreditCardDetails = async () => {
-            if (!user?.email) return;
+            if (!authUser?.email) return;
 
-            const customerId = await getStripeCustomerId(user.email);
+            const customerId = await getStripeCustomerId(authUser.email);
             setStripeCustomerId(customerId);
         };
 
         fetchStripeCustomerCreditCardDetails();
-    }, [user]);
+    }, [authUser]);
 
     const handlePortalOpen = async () => {
         setIsOpeningBillingPortal(true);

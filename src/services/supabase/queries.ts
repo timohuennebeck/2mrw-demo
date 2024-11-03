@@ -5,6 +5,7 @@ import { Product } from "@/interfaces/ProductInterfaces";
 import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
 import { createClient } from "./server";
 import { handleSupabaseError } from "../../lib/helper/handleSupabaseError";
+import { User } from "@/interfaces/UserInterfaces";
 
 export const checkUserRowExists = async ({
     tableId,
@@ -116,6 +117,30 @@ export const fetchUserSubscription = async (userId: string) => {
     }
 };
 
+export const fetchUser = async (userId: string) => {
+    const supabase = createClient();
+
+    try {
+        const { data: user, error } = await supabase
+            .from("users")
+            .select("*")
+            .eq("id", userId)
+            .single();
+
+        if (error) throw error;
+
+        return {
+            user: user as User,
+            error: null,
+        };
+    } catch (error) {
+        return {
+            user: null,
+            error: handleSupabaseError({ error, fnTitle: "fetchUser" }),
+        };
+    }
+};
+
 export const fetchUserFreeTrial = async (userId: string) => {
     const supabase = createClient();
 
@@ -202,6 +227,7 @@ export const fetchSubscriptionTier = async (stripePriceId: string) => {
 };
 
 export const getUserId = async () => {
+    //  TODO: check if this returns the correct user
     const supabase = createClient();
 
     try {

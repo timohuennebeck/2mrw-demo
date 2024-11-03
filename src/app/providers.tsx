@@ -3,7 +3,7 @@
 import { ProductsProvider } from "@/context/ProductsContext";
 import { SessionProvider, useSession } from "@/context/SessionContext";
 import { queryClient } from "@/lib/qClient/qClient";
-import { fetchUserFreeTrial, fetchUserSubscription } from "@/services/supabase/queries";
+import { fetchUser, fetchUserFreeTrial, fetchUserSubscription } from "@/services/supabase/queries";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useEffect } from "react";
 
@@ -22,21 +22,25 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
 };
 
 const PreloaderWrapper = ({ children }: { children: React.ReactNode }) => {
-    const { userIsLoggedIn, user } = useSession();
+    const { authUserIsLoggedIn, authUser } = useSession();
 
     useEffect(() => {
         const fetchInitialInformation = async () => {
-            if (!userIsLoggedIn || !user) return;
+            if (!authUserIsLoggedIn || !authUser) return;
 
             try {
                 await Promise.all([
                     queryClient.prefetchQuery({
-                        queryKey: ["freeTrial", user.id],
-                        queryFn: () => fetchUserFreeTrial(user.id),
+                        queryKey: ["freeTrial", authUser.id],
+                        queryFn: () => fetchUserFreeTrial(authUser.id),
                     }),
                     queryClient.prefetchQuery({
-                        queryKey: ["subscription", user.id],
-                        queryFn: () => fetchUserSubscription(user.id),
+                        queryKey: ["subscription", authUser.id],
+                        queryFn: () => fetchUserSubscription(authUser.id),
+                    }),
+                    queryClient.prefetchQuery({
+                        queryKey: ["user", authUser.id],
+                        queryFn: () => fetchUser(authUser.id),
                     }),
                 ]);
             } catch (error) {
@@ -45,7 +49,7 @@ const PreloaderWrapper = ({ children }: { children: React.ReactNode }) => {
         };
 
         fetchInitialInformation();
-    }, [userIsLoggedIn, user]);
+    }, [authUserIsLoggedIn, authUser]);
 
     return children;
 };

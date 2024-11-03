@@ -11,10 +11,10 @@ import { PlanFeatures } from "../PricingPlan/PlanFeatures";
 import { formatPriceDisplay, getProductDetailsByStripePriceId } from "@/lib/helper/priceHelper";
 
 const CurrentSubscriptionPlan = () => {
-    const { user } = useSession();
+    const { authUser } = useSession();
     const { products } = useProducts();
-    const { subscription } = useSubscription(user?.id ?? "");
-    const { freeTrial } = useFreeTrial(user?.id ?? "");
+    const { subscription } = useSubscription(authUser?.id ?? "");
+    const { freeTrial } = useFreeTrial(authUser?.id ?? "");
 
     const activePriceId = subscription?.stripe_price_id || freeTrial?.stripe_price_id;
 

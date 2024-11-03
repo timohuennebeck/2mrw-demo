@@ -12,21 +12,21 @@ import { useFreeTrial } from "@/hooks/useFreeTrial";
 import { useSupabaseRealtime } from "@/hooks/useSupabaseRealtime";
 
 const BillingPage = () => {
-    const { user } = useSession();
-    const { invalidateSubscription } = useSubscription(user?.id ?? "");
-    const { invalidateFreeTrial } = useFreeTrial(user?.id ?? "");
+    const { authUser } = useSession();
+    const { invalidateSubscription } = useSubscription(authUser?.id ?? "");
+    const { invalidateFreeTrial } = useFreeTrial(authUser?.id ?? "");
 
-    const hasPremiumOrFreeTrial = hasUserPremiumOrFreeTrial(user);
+    const hasPremiumOrFreeTrial = hasUserPremiumOrFreeTrial(authUser);
 
     useSupabaseRealtime({
         table: "purchased_subscriptions",
-        filter: `user_id=eq.${user?.id}`,
+        filter: `user_id=eq.${authUser?.id}`,
         onChange: invalidateSubscription,
     });
 
     useSupabaseRealtime({
         table: "free_trials",
-        filter: `user_id=eq.${user?.id}`,
+        filter: `user_id=eq.${authUser?.id}`,
         onChange: invalidateFreeTrial,
     });
 

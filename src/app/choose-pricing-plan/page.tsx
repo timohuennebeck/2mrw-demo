@@ -15,9 +15,9 @@ const ChoosePricingPlanPage = () => {
     const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
 
     const { products } = useProducts();
-    const { user } = useSession();
+    const { authUser } = useSession();
 
-    const userId = user?.id;
+    const userId = authUser?.id;
 
     const {
         status: freeTrialStatus,
@@ -73,7 +73,7 @@ const ChoosePricingPlanPage = () => {
                                   freeTrialData={freeTrialData}
                                   subscriptionStatus={subscriptionStatus}
                                   subscriptionData={subscriptionData}
-                                  supabaseUser={user ?? null}
+                                  supabaseUser={authUser ?? null}
                                   isLoading={isLoading}
                                   billingCycle={billingCycle}
                                   setBillingCycle={setBillingCycle}

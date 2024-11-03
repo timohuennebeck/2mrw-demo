@@ -15,14 +15,14 @@ const ProductsContext = createContext<ProductsContextType>({
 });
 
 export const ProductsProvider = ({ children }: { children: React.ReactNode }) => {
-    const { userIsLoggedIn } = useSession();
+    const { authUserIsLoggedIn } = useSession();
 
     const { data, isLoading } = useQuery({
         queryKey: ["products"],
         queryFn: () => fetchProducts(),
         staleTime: 12 * 60 * 60 * 1000, // 12 hours
         gcTime: 24 * 60 * 60 * 1000, // 24 hours
-        enabled: userIsLoggedIn,
+        enabled: authUserIsLoggedIn,
         refetchOnMount: false,
         refetchOnWindowFocus: false,
         refetchOnReconnect: false,

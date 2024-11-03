@@ -66,10 +66,10 @@ const _isProductSubscribed = ({
 
 const ChangeSubscriptionPlan = () => {
     const { products } = useProducts();
-    const { user } = useSession();
+    const { authUser } = useSession();
 
-    const { subscription } = useSubscription(user?.id ?? "");
-    const { freeTrial } = useFreeTrial(user?.id ?? "");
+        const { subscription } = useSubscription(authUser?.id ?? "");
+    const { freeTrial } = useFreeTrial(authUser?.id ?? "");
 
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -123,7 +123,7 @@ const ChangeSubscriptionPlan = () => {
         e.preventDefault();
 
         try {
-            if (!user?.email || !selectedPlan) {
+            if (!authUser?.email || !selectedPlan) {
                 toast.error("Please select a plan to continue");
                 return;
             }
@@ -143,7 +143,7 @@ const ChangeSubscriptionPlan = () => {
             }
 
             const { checkoutUrl } = await initiateStripeCheckoutProcess({
-                userEmail: user.email,
+                userEmail: authUser.email,
                 stripePriceId,
                 successUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/billing?success=true&session_id={CHECKOUT_SESSION_ID}`,
                 cancelUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/billing`,
@@ -162,9 +162,9 @@ const ChangeSubscriptionPlan = () => {
 
     return (
         <>
-            {showSuccessPopup && user?.email && (
+            {showSuccessPopup && authUser?.email && (
                 <SubscriptionSuccessPopup
-                    email={user.email ?? ""}
+                    email={authUser.email ?? ""}
                     onClose={() => setShowSuccessPopup(false)}
                 />
             )}

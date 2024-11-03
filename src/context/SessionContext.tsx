@@ -3,18 +3,18 @@ import { User } from "@supabase/supabase-js";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface SessionContextType {
-    userIsLoggedIn: boolean;
-    user: User | null;
+    authUserIsLoggedIn: boolean;
+    authUser: User | null;
 }
 
 const SessionContext = createContext<SessionContextType>({
-    userIsLoggedIn: false,
-    user: null,
+    authUserIsLoggedIn: false,
+    authUser: null,
 });
 
 export const SessionProvider = ({ children }: { children: React.ReactNode }) => {
-    const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
-    const [user, setUser] = useState<User | null>(null);
+    const [authUserIsLoggedIn, setAuthUserIsLoggedIn] = useState(false);
+    const [authUser, setAuthUser] = useState<User | null>(null);
 
     useEffect(() => {
         const supabaseClient = createClient();
@@ -24,15 +24,15 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
                 data: { user },
             } = await supabaseClient.auth.getUser();
 
-            setUserIsLoggedIn(!!user);
-            setUser(user);
+            setAuthUserIsLoggedIn(!!user);
+            setAuthUser(user);
         };
 
         checkUser();
 
         const { data: authListener } = supabaseClient.auth.onAuthStateChange((_, session) => {
-            setUserIsLoggedIn(!!session);
-            setUser(session?.user ?? null);
+            setAuthUserIsLoggedIn(!!session);
+            setAuthUser(session?.user ?? null);
         });
 
         return () => {
@@ -41,7 +41,7 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
     }, []);
 
     return (
-        <SessionContext.Provider value={{ userIsLoggedIn, user }}>
+        <SessionContext.Provider value={{ authUserIsLoggedIn, authUser }}>
             {children}
         </SessionContext.Provider>
     );
