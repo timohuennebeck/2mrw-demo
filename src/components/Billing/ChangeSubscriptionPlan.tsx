@@ -16,6 +16,8 @@ import {
 import { initiateStripeCheckoutProcess } from "@/lib/stripe/stripeUtils";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import SubscriptionSuccessPopup from "../SubscriptionSuccessPopup";
+import { useSearchParams } from "next/dist/client/components/navigation";
+import { useRouter } from "next/navigation";
 
 const _isExactPlanMatch = ({
     activeStripePriceId,
@@ -69,6 +71,9 @@ const ChangeSubscriptionPlan = () => {
     const { subscription } = useSubscription(user?.id ?? "");
     const { freeTrial } = useFreeTrial(user?.id ?? "");
 
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
     const formRef = useRef<HTMLFormElement>(null);
 
     const [selectedPlan, setSelectedPlan] = useState("");
@@ -90,11 +95,12 @@ const ChangeSubscriptionPlan = () => {
     }, []);
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get("success") === "true") {
+        const success = searchParams.get("success");
+        if (success === "true") {
             setShowSuccessPopup(true);
+            router.replace("/billing"); // clean up the URL without the success parameter
         }
-    }, []);
+    }, [searchParams, router]);
 
     if (!products) return null;
 
@@ -139,7 +145,7 @@ const ChangeSubscriptionPlan = () => {
             const { checkoutUrl } = await initiateStripeCheckoutProcess({
                 userEmail: user.email,
                 stripePriceId,
-                successUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/billing?session_id={CHECKOUT_SESSION_ID}`,
+                successUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/billing?success=true&session_id={CHECKOUT_SESSION_ID}`,
                 cancelUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/billing`,
             });
 
