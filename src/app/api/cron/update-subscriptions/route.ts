@@ -6,7 +6,7 @@ import { NextResponse as response } from "next/server";
 export const dynamic = "force-dynamic";
 
 export const GET = async () => {
-    const supabase = getSupabasePowerUser();
+    const supabase = await getSupabasePowerUser();
 
     try {
         const { data: activeSubscriptions, error: fetchError } = await supabase

@@ -28,7 +28,7 @@ export const handleSubscriptionUpdated = async ({
 }) => {
     if (!userId) throw new Error("No user ID provided");
 
-    const supabase = getSupabasePowerUser();
+    const supabasePowerUser = await getSupabasePowerUser();
     const stripePriceId = subscription.items.data[0].price.id;
 
     try {
@@ -37,7 +37,7 @@ export const handleSubscriptionUpdated = async ({
 
         // check if the subscription is set to cancel at the end of the current period
         if (subscription.cancel_at_period_end) {
-            const { error: updateError } = await supabase
+            const { error: updateError } = await supabasePowerUser
                 .from("purchased_subscriptions")
                 .update({
                     status: SubscriptionStatus.CANCELLED,
@@ -51,15 +51,13 @@ export const handleSubscriptionUpdated = async ({
                 throw updateError;
             }
 
-            const { error: authUserUpdateError } = await supabase.auth.admin.updateUserById(
-                userId,
-                {
+            const { error: authUserUpdateError } =
+                await supabasePowerUser.auth.admin.updateUserById(userId, {
                     user_metadata: {
                         subscription_status: SubscriptionStatus.CANCELLED,
                         subscription_updated_at: moment().toISOString(),
                     },
-                },
-            );
+                });
 
             if (authUserUpdateError) {
                 console.error("Error updating auth user:", authUserUpdateError);
@@ -67,7 +65,7 @@ export const handleSubscriptionUpdated = async ({
             }
         } else {
             // update subscription end date based on current period end
-            await supabase
+            await supabasePowerUser
                 .from("purchased_subscriptions")
                 .update({
                     end_date: moment.unix(subscription.current_period_end).toISOString(),
@@ -76,7 +74,7 @@ export const handleSubscriptionUpdated = async ({
                 })
                 .eq("user_id", userId);
 
-            await supabase.auth.admin.updateUserById(userId, {
+            await supabasePowerUser.auth.admin.updateUserById(userId, {
                 user_metadata: {
                     subscription_status: SubscriptionStatus.ACTIVE,
                     subscription_updated_at: moment().toISOString(),
@@ -149,7 +147,7 @@ export const handleCheckoutSessionCompleted = async ({
     const stripePriceId = session.line_items?.data[0].price?.id;
     if (!stripePriceId) throw new Error("No stripe price ID found in session");
 
-    const supabase = getSupabasePowerUser();
+    const supabasePowerUser = await getSupabasePowerUser();
 
     try {
         const { enableFreeTrial } = getCurrentPaymentSettings();
@@ -161,7 +159,7 @@ export const handleCheckoutSessionCompleted = async ({
         // updates the user subscription or creates a new table and then updates it
         await upsertUserSubscription({ stripePriceId, subscriptionTier, userId });
 
-        await supabase.auth.admin.updateUserById(userId, {
+        await supabasePowerUser.auth.admin.updateUserById(userId, {
             user_metadata: {
                 subscription_status: SubscriptionStatus.ACTIVE,
                 subscription_updated_at: new Date().toISOString(),

@@ -8,10 +8,10 @@ import { validateEmailProps } from "@/lib/validation/emailValidation";
 export const dynamic = "force-dynamic";
 
 export const GET = async () => {
-    const supabase = getSupabasePowerUser();
+    const supabasePowerUser = await getSupabasePowerUser();
 
     try {
-        const { data: activeTrials, error: fetchError } = await supabase
+        const { data: activeTrials, error: fetchError } = await supabasePowerUser
             .from("free_trials")
             .select("user_id, status, end_date")
             .in("status", [FreeTrialStatus.ACTIVE, FreeTrialStatus.CANCELLED]);
@@ -29,7 +29,7 @@ export const GET = async () => {
                 const { error } = await endUserFreeTrial({ userId: trial.user_id });
                 if (error) throw error;
 
-                await supabase.auth.admin.updateUserById(trial.user_id, {
+                await supabasePowerUser.auth.admin.updateUserById(trial.user_id, {
                     user_metadata: {
                         free_trial_status: FreeTrialStatus.EXPIRED,
                     },
@@ -39,7 +39,7 @@ export const GET = async () => {
 
             // check if trial ends in 2 days
             if (endDate.isSame(twoDaysFromNow, "day")) {
-                const { data: userData, error: userError } = await supabase
+                const { data: userData, error: userError } = await supabasePowerUser
                     .from("users")
                     .select("first_name, email")
                     .eq("id", trial.user_id)
