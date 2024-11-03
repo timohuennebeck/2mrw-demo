@@ -2,7 +2,7 @@ import { Resend } from "resend";
 import { emailConfig as actualEmailConfig } from "@/config/emailConfig";
 import SubscriptionConfirmationEmail from "@/emails/SubscriptionConfirmationEmail";
 import FreeTrialEmail from "@/emails/FreeTrialEmail";
-import FreeTrialReminder from "@/emails/FreeTrialReminder";
+import FreeTrialReminderEmail from "@/emails/FreeTrialReminderEmail";
 
 const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_EMAIL_API_KEY ?? "");
 
@@ -17,7 +17,7 @@ interface EmailTemplateProps {
 export enum EmailTemplate {
     FREE_TRIAL = "FREE_TRIAL",
     FREE_TRIAL_REMINDER = "FREE_TRIAL_REMINDER",
-    ONBOARDING = "ONBOARDING",
+    SUBSCRIPTION_CONFIRMATION = "SUBSCRIPTION_CONFIRMATION",
 }
 
 const getEmailConfig = (template: EmailTemplate, props: EmailTemplateProps) => {
@@ -44,20 +44,20 @@ const getEmailConfig = (template: EmailTemplate, props: EmailTemplateProps) => {
 
             return {
                 subject: settings.freeTrialReminderEmail.subject,
-                react: FreeTrialReminder({
+                react: FreeTrialReminderEmail({
                     userFirstName: props.userFirstName,
                     freeTrialEndDate: props.freeTrialEndDate!,
                     upgradeUrl: props.upgradeUrl!,
                 }),
             };
 
-        case EmailTemplate.ONBOARDING:
-            if (!settings.onboardingEmail.isEnabled) {
-                throw new Error("Onboarding email is disabled");
+        case EmailTemplate.SUBSCRIPTION_CONFIRMATION:
+            if (!settings.subscriptionConfirmationEmail.isEnabled) {
+                throw new Error("Subscription confirmation email is disabled");
             }
 
             return {
-                subject: `${settings.onboardingEmail.subject} - ${props.purchasedPackage}`,
+                subject: `${settings.subscriptionConfirmationEmail.subject} - ${props.purchasedPackage}`,
                 react: SubscriptionConfirmationEmail({
                     userFirstName: props.userFirstName,
                     purchasedPackage: props.purchasedPackage!,

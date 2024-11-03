@@ -22,17 +22,14 @@ interface EmailSettings {
     freeTrialEmail: {
         subject: string;
         isEnabled: boolean;
-        template: any;
     };
     freeTrialReminderEmail: {
         subject: string;
         isEnabled: boolean;
     };
-    onboardingEmail: {
+    subscriptionConfirmationEmail: {
         subject: string;
         isEnabled: boolean;
-        gettingStartedLoomUrl: string;
-        template: any;
     };
 }
 
@@ -68,10 +65,9 @@ export const emailConfig = {
             subject: "Your free trial is ending soon!",
             isEnabled: true,
         },
-        onboardingEmail: {
+        subscriptionConfirmationEmail: {
             subject: "Order Confirmation",
             isEnabled: true,
-            gettingStartedLoomUrl: "https://www.loom.com/share/1234567890?sid=1234567890",
         },
     } as EmailSettings,
 };
