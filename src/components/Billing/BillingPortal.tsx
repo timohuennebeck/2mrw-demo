@@ -21,6 +21,15 @@ const BillingPortal = () => {
         fetchStripeCustomerCreditCardDetails();
     }, [user]);
 
+    const handlePortalOpen = async () => {
+        setIsOpeningBillingPortal(true);
+        const url = await handleStripePortalSession(stripeCustomerId ?? "");
+        if (url) {
+            window.open(url, "_blank");
+        }
+        setIsOpeningBillingPortal(false);
+    };
+
     return (
         <div>
             <HeaderWithDescription
@@ -34,12 +43,7 @@ const BillingPortal = () => {
                 </div>
                 <CustomButton
                     title="Billing Portal"
-                    onClick={async () => {
-                        setIsOpeningBillingPortal(true);
-                        const url = await handleStripePortalSession(stripeCustomerId ?? "");
-                        window.open(url ?? "", "_blank");
-                        setIsOpeningBillingPortal(false);
-                    }}
+                    onClick={handlePortalOpen}
                     disabled={isOpeningBillingPortal}
                     isLoading={isOpeningBillingPortal}
                 />
