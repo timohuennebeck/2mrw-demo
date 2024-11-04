@@ -30,7 +30,6 @@ export interface Product {
     features: Feature[];
     is_active: boolean;
     subscription_tier: SubscriptionTier;
-    billing_method: PaymentEnums;
     updated_at: Date;
     created_at: Date;
 }
