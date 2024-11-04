@@ -11,11 +11,11 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
     return (
         <QueryClientProvider client={queryClient}>
             <SessionProvider>
-                <PreloaderWrapper>
-                    <ProductsProvider>
+                <ProductsProvider>
+                    <PreloaderWrapper>
                         {children}
-                    </ProductsProvider>
-                </PreloaderWrapper>
+                    </PreloaderWrapper>
+                </ProductsProvider>
             </SessionProvider>
         </QueryClientProvider>
     );
