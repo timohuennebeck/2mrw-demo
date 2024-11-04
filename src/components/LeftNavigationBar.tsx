@@ -1,7 +1,14 @@
 "use client";
 
 import React from "react";
-import { CreditCard, FileText, MapPinHouse, SquareArrowOutUpRight, Settings2 } from "lucide-react";
+import {
+    CreditCard,
+    FileText,
+    MapPinHouse,
+    SquareArrowOutUpRight,
+    Settings2,
+    CircleUserRound,
+} from "lucide-react";
 import { toast } from "sonner";
 import { TextConstants } from "@/constants/TextConstants";
 import { useRouter, usePathname } from "next/navigation";
@@ -46,6 +53,11 @@ const LeftNavigationBar = () => {
                     name: "Billing",
                     icon: <CreditCard size={20} strokeWidth={2} />,
                     link: "/billing",
+                },
+                {
+                    name: "User Profile",
+                    icon: <CircleUserRound size={20} strokeWidth={2} />,
+                    link: "/user-profile",
                 },
             ],
         },
@@ -121,28 +133,6 @@ const LeftNavigationBar = () => {
                         ))}
                     </div>
                 ))}
-            </div>
-
-            {/* User Profile */}
-            <div
-                className="mt-auto w-full cursor-pointer pt-4"
-                onClick={() => router.push("/user-profile")}
-            >
-                <div className="flex items-center rounded-md px-3 py-2 hover:bg-neutral-100">
-                    <div className="relative h-8 w-8 rounded-full border-2 border-neutral-200">
-                        <Image
-                            src="https://framerusercontent.com/images/bFuS8dh0c2VYIBRtknYJJUJnq8.jpg?scale-down-to=1024"
-                            alt="User"
-                            layout="fill"
-                            objectFit="cover"
-                            className="rounded-full"
-                        />
-                    </div>
-                    <div className="ml-3">
-                        <p className="text-sm font-medium text-neutral-900">Timo Huennebeck</p>
-                        <p className="text-xs text-neutral-500">m@example.com</p>
-                    </div>
-                </div>
             </div>
         </nav>
     );
