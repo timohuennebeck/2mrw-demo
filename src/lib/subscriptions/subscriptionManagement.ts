@@ -73,7 +73,7 @@ export const handleSubscriptionUpdated = async ({
                     status: SubscriptionStatus.ACTIVE,
                     subscription_tier: subscriptionTier,
                     stripe_subscription_id: subscription.id,
-                    payment_type:
+                    billing_method:
                         subscription.object === "subscription"
                             ? PaymentEnums.SUBSCRIPTION
                             : PaymentEnums.ONE_TIME,
