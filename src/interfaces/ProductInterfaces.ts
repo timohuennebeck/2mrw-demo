@@ -1,20 +1,5 @@
-import { PaymentEnums } from "@/enums/PaymentEnums";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
-
-export interface PricePoint {
-    previous?: number;
-    current: number;
-    stripe_price_id: string;
-    currency: string;
-}
-
-export interface ProductPricing {
-    one_time?: PricePoint;
-    subscription?: {
-        monthly?: PricePoint;
-        yearly?: PricePoint;
-    };
-}
+import { PricingModel } from "./StripePrices";
 
 export interface Feature {
     name: string;
@@ -25,11 +10,11 @@ export interface Product {
     id: string;
     name: string;
     description: string;
-    pricing: ProductPricing;
+    pricing_model: PricingModel;
     is_highlighted: boolean;
     features: Feature[];
     is_active: boolean;
     subscription_tier: SubscriptionTier;
-    updated_at: Date;
-    created_at: Date;
+    updated_at: string;
+    created_at: string;
 }
