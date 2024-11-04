@@ -53,7 +53,7 @@ export const PlanButton = ({
             const { checkoutUrl } = await initiateStripeCheckoutProcess({
                 userEmail: supabaseUser?.email ?? "",
                 stripePriceId: stripePriceId,
-                successUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan?session_id={CHECKOUT_SESSION_ID}`,
+                successUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/?success=true&session_id={CHECKOUT_SESSION_ID}`,
                 cancelUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan`,
             });
 

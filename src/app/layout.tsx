@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { Providers } from "./providers";
+import SubscriptionConfirmationHandler from "@/components/SubscriptionConfirmationHandler";
 
 export const metadata: Metadata = {
     title: "Boilerplate",
-    description: "Created bY Timo Huennebeck",
+    description: "Created by Timo Huennebeck",
 };
 
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
@@ -15,8 +16,12 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
     return (
         <html className="h-full" lang="en" suppressHydrationWarning={true}>
             <body className={`h-full`}>
-                <Providers>{children}</Providers>
+                <Providers>
+                    {children}
+                </Providers>
+
                 <Toaster position="bottom-right" />
+                <SubscriptionConfirmationHandler />
             </body>
         </html>
     );

@@ -15,10 +15,8 @@ import {
 } from "@/lib/helper/priceHelper";
 import { initiateStripeCheckoutProcess } from "@/lib/stripe/stripeUtils";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
-import { useSearchParams } from "next/dist/client/components/navigation";
-import { useRouter } from "next/navigation";
 import CustomPopup from "../CustomPopup";
-import { Check, ShieldAlert } from "lucide-react";
+import { ShieldAlert } from "lucide-react";
 
 const _isExactPlanMatch = ({
     activeStripePriceId,
@@ -72,15 +70,11 @@ const ChangeSubscriptionPlan = () => {
     const { subscription } = useSubscription(authUser?.id ?? "");
     const { freeTrial } = useFreeTrial(authUser?.id ?? "");
 
-    const router = useRouter();
-    const searchParams = useSearchParams();
-
     const formRef = useRef<HTMLFormElement>(null);
 
     const [selectedPlan, setSelectedPlan] = useState("");
     const [selectedBillingCycle, setSelectedBillingCycle] = useState("monthly");
     const [isLoading, setIsLoading] = useState(false);
-    const [showSuccessPopup, setShowSuccessPopup] = useState(false);
     const [showConfirmationPopup, setShowConfirmationPopup] = useState(false);
     const [selectedProductDetails, setSelectedProductDetails] = useState<Product | null>(null);
 
@@ -101,14 +95,6 @@ const ChangeSubscriptionPlan = () => {
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [showConfirmationPopup]);
-
-    useEffect(() => {
-        const success = searchParams.get("success");
-        if (success === "true") {
-            setShowSuccessPopup(true);
-            router.replace("/billing"); // clean up the URL without the success parameter
-        }
-    }, [searchParams, router]);
 
     if (!products) return null;
 
@@ -179,18 +165,6 @@ const ChangeSubscriptionPlan = () => {
 
     return (
         <>
-            {showSuccessPopup && authUser?.email && (
-                <CustomPopup
-                    title="Subscription Changed"
-                    description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
-                    icon={<Check size={32} strokeWidth={1.5} className="text-green-500" />}
-                    iconBackgroundColor="bg-green-100"
-                    mainButtonText="Continue"
-                    onConfirm={() => setShowSuccessPopup(false)}
-                    hideSecondaryButton
-                />
-            )}
-
             {showConfirmationPopup && selectedProductDetails && (
                 <CustomPopup
                     title="Confirm Subscription Change"

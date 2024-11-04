@@ -1,7 +1,7 @@
 import HeaderWithDescription from "@/components/HeaderWithDescription";
 import DashboardLayout from "./DashboardLayout";
 
-export default async function Home() {
+const Home = () => {
     return (
         <DashboardLayout>
             <div className="bg-white">
@@ -18,4 +18,6 @@ export default async function Home() {
             </div>
         </DashboardLayout>
     );
-}
+};
+
+export default Home;
