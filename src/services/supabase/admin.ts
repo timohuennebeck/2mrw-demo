@@ -75,6 +75,7 @@ export const startUserSubscription = async ({
     userId,
     stripePriceId,
     subscriptionTier,
+    stripeSubscriptionId,
 }: CreatePurchasedSubscriptionTableParams) => {
     const supabase = await getSupabasePowerUser();
 
@@ -86,6 +87,7 @@ export const startUserSubscription = async ({
             stripe_price_id: stripePriceId,
             status: SubscriptionStatus.ACTIVE,
             subscription_tier: subscriptionTier,
+            stripe_subscription_id: stripeSubscriptionId,
             payment_type: isOneTimePaymentEnabled()
                 ? PaymentEnums.ONE_TIME
                 : PaymentEnums.SUBSCRIPTION,
@@ -110,7 +112,7 @@ export const startUserSubscription = async ({
 
             const purchasedPackage = await getProductNameByTier(subscriptionTier);
 
-            const { error: validationError } = validateEmailProps(EmailTemplate.ONBOARDING, {
+            const { error: validationError } = validateEmailProps(EmailTemplate.SUBSCRIPTION_CONFIRMATION, {
                 userEmail: userData.email,
                 userFirstName: userData.first_name,
                 purchasedPackage,
@@ -121,7 +123,7 @@ export const startUserSubscription = async ({
                 return { success: true, error: null };
             }
 
-            await sendEmail(EmailTemplate.ONBOARDING, {
+            await sendEmail(EmailTemplate.SUBSCRIPTION_CONFIRMATION, {
                 userEmail: userData.email,
                 userFirstName: userData.first_name,
                 purchasedPackage,
@@ -144,6 +146,7 @@ export const updateUserSubscription = async ({
     stripePriceId,
     status,
     subscriptionTier,
+    stripeSubscriptionId,
 }: UpdateUserSubscriptionStatusParams) => {
     const supabase = await getSupabasePowerUser();
 
@@ -156,6 +159,7 @@ export const updateUserSubscription = async ({
                 stripe_price_id: stripePriceId,
                 status,
                 subscription_tier: subscriptionTier,
+                stripe_subscription_id: stripeSubscriptionId,
                 payment_type: isOneTimePaymentEnabled()
                     ? PaymentEnums.ONE_TIME
                     : PaymentEnums.SUBSCRIPTION,

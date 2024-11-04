@@ -68,7 +68,7 @@ const ChangeSubscriptionPlan = () => {
     const { products } = useProducts();
     const { authUser } = useSession();
 
-        const { subscription } = useSubscription(authUser?.id ?? "");
+    const { subscription } = useSubscription(authUser?.id ?? "");
     const { freeTrial } = useFreeTrial(authUser?.id ?? "");
 
     const router = useRouter();
@@ -147,6 +147,7 @@ const ChangeSubscriptionPlan = () => {
                 stripePriceId,
                 successUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/billing?success=true&session_id={CHECKOUT_SESSION_ID}`,
                 cancelUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/billing`,
+                existingSubscriptionId: subscription?.stripe_subscription_id,
             });
 
             if (checkoutUrl) {
@@ -270,7 +271,13 @@ const ChangeSubscriptionPlan = () => {
 
                     <div className="mt-6 flex items-start justify-start">
                         <CustomButton
-                            title={isOnFreeTrial ? "Upgrade Plan" : "Change Plan"}
+                            title={
+                                !subscription
+                                    ? "Unlock Plan"
+                                    : isOnFreeTrial
+                                      ? "Upgrade Plan"
+                                      : "Change Plan"
+                            }
                             disabled={!selectedPlan || isLoading}
                             isLoading={isLoading}
                         />

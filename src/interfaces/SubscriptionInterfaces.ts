@@ -6,11 +6,13 @@ export interface UpsertUserSubscriptionParams {
     userId: string;
     stripePriceId: string;
     subscriptionTier: SubscriptionTier;
+    stripeSubscriptionId?: string;
 }
 
 export interface PurchasedSubscription {
     id: number;
     stripe_price_id: string;
+    stripe_subscription_id: string;
     user_id: string;
     status: SubscriptionStatus;
     subscription_tier: SubscriptionTier;

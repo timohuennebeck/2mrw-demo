@@ -2,6 +2,7 @@
 
 import { getCurrentPaymentSettings } from "@/config/paymentConfig";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
+import { PaymentEnums } from "@/enums/PaymentEnums";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { UpsertUserSubscriptionParams } from "@/interfaces/SubscriptionInterfaces";
 import {
@@ -10,7 +11,6 @@ import {
     endUserFreeTrial,
     updateUserSubscription,
     getSupabasePowerUser,
-    updateUserStripeCustomerId,
 } from "@/services/supabase/admin";
 import {
     checkUserRowExists,
@@ -69,8 +69,15 @@ export const handleSubscriptionUpdated = async ({
             await supabasePowerUser
                 .from("purchased_subscriptions")
                 .update({
-                    end_date: moment.unix(subscription.current_period_end).toISOString(),
+                    stripe_price_id: stripePriceId,
                     status: SubscriptionStatus.ACTIVE,
+                    subscription_tier: subscriptionTier,
+                    stripe_subscription_id: subscription.id,
+                    payment_type:
+                        subscription.object === "subscription"
+                            ? PaymentEnums.SUBSCRIPTION
+                            : PaymentEnums.ONE_TIME,
+                    end_date: moment.unix(subscription.current_period_end).toISOString(),
                     updated_at: moment().toISOString(),
                 })
                 .eq("user_id", userId);
@@ -108,6 +115,7 @@ const upsertUserSubscription = async ({
     userId,
     stripePriceId,
     subscriptionTier,
+    stripeSubscriptionId,
 }: UpsertUserSubscriptionParams) => {
     const { rowExists } = await checkUserRowExists({ tableId: "purchased_subscriptions", userId });
 
@@ -117,12 +125,14 @@ const upsertUserSubscription = async ({
             stripePriceId,
             status: SubscriptionStatus.ACTIVE,
             subscriptionTier,
+            stripeSubscriptionId,
         });
     } else {
         await startUserSubscription({
             userId,
             stripePriceId,
             subscriptionTier,
+            stripeSubscriptionId,
         });
     }
 };
@@ -151,7 +161,6 @@ export const handleCheckoutSessionCompleted = async ({
     const supabasePowerUser = await getSupabasePowerUser();
 
     try {
-
         const { enableFreeTrial } = getCurrentPaymentSettings();
         if (enableFreeTrial) await endOnGoingFreeTrial(userId); // if free trial is not enabled in the paymentConfig.ts, we don't need to check for an on-going free trial
 
@@ -159,7 +168,12 @@ export const handleCheckoutSessionCompleted = async ({
         if (!subscriptionTier) throw new Error("SubscriptionTier not found");
 
         // updates the user subscription or creates a new table and then updates it
-        await upsertUserSubscription({ stripePriceId, subscriptionTier, userId });
+        await upsertUserSubscription({
+            stripePriceId,
+            subscriptionTier,
+            userId,
+            stripeSubscriptionId: session.subscription?.toString(),
+        });
 
         await supabasePowerUser.auth.admin.updateUserById(userId, {
             user_metadata: {

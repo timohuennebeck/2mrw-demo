@@ -158,5 +158,5 @@ export const PlanButton = ({
         };
     };
 
-    return <CustomButton {...determineButtonProps()} />;
+    return <CustomButton {...determineButtonProps()} className="w-full" />;
 };

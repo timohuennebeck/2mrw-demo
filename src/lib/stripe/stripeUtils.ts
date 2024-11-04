@@ -13,19 +13,40 @@ export const initiateStripeCheckoutProcess = async ({
     stripePriceId,
     successUrl,
     cancelUrl,
+    existingSubscriptionId,
 }: InitiateStripeCheckoutProcessParams) => {
     const stripeCustomerId = await getStripeCustomerId(userEmail);
     if (!stripeCustomerId) throw new Error("No stripe customer ID found");
 
-    const session = await stripe.checkout.sessions.create({
-        customer: stripeCustomerId,
-        line_items: [{ price: stripePriceId, quantity: 1 }],
-        mode: isOneTimePaymentEnabled() ? "payment" : "subscription",
-        success_url: successUrl,
-        cancel_url: cancelUrl,
-    });
+    if (existingSubscriptionId) {
+        const subscription = await stripe.subscriptions.retrieve(existingSubscriptionId);
 
-    return { checkoutUrl: session.url };
+        // get the subscription item ID (each subscription has at least one item)
+        const subscriptionItemId = subscription.items.data[0].id;
+
+        // if user has an existing subscription, update it immediately
+        await stripe.subscriptions.update(existingSubscriptionId, {
+            items: [
+                {
+                    id: subscriptionItemId,
+                    price: stripePriceId,
+                },
+            ],
+            proration_behavior: "always_invoice", // or 'create_prorations' based on your needs
+        });
+
+        return { checkoutUrl: successUrl };
+    } else {
+        const session = await stripe.checkout.sessions.create({
+            customer: stripeCustomerId,
+            line_items: [{ price: stripePriceId, quantity: 1 }],
+            mode: isOneTimePaymentEnabled() ? "payment" : "subscription",
+            success_url: successUrl,
+            cancel_url: cancelUrl,
+        });
+
+        return { checkoutUrl: session.url };
+    }
 };
 
 export const updateStripeCustomer = async (

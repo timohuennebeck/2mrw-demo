@@ -5,6 +5,7 @@ export interface CreatePurchasedSubscriptionTableParams {
     userId: string;
     stripePriceId: string;
     subscriptionTier: SubscriptionTier;
+    stripeSubscriptionId?: string;
 }
 
 export interface UpdateUserSubscriptionStatusParams {
@@ -12,6 +13,7 @@ export interface UpdateUserSubscriptionStatusParams {
     stripePriceId: string;
     status: SubscriptionStatus;
     subscriptionTier: SubscriptionTier;
+    stripeSubscriptionId?: string;
 }
 
 export interface StartUserFreeTrialParams {
