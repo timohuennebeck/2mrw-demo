@@ -1,16 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { createClient } from "@/services/supabase/client";
 import DashboardLayout from "../DashboardLayout";
 import { toast } from "sonner";
-import moment from "moment";
 import { useSession } from "@/context/SessionContext";
 import useUser from "@/hooks/useUser";
 import InputField from "@/components/InputField";
 import HeaderWithDescription from "@/components/HeaderWithDescription";
 import PasswordStrengthChecker from "@/components/PasswordStrengthChecker";
 import CustomButton from "@/components/CustomButton";
+import Image from "next/image";
+import { Loader, UserRound } from "lucide-react";
+import { updateUserProfileImage, updateUserEmail, updateUserPassword } from "./action";
 
 const UserProfilePage = () => {
     const { authUser } = useSession();
@@ -21,110 +22,63 @@ const UserProfilePage = () => {
 
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [userProfileImageUrl, setUserProfileImageUrl] = useState<string | null>(null);
 
     const [isUpdatingPersonalInfo, setIsUpdatingPersonalInfo] = useState(false);
     const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [isImageLoading, setIsImageLoading] = useState(true);
+    const [isUploadingProfileImage, setIsUploadingProfileImage] = useState(false);
     const [pendingEmail, setPendingEmail] = useState<string | null>(null);
-
-    const supabase = createClient();
 
     useEffect(() => {
         if (dbUser) {
             setFirstName(dbUser.first_name);
             setEmail(dbUser.email);
+            setUserProfileImageUrl(dbUser.profile_image_url ?? null);
             setIsLoading(false);
         }
     }, [dbUser]);
-
-    useEffect(() => {
-        // Set up auth state change listener
-        const {
-            data: { subscription },
-        } = supabase.auth.onAuthStateChange(async (event, session) => {
-            console.log("→ [LOG] event", event);
-            console.log("→ [LOG] session", session);
-
-            if (event === "USER_UPDATED" && session?.user.email === pendingEmail) {
-                // Email was verified, now update the database
-                const { error: databaseError } = await supabase
-                    .from("users")
-                    .update({
-                        first_name: name,
-                        email: pendingEmail,
-                        updated_at: moment().toISOString(),
-                    })
-                    .eq("id", authUser?.id);
-
-                if (databaseError) {
-                    toast.error("Error updating profile in database");
-                } else {
-                    toast.success("Profile successfully updated");
-                    setPendingEmail(null);
-                }
-            }
-        });
-
-        // Cleanup subscription
-        return () => {
-            subscription.unsubscribe();
-        };
-    }, [pendingEmail, name, authUser?.id, supabase]);
-
-    // TODO: when user changes his email address, I'll also need to change it in stripe. Otherwise, he won't be able to access his stripe billing page.
-    // TODO: when user changes his name, I'll also need to change it in stripe. Otherwise, his stripe customer name will be outdated.
 
     const hasPersonalInfoChanged = () => {
         if (isLoading || !dbUser) return false;
         return firstName !== dbUser.first_name || email !== dbUser.email;
     };
 
-    const updateUserEmail = async () => {
-        setPendingEmail(email);
-
-        const { error: authError } = await supabase.auth.updateUser({
-            email: email,
-        });
-
-        if (authError) {
-            toast.error("Error updating email.");
-            setPendingEmail(null);
-        } else {
-            toast.success("Please check email inbox to confirm the new email address.");
-        }
-    };
-
-    const updateUserName = async () => {
-        const { error: databaseError } = await supabase
-            .from("users")
-            .update({ first_name: name, updated_at: moment().toISOString() })
-            .eq("id", authUser?.id);
-
-        await supabase.auth.updateUser({
-            data: {
-                full_name: name,
-            },
-        });
-
-        if (databaseError) {
-            toast.error("Error updating database.");
-        } else {
-            toast.success("Your profile has been updated.");
-        }
-    };
-
     const handlePersonalInfoSubmit = async () => {
         setIsUpdatingPersonalInfo(true);
 
         if (email !== dbUser?.email) {
-            await updateUserEmail(); // if email changed, request email update
-        }
-
-        if (firstName !== dbUser?.first_name) {
-            await updateUserName(); // if name changed, update just the database
+            await updateUserEmail(authUser?.id ?? "", email); // if email changed, request email update
         }
 
         setIsUpdatingPersonalInfo(false);
+    };
+
+    const handleProfileImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        setIsUploadingProfileImage(true);
+
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            const result = await updateUserProfileImage({
+                profileImageUrl: userProfileImageUrl ?? "",
+                userId: authUser?.id ?? "",
+                formData,
+            });
+
+            if (result.error) {
+                toast.error(result.error);
+            } else {
+                setUserProfileImageUrl(result.publicUrl ?? null);
+                toast.success("Profile image has been updated.");
+            }
+        } finally {
+            setIsUploadingProfileImage(false);
+        }
     };
 
     const handleChangePasswordSubmit = async () => {
@@ -133,31 +87,24 @@ const UserProfilePage = () => {
             return;
         }
 
-        setIsUpdatingPassword(true);
-
-        const { error } = await supabase.auth.updateUser({
-            password: password,
-        });
-
-        if (error) {
-            toast.error("Error updating password");
-        } else {
-            toast.success("Password updated");
-            setPassword("");
-            setConfirmPassword("");
+        try {
+            setIsUpdatingPassword(true);
+            const result = await updateUserPassword(password);
+            if (result.error) {
+                toast.error(result.error);
+            } else {
+                toast.success("Password updated");
+                setPassword("");
+                setConfirmPassword("");
+            }
+        } finally {
+            setIsUpdatingPassword(false);
         }
-
-        setIsUpdatingPassword(false);
-    };
-
-    const handleDeleteAccount = () => {
-        // Implement logic to delete account
-        console.log("Delete account requested");
     };
 
     return (
         <DashboardLayout>
-            <div className="container max-w-3xl bg-white">
+            <div className="container h-full max-w-3xl bg-white">
                 <HeaderWithDescription
                     title="Personal Profile"
                     isPageHeader
@@ -165,11 +112,43 @@ const UserProfilePage = () => {
                 />
 
                 <div className="flex items-center">
-                    <div className="mr-6 h-24 w-24 rounded-full bg-gray-200">
-                        {/* Placeholder for profile image */}
+                    <div className="mr-6 flex h-24 w-24 items-center justify-center rounded-full bg-gray-200">
+                        {isUploadingProfileImage ? (
+                            <div className="flex h-full w-full items-center justify-center text-gray-400">
+                                <Loader className="h-6 w-6 animate-spin" />
+                            </div>
+                        ) : userProfileImageUrl ? (
+                            <Image
+                                src={userProfileImageUrl}
+                                alt="Profile avatar"
+                                className="h-full w-full rounded-full object-cover"
+                                sizes="100vw"
+                                width={0}
+                                height={0}
+                                onLoadingComplete={() => setIsImageLoading(false)}
+                            />
+                        ) : (
+                            <div className="flex h-full w-full items-center justify-center text-gray-400">
+                                <UserRound size={48} strokeWidth={1.5} />
+                            </div>
+                        )}
                     </div>
 
-                    <CustomButton title="Change avatar" />
+                    <div>
+                        {/* hidden so we can use a styled button instead */}
+                        <input
+                            type="file"
+                            id="avatar"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={handleProfileImageUpload}
+                        />
+                        <CustomButton
+                            title={isUploadingProfileImage ? "Uploading..." : "Change avatar"}
+                            onClick={() => document.getElementById("avatar")?.click()}
+                            disabled={isUploadingProfileImage}
+                        />
+                    </div>
                 </div>
 
                 <form onSubmit={handlePersonalInfoSubmit} className="mt-6">
@@ -179,10 +158,7 @@ const UserProfilePage = () => {
                     />
                     <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                            <label
-                                htmlFor="name"
-                                className="text-sm font-medium text-gray-700"
-                            >
+                            <label htmlFor="name" className="text-sm font-medium text-gray-700">
                                 First name
                             </label>
                             <div className="w-2/3">
@@ -198,10 +174,7 @@ const UserProfilePage = () => {
                             </div>
                         </div>
                         <div className="flex items-center justify-between">
-                            <label
-                                htmlFor="email"
-                                className="text-sm font-medium text-gray-700"
-                            >
+                            <label htmlFor="email" className="text-sm font-medium text-gray-700">
                                 Email address
                             </label>
 
@@ -315,7 +288,7 @@ const UserProfilePage = () => {
                     />
 
                     <button
-                        onClick={handleDeleteAccount}
+                        onClick={() => {}}
                         className="rounded-md border border-red-600 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
                     >
                         Delete Profile

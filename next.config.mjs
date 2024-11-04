@@ -6,7 +6,7 @@ const nextConfig = {
                 hostname: "i.imgur.com",
             },
         ],
-        domains: ["framerusercontent.com"],
+        domains: ["framerusercontent.com", "hinzuadpeftfdasbttoc.supabase.co"],
     },
 };
 
