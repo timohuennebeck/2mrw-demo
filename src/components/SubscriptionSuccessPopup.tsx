@@ -1,4 +1,5 @@
 import CustomButton from "./CustomButton";
+import { Check } from "lucide-react";
 
 interface SubscriptionSuccessPopupProps {
     email: string;
@@ -11,19 +12,7 @@ const SubscriptionSuccessPopup = ({ email, onClose }: SubscriptionSuccessPopupPr
             <div className="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-xl">
                 <div className="mb-6 flex justify-center">
                     <div className="rounded-full bg-green-100 p-3">
-                        <svg
-                            className="h-8 w-8 text-green-500"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M5 13l4 4L19 7"
-                            />
-                        </svg>
+                        <Check size={32} strokeWidth={1.5} className="text-green-500" />
                     </div>
                 </div>
 
@@ -31,7 +20,7 @@ const SubscriptionSuccessPopup = ({ email, onClose }: SubscriptionSuccessPopupPr
 
                 <p className="mb-6 text-gray-600">
                     Thanks for subscribing. Your subscription has been activated. The confirmation
-                    email has been sent to {email}.
+                    email has been sent to <span className="font-medium">{email}</span>.
                 </p>
 
                 <div className="flex justify-center">

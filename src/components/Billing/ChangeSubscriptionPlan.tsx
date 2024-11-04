@@ -18,6 +18,7 @@ import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import SubscriptionSuccessPopup from "../SubscriptionSuccessPopup";
 import { useSearchParams } from "next/dist/client/components/navigation";
 import { useRouter } from "next/navigation";
+import ChangeSubscriptionConfirmationPopup from "../ChangeSubscriptionConfirmationPopup";
 
 const _isExactPlanMatch = ({
     activeStripePriceId,
@@ -80,10 +81,12 @@ const ChangeSubscriptionPlan = () => {
     const [selectedBillingCycle, setSelectedBillingCycle] = useState("monthly");
     const [isLoading, setIsLoading] = useState(false);
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+    const [showConfirmationPopup, setShowConfirmationPopup] = useState(false);
+    const [selectedProductDetails, setSelectedProductDetails] = useState<Product | null>(null);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (formRef.current && !formRef.current.contains(event.target as Node)) {
+            if (!showConfirmationPopup && formRef.current && !formRef.current.contains(event.target as Node)) {
                 setSelectedPlan("");
             }
         };
@@ -92,7 +95,8 @@ const ChangeSubscriptionPlan = () => {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [showConfirmationPopup]);
 
     useEffect(() => {
         const success = searchParams.get("success");
@@ -122,13 +126,21 @@ const ChangeSubscriptionPlan = () => {
     const handleSubscriptionChange = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        try {
-            if (!authUser?.email || !selectedPlan) {
-                toast.error("Please select a plan to continue");
-                return;
-            }
+        if (!authUser?.email || !selectedPlan) {
+            toast.error("Please select a plan to continue");
+            return;
+        }
 
+        // find selected product details
+        const selectedProduct = products.find((p) => p.id === selectedPlan);
+        setSelectedProductDetails(selectedProduct || null);
+        setShowConfirmationPopup(true);
+    };
+
+    const handleConfirmSubscription = async () => {
+        try {
             setIsLoading(true);
+            setShowConfirmationPopup(false);
 
             const stripePriceId = getStripePriceIdBasedOnSelectedPlan({
                 products,
@@ -143,7 +155,7 @@ const ChangeSubscriptionPlan = () => {
             }
 
             const { checkoutUrl } = await initiateStripeCheckoutProcess({
-                userEmail: authUser.email,
+                userEmail: authUser?.email ?? "",
                 stripePriceId,
                 successUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/billing?success=true&session_id={CHECKOUT_SESSION_ID}`,
                 cancelUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/billing`,
@@ -167,6 +179,15 @@ const ChangeSubscriptionPlan = () => {
                 <SubscriptionSuccessPopup
                     email={authUser.email ?? ""}
                     onClose={() => setShowSuccessPopup(false)}
+                />
+            )}
+
+            {showConfirmationPopup && selectedProductDetails && (
+                <ChangeSubscriptionConfirmationPopup
+                    onConfirm={handleConfirmSubscription}
+                    onCancel={() => setShowConfirmationPopup(false)}
+                    newPlanName={selectedProductDetails.name}
+                    currentPlanName={activeProductDetails?.name}
                 />
             )}
 
@@ -273,10 +294,10 @@ const ChangeSubscriptionPlan = () => {
                         <CustomButton
                             title={
                                 !subscription
-                                    ? "Unlock Plan"
+                                    ? TextConstants.TEXT__UNLOCK_PLAN
                                     : isOnFreeTrial
-                                      ? "Upgrade Plan"
-                                      : "Change Plan"
+                                      ? TextConstants.TEXT__UPGRADE_PLAN
+                                      : TextConstants.TEXT__CHANGE_PLAN
                             }
                             disabled={!selectedPlan || isLoading}
                             isLoading={isLoading}
