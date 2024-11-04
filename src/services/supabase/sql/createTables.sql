@@ -50,7 +50,7 @@ CREATE TABLE
         status SubscriptionStatusEnums NOT NULL,
         end_date TIMESTAMPTZ,
         subscription_tier SubscriptionTierEnums NOT NULL,
-        billing_method PaymentEnums NOT NULL,
+        pricing_model PaymentEnums NOT NULL,
         created_at TIMESTAMPTZ NOT NULL,
         updated_at TIMESTAMPTZ NOT NULL
     );

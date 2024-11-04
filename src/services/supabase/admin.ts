@@ -88,7 +88,7 @@ export const startUserSubscription = async ({
             status: SubscriptionStatus.ACTIVE,
             subscription_tier: subscriptionTier,
             stripe_subscription_id: stripeSubscriptionId,
-            billing_method: isOneTimePaymentEnabled()
+            pricing_model: isOneTimePaymentEnabled()
                 ? PaymentEnums.ONE_TIME
                 : PaymentEnums.SUBSCRIPTION,
             end_date: endDate,
@@ -160,7 +160,7 @@ export const updateUserSubscription = async ({
                 status,
                 subscription_tier: subscriptionTier,
                 stripe_subscription_id: stripeSubscriptionId,
-                billing_method: isOneTimePaymentEnabled()
+                pricing_model: isOneTimePaymentEnabled()
                     ? PaymentEnums.ONE_TIME
                     : PaymentEnums.SUBSCRIPTION,
                 end_date: endDate,

@@ -16,7 +16,7 @@ export interface PurchasedSubscription {
     user_id: string;
     status: SubscriptionStatus;
     subscription_tier: SubscriptionTier;
-    billing_method: PaymentEnums;
+    pricing_model: PaymentEnums;
     end_date: string;
     updated_at: Date;
     created_at: Date;
