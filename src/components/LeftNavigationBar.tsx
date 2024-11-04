@@ -6,24 +6,21 @@ import {
     FileText,
     MapPinHouse,
     SquareArrowOutUpRight,
-    Settings2,
+    Settings,
     CircleUserRound,
+    Power,
 } from "lucide-react";
 import { toast } from "sonner";
 import { TextConstants } from "@/constants/TextConstants";
 import { useRouter, usePathname } from "next/navigation";
-import { SupabaseClient } from "@supabase/supabase-js";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import Image from "next/image";
+import { createClient } from "@/services/supabase/client";
 
-interface HandleSignOutProps {
-    supabaseClient: SupabaseClient;
-    router: AppRouterInstance;
-}
-
-export const _handleSignOut = async ({ supabaseClient, router }: HandleSignOutProps) => {
+export const _handleSignOut = async (router: AppRouterInstance) => {
+    const supabase = createClient();
     try {
-        const { error } = await supabaseClient.auth.signOut();
+        const { error } = await supabase.auth.signOut();
 
         if (error) {
             toast.error(`${TextConstants.ERROR_SIGNING_OUT}: ${error.message}`);
@@ -37,43 +34,100 @@ export const _handleSignOut = async ({ supabaseClient, router }: HandleSignOutPr
     }
 };
 
+const _handleItemClick = (item: NavigationItem, router: AppRouterInstance) => {
+    // handle external links
+    if (item.isExternal && item.link) {
+        window.open(item.link, "_blank");
+        return;
+    }
+
+    // handle custom onClick handlers
+    if (item.onClick) {
+        item.onClick();
+        return;
+    }
+
+    // handle internal navigation
+    if (item.link) {
+        router.push(item.link);
+        return;
+    }
+};
+
+type NavigationItem =
+    | {
+          name: string;
+          icon: React.ReactNode;
+          link?: string;
+          onClick?: () => void;
+          isExternal?: never;
+      }
+    | {
+          name: string;
+          icon: React.ReactNode;
+          link: string; // required when isExternal is true
+          onClick?: () => void;
+          isExternal: true;
+      };
+
+interface NavigationItems {
+    category: string;
+    items: NavigationItem[];
+}
+
 const LeftNavigationBar = () => {
     const router = useRouter();
     const pathname = usePathname();
 
-    const navigationItems = [
+    const navigationItems: NavigationItems[] = [
         {
             category: "MENU",
-            items: [{ name: "Home", icon: <MapPinHouse size={20} strokeWidth={2} />, link: "/" }],
+            items: [
+                {
+                    name: "Home",
+                    icon: <MapPinHouse size={20} strokeWidth={2} />,
+                    link: "/",
+                },
+            ],
         },
         {
-            category: "ADMINISTRATION",
+            category: "BILLING",
             items: [
                 {
                     name: "Billing",
                     icon: <CreditCard size={20} strokeWidth={2} />,
                     link: "/billing",
                 },
-                {
-                    name: "User Profile",
-                    icon: <CircleUserRound size={20} strokeWidth={2} />,
-                    link: "/user-profile",
-                },
             ],
         },
         {
-            category: "SETTINGS",
+            category: "HELP AND LEARNING",
             items: [
-                {
-                    name: "Settings",
-                    icon: <Settings2 size={20} strokeWidth={2} />,
-                    link: "/settings",
-                },
                 {
                     name: "Documentation",
                     icon: <FileText size={20} strokeWidth={2} />,
                     link: "/documentation",
                     isExternal: true,
+                },
+            ],
+        },
+        {
+            category: "PREFERENCES",
+            items: [
+                {
+                    name: "Settings",
+                    icon: <Settings size={20} strokeWidth={2} />,
+                    link: "/settings",
+                },
+                {
+                    name: "User Profile",
+                    icon: <CircleUserRound size={20} strokeWidth={2} />,
+                    link: "/user-profile",
+                },
+                {
+                    name: "Logout",
+                    icon: <Power size={20} strokeWidth={2} />,
+                    onClick: () => _handleSignOut(router),
                 },
             ],
         },
@@ -112,11 +166,7 @@ const LeftNavigationBar = () => {
                                         ? "bg-neutral-100 text-neutral-900"
                                         : "text-neutral-500 hover:bg-neutral-100"
                                 }`}
-                                onClick={() =>
-                                    item.isExternal
-                                        ? window.open(item.link, "_blank")
-                                        : router.push(item.link)
-                                }
+                                onClick={() => _handleItemClick(item, router)}
                             >
                                 <div className="flex items-center">
                                     <div className="mr-3">{item.icon}</div>
