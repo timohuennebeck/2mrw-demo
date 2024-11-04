@@ -15,10 +15,10 @@ import {
 } from "@/lib/helper/priceHelper";
 import { initiateStripeCheckoutProcess } from "@/lib/stripe/stripeUtils";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
-import SubscriptionSuccessPopup from "../SubscriptionSuccessPopup";
 import { useSearchParams } from "next/dist/client/components/navigation";
 import { useRouter } from "next/navigation";
-import ChangeSubscriptionConfirmationPopup from "../ChangeSubscriptionConfirmationPopup";
+import CustomPopup from "../CustomPopup";
+import { Check, ShieldAlert } from "lucide-react";
 
 const _isExactPlanMatch = ({
     activeStripePriceId,
@@ -86,7 +86,11 @@ const ChangeSubscriptionPlan = () => {
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (!showConfirmationPopup && formRef.current && !formRef.current.contains(event.target as Node)) {
+            if (
+                !showConfirmationPopup &&
+                formRef.current &&
+                !formRef.current.contains(event.target as Node)
+            ) {
                 setSelectedPlan("");
             }
         };
@@ -176,18 +180,26 @@ const ChangeSubscriptionPlan = () => {
     return (
         <>
             {showSuccessPopup && authUser?.email && (
-                <SubscriptionSuccessPopup
-                    email={authUser.email ?? ""}
-                    onClose={() => setShowSuccessPopup(false)}
+                <CustomPopup
+                    title="Subscription Changed"
+                    description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
+                    icon={<Check size={32} strokeWidth={1.5} className="text-green-500" />}
+                    iconBackgroundColor="bg-green-100"
+                    mainButtonText="Continue"
+                    onConfirm={() => setShowSuccessPopup(false)}
+                    hideSecondaryButton
                 />
             )}
 
             {showConfirmationPopup && selectedProductDetails && (
-                <ChangeSubscriptionConfirmationPopup
+                <CustomPopup
+                    title="Confirm Subscription Change"
+                    description={`Change current subscription plan from ${activeProductDetails?.name} to ${selectedProductDetails?.name}?`}
+                    icon={<ShieldAlert size={32} strokeWidth={1.5} className="text-yellow-500" />}
+                    iconBackgroundColor="bg-yellow-100"
+                    mainButtonText="Confirm"
                     onConfirm={handleConfirmSubscription}
                     onCancel={() => setShowConfirmationPopup(false)}
-                    newPlanName={selectedProductDetails.name}
-                    currentPlanName={activeProductDetails?.name}
                 />
             )}
 

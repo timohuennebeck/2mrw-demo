@@ -10,8 +10,9 @@ import HeaderWithDescription from "@/components/HeaderWithDescription";
 import PasswordStrengthChecker from "@/components/PasswordStrengthChecker";
 import CustomButton from "@/components/CustomButton";
 import Image from "next/image";
-import { Loader, UserRound } from "lucide-react";
+import { AlertTriangle, Loader, UserRound } from "lucide-react";
 import { updateUserProfileImage, updateUserEmail, updateUserPassword } from "./action";
+import CustomPopup from "@/components/CustomPopup";
 
 const UserProfilePage = () => {
     const { authUser } = useSession();
@@ -27,9 +28,9 @@ const UserProfilePage = () => {
     const [isUpdatingPersonalInfo, setIsUpdatingPersonalInfo] = useState(false);
     const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    const [isImageLoading, setIsImageLoading] = useState(true);
     const [isUploadingProfileImage, setIsUploadingProfileImage] = useState(false);
     const [pendingEmail, setPendingEmail] = useState<string | null>(null);
+    const [showDeleteAccountPopup, setShowDeleteAccountPopup] = useState(false);
 
     useEffect(() => {
         if (dbUser) {
@@ -104,6 +105,19 @@ const UserProfilePage = () => {
 
     return (
         <DashboardLayout>
+            {showDeleteAccountPopup && (
+                <CustomPopup
+                    title="Lorem Ipsum"
+                    description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
+                    icon={<AlertTriangle size={32} strokeWidth={1.5} className="text-red-500" />}
+                    iconBackgroundColor="bg-red-100"
+                    mainButtonColor="bg-red-600 hover:bg-red-700"
+                    mainButtonText="Confirm Deletion"
+                    onConfirm={() => {}}
+                    onCancel={() => setShowDeleteAccountPopup(false)}
+                />
+            )}
+
             <div className="container h-full max-w-3xl bg-white">
                 <HeaderWithDescription
                     title="Personal Profile"
@@ -125,7 +139,6 @@ const UserProfilePage = () => {
                                 sizes="100vw"
                                 width={0}
                                 height={0}
-                                onLoadingComplete={() => setIsImageLoading(false)}
                             />
                         ) : (
                             <div className="flex h-full w-full items-center justify-center text-gray-400">
@@ -288,7 +301,7 @@ const UserProfilePage = () => {
                     />
 
                     <button
-                        onClick={() => {}}
+                        onClick={() => setShowDeleteAccountPopup(true)}
                         className="rounded-md border border-red-600 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
                     >
                         Delete Profile
