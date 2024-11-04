@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import DashboardLayout from "../DashboardLayout";
 import HeaderWithDescription from "@/components/HeaderWithDescription";
 
