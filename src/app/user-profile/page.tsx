@@ -16,7 +16,7 @@ const UserProfilePage = () => {
     const { authUser } = useSession();
     const { dbUser } = useUser(authUser?.id ?? "");
 
-    const [name, setName] = useState("");
+    const [firstName, setFirstName] = useState("");
     const [email, setEmail] = useState("");
 
     const [password, setPassword] = useState("");
@@ -31,7 +31,7 @@ const UserProfilePage = () => {
 
     useEffect(() => {
         if (dbUser) {
-            setName(dbUser.first_name);
+            setFirstName(dbUser.first_name);
             setEmail(dbUser.email);
             setIsLoading(false);
         }
@@ -71,9 +71,10 @@ const UserProfilePage = () => {
         };
     }, [pendingEmail, name, authUser?.id, supabase]);
 
+
     const hasPersonalInfoChanged = () => {
         if (isLoading || !dbUser) return false;
-        return name !== dbUser.first_name || email !== dbUser.email;
+        return firstName !== dbUser.first_name || email !== dbUser.email;
     };
 
     const updateUserEmail = async () => {
@@ -91,11 +92,17 @@ const UserProfilePage = () => {
         }
     };
 
-    const updateUserDatabase = async () => {
+    const updateUserName = async () => {
         const { error: databaseError } = await supabase
             .from("users")
             .update({ first_name: name, updated_at: moment().toISOString() })
             .eq("id", authUser?.id);
+
+        await supabase.auth.updateUser({
+            data: {
+                full_name: name,
+            },
+        });
 
         if (databaseError) {
             toast.error("Error updating database.");
@@ -111,8 +118,8 @@ const UserProfilePage = () => {
             await updateUserEmail(); // if email changed, request email update
         }
 
-        if (name !== dbUser?.first_name) {
-            await updateUserDatabase(); // if name changed, update just the database
+        if (firstName !== dbUser?.first_name) {
+            await updateUserName(); // if name changed, update just the database
         }
 
         setIsUpdatingPersonalInfo(false);
@@ -174,17 +181,17 @@ const UserProfilePage = () => {
                                 htmlFor="name"
                                 className="w-1/3 text-sm font-medium text-gray-700"
                             >
-                                Full name
+                                First name
                             </label>
                             <div className="w-2/3">
                                 <InputField
                                     id="name"
-                                    label="Full Name"
+                                    label="First Name"
                                     hideLabel
                                     type="text"
                                     name="name"
-                                    value={name}
-                                    onChange={(value) => setName(value)}
+                                    value={firstName}
+                                    onChange={(value) => setFirstName(value)}
                                 />
                             </div>
                         </div>
