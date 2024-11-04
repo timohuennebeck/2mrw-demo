@@ -25,9 +25,9 @@ export const _handleSignOut = async (router: AppRouterInstance) => {
         if (error) {
             toast.error(`${TextConstants.ERROR_SIGNING_OUT}: ${error.message}`);
         } else {
-            toast.success(TextConstants.TEXT__LOGOUT_SUCCESSFUL);
-
             router.replace("/auth/sign-in");
+
+            toast.success(TextConstants.TEXT__LOGOUT_SUCCESSFUL);
         }
     } catch (err) {
         toast.error(`${TextConstants.ERROR__UNEXPECTED_ERROR} ${err}`);
