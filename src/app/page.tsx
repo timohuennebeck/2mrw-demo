@@ -8,6 +8,7 @@ export default async function Home() {
                 <HeaderWithDescription
                     title="Home"
                     description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
+                    isPageHeader
                 />
             </div>
             <div className="flex h-full w-full items-center justify-center">

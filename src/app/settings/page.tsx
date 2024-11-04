@@ -8,6 +8,7 @@ const SettingsPage = () => {
                 <HeaderWithDescription
                     title="Settings"
                     description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
+                    isPageHeader
                 />
             </div>
             <div className="flex h-full w-full items-center justify-center">
