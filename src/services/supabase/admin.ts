@@ -319,3 +319,26 @@ export const cancelUserSubscription = async (userId: string) => {
         };
     }
 };
+
+export const updateUserStripeCustomerId = async (userId: string, stripeCustomerId: string) => {
+    const supabase = await getSupabasePowerUser();
+
+    try {
+        const { error } = await supabase
+            .from("users")
+            .update({
+                stripe_customer_id: stripeCustomerId,
+                updated_at: moment().toISOString(),
+            })
+            .eq("id", userId);
+
+        if (error) throw error;
+
+        return { success: true, error: null };
+    } catch (error) {
+        return {
+            success: null,
+            error: handleSupabaseError({ error, fnTitle: "updateUserStripeCustomerId" }),
+        };
+    }
+};

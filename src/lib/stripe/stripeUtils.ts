@@ -2,6 +2,7 @@
 
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { InitiateStripeCheckoutProcessParams } from "@/interfaces/StripeInterfaces";
+import { updateUserStripeCustomerId } from "@/services/supabase/admin";
 import axios from "axios";
 import Stripe from "stripe";
 
@@ -13,8 +14,11 @@ export const initiateStripeCheckoutProcess = async ({
     successUrl,
     cancelUrl,
 }: InitiateStripeCheckoutProcessParams) => {
+    const stripeCustomerId = await getStripeCustomerId(userEmail);
+    if (!stripeCustomerId) throw new Error("No stripe customer ID found");
+
     const session = await stripe.checkout.sessions.create({
-        customer_email: userEmail,
+        customer: stripeCustomerId,
         line_items: [{ price: stripePriceId, quantity: 1 }],
         mode: isOneTimePaymentEnabled() ? "payment" : "subscription",
         success_url: successUrl,
@@ -24,7 +28,22 @@ export const initiateStripeCheckoutProcess = async ({
     return { checkoutUrl: session.url };
 };
 
-export const getStripeCustomerId = async (email: string) => {
+export const updateStripeCustomer = async (
+    customerId: string,
+    updates: { name?: string; email?: string },
+) => {
+    // only include fields that are provided
+    const updateData: { name?: string; email?: string } = {};
+    if (updates.name) updateData.name = updates.name;
+    if (updates.email) updateData.email = updates.email;
+
+    // update the customer in Stripe only if there are changes
+    if (Object.keys(updateData).length !== 0) {
+        return await stripe.customers.update(customerId, updateData);
+    }
+};
+
+export const getStripeCustomerId = async (email: string, userId?: string) => {
     try {
         const customers = await stripe.customers.list({
             email: email,
@@ -39,6 +58,10 @@ export const getStripeCustomerId = async (email: string) => {
         const newCustomer = await stripe.customers.create({
             email: email,
         });
+
+        if (userId) {
+            await updateUserStripeCustomerId(userId, newCustomer.id);
+        }
 
         return newCustomer.id;
     } catch (error) {
@@ -69,12 +92,12 @@ export const getStripeCustomerCreditCardDetails = async (customerId: string) => 
     };
 };
 
-export const handleStripePortalSession = async (customerId: string) => {
+export const handleStripePortalSession = async (stripeCustomerId: string) => {
     try {
         const response = await axios.post(
             `${process.env.NEXT_PUBLIC_SITE_URL}/api/stripe/create-portal-session`,
             {
-                customerId,
+                stripeCustomerId,
             },
         );
 

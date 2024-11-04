@@ -7,22 +7,14 @@ import { useSession } from "@/context/SessionContext";
 const BillingPortal = () => {
     const { authUser } = useSession();
 
-    const [stripeCustomerId, setStripeCustomerId] = useState<string | null>(null);
     const [isOpeningBillingPortal, setIsOpeningBillingPortal] = useState(false);
-
-    useEffect(() => {
-        const fetchStripeCustomerCreditCardDetails = async () => {
-            if (!authUser?.email) return;
-
-            const customerId = await getStripeCustomerId(authUser.email);
-            setStripeCustomerId(customerId);
-        };
-
-        fetchStripeCustomerCreditCardDetails();
-    }, [authUser]);
 
     const handlePortalOpen = async () => {
         setIsOpeningBillingPortal(true);
+
+        if (!authUser?.email || !authUser?.id) return;
+
+        const stripeCustomerId = await getStripeCustomerId(authUser.email, authUser.id);
         const url = await handleStripePortalSession(stripeCustomerId ?? "");
         if (url) {
             window.open(url, "_blank");

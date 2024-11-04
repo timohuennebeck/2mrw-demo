@@ -10,6 +10,7 @@ import {
     endUserFreeTrial,
     updateUserSubscription,
     getSupabasePowerUser,
+    updateUserStripeCustomerId,
 } from "@/services/supabase/admin";
 import {
     checkUserRowExists,
@@ -150,8 +151,9 @@ export const handleCheckoutSessionCompleted = async ({
     const supabasePowerUser = await getSupabasePowerUser();
 
     try {
+
         const { enableFreeTrial } = getCurrentPaymentSettings();
-        if (enableFreeTrial) await endOnGoingFreeTrial(userId); // if free trial is not enabled, we don't need to check for an on-going free trial
+        if (enableFreeTrial) await endOnGoingFreeTrial(userId); // if free trial is not enabled in the paymentConfig.ts, we don't need to check for an on-going free trial
 
         const { subscriptionTier } = await fetchSubscriptionTier(stripePriceId);
         if (!subscriptionTier) throw new Error("SubscriptionTier not found");

@@ -9,6 +9,7 @@ CREATE TYPE PaymentEnums AS ENUM ('SUBSCRIPTION', 'ONE_TIME');
 CREATE TABLE
     users (
         id UUID PRIMARY KEY UNIQUE DEFAULT NOT NULL,
+        stripe_customer_id TEXT,
         email TEXT NOT NULL,
         first_name TEXT NOT NULL,
         created_at TIMESTAMPTZ NOT NULL,

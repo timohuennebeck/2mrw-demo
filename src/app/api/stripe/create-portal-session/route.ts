@@ -5,10 +5,10 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(request: Request) {
     try {
-        const { customerId } = await request.json();
+        const { stripeCustomerId } = await request.json();
 
         const session = await stripe.billingPortal.sessions.create({
-            customer: customerId,
+            customer: stripeCustomerId,
             return_url: `${process.env.NEXT_PUBLIC_SITE_URL}/billing`,
         });
 
