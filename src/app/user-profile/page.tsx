@@ -71,6 +71,8 @@ const UserProfilePage = () => {
         };
     }, [pendingEmail, name, authUser?.id, supabase]);
 
+    // TODO: when user changes his email address, I'll also need to change it in stripe. Otherwise, he won't be able to access his stripe billing page.
+    // TODO: when user changes his name, I'll also need to change it in stripe. Otherwise, his stripe customer name will be outdated.
 
     const hasPersonalInfoChanged = () => {
         if (isLoading || !dbUser) return false;
@@ -176,10 +178,10 @@ const UserProfilePage = () => {
                         description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
                     />
                     <div className="space-y-4">
-                        <div className="flex items-center">
+                        <div className="flex items-center justify-between">
                             <label
                                 htmlFor="name"
-                                className="w-1/3 text-sm font-medium text-gray-700"
+                                className="text-sm font-medium text-gray-700"
                             >
                                 First name
                             </label>
@@ -195,10 +197,10 @@ const UserProfilePage = () => {
                                 />
                             </div>
                         </div>
-                        <div className="flex items-center">
+                        <div className="flex items-center justify-between">
                             <label
                                 htmlFor="email"
-                                className="w-1/3 text-sm font-medium text-gray-700"
+                                className="text-sm font-medium text-gray-700"
                             >
                                 Email address
                             </label>
@@ -248,10 +250,10 @@ const UserProfilePage = () => {
                         description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
                     />
                     <div className="space-y-4">
-                        <div className="flex items-center">
+                        <div className="flex items-center justify-between">
                             <label
                                 htmlFor="new-password"
-                                className="w-1/3 text-sm font-medium text-gray-700"
+                                className="text-sm font-medium text-gray-700"
                             >
                                 Password
                             </label>
@@ -267,10 +269,10 @@ const UserProfilePage = () => {
                                 />
                             </div>
                         </div>
-                        <div className="flex w-full items-center">
+                        <div className="flex w-full items-center justify-between">
                             <label
                                 htmlFor="confirm-password"
-                                className="w-1/3 text-sm font-medium text-gray-700"
+                                className="text-sm font-medium text-gray-700"
                             >
                                 Confirm Password
                             </label>
