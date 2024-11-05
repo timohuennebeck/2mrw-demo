@@ -14,10 +14,14 @@ import { Check } from "lucide-react";
 import { useState } from "react";
 import useSuccessParam from "@/hooks/useSuccessParam";
 import { hasUserPremiumOrFreeTrial } from "@/lib/helper/subscriptionHelper";
+import { useProducts } from "@/context/ProductsContext";
+import CurrentSubscriptionPlanSkeleton from "@/components/ui/CurrentSubscriptionPlanSkeleton";
+import ChangeSubscriptionPlanSkeleton from "@/components/ui/ChangeSubscriptionPlanSkeleton";
 
 const BillingPage = () => {
     const { authUser } = useSession();
-    const { invalidateSubscription } = useSubscription(authUser?.id ?? "");
+    const { products } = useProducts();
+    const { subscription, invalidateSubscription } = useSubscription(authUser?.id ?? "");
     const { invalidateFreeTrial } = useFreeTrial(authUser?.id ?? "");
 
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
@@ -64,8 +68,18 @@ const BillingPage = () => {
 
                 <div className="flex flex-col gap-6">
                     <BillingPortal />
-                    {hasPremiumOrFreeTrial && <CurrentSubscriptionPlan />}
-                    <ChangeSubscriptionPlan />
+
+                    {!products || !subscription ? (
+                        <div className="flex flex-col gap-6">
+                            <CurrentSubscriptionPlanSkeleton />
+                            <ChangeSubscriptionPlanSkeleton />
+                        </div>
+                    ) : (
+                        <div className="flex flex-col gap-6">
+                            {hasPremiumOrFreeTrial && <CurrentSubscriptionPlan />}
+                            <ChangeSubscriptionPlan />
+                        </div>
+                    )}
                 </div>
             </div>
         </DashboardLayout>

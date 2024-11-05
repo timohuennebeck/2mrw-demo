@@ -4,7 +4,7 @@ import { PricingPlanCard } from "@/components/PricingPlan/PricingPlanCard";
 import { PricingPlanCardSkeleton } from "@/components/ui/PricingPlanCardSkeleton";
 import { useFreeTrial } from "@/hooks/useFreeTrial";
 import { useSubscription } from "@/hooks/useSubscription";
-import { Product, ProductWithPrices } from "@/interfaces/ProductInterfaces";
+import { ProductWithPrices } from "@/interfaces/ProductInterfaces";
 import { useState } from "react";
 import { isFreePlanEnabled, isOneTimePaymentEnabled, paymentConfig } from "@/config/paymentConfig";
 import { TextConstants } from "@/constants/TextConstants";
@@ -12,16 +12,7 @@ import { useProducts } from "@/context/ProductsContext";
 import { useSession } from "@/context/SessionContext";
 import { SubscriptionInterval } from "@/interfaces/StripePrices";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
-
-const IntervalButtonSkeleton = ({ isYearly }: { isYearly?: boolean }) => {
-    return (
-        <div
-            className={`h-7 animate-pulse rounded border bg-neutral-100 ${
-                isYearly ? "w-28" : "w-20"
-            }`}
-        />
-    );
-};
+import BillingPlanSkeleton from "@/components/ui/BillingPlanSkeleton";
 
 const ChoosePricingPlanPage = () => {
     const [billingCycle, setBillingCycle] = useState<SubscriptionInterval>(
@@ -67,8 +58,8 @@ const ChoosePricingPlanPage = () => {
                         <div className="flex gap-2">
                             {!products || isLoading ? (
                                 <>
-                                    <IntervalButtonSkeleton />
-                                    <IntervalButtonSkeleton isYearly />
+                                    <BillingPlanSkeleton />
+                                    <BillingPlanSkeleton isYearly />
                                 </>
                             ) : (
                                 <>

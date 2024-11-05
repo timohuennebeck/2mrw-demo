@@ -77,7 +77,9 @@ const CurrentSubscriptionPlan = () => {
             return null;
         }
 
-        const formattedEndDate = formatDateToDayMonthYear(freeTrial?.end_date ?? subscription?.end_date);
+        const formattedEndDate = formatDateToDayMonthYear(
+            freeTrial?.end_date ?? subscription?.end_date,
+        );
 
         if (freeTrial?.status === FreeTrialStatus.ACTIVE) {
             return `Your free trial will end on ${formattedEndDate}!`;
