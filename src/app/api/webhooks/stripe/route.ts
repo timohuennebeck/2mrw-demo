@@ -5,7 +5,6 @@ import { VerifyStripeWebhookParams } from "@/interfaces/StripeInterfaces";
 import { queryClient } from "@/lib/qClient/qClient";
 import {
     handleCheckoutSessionCompleted,
-    handleSubscriptionDeleted,
     handleSubscriptionUpdated,
 } from "@/lib/subscriptions/subscriptionManagement";
 import { getUserId } from "@/services/supabase/queries";
@@ -59,15 +58,6 @@ export const POST = async (req: request) => {
                     subscription: event.data.object,
                     userId: userId ?? "",
                 });
-
-                if (userId) {
-                    queryClient.invalidateQueries({
-                        queryKey: ["subscription", userId],
-                    });
-                }
-                break;
-            case StripeWebhookEvents.CUSTOMER_SUBSCRIPTION_DELETED:
-                await handleSubscriptionDeleted(userId ?? "");
 
                 if (userId) {
                     queryClient.invalidateQueries({

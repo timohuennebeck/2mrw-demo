@@ -8,6 +8,16 @@ import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 
+export const cancelStripeSubscription = async (stripeSubscriptionId: string) => {
+    try {
+        await stripe.subscriptions.cancel(stripeSubscriptionId);
+        return { success: true, error: null };
+    } catch (error) {
+        console.error("Error canceling Stripe subscription:", error);
+        return { success: false, error };
+    }
+};
+
 export const initiateStripeCheckoutProcess = async ({
     userEmail,
     stripePriceId,

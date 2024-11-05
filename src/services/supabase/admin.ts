@@ -11,11 +11,13 @@ import { createClient, User } from "@supabase/supabase-js";
 import { handleSupabaseError } from "../../lib/helper/handleSupabaseError";
 import moment from "moment";
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
-import { fetchProductsWithPrices } from "./queries";
 import { EmailTemplate, sendEmail } from "@/lib/email/emailService";
 import { getProductNameByTier } from "@/lib/helper/PackagesHelper";
 import { validateEmailProps } from "@/lib/validation/emailValidation";
-import { PricingModel, SubscriptionInterval } from "@/interfaces/StripePrices";
+import { PricingModel } from "@/interfaces/StripePrices";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 
 export const getSupabasePowerUser = async () => {
     return createClient(
@@ -30,27 +32,24 @@ export const getSupabasePowerUser = async () => {
     );
 };
 
-const getEndDate = async (stripePriceId: string) => {
+const getEndDate = async (stripeSubscriptionId: string) => {
+    // If it's a one-time payment, return null as there's no end date
     if (isOneTimePaymentEnabled()) {
-        return null; // one-time payments don't have an end date
+        return null;
     }
 
-    // fetch products to check price IDs
-    const { products } = await fetchProductsWithPrices();
-    if (!products) throw new Error("Failed to fetch products");
+    // if there's no subscription ID, return null
+    if (!stripeSubscriptionId) {
+        return null;
+    }
 
-    // check if the stripePriceId matches any yearly subscription
-    const isYearlySubscription = products.some(
-        (product) =>
-            product.prices.find((price) => price.id === stripePriceId)?.subscription_interval ===
-            SubscriptionInterval.YEARLY,
-    );
-
-    const currentDate = moment();
-
-    return isYearlySubscription
-        ? currentDate.add(1, "year").toISOString()
-        : currentDate.add(1, "month").toISOString();
+    try {
+        const subscription = await stripe.subscriptions.retrieve(stripeSubscriptionId);
+        return moment.unix(subscription.current_period_end).toISOString();
+    } catch (error) {
+        console.error("Error fetching subscription:", error);
+        return null;
+    }
 };
 
 export const createUserTable = async ({ user }: { user: User }) => {
@@ -78,11 +77,12 @@ export const startUserSubscription = async ({
     stripePriceId,
     subscriptionTier,
     stripeSubscriptionId,
+    pricingModel,
 }: CreatePurchasedSubscriptionTableParams) => {
     const supabase = await getSupabasePowerUser();
 
     try {
-        const endDate = await getEndDate(stripePriceId);
+        const endDate = await getEndDate(stripeSubscriptionId ?? "");
 
         const { error } = await supabase.from("purchased_subscriptions").insert({
             user_id: userId,
@@ -90,9 +90,7 @@ export const startUserSubscription = async ({
             status: SubscriptionStatus.ACTIVE,
             subscription_tier: subscriptionTier,
             stripe_subscription_id: stripeSubscriptionId,
-            pricing_model: isOneTimePaymentEnabled()
-                ? PricingModel.ONE_TIME
-                : PricingModel.SUBSCRIPTION,
+            pricing_model: pricingModel,
             end_date: endDate,
             updated_at: moment().toISOString(),
             created_at: moment().toISOString(),
@@ -152,11 +150,12 @@ export const updateUserSubscription = async ({
     status,
     subscriptionTier,
     stripeSubscriptionId,
+    pricingModel,
 }: UpdateUserSubscriptionStatusParams) => {
     const supabase = await getSupabasePowerUser();
 
     try {
-        const endDate = await getEndDate(stripePriceId);
+        const endDate = await getEndDate(stripeSubscriptionId ?? "");
 
         const { error } = await supabase
             .from("purchased_subscriptions")
@@ -165,9 +164,7 @@ export const updateUserSubscription = async ({
                 status,
                 subscription_tier: subscriptionTier,
                 stripe_subscription_id: stripeSubscriptionId,
-                pricing_model: isOneTimePaymentEnabled()
-                    ? PricingModel.ONE_TIME
-                    : PricingModel.SUBSCRIPTION,
+                pricing_model: pricingModel,
                 end_date: endDate,
                 updated_at: moment().toISOString(),
             })
@@ -300,7 +297,7 @@ export const cancelUserFreeTrial = async ({ userId }: { userId: string }) => {
     }
 };
 
-export const cancelUserSubscription = async (userId: string) => {
+export const cancelUserSubscription = async (userId: string, endDate: string) => {
     const supabase = await getSupabasePowerUser();
 
     try {
@@ -309,6 +306,7 @@ export const cancelUserSubscription = async (userId: string) => {
             .update({
                 updated_at: moment().toISOString(),
                 status: SubscriptionStatus.CANCELLED,
+                end_date: endDate,
             })
             .eq("user_id", userId);
 

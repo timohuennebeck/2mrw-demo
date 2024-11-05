@@ -79,26 +79,26 @@ export class PricingService {
 
     static getStripePriceIdBasedOnSelectedPlan({
         products,
-        selectedPlan,
-        selectedBillingCycle,
-        isOneTimePaymentPlan,
+        selectedPlanId,
+        subscriptionInterval,
+        pricingModel,
     }: {
         products: ProductWithPrices[];
-        selectedPlan: string;
-        selectedBillingCycle: SubscriptionInterval;
-        isOneTimePaymentPlan: boolean;
+        selectedPlanId: string;
+        subscriptionInterval: SubscriptionInterval;
+        pricingModel: PricingModel;
     }) {
-        const selectedProduct = products.find((product) => product.id === selectedPlan);
+        const selectedProduct = products.find((product) => product.id === selectedPlanId);
         if (!selectedProduct) return null;
 
-        if (isOneTimePaymentPlan) {
+        if (pricingModel === PricingModel.ONE_TIME) {
             return selectedProduct.prices.find(
                 (price) => price.pricing_model === PricingModel.ONE_TIME,
             )?.stripe_price_id;
         }
 
         return selectedProduct.prices.find(
-            (price) => price.subscription_interval === selectedBillingCycle,
+            (price) => price.subscription_interval === subscriptionInterval,
         )?.stripe_price_id;
     }
 }

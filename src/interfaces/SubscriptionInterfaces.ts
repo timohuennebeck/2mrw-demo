@@ -7,6 +7,7 @@ export interface UpsertUserSubscriptionParams {
     stripePriceId: string;
     subscriptionTier: SubscriptionTier;
     stripeSubscriptionId?: string;
+    pricingModel: PricingModel;
 }
 
 export interface PurchasedSubscription {

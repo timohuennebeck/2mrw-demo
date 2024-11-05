@@ -1,11 +1,13 @@
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
+import { PricingModel } from "@/interfaces/StripePrices";
 
 export interface CreatePurchasedSubscriptionTableParams {
     userId: string;
-    stripePriceId: string;
+    stripePriceId: string | null;
     subscriptionTier: SubscriptionTier;
-    stripeSubscriptionId?: string;
+    stripeSubscriptionId?: string | null;
+    pricingModel: PricingModel;
 }
 
 export interface UpdateUserSubscriptionStatusParams {
@@ -14,6 +16,7 @@ export interface UpdateUserSubscriptionStatusParams {
     status: SubscriptionStatus;
     subscriptionTier: SubscriptionTier;
     stripeSubscriptionId?: string;
+    pricingModel: PricingModel;
 }
 
 export interface StartUserFreeTrialParams {

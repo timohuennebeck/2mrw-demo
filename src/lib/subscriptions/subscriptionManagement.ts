@@ -3,10 +3,8 @@
 import { getCurrentPaymentSettings } from "@/config/paymentConfig";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
-import { PricingModel } from "@/interfaces/StripePrices";
 import { UpsertUserSubscriptionParams } from "@/interfaces/SubscriptionInterfaces";
 import {
-    cancelUserSubscription,
     startUserSubscription,
     endUserFreeTrial,
     updateUserSubscription,
@@ -99,25 +97,12 @@ export const handleSubscriptionUpdated = async ({
     }
 };
 
-export const handleSubscriptionDeleted = async (userId: string) => {
-    if (!userId) throw new Error("No user ID provided");
-
-    try {
-        const { error } = await cancelUserSubscription(userId);
-        if (error) throw error;
-
-        return { success: true };
-    } catch (error) {
-        console.error("Error in handleSubscriptionDeleted:", error);
-        throw error;
-    }
-};
-
 const upsertUserSubscription = async ({
     userId,
     stripePriceId,
     subscriptionTier,
     stripeSubscriptionId,
+    pricingModel,
 }: UpsertUserSubscriptionParams) => {
     const { rowExists } = await checkUserRowExists({ tableId: "purchased_subscriptions", userId });
 
@@ -128,6 +113,7 @@ const upsertUserSubscription = async ({
             status: SubscriptionStatus.ACTIVE,
             subscriptionTier,
             stripeSubscriptionId,
+            pricingModel,
         });
     } else {
         await startUserSubscription({
@@ -135,6 +121,7 @@ const upsertUserSubscription = async ({
             stripePriceId,
             subscriptionTier,
             stripeSubscriptionId,
+            pricingModel,
         });
     }
 };
@@ -169,12 +156,16 @@ export const handleCheckoutSessionCompleted = async ({
         const { subscriptionTier } = await fetchSubscriptionTier(stripePriceId);
         if (!subscriptionTier) throw new Error("SubscriptionTier not found");
 
+        const { pricingModel } = await fetchPricingModel(stripePriceId);
+        if (!pricingModel) throw new Error("PricingModel not found");
+
         // updates the user subscription or creates a new table and then updates it
         await upsertUserSubscription({
             stripePriceId,
             subscriptionTier,
             userId,
             stripeSubscriptionId: session.subscription?.toString(),
+            pricingModel,
         });
 
         await supabasePowerUser.auth.admin.updateUserById(userId, {

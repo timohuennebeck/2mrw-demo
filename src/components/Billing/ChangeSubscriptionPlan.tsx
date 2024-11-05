@@ -8,7 +8,7 @@ import { useSession } from "@/context/SessionContext";
 import { useProducts } from "@/context/ProductsContext";
 import useFreeTrial from "@/hooks/useFreeTrial";
 import useSubscription from "@/hooks/useSubscription";
-import { initiateStripeCheckoutProcess } from "@/lib/stripe/stripeUtils";
+import { cancelStripeSubscription, initiateStripeCheckoutProcess } from "@/lib/stripe/stripeUtils";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import CustomPopup from "../CustomPopup";
 import { ShieldAlert } from "lucide-react";
@@ -17,6 +17,8 @@ import { PricingService } from "@/services/PricingService";
 import { PricingModel } from "@/interfaces/StripePrices";
 import useClickOutside from "@/hooks/useClickOutside";
 import { useRouter } from "next/navigation";
+import { SubscriptionTier } from "@/enums/SubscriptionTier";
+import { cancelUserSubscription, startUserSubscription } from "@/services/supabase/admin";
 
 const ChangeSubscriptionPlan = () => {
     const { authUser } = useSession();
@@ -65,12 +67,34 @@ const ChangeSubscriptionPlan = () => {
             setIsLoading(true);
             setShowConfirmationPopup(false);
 
+            const selectedProduct = products.find((p) => p.id === selectedPlanId);
+            const isFreeProduct = selectedProduct?.pricing_model === PricingModel.FREE;
             const stripePriceId = PricingService.getStripePriceIdBasedOnSelectedPlan({
                 products,
-                selectedPlan: selectedPlanId,
-                selectedBillingCycle: subscriptionInterval,
-                isOneTimePaymentPlan,
+                selectedPlanId,
+                subscriptionInterval,
+                pricingModel: selectedProduct?.pricing_model ?? PricingModel.SUBSCRIPTION,
             });
+
+            if (isFreeProduct) {
+                if (subscription?.stripe_subscription_id) {
+                    await cancelStripeSubscription(subscription.stripe_subscription_id);
+                }
+
+                await cancelUserSubscription(authUser?.id ?? "", subscription?.end_date ?? "");
+
+                await startUserSubscription({
+                    userId: authUser?.id ?? "",
+                    stripePriceId: null,
+                    subscriptionTier: SubscriptionTier.FREE,
+                    stripeSubscriptionId: null,
+                    pricingModel: PricingModel.FREE,
+                });
+
+                toast.success("You've been downgraded to the free plan.");
+                router.refresh();
+                return;
+            }
 
             if (!stripePriceId) {
                 toast.error("Invalid plan selection");
