@@ -4,15 +4,19 @@ import { PricingPlanCard } from "@/components/PricingPlan/PricingPlanCard";
 import { PricingPlanCardSkeleton } from "@/components/ui/PricingPlanCardSkeleton";
 import { useFreeTrial } from "@/hooks/useFreeTrial";
 import { useSubscription } from "@/hooks/useSubscription";
-import { Product } from "@/interfaces/ProductInterfaces";
+import { Product, ProductWithPrices } from "@/interfaces/ProductInterfaces";
 import { useState } from "react";
 import { isOneTimePaymentEnabled, paymentConfig } from "@/config/paymentConfig";
 import { TextConstants } from "@/constants/TextConstants";
 import { useProducts } from "@/context/ProductsContext";
 import { useSession } from "@/context/SessionContext";
+import { SubscriptionInterval } from "@/interfaces/StripePrices";
+import { SubscriptionTier } from "@/enums/SubscriptionTier";
 
 const ChoosePricingPlanPage = () => {
-    const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
+    const [billingCycle, setBillingCycle] = useState<SubscriptionInterval>(
+        SubscriptionInterval.MONTHLY,
+    );
 
     const { products } = useProducts();
     const { authUser } = useSession();
@@ -33,6 +37,18 @@ const ChoosePricingPlanPage = () => {
 
     const isLoading = isFreeTrialLoading || isSubscriptionLoading;
 
+    const productsOrder = [
+        SubscriptionTier.FREE,
+        SubscriptionTier.ESSENTIALS,
+        SubscriptionTier.FOUNDERS,
+    ];
+
+    const sortedProducts = products?.sort((a, b) => {
+        return (
+            productsOrder.indexOf(a.subscription_tier) - productsOrder.indexOf(b.subscription_tier)
+        );
+    });
+
     return (
         <div className="flex h-full min-h-screen w-full items-center justify-center">
             <div className="container px-4 py-8">
@@ -40,9 +56,9 @@ const ChoosePricingPlanPage = () => {
                     <div className="mb-8 flex justify-center">
                         <div className="flex gap-2">
                             <button
-                                onClick={() => setBillingCycle("monthly")}
+                                onClick={() => setBillingCycle(SubscriptionInterval.MONTHLY)}
                                 className={`rounded px-3 py-1 text-sm ${
-                                    billingCycle === "monthly"
+                                    billingCycle === SubscriptionInterval.MONTHLY
                                         ? "bg-neutral-900 text-white"
                                         : "bg-neutral-100"
                                 }`}
@@ -50,9 +66,9 @@ const ChoosePricingPlanPage = () => {
                                 {TextConstants.TEXT__MONTHLY.toUpperCase()}
                             </button>
                             <button
-                                onClick={() => setBillingCycle("yearly")}
+                                onClick={() => setBillingCycle(SubscriptionInterval.YEARLY)}
                                 className={`rounded px-3 py-1 text-sm ${
-                                    billingCycle === "yearly"
+                                    billingCycle === SubscriptionInterval.YEARLY
                                         ? "bg-neutral-900 text-white"
                                         : "bg-neutral-100"
                                 }`}
@@ -62,10 +78,10 @@ const ChoosePricingPlanPage = () => {
                         </div>
                     </div>
                 )}
-                <div className="mx-auto grid w-full max-w-4xl grid-cols-1 gap-8 md:grid-cols-2">
+                <div className="mx-auto grid w-full grid-cols-1 gap-8 md:grid-cols-3">
                     {isLoading
-                        ? [1, 2].map((_, index) => <PricingPlanCardSkeleton key={index} />)
-                        : products?.map((product: Product, index) => (
+                        ? [1, 2, 3].map((_, index) => <PricingPlanCardSkeleton key={index} />)
+                        : sortedProducts?.map((product: ProductWithPrices, index) => (
                               <PricingPlanCard
                                   key={index}
                                   {...product}

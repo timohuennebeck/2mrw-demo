@@ -57,12 +57,7 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
         billingCycle,
     } = props;
 
-    const features = FeatureService.getFeaturesByTier(subscription_tier);
-
-    // If user has a current subscription, show feature comparison
-    const featureComparison = subscriptionData?.subscription_tier
-        ? FeatureService.compareFeatures(subscriptionData.subscription_tier, subscription_tier)
-        : null;
+    const features = FeatureService.getFeaturesWithAvailability(subscription_tier);
 
     const renderPaymentTypeText = () => {
         if (isOneTimePaymentEnabled()) {
@@ -95,7 +90,7 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
 
                 <p className="mb-4 text-sm text-neutral-500">{description}</p>
 
-                <PlanFeatures features={features} newFeatures={featureComparison?.newFeatures} />
+                <PlanFeatures features={features} />
             </section>
 
             <section>
