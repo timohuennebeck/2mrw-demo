@@ -169,87 +169,93 @@ const ChangeSubscriptionPlan = () => {
 
                 <form onSubmit={handleSubscriptionChange} ref={formRef}>
                     <div className="space-y-4">
-                        {products?.map((product) => {
-                            const isFreeProduct = product.billing_plan === BillingPlan.FREE;
-                            const price = !isFreeProduct
-                                ? getPrice({
-                                      product,
-                                      billingPlan: isOneTimePaymentPlan
-                                          ? BillingPlan.ONE_TIME
-                                          : BillingPlan.SUBSCRIPTION,
-                                      interval:
-                                          subscriptionInterval === SubscriptionInterval.MONTHLY
-                                              ? SubscriptionInterval.MONTHLY
-                                              : SubscriptionInterval.YEARLY,
-                                  })
-                                : null;
+                        {products
+                            .filter((p) =>
+                                subscriptionInterval === SubscriptionInterval.FREE
+                                    ? p.billing_plan === BillingPlan.FREE
+                                    : p.billing_plan !== BillingPlan.FREE,
+                            )
+                            .map((product) => {
+                                const isFreeProduct = product.billing_plan === BillingPlan.FREE;
+                                const price = !isFreeProduct
+                                    ? getPrice({
+                                          product,
+                                          billingPlan: isOneTimePaymentPlan
+                                              ? BillingPlan.ONE_TIME
+                                              : BillingPlan.SUBSCRIPTION,
+                                          interval:
+                                              subscriptionInterval === SubscriptionInterval.MONTHLY
+                                                  ? SubscriptionInterval.MONTHLY
+                                                  : SubscriptionInterval.YEARLY,
+                                      })
+                                    : null;
 
-                            const isSubscribedToPlan = isFreeProduct
-                                ? activeProductDetails?.id === product.id
-                                : price?.stripe_price_id === activeStripePriceId;
+                                const isSubscribedToPlan = isFreeProduct
+                                    ? activeProductDetails?.id === product.id
+                                    : price?.stripe_price_id === activeStripePriceId;
 
-                            const isDisabled = isSubscribedToPlan && !userIsOnFreeTrial;
+                                const isDisabled = isSubscribedToPlan && !userIsOnFreeTrial;
 
-                            return (
-                                <div
-                                    key={product.id}
-                                    className={`relative rounded-lg border ${
-                                        selectedPlanId === product.id
-                                            ? "border-blue-500 bg-blue-50"
-                                            : "border-gray-200 bg-white"
-                                    } ${isDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"} p-4`}
-                                    onClick={() => !isDisabled && setSelectedPlanId(product.id)}
-                                >
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center">
-                                            <input
-                                                type="radio"
-                                                id={`${product.id}-plan`}
-                                                name="subscription-plan"
-                                                value={product.id}
-                                                checked={selectedPlanId === product.id}
-                                                onChange={() => {}}
-                                                disabled={isDisabled}
-                                                className="mr-3 h-4 w-4 text-blue-600 disabled:opacity-50"
-                                            />
-                                            <label
-                                                htmlFor={`${product.id}-plan`}
-                                                className={`text-sm ${
-                                                    isDisabled
-                                                        ? "cursor-not-allowed"
-                                                        : "cursor-pointer"
-                                                }`}
-                                            >
-                                                <div className="font-medium text-gray-700">
-                                                    {product.name}
-                                                    {isSubscribedToPlan && " (Current Plan)"}
-                                                </div>
-                                                <div className="pr-8 text-gray-500">
-                                                    {product.description}
-                                                </div>
-                                            </label>
-                                        </div>
-                                        <div className="text-right">
-                                            <div className="whitespace-nowrap font-medium text-gray-700">
-                                                {isFreeProduct
-                                                    ? "Free"
-                                                    : price
-                                                      ? `${getCurrency() === "EUR" ? "€" : "$"} ${price.current_amount}`
-                                                      : "N/A"}
+                                return (
+                                    <div
+                                        key={product.id}
+                                        className={`relative rounded-lg border ${
+                                            selectedPlanId === product.id
+                                                ? "border-blue-500 bg-blue-50"
+                                                : "border-gray-200 bg-white"
+                                        } ${isDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"} p-4`}
+                                        onClick={() => !isDisabled && setSelectedPlanId(product.id)}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center">
+                                                <input
+                                                    type="radio"
+                                                    id={`${product.id}-plan`}
+                                                    name="subscription-plan"
+                                                    value={product.id}
+                                                    checked={selectedPlanId === product.id}
+                                                    onChange={() => {}}
+                                                    disabled={isDisabled}
+                                                    className="mr-3 h-4 w-4 text-blue-600 disabled:opacity-50"
+                                                />
+                                                <label
+                                                    htmlFor={`${product.id}-plan`}
+                                                    className={`text-sm ${
+                                                        isDisabled
+                                                            ? "cursor-not-allowed"
+                                                            : "cursor-pointer"
+                                                    }`}
+                                                >
+                                                    <div className="font-medium text-gray-700">
+                                                        {product.name}
+                                                        {isSubscribedToPlan && " (Current Plan)"}
+                                                    </div>
+                                                    <div className="pr-8 text-gray-500">
+                                                        {product.description}
+                                                    </div>
+                                                </label>
                                             </div>
-                                            <div className="whitespace-nowrap text-sm text-gray-500">
-                                                {isFreeProduct
-                                                    ? "FOREVER"
-                                                    : price?.subscription_interval ===
-                                                        SubscriptionInterval.MONTHLY
-                                                      ? "PER MONTH"
-                                                      : "PER YEAR"}
+                                            <div className="text-right">
+                                                <div className="whitespace-nowrap font-medium text-gray-700">
+                                                    {isFreeProduct
+                                                        ? "Free"
+                                                        : price
+                                                          ? `${getCurrency() === "EUR" ? "€" : "$"} ${price.current_amount}`
+                                                          : "N/A"}
+                                                </div>
+                                                <div className="whitespace-nowrap text-sm text-gray-500">
+                                                    {isFreeProduct
+                                                        ? "FOREVER"
+                                                        : price?.subscription_interval ===
+                                                            SubscriptionInterval.MONTHLY
+                                                          ? "PER MONTH"
+                                                          : "PER YEAR"}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            );
-                        })}
+                                );
+                            })}
                     </div>
 
                     <div className="mt-6 flex items-start justify-start">
