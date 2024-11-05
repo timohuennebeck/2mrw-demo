@@ -1,5 +1,5 @@
 import { getCurrency, isOneTimePaymentEnabled } from "@/config/paymentConfig";
-import { PricingModel, StripePrice, SubscriptionInterval } from "@/interfaces/StripePrices";
+import { BillingPlan, StripePrice, SubscriptionInterval } from "@/interfaces/StripePrices";
 
 interface PlanPricingProps {
     prices: StripePrice[];
@@ -9,7 +9,7 @@ interface PlanPricingProps {
 export const PlanPricing = ({ prices, billingCycle }: PlanPricingProps) => {
     const getPriceInfo = () => {
         if (isOneTimePaymentEnabled()) {
-            const oneTimePrice = prices.find((p) => p.pricing_model === PricingModel.ONE_TIME);
+            const oneTimePrice = prices.find((p) => p.billing_plan === BillingPlan.ONE_TIME);
 
             return {
                 current: oneTimePrice?.current_amount ?? 0,

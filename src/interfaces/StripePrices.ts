@@ -1,4 +1,4 @@
-export enum PricingModel {
+export enum BillingPlan {
     FREE = "FREE",
     ONE_TIME = "ONE_TIME",
     SUBSCRIPTION = "SUBSCRIPTION",
@@ -12,7 +12,7 @@ export enum SubscriptionInterval {
 export interface StripePrice {
     id: string;
     product_id: string;
-    pricing_model: PricingModel;
+    billing_plan: BillingPlan;
     is_active: boolean;
     subscription_interval?: SubscriptionInterval; // null for one-time prices
     current_amount: number;

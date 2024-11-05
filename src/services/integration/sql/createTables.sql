@@ -4,7 +4,7 @@ CREATE TYPE FreeTrialStatusEnums AS ENUM ('ACTIVE', 'EXPIRED', 'NOT_STARTED', 'C
 
 CREATE TYPE SubscriptionTierEnums AS ENUM ('TIER_ZERO', 'TIER_ONE', 'TIER_TWO');
 
-CREATE TYPE PricingModel AS ENUM ('SUBSCRIPTION', 'ONE_TIME');
+CREATE TYPE BillingPlan AS ENUM ('SUBSCRIPTION', 'ONE_TIME');
 
 CREATE TABLE
     users (
@@ -50,7 +50,7 @@ CREATE TABLE
         status SubscriptionStatusEnums NOT NULL,
         end_date TIMESTAMPTZ,
         subscription_tier SubscriptionTierEnums NOT NULL,
-        pricing_model PricingModel NOT NULL,
+        billing_plan BillingPlan NOT NULL,
         created_at TIMESTAMPTZ NOT NULL,
         updated_at TIMESTAMPTZ NOT NULL
     );

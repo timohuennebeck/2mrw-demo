@@ -9,7 +9,7 @@ import { useProducts } from "@/context/ProductsContext";
 import { PlanFeatures } from "../PricingPlan/PlanFeatures";
 import { getProductDetailsByStripePriceId } from "@/services/domain/PricingService";
 import { getCurrency } from "@/config/paymentConfig";
-import { PricingModel, SubscriptionInterval } from "@/interfaces/StripePrices";
+import { BillingPlan, SubscriptionInterval } from "@/interfaces/StripePrices";
 import { CalendarClock } from "lucide-react";
 import { getFeaturesWithAvailability } from "@/services/domain/FeatureService";
 import { formatDateToDayMonthYear } from "@/lib/helper/DateHelper";
@@ -32,7 +32,7 @@ const CurrentSubscriptionPlan = () => {
         ? getFeaturesWithAvailability(productDetails.subscription_tier)
         : [];
 
-    const isFreeProduct = productDetails?.pricing_model === PricingModel.FREE;
+    const isFreeProduct = productDetails?.billing_plan === BillingPlan.FREE;
 
     const renderStatusBadge = (text: string, variant: "green" | "yellow" | "red") => {
         const colors = {

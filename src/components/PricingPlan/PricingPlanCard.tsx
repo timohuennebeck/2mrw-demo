@@ -12,7 +12,7 @@ import { FreeTrial } from "@/interfaces/FreeTrial";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { TextConstants } from "@/constants/TextConstants";
-import { PricingModel, StripePrice, SubscriptionInterval } from "@/interfaces/StripePrices";
+import { BillingPlan, StripePrice, SubscriptionInterval } from "@/interfaces/StripePrices";
 import { getFeaturesWithAvailability } from "@/services/domain/FeatureService";
 
 interface PricingPlanCardProps extends ProductWithPrices {
@@ -28,11 +28,11 @@ interface PricingPlanCardProps extends ProductWithPrices {
 
 const _getStripePriceId = (prices: StripePrice[], billingCycle: SubscriptionInterval) => {
     if (isOneTimePaymentEnabled()) {
-        const oneTimePrice = prices.find((p) => p.pricing_model === PricingModel.ONE_TIME);
+        const oneTimePrice = prices.find((p) => p.billing_plan === BillingPlan.ONE_TIME);
         return oneTimePrice?.stripe_price_id ?? "";
     }
 
-    const subscriptionPrices = prices.filter((p) => p.pricing_model === PricingModel.SUBSCRIPTION);
+    const subscriptionPrices = prices.filter((p) => p.billing_plan === BillingPlan.SUBSCRIPTION);
 
     const subscriptionPrice =
         subscriptionPrices.find((p) => p.subscription_interval === billingCycle)?.stripe_price_id ??

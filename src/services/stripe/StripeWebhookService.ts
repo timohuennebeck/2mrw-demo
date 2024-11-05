@@ -50,8 +50,8 @@ export const handleSubscriptionUpdated = async (
             const { subscriptionTier } = await fetchSubscriptionTier(stripePriceId);
             if (!subscriptionTier) throw new Error("SubscriptionTier not found");
 
-            const { pricingModel } = await fetchPricingModel(stripePriceId);
-            if (!pricingModel) throw new Error("PricingModel not found");
+            const { billingPlan } = await fetchPricingModel(stripePriceId);
+            if (!billingPlan) throw new Error("BillingPlan not found");
 
             // update subscription end date based on current period end
             const { error: updateError } = await adminSupabase
@@ -61,7 +61,7 @@ export const handleSubscriptionUpdated = async (
                     status: SubscriptionStatus.ACTIVE,
                     subscription_tier: subscriptionTier,
                     stripe_subscription_id: subscription.id,
-                    pricing_model: pricingModel,
+                    billing_plan: billingPlan,
                     end_date: moment.unix(subscription.current_period_end).toISOString(),
                     updated_at: moment().toISOString(),
                 })
@@ -101,15 +101,15 @@ const _handleFreeTrial = async (userId: string) => {
 
 const _getSubscriptionDetails = async (stripePriceId: string) => {
     const { subscriptionTier } = await fetchSubscriptionTier(stripePriceId);
-    const { pricingModel } = await fetchPricingModel(stripePriceId);
+    const { billingPlan } = await fetchPricingModel(stripePriceId);
 
-    if (!subscriptionTier || !pricingModel) {
+    if (!subscriptionTier || !billingPlan) {
         throw new Error(
-            !subscriptionTier ? "SubscriptionTier not found!" : "PricingModel not found!",
+            !subscriptionTier ? "SubscriptionTier not found!" : "BillingPlan not found!",
         );
     }
 
-    return { subscriptionTier, pricingModel };
+    return { subscriptionTier, billingPlan };
 };
 
 export const handleCheckoutSessionCompleted = async (
@@ -124,7 +124,7 @@ export const handleCheckoutSessionCompleted = async (
     try {
         await _handleFreeTrial(userId);
 
-        const { subscriptionTier, pricingModel } = await _getSubscriptionDetails(stripePriceId);
+        const { subscriptionTier, billingPlan } = await _getSubscriptionDetails(stripePriceId);
         const { subscription } = await fetchUserSubscription(userId);
 
         const dataToUpdate = {
@@ -132,7 +132,7 @@ export const handleCheckoutSessionCompleted = async (
             stripePriceId,
             subscriptionTier,
             stripeSubscriptionId: session.subscription?.toString(),
-            pricingModel,
+            billingPlan,
         };
 
         await (subscription

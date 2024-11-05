@@ -87,16 +87,16 @@ export const fetchPricingModel = async (stripePriceId: string) => {
 
         const { data, error } = await supabase
             .from("stripe_prices")
-            .select("pricing_model")
+            .select("billing_plan")
             .eq("stripe_price_id", stripePriceId)
             .single();
 
         if (error) throw error;
 
-        return { pricingModel: data?.pricing_model, error: null };
+        return { billingPlan: data?.billing_plan, error: null };
     } catch (error) {
         return {
-            pricingModel: null,
+            billingPlan: null,
             error: handleSupabaseError({ error, fnTitle: "fetchPricingModel" }),
         };
     }

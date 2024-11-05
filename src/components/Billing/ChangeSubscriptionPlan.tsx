@@ -19,7 +19,7 @@ import {
     getStripePriceIdBasedOnSelectedPlan,
     isSubscribedToPlan,
 } from "@/services/domain/PricingService";
-import { PricingModel } from "@/interfaces/StripePrices";
+import { BillingPlan } from "@/interfaces/StripePrices";
 import useClickOutside from "@/hooks/useClickOutside";
 import { useRouter } from "next/navigation";
 import {
@@ -57,7 +57,7 @@ const ChangeSubscriptionPlan = () => {
         ? getProductDetailsByStripePriceId(products, activeStripePriceId)
         : null;
 
-    const isOneTimePaymentPlan = activeProductDetails?.price?.interval === PricingModel.ONE_TIME;
+    const isOneTimePaymentPlan = activeProductDetails?.price?.interval === BillingPlan.ONE_TIME;
 
     const handleSubscriptionChange = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -76,12 +76,12 @@ const ChangeSubscriptionPlan = () => {
             setShowConfirmationPopup(false);
 
             const selectedProduct = products.find((p) => p.id === selectedPlanId);
-            const isFreeProduct = selectedProduct?.pricing_model === PricingModel.FREE;
+            const isFreeProduct = selectedProduct?.billing_plan === BillingPlan.FREE;
             const stripePriceId = getStripePriceIdBasedOnSelectedPlan({
                 products,
                 selectedPlanId,
                 subscriptionInterval,
-                pricingModel: selectedProduct?.pricing_model ?? PricingModel.SUBSCRIPTION,
+                billingPlan: selectedProduct?.billing_plan ?? BillingPlan.SUBSCRIPTION,
             });
 
             if (isFreeProduct) {
@@ -96,7 +96,7 @@ const ChangeSubscriptionPlan = () => {
                     stripePriceId: null,
                     subscriptionTier: SubscriptionTier.FREE,
                     stripeSubscriptionId: null,
-                    pricingModel: PricingModel.FREE,
+                    billingPlan: BillingPlan.FREE,
                 });
 
                 toast.success("You've been downgraded to the free plan.");
@@ -164,13 +164,13 @@ const ChangeSubscriptionPlan = () => {
                 <form onSubmit={handleSubscriptionChange} ref={formRef}>
                     <div className="space-y-4">
                         {products?.map((product) => {
-                            const isFreeProduct = product.pricing_model === PricingModel.FREE;
+                            const isFreeProduct = product.billing_plan === BillingPlan.FREE;
                             const price = !isFreeProduct
                                 ? getPrice({
                                       product,
-                                      pricingModel: isOneTimePaymentPlan
-                                          ? PricingModel.ONE_TIME
-                                          : PricingModel.SUBSCRIPTION,
+                                      billingPlan: isOneTimePaymentPlan
+                                          ? BillingPlan.ONE_TIME
+                                          : BillingPlan.SUBSCRIPTION,
                                       interval:
                                           subscriptionInterval === SubscriptionInterval.MONTHLY
                                               ? SubscriptionInterval.MONTHLY

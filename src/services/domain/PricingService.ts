@@ -1,9 +1,9 @@
 import { ProductWithPrices } from "@/interfaces/ProductInterfaces";
-import { PricingModel, SubscriptionInterval } from "@/interfaces/StripePrices";
+import { BillingPlan, SubscriptionInterval } from "@/interfaces/StripePrices";
 
 interface GetPriceParams {
     product: ProductWithPrices;
-    pricingModel: PricingModel;
+    billingPlan: BillingPlan;
     interval?: SubscriptionInterval;
 }
 
@@ -16,8 +16,8 @@ export const getProductPriceByStripePriceId = (
 
     let interval: string;
     switch (true) {
-        case price.pricing_model === PricingModel.ONE_TIME:
-            interval = PricingModel.ONE_TIME;
+        case price.billing_plan === BillingPlan.ONE_TIME:
+            interval = BillingPlan.ONE_TIME;
             break;
         case price.subscription_interval === SubscriptionInterval.MONTHLY:
             interval = SubscriptionInterval.MONTHLY;
@@ -36,13 +36,13 @@ export const getProductPriceByStripePriceId = (
     };
 };
 
-export const getPrice = ({ product, pricingModel, interval }: GetPriceParams) => {
+export const getPrice = ({ product, billingPlan, interval }: GetPriceParams) => {
     const price = product.prices.find((price) => {
-        const matchesPricingModel = price.pricing_model === pricingModel;
+        const matchesPricingModel = price.billing_plan === billingPlan;
 
         // check if the interval matches. FYI: one-time purchases don't need interval checking
         const matchesInterval =
-            pricingModel === PricingModel.ONE_TIME ||
+            billingPlan === BillingPlan.ONE_TIME ||
             (interval ? price.subscription_interval === interval : true);
 
         return matchesPricingModel && matchesInterval;
@@ -69,7 +69,7 @@ export const getProductDetailsByStripePriceId = (
         name: product.name,
         description: product.description,
         subscription_tier: product.subscription_tier,
-        pricing_model: product.pricing_model,
+        billing_plan: product.billing_plan,
         price: priceDetails,
     };
 };
@@ -84,18 +84,18 @@ export const getStripePriceIdBasedOnSelectedPlan = ({
     products,
     selectedPlanId,
     subscriptionInterval,
-    pricingModel,
+    billingPlan,
 }: {
     products: ProductWithPrices[];
     selectedPlanId: string;
     subscriptionInterval: SubscriptionInterval;
-    pricingModel: PricingModel;
+    billingPlan: BillingPlan;
 }) => {
     const selectedProduct = products.find((product) => product.id === selectedPlanId);
     if (!selectedProduct) return null;
 
-    if (pricingModel === PricingModel.ONE_TIME) {
-        return selectedProduct.prices.find((price) => price.pricing_model === PricingModel.ONE_TIME)
+    if (billingPlan === BillingPlan.ONE_TIME) {
+        return selectedProduct.prices.find((price) => price.billing_plan === BillingPlan.ONE_TIME)
             ?.stripe_price_id;
     }
 

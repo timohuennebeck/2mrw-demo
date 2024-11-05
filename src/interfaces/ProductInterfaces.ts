@@ -1,11 +1,11 @@
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
-import { PricingModel, StripePrice } from "./StripePrices";
+import { BillingPlan, StripePrice } from "./StripePrices";
 
 export interface Product {
     id: string;
     name: string;
     description: string;
-    pricing_model: PricingModel;
+    billing_plan: BillingPlan;
     is_highlighted: boolean;
     is_active: boolean;
     subscription_tier: SubscriptionTier;

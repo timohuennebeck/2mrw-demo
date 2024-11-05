@@ -57,7 +57,7 @@ export const startUserSubscription = async ({
     stripePriceId,
     subscriptionTier,
     stripeSubscriptionId,
-    pricingModel,
+    billingPlan,
 }: CreatePurchasedSubscriptionTableParams) => {
     try {
         const { supabase } = await getClients();
@@ -69,7 +69,7 @@ export const startUserSubscription = async ({
             status: SubscriptionStatus.ACTIVE,
             subscription_tier: subscriptionTier,
             stripe_subscription_id: stripeSubscriptionId,
-            pricing_model: pricingModel,
+            billing_plan: billingPlan,
             end_date: endDate,
             updated_at: moment().toISOString(),
             created_at: moment().toISOString(),
@@ -157,7 +157,7 @@ export const updateUserSubscription = async ({
     stripePriceId,
     subscriptionTier,
     stripeSubscriptionId,
-    pricingModel,
+    billingPlan,
 }: UpdateUserSubscriptionStatusParams) => {
     try {
         const { supabase } = await getClients();
@@ -169,7 +169,7 @@ export const updateUserSubscription = async ({
                 stripe_price_id: stripePriceId,
                 subscription_tier: subscriptionTier,
                 stripe_subscription_id: stripeSubscriptionId,
-                pricing_model: pricingModel,
+                billing_plan: billingPlan,
                 end_date: endDate,
                 updated_at: moment().toISOString(),
             })
