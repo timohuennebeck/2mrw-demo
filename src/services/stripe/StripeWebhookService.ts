@@ -5,7 +5,7 @@ import { isFreeTrialEnabled } from "@/config/paymentConfig";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { endUserFreeTrial, fetchUserFreeTrial } from "@/services/database/FreeTrialService";
 import { getClients } from "../database/BaseService";
-import { fetchPricingModel, fetchSubscriptionTier } from "../database/ProductService";
+import { fetchBillingPlan, fetchSubscriptionTier } from "../database/ProductService";
 import {
     fetchUserSubscription,
     startUserSubscription,
@@ -50,7 +50,7 @@ export const handleSubscriptionUpdated = async (
             const { subscriptionTier } = await fetchSubscriptionTier(stripePriceId);
             if (!subscriptionTier) throw new Error("SubscriptionTier not found");
 
-            const { billingPlan } = await fetchPricingModel(stripePriceId);
+            const { billingPlan } = await fetchBillingPlan(stripePriceId);
             if (!billingPlan) throw new Error("BillingPlan not found");
 
             // update subscription end date based on current period end
@@ -101,7 +101,7 @@ const _handleFreeTrial = async (userId: string) => {
 
 const _getSubscriptionDetails = async (stripePriceId: string) => {
     const { subscriptionTier } = await fetchSubscriptionTier(stripePriceId);
-    const { billingPlan } = await fetchPricingModel(stripePriceId);
+    const { billingPlan } = await fetchBillingPlan(stripePriceId);
 
     if (!subscriptionTier || !billingPlan) {
         throw new Error(

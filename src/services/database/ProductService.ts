@@ -81,7 +81,7 @@ export const fetchSubscriptionTier = async (stripePriceId: string) => {
     }
 };
 
-export const fetchPricingModel = async (stripePriceId: string) => {
+export const fetchBillingPlan = async (stripePriceId: string) => {
     try {
         const { supabase } = await getClients();
 
@@ -97,7 +97,7 @@ export const fetchPricingModel = async (stripePriceId: string) => {
     } catch (error) {
         return {
             billingPlan: null,
-            error: handleSupabaseError({ error, fnTitle: "fetchPricingModel" }),
+            error: handleSupabaseError({ error, fnTitle: "fetchBillingPlan" }),
         };
     }
 };

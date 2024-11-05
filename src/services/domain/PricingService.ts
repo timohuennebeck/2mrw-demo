@@ -38,14 +38,14 @@ export const getProductPriceByStripePriceId = (
 
 export const getPrice = ({ product, billingPlan, interval }: GetPriceParams) => {
     const price = product.prices.find((price) => {
-        const matchesPricingModel = price.billing_plan === billingPlan;
+        const matchesBillingPlan = price.billing_plan === billingPlan;
 
         // check if the interval matches. FYI: one-time purchases don't need interval checking
         const matchesInterval =
             billingPlan === BillingPlan.ONE_TIME ||
             (interval ? price.subscription_interval === interval : true);
 
-        return matchesPricingModel && matchesInterval;
+        return matchesBillingPlan && matchesInterval;
     });
 
     return price;
