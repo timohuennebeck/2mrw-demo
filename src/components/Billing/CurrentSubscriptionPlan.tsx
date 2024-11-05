@@ -114,8 +114,8 @@ const CurrentSubscriptionPlan = () => {
                         <div className="whitespace-nowrap text-xl font-medium text-gray-700">
                             {isFreeProduct
                                 ? "Free"
-                                : productDetails?.price?.current
-                                  ? `${getCurrency() === "EUR" ? "€" : "$"} ${productDetails.price.current}`
+                                : productDetails?.price?.current_amount
+                                  ? `${getCurrency() === "EUR" ? "€" : "$"} ${productDetails.price.current_amount}`
                                   : "N/A"}
                         </div>
                         <div className="whitespace-nowrap text-sm font-medium text-gray-500">

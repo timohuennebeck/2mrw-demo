@@ -16,7 +16,7 @@ import { SubscriptionInterval } from "@/interfaces/StripePrices";
 import {
     getPrice,
     getProductDetailsByStripePriceId,
-    getStripePriceIdBasedOnSelectedPlan,
+    getStripePriceIdBasedOnSelectedPlanId,
 } from "@/services/domain/PricingService";
 import { BillingPlan } from "@/interfaces/StripePrices";
 import useClickOutside from "@/hooks/useClickOutside";
@@ -76,7 +76,7 @@ const ChangeSubscriptionPlan = () => {
 
             const selectedProduct = products.find((p) => p.id === selectedPlanId);
             const isFreeProduct = selectedProduct?.billing_plan === BillingPlan.FREE;
-            const stripePriceId = getStripePriceIdBasedOnSelectedPlan({
+            const stripePriceId = getStripePriceIdBasedOnSelectedPlanId({
                 products,
                 selectedPlanId,
                 subscriptionInterval,
