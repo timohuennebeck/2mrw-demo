@@ -12,15 +12,6 @@ import {
     updateUserSubscription,
 } from "../database/SubscriptionService";
 
-export const endOnGoingFreeTrial = async (userId: string) => {
-    const { freeTrial } = await fetchUserFreeTrial(userId);
-
-    if (freeTrial?.status === FreeTrialStatus.ACTIVE) {
-        const { error } = await endUserFreeTrial(userId);
-        if (error) throw new Error("Failed to end free trial");
-    }
-};
-
 export const handleSubscriptionUpdated = async (
     subscription: Stripe.Subscription,
     userId: string,
@@ -96,48 +87,57 @@ export const handleSubscriptionUpdated = async (
     }
 };
 
+const _handleFreeTrial = async (userId: string) => {
+    if (!userId) throw new Error("User id is required!");
+
+    const { freeTrial, error: fetchError } = await fetchUserFreeTrial(userId);
+    if (fetchError) throw new Error("Failed to fetch user free trial!");
+
+    if (freeTrial?.status === FreeTrialStatus.ACTIVE) {
+        const { error } = await endUserFreeTrial(userId);
+        if (error) throw new Error("Failed to end free trial!");
+    }
+};
+
+const _getSubscriptionDetails = async (stripePriceId: string) => {
+    const { subscriptionTier } = await fetchSubscriptionTier(stripePriceId);
+    const { pricingModel } = await fetchPricingModel(stripePriceId);
+
+    if (!subscriptionTier || !pricingModel) {
+        throw new Error(
+            !subscriptionTier ? "SubscriptionTier not found!" : "PricingModel not found!",
+        );
+    }
+
+    return { subscriptionTier, pricingModel };
+};
+
 export const handleCheckoutSessionCompleted = async (
     session: Stripe.Checkout.Session,
     userId: string,
 ) => {
-    if (!userId) throw new Error("No user ID provided");
-
-    const stripePriceId = session.line_items?.data[0].price?.id;
-    if (!stripePriceId) throw new Error("No stripe price ID found in session");
-
     const { adminSupabase } = await getClients();
 
+    const stripePriceId = session.line_items?.data[0].price?.id;
+    if (!stripePriceId) throw new Error("Stripe price id is missing!");
+
     try {
-        if (isFreeTrialEnabled()) {
-            await endOnGoingFreeTrial(userId);
-        }
+        await _handleFreeTrial(userId);
 
-        const { subscriptionTier } = await fetchSubscriptionTier(stripePriceId);
-        if (!subscriptionTier) throw new Error("SubscriptionTier not found");
-
-        const { pricingModel } = await fetchPricingModel(stripePriceId);
-        if (!pricingModel) throw new Error("PricingModel not found");
-
+        const { subscriptionTier, pricingModel } = await _getSubscriptionDetails(stripePriceId);
         const { subscription } = await fetchUserSubscription(userId);
 
-        if (subscription) {
-            await updateUserSubscription({
-                userId,
-                stripePriceId,
-                status: SubscriptionStatus.ACTIVE,
-                subscriptionTier,
-                stripeSubscriptionId: session.subscription?.toString(),
-                pricingModel,
-            });
-        } else {
-            await startUserSubscription({
-                userId,
-                stripePriceId,
-                subscriptionTier,
-                stripeSubscriptionId: session.subscription?.toString(),
-                pricingModel,
-            });
-        }
+        const dataToUpdate = {
+            userId,
+            stripePriceId,
+            subscriptionTier,
+            stripeSubscriptionId: session.subscription?.toString(),
+            pricingModel,
+        };
+
+        await (subscription
+            ? updateUserSubscription(dataToUpdate)
+            : startUserSubscription(dataToUpdate));
 
         await adminSupabase.auth.admin.updateUserById(userId, {
             user_metadata: {

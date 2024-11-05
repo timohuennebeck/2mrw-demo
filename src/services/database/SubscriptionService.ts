@@ -155,7 +155,6 @@ export const endUserSubscription = async (userId: string) => {
 export const updateUserSubscription = async ({
     userId,
     stripePriceId,
-    status,
     subscriptionTier,
     stripeSubscriptionId,
     pricingModel,
@@ -168,7 +167,6 @@ export const updateUserSubscription = async ({
             .from("purchased_subscriptions")
             .update({
                 stripe_price_id: stripePriceId,
-                status,
                 subscription_tier: subscriptionTier,
                 stripe_subscription_id: stripeSubscriptionId,
                 pricing_model: pricingModel,
