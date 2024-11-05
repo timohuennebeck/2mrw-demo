@@ -1,16 +1,16 @@
+import { getCurrency } from "@/config/paymentConfig";
 import { Product } from "@/interfaces/ProductInterfaces";
 
 export const formatPriceDisplay = (price: {
     current: number;
     previous?: number;
-    currency: string;
     interval: string;
 }) => {
     if (price.interval === "one-time") {
-        return `${price.current} ${price.currency} (OTP)`;
+        return `${price.current} ${getCurrency()} (OTP)`;
     }
 
-    return `${price.current} ${price.currency}/${price.interval.toUpperCase()}`;
+    return `${price.current} ${getCurrency()}/${price.interval.toUpperCase()}`;
 };
 
 export const getStripePriceIdBasedOnSelectedPlan = ({

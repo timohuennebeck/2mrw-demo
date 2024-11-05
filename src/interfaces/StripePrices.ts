@@ -16,7 +16,6 @@ export interface StripePrice {
     subscription_interval?: SubscriptionInterval; // null for one-time prices
     current_amount: number;
     previous_amount?: number;
-    currency: string;
     stripe_price_id: string;
     updated_at: string;
     created_at: string;
