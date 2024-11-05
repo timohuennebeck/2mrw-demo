@@ -99,7 +99,7 @@ const _handleFreeTrial = async (userId: string) => {
     }
 };
 
-const _getSubscriptionDetails = async (stripePriceId: string) => {
+const _getSubscriptionTierBillingPlan = async (stripePriceId: string) => {
     const { subscriptionTier } = await fetchSubscriptionTier(stripePriceId);
     const { billingPlan } = await fetchBillingPlan(stripePriceId);
 
@@ -126,7 +126,7 @@ export const handleCheckoutSessionCompleted = async (
     try {
         await _handleFreeTrial(userId);
 
-        const { subscriptionTier, billingPlan } = await _getSubscriptionDetails(stripePriceId);
+        const { subscriptionTier, billingPlan } = await _getSubscriptionTierBillingPlan(stripePriceId);
         const { subscription } = await fetchUserSubscription(userId);
 
         const dataToUpdate = {
