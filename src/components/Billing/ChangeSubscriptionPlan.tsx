@@ -199,7 +199,7 @@ const ChangeSubscriptionPlan = () => {
                                                 {isFreeProduct
                                                     ? "Free"
                                                     : price
-                                                      ? `${price.current_amount} ${getCurrency()}`
+                                                      ? `${getCurrency() === "EUR" ? "€" : "$"} ${price.current_amount}`
                                                       : "N/A"}
                                             </div>
                                             <div className="whitespace-nowrap text-sm text-gray-500">

@@ -12,6 +12,7 @@ import { PricingService } from "@/services/PricingService";
 import { FeatureService } from "@/services/FeatureService";
 import { getCurrency } from "@/config/paymentConfig";
 import { PricingModel, SubscriptionInterval } from "@/interfaces/StripePrices";
+import { Calendar, CalendarClock } from "lucide-react";
 
 const CurrentSubscriptionPlan = () => {
     const { authUser } = useSession();
@@ -79,9 +80,9 @@ const CurrentSubscriptionPlan = () => {
         if (freeTrial?.status === FreeTrialStatus.ACTIVE) {
             return `Your FREE TRIAL will end on ${formatDateToHumanFormat(freeTrial?.end_date)}.`;
         } else if (subscription?.status === SubscriptionStatus.ACTIVE) {
-            return `Your subscription will renew on ${formatDateToHumanFormat(subscription?.end_date)}.`;
+            return `This subscription renews on ${formatDateToHumanFormat(subscription?.end_date)}`;
         } else if (subscription?.status === SubscriptionStatus.CANCELLED) {
-            return `Your subscription has been cancelled and will end on ${formatDateToHumanFormat(subscription?.end_date)}.`;
+            return `This subscription has been cancelled and will end on ${formatDateToHumanFormat(subscription?.end_date)}.`;
         }
 
         return null;
@@ -112,7 +113,7 @@ const CurrentSubscriptionPlan = () => {
                             {isFreeProduct
                                 ? "Free"
                                 : productDetails?.price?.current
-                                  ? `${productDetails.price.current} ${getCurrency()}`
+                                  ? `${getCurrency() === "EUR" ? "€" : "$"} ${productDetails.price.current}`
                                   : "N/A"}
                         </div>
                         <div className="whitespace-nowrap text-sm font-medium text-gray-500">
@@ -128,7 +129,13 @@ const CurrentSubscriptionPlan = () => {
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Et odit autem alias
                     aut.
                 </p>
-                <p className="text-sm font-medium">{getSubscriptionStatusMessage()}</p>
+
+                <div className="border-t border-gray-200 pb-4" />
+
+                <div className="flex items-center gap-2">
+                    <CalendarClock size={16} strokeWidth={1.5} className="text-gray-500" />
+                    <p className="text-xs text-gray-500">{getSubscriptionStatusMessage()}</p>
+                </div>
 
                 <div className="mt-4">
                     <PlanFeatures features={features ?? []} />
