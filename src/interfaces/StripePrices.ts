@@ -5,6 +5,7 @@ export enum BillingPlan {
 }
 
 export enum SubscriptionInterval {
+    FREE = "FREE",
     MONTHLY = "MONTHLY",
     YEARLY = "YEARLY",
 }

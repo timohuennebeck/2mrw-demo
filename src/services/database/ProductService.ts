@@ -3,6 +3,8 @@
 import { ProductWithPrices } from "@/interfaces/ProductInterfaces";
 import { getClients } from "./BaseService";
 import { handleSupabaseError } from "@/lib/helper/SupabaseHelper";
+import { BillingPlan } from "@/interfaces/StripePrices";
+import { isFreePlanEnabled } from "@/config/paymentConfig";
 
 export const fetchProductsWithPrices = async () => {
     try {
@@ -24,10 +26,14 @@ export const fetchProductsWithPrices = async () => {
 
         if (pricesError) throw pricesError;
 
-        const productsWithPrices = products.map((product) => ({
-            ...product,
-            prices: prices.filter((price) => price.product_id === product.id),
-        }));
+        const productsWithPrices = products
+            .map((product) => ({
+                ...product,
+                prices: prices.filter((price) => price.product_id === product.id),
+            }))
+            .filter((product) =>
+                isFreePlanEnabled() ? true : product.billing_plan !== BillingPlan.FREE,
+            );
 
         return { products: productsWithPrices as ProductWithPrices[], error: null };
     } catch (error) {

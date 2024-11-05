@@ -54,10 +54,8 @@ export const PlanPricing = ({ prices, billingCycle }: PlanPricingProps) => {
                 </span>
                 <span className="ml-2 text-neutral-600">
                     {!isOneTimePaymentEnabled() &&
-                        `/${
-                            billingCycle === SubscriptionInterval.YEARLY
-                                ? "per 12 months"
-                                : "per month"
+                        `/ ${
+                            billingCycle === SubscriptionInterval.YEARLY ? "PER YEAR" : "PER MONTH"
                         }`}
                 </span>
             </div>

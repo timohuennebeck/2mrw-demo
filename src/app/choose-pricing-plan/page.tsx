@@ -6,12 +6,22 @@ import { useFreeTrial } from "@/hooks/useFreeTrial";
 import { useSubscription } from "@/hooks/useSubscription";
 import { Product, ProductWithPrices } from "@/interfaces/ProductInterfaces";
 import { useState } from "react";
-import { isOneTimePaymentEnabled, paymentConfig } from "@/config/paymentConfig";
+import { isFreePlanEnabled, isOneTimePaymentEnabled, paymentConfig } from "@/config/paymentConfig";
 import { TextConstants } from "@/constants/TextConstants";
 import { useProducts } from "@/context/ProductsContext";
 import { useSession } from "@/context/SessionContext";
 import { SubscriptionInterval } from "@/interfaces/StripePrices";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
+
+const IntervalButtonSkeleton = ({ isYearly }: { isYearly?: boolean }) => {
+    return (
+        <div
+            className={`h-7 animate-pulse rounded border bg-neutral-100 ${
+                isYearly ? "w-28" : "w-20"
+            }`}
+        />
+    );
+};
 
 const ChoosePricingPlanPage = () => {
     const [billingCycle, setBillingCycle] = useState<SubscriptionInterval>(
@@ -55,32 +65,51 @@ const ChoosePricingPlanPage = () => {
                 {!isOneTimePaymentEnabled() && (
                     <div className="mb-8 flex justify-center">
                         <div className="flex gap-2">
-                            <button
-                                onClick={() => setBillingCycle(SubscriptionInterval.MONTHLY)}
-                                className={`rounded px-3 py-1 text-sm ${
-                                    billingCycle === SubscriptionInterval.MONTHLY
-                                        ? "bg-neutral-900 text-white"
-                                        : "bg-neutral-100"
-                                }`}
-                            >
-                                {TextConstants.TEXT__MONTHLY.toUpperCase()}
-                            </button>
-                            <button
-                                onClick={() => setBillingCycle(SubscriptionInterval.YEARLY)}
-                                className={`rounded px-3 py-1 text-sm ${
-                                    billingCycle === SubscriptionInterval.YEARLY
-                                        ? "bg-neutral-900 text-white"
-                                        : "bg-neutral-100"
-                                }`}
-                            >
-                                {`${TextConstants.TEXT__YEARLY.toUpperCase()} (${paymentConfig.subscriptionSettings.yearlyDiscountPercentage}%)`}
-                            </button>
+                            {!products || isLoading ? (
+                                <>
+                                    <IntervalButtonSkeleton />
+                                    <IntervalButtonSkeleton isYearly />
+                                </>
+                            ) : (
+                                <>
+                                    <button
+                                        onClick={() =>
+                                            setBillingCycle(SubscriptionInterval.MONTHLY)
+                                        }
+                                        className={`rounded px-3 py-1 text-sm ${
+                                            billingCycle === SubscriptionInterval.MONTHLY
+                                                ? "bg-neutral-900 text-white"
+                                                : "bg-neutral-100"
+                                        }`}
+                                    >
+                                        {TextConstants.TEXT__MONTHLY.toUpperCase()}
+                                    </button>
+                                    <button
+                                        onClick={() => setBillingCycle(SubscriptionInterval.YEARLY)}
+                                        className={`rounded px-3 py-1 text-sm ${
+                                            billingCycle === SubscriptionInterval.YEARLY
+                                                ? "bg-neutral-900 text-white"
+                                                : "bg-neutral-100"
+                                        }`}
+                                    >
+                                        {`${TextConstants.TEXT__YEARLY.toUpperCase()} (${paymentConfig.subscriptionSettings.yearlyDiscountPercentage}%)`}
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </div>
                 )}
-                <div className="mx-auto grid w-full grid-cols-1 gap-8 md:grid-cols-3">
-                    {isLoading
-                        ? [1, 2, 3].map((_, index) => <PricingPlanCardSkeleton key={index} />)
+                <div
+                    className={`mx-auto grid w-full grid-cols-1 gap-8 ${
+                        isFreePlanEnabled()
+                            ? "max-w-8xl md:grid-cols-3"
+                            : "max-w-6xl md:grid-cols-2"
+                    }`}
+                >
+                    {!products || isLoading
+                        ? isFreePlanEnabled()
+                            ? [1, 2, 3].map((_, index) => <PricingPlanCardSkeleton key={index} />)
+                            : [1, 2].map((_, index) => <PricingPlanCardSkeleton key={index} />)
                         : sortedProducts?.map((product: ProductWithPrices, index) => (
                               <PricingPlanCard
                                   key={index}

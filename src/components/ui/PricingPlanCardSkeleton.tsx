@@ -23,7 +23,7 @@ export const PricingPlanCardSkeleton = () => {
                 <div className="skeleton-features mb-4">
                     {/* Placeholder for PlanFeatures */}
                     {[...Array(5)].map((_, index) => (
-                        <div key={index} className="mb-2 flex items-center">
+                        <div key={index} className="mb-[18px] flex items-center">
                             <div className="mr-2 h-[31.25px] w-[31.25px] rounded-full bg-neutral-200"></div>
                             <div className="h-[31.25px] w-3/4 rounded bg-neutral-200"></div>
                         </div>

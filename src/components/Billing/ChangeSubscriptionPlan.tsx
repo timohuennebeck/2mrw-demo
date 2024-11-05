@@ -1,7 +1,7 @@
 import { TextConstants } from "@/constants/TextConstants";
 import CustomButton from "../CustomButton";
 import HeaderWithDescription from "../HeaderWithDescription";
-import { getCurrency, paymentConfig } from "@/config/paymentConfig";
+import { getCurrency, isFreePlanEnabled, paymentConfig } from "@/config/paymentConfig";
 import { toast } from "sonner";
 import { useRef, useState } from "react";
 import { useSession } from "@/context/SessionContext";
@@ -147,6 +147,13 @@ const ChangeSubscriptionPlan = () => {
 
                 {!isOneTimePaymentPlan && (
                     <div className="mb-6 flex space-x-4">
+                        {isFreePlanEnabled() && (
+                            <CustomButton
+                                title={TextConstants.TEXT__FREE.toUpperCase()}
+                                onClick={() => setSubscriptionInterval(SubscriptionInterval.FREE)}
+                                isSecondary={subscriptionInterval !== SubscriptionInterval.FREE}
+                            />
+                        )}
                         <CustomButton
                             title={TextConstants.TEXT__MONTHLY.toUpperCase()}
                             onClick={() => setSubscriptionInterval(SubscriptionInterval.MONTHLY)}
