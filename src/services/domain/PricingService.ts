@@ -74,12 +74,6 @@ export const getProductDetailsByStripePriceId = (
     };
 };
 
-export const isSubscribedToPlan = (productStripePriceId: string, activeStripePriceId: string) => {
-    if (!activeStripePriceId) return false;
-
-    return productStripePriceId === activeStripePriceId;
-};
-
 export const getStripePriceIdBasedOnSelectedPlan = ({
     products,
     selectedPlanId,

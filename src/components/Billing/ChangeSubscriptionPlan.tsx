@@ -17,7 +17,6 @@ import {
     getPrice,
     getProductDetailsByStripePriceId,
     getStripePriceIdBasedOnSelectedPlan,
-    isSubscribedToPlan,
 } from "@/services/domain/PricingService";
 import { BillingPlan } from "@/interfaces/StripePrices";
 import useClickOutside from "@/hooks/useClickOutside";
@@ -178,14 +177,11 @@ const ChangeSubscriptionPlan = () => {
                                   })
                                 : null;
 
-                            const subscribedToPlan = isFreeProduct
+                            const isSubscribedToPlan = isFreeProduct
                                 ? activeProductDetails?.id === product.id
-                                : isSubscribedToPlan(
-                                      price?.stripe_price_id ?? "",
-                                      activeStripePriceId,
-                                  );
+                                : price?.stripe_price_id === activeStripePriceId;
 
-                            const isDisabled = subscribedToPlan && !userIsOnFreeTrial;
+                            const isDisabled = isSubscribedToPlan && !userIsOnFreeTrial;
 
                             return (
                                 <div
