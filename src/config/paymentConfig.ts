@@ -1,4 +1,4 @@
-import { PaymentEnums } from "@/enums/PaymentEnums";
+import { PricingModel } from "@/interfaces/StripePrices";
 
 interface SubscriptionSettings {
     enableFreeTrial: boolean;
@@ -12,13 +12,17 @@ interface OneTimeSettings {
 }
 
 interface CompletePaymentConfig {
-    paymentType: PaymentEnums;
+    paymentType: PricingModel;
     subscriptionSettings: SubscriptionSettings;
     oneTimeSettings: OneTimeSettings;
 }
 
 export const paymentConfig: CompletePaymentConfig = {
-    paymentType: PaymentEnums.SUBSCRIPTION, // set which payment type is active
+
+    // TOOD: remove this as we now have pricing_model inside the database
+    paymentType: PricingModel.SUBSCRIPTION, // set which payment type is active
+
+    // TODO: query the prices from the database where the pricing_model is equal to the pricing_model from the products table and the product_id is equal to the id from the products table
 
     // subscription settings: used when paymentType is SUBSCRIPTION
     subscriptionSettings: {
@@ -36,10 +40,10 @@ export const paymentConfig: CompletePaymentConfig = {
 
 // helper functions to get the active settings
 export const getCurrentPaymentSettings = () => {
-    return paymentConfig.paymentType === PaymentEnums.SUBSCRIPTION
+    return paymentConfig.paymentType === PricingModel.SUBSCRIPTION
         ? paymentConfig.subscriptionSettings
         : paymentConfig.oneTimeSettings;
 };
 
 // helper to check if subscription features are enabled
-export const isOneTimePaymentEnabled = () => paymentConfig.paymentType === PaymentEnums.ONE_TIME;
+export const isOneTimePaymentEnabled = () => paymentConfig.paymentType === PricingModel.ONE_TIME;

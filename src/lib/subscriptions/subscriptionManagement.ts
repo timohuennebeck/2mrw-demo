@@ -2,8 +2,8 @@
 
 import { getCurrentPaymentSettings } from "@/config/paymentConfig";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
-import { PaymentEnums } from "@/enums/PaymentEnums";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
+import { PricingModel } from "@/interfaces/StripePrices";
 import { UpsertUserSubscriptionParams } from "@/interfaces/SubscriptionInterfaces";
 import {
     cancelUserSubscription,
@@ -75,8 +75,8 @@ export const handleSubscriptionUpdated = async ({
                     stripe_subscription_id: subscription.id,
                     pricing_model:
                         subscription.object === "subscription"
-                            ? PaymentEnums.SUBSCRIPTION
-                            : PaymentEnums.ONE_TIME,
+                            ? PricingModel.SUBSCRIPTION
+                            : PricingModel.ONE_TIME,
                     end_date: moment.unix(subscription.current_period_end).toISOString(),
                     updated_at: moment().toISOString(),
                 })

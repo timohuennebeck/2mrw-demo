@@ -1,7 +1,7 @@
 "use server";
 
 import { FreeTrial } from "@/interfaces/FreeTrial";
-import { Product } from "@/interfaces/ProductInterfaces";
+import { Product, ProductWithPrices } from "@/interfaces/ProductInterfaces";
 import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
 import { createClient } from "./server";
 import { handleSupabaseError } from "../../lib/helper/handleSupabaseError";
@@ -37,19 +37,32 @@ export const checkUserRowExists = async ({
     }
 };
 
-export const fetchProducts = async () => {
+export const fetchProductsWithPrices = async () => {
     const supabase = createClient();
 
     try {
-        const { data: products, error } = await supabase
+        const { data: products, error: productsError } = await supabase
             .from("products")
             .select("*")
             .eq("is_active", "TRUE")
             .order("id", { ascending: true });
 
-        if (error) throw error;
+        if (productsError) throw productsError;
 
-        return { products: products as Product[], error: null };
+        const { data: prices, error: pricesError } = await supabase
+            .from("stripe_prices")
+            .select("*")
+            .eq("is_active", "TRUE")
+            .order("id", { ascending: true });
+
+        if (pricesError) throw pricesError;
+
+        const productsWithPrices = products.map((product) => ({
+            ...product,
+            prices: prices.filter((price) => price.product_id === product.id),
+        }));
+
+        return { products: productsWithPrices as ProductWithPrices[], error: null };
     } catch (error) {
         return {
             products: null,

@@ -1,11 +1,11 @@
-import { Product } from "@/interfaces/ProductInterfaces";
-import { fetchProducts } from "@/services/supabase/queries";
+import { Product, ProductWithPrices } from "@/interfaces/ProductInterfaces";
+import { fetchProductsWithPrices } from "@/services/supabase/queries";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
 
 interface ProductsContextType {
     isLoading: boolean;
-    products: Product[] | null;
+    products: ProductWithPrices[] | null;
 }
 
 const ProductsContext = createContext<ProductsContextType>({
@@ -16,7 +16,7 @@ const ProductsContext = createContext<ProductsContextType>({
 export const ProductsProvider = ({ children }: { children: React.ReactNode }) => {
     const { data, isLoading } = useQuery({
         queryKey: ["products"],
-        queryFn: () => fetchProducts(),
+        queryFn: () => fetchProductsWithPrices(),
         staleTime: 12 * 60 * 60 * 1000, // 12 hours
         gcTime: 24 * 60 * 60 * 1000, // 24 hours
         refetchOnMount: false,

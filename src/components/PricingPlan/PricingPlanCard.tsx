@@ -1,6 +1,6 @@
 "use client";
 
-import { Product } from "@/interfaces/ProductInterfaces";
+import { Product, ProductWithPrices } from "@/interfaces/ProductInterfaces";
 import { PlanButton } from "./PlanButton";
 import { PlanFeatures } from "./PlanFeatures";
 import { PlanHeader } from "./PlanHeader";
@@ -12,25 +12,42 @@ import { FreeTrial } from "@/interfaces/FreeTrial";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { TextConstants } from "@/constants/TextConstants";
+import { PricingModel, StripePrice, SubscriptionInterval } from "@/interfaces/StripePrices";
+import { FeatureService } from "@/services/FeatureService";
 
-interface PricingPlanCardProps extends Product {
+interface PricingPlanCardProps extends ProductWithPrices {
     supabaseUser: User | null;
     freeTrialStatus: FreeTrialStatus;
     freeTrialData: FreeTrial;
     subscriptionStatus: SubscriptionStatus;
     subscriptionData: PurchasedSubscription;
     isLoading: boolean;
-    billingCycle: "monthly" | "yearly";
-    setBillingCycle: (cycle: "monthly" | "yearly") => void;
+    billingCycle: SubscriptionInterval;
+    setBillingCycle: (cycle: SubscriptionInterval) => void;
 }
+
+const _getStripePriceId = (prices: StripePrice[], billingCycle: SubscriptionInterval) => {
+    if (isOneTimePaymentEnabled()) {
+        const oneTimePrice = prices.find((p) => p.pricing_model === PricingModel.ONE_TIME);
+        return oneTimePrice?.stripe_price_id ?? "";
+    }
+
+    const subscriptionPrices = prices.filter((p) => p.pricing_model === PricingModel.SUBSCRIPTION);
+
+    const subscriptionPrice =
+        subscriptionPrices.find((p) => p.subscription_interval === billingCycle)?.stripe_price_id ??
+        "";
+
+    return subscriptionPrice;
+};
 
 export const PricingPlanCard = (props: PricingPlanCardProps) => {
     const {
         is_highlighted,
+        subscription_tier,
         name,
-        pricing,
+        prices,
         description,
-        features,
         freeTrialStatus,
         freeTrialData,
         subscriptionStatus,
@@ -40,15 +57,12 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
         billingCycle,
     } = props;
 
-    const getStripePriceId = () => {
-        if (isOneTimePaymentEnabled()) {
-            return pricing?.one_time?.stripe_price_id ?? "";
-        }
+    const features = FeatureService.getFeaturesByTier(subscription_tier);
 
-        return billingCycle === "yearly"
-            ? (pricing?.subscription?.yearly?.stripe_price_id ?? "")
-            : (pricing?.subscription?.monthly?.stripe_price_id ?? "");
-    };
+    // If user has a current subscription, show feature comparison
+    const featureComparison = subscriptionData?.subscription_tier
+        ? FeatureService.compareFeatures(subscriptionData.subscription_tier, subscription_tier)
+        : null;
 
     const renderPaymentTypeText = () => {
         if (isOneTimePaymentEnabled()) {
@@ -67,34 +81,36 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
     };
 
     return (
-        <div className="relative max-w-lg rounded-md border p-8">
-            <div className="mb-6">
+        <div className="relative flex max-w-lg flex-col justify-between rounded-md border p-8">
+            <section className="mb-6">
                 <PlanHeader
                     freeTrialData={freeTrialData}
                     freeTrialStatus={freeTrialStatus}
                     isHighlighted={is_highlighted}
                     name={name}
-                    stripePriceId={getStripePriceId()}
+                    stripePriceId={_getStripePriceId(prices, billingCycle) ?? ""}
                 />
 
-                <PlanPricing pricing={pricing} billingCycle={billingCycle} />
+                <PlanPricing prices={prices} billingCycle={billingCycle} />
 
                 <p className="mb-4 text-sm text-neutral-500">{description}</p>
 
-                <PlanFeatures features={features} />
-            </div>
+                <PlanFeatures features={features} newFeatures={featureComparison?.newFeatures} />
+            </section>
 
-            <PlanButton
-                freeTrialStatus={freeTrialStatus}
-                isLoading={isLoading}
-                subscriptionData={subscriptionData}
-                subscriptionStatus={subscriptionStatus}
-                supabaseUser={supabaseUser ?? null}
-                name={name}
-                stripePriceId={getStripePriceId()}
-            />
+            <section>
+                <PlanButton
+                    freeTrialStatus={freeTrialStatus}
+                    isLoading={isLoading}
+                    subscriptionData={subscriptionData}
+                    subscriptionStatus={subscriptionStatus}
+                    supabaseUser={supabaseUser ?? null}
+                    name={name}
+                    stripePriceId={_getStripePriceId(prices, billingCycle) ?? ""}
+                />
 
-            <div className="mt-4">{renderPaymentTypeText()}</div>
+                <div className="mt-4">{renderPaymentTypeText()}</div>
+            </section>
         </div>
     );
 };

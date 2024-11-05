@@ -7,15 +7,15 @@ import {
     StartUserFreeTrialParams,
     UpdateUserSubscriptionStatusParams,
 } from "./supabaseInterfaces";
-import { createClient, SupabaseClient, User } from "@supabase/supabase-js";
+import { createClient, User } from "@supabase/supabase-js";
 import { handleSupabaseError } from "../../lib/helper/handleSupabaseError";
 import moment from "moment";
-import { PaymentEnums } from "@/enums/PaymentEnums";
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
-import { fetchProducts } from "./queries";
+import { fetchProductsWithPrices } from "./queries";
 import { EmailTemplate, sendEmail } from "@/lib/email/emailService";
 import { getProductNameByTier } from "@/lib/helper/PackagesHelper";
 import { validateEmailProps } from "@/lib/validation/emailValidation";
+import { PricingModel, SubscriptionInterval } from "@/interfaces/StripePrices";
 
 export const getSupabasePowerUser = async () => {
     return createClient(
@@ -36,12 +36,14 @@ const getEndDate = async (stripePriceId: string) => {
     }
 
     // fetch products to check price IDs
-    const { products } = await fetchProducts();
+    const { products } = await fetchProductsWithPrices();
     if (!products) throw new Error("Failed to fetch products");
 
     // check if the stripePriceId matches any yearly subscription
     const isYearlySubscription = products.some(
-        (product) => product.pricing.subscription?.yearly?.stripe_price_id === stripePriceId,
+        (product) =>
+            product.prices.find((price) => price.id === stripePriceId)?.subscription_interval ===
+            SubscriptionInterval.YEARLY,
     );
 
     const currentDate = moment();
@@ -89,8 +91,8 @@ export const startUserSubscription = async ({
             subscription_tier: subscriptionTier,
             stripe_subscription_id: stripeSubscriptionId,
             pricing_model: isOneTimePaymentEnabled()
-                ? PaymentEnums.ONE_TIME
-                : PaymentEnums.SUBSCRIPTION,
+                ? PricingModel.ONE_TIME
+                : PricingModel.SUBSCRIPTION,
             end_date: endDate,
             updated_at: moment().toISOString(),
             created_at: moment().toISOString(),
@@ -112,11 +114,14 @@ export const startUserSubscription = async ({
 
             const purchasedPackage = await getProductNameByTier(subscriptionTier);
 
-            const { error: validationError } = validateEmailProps(EmailTemplate.SUBSCRIPTION_CONFIRMATION, {
-                userEmail: userData.email,
-                userFirstName: userData.first_name,
-                purchasedPackage,
-            });
+            const { error: validationError } = validateEmailProps(
+                EmailTemplate.SUBSCRIPTION_CONFIRMATION,
+                {
+                    userEmail: userData.email,
+                    userFirstName: userData.first_name,
+                    purchasedPackage,
+                },
+            );
 
             if (validationError) {
                 console.error("Invalid email props:", validationError);
@@ -161,8 +166,8 @@ export const updateUserSubscription = async ({
                 subscription_tier: subscriptionTier,
                 stripe_subscription_id: stripeSubscriptionId,
                 pricing_model: isOneTimePaymentEnabled()
-                    ? PaymentEnums.ONE_TIME
-                    : PaymentEnums.SUBSCRIPTION,
+                    ? PricingModel.ONE_TIME
+                    : PricingModel.SUBSCRIPTION,
                 end_date: endDate,
                 updated_at: moment().toISOString(),
             })

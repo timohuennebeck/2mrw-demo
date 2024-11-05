@@ -1,6 +1,6 @@
-import { PaymentEnums } from "@/enums/PaymentEnums";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
+import { PricingModel } from "./StripePrices";
 
 export interface UpsertUserSubscriptionParams {
     userId: string;
@@ -16,7 +16,7 @@ export interface PurchasedSubscription {
     user_id: string;
     status: SubscriptionStatus;
     subscription_tier: SubscriptionTier;
-    pricing_model: PaymentEnums;
+    pricing_model: PricingModel;
     end_date: string;
     updated_at: Date;
     created_at: Date;

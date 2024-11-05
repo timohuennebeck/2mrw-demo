@@ -1,17 +1,18 @@
 export enum PricingModel {
-    ONE_TIME = "one_time",
-    SUBSCRIPTION = "subscription",
+    ONE_TIME = "ONE_TIME",
+    SUBSCRIPTION = "SUBSCRIPTION",
 }
 
 export enum SubscriptionInterval {
-    MONTHLY = "monthly",
-    YEARLY = "yearly",
+    MONTHLY = "MONTHLY",
+    YEARLY = "YEARLY",
 }
 
 export interface StripePrice {
     id: string;
     product_id: string;
     pricing_model: PricingModel;
+    is_active: boolean;
     subscription_interval?: SubscriptionInterval; // null for one-time prices
     current_amount: number;
     previous_amount?: number;
