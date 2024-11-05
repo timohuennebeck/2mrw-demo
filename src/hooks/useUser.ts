@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchUser } from "@/services/supabase/queries";
 import { User } from "@/interfaces/UserInterfaces";
+import { fetchUser } from "@/services/database/UserService";
 
 export const useUser = (userId: string) => {
     const queryClient = useQueryClient();

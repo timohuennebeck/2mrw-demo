@@ -48,4 +48,5 @@ export const getCurrentPaymentSettings = () => {
 
 // helper to check if subscription features are enabled
 export const isOneTimePaymentEnabled = () => paymentConfig.paymentType === PricingModel.ONE_TIME;
+export const isFreeTrialEnabled = () => getCurrentPaymentSettings().enableFreeTrial;
 export const getCurrency = () => paymentConfig.currency;

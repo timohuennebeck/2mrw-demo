@@ -6,7 +6,6 @@ import CurrentSubscriptionPlan from "@/components/Billing/CurrentSubscriptionPla
 import ChangeSubscriptionPlan from "@/components/Billing/ChangeSubscriptionPlan";
 import HeaderWithDescription from "@/components/HeaderWithDescription";
 import { useSession } from "@/context/SessionContext";
-import { hasUserPremiumOrFreeTrial } from "@/lib/helper/subscriptionHelper";
 import { useSubscription } from "@/hooks/useSubscription";
 import { useFreeTrial } from "@/hooks/useFreeTrial";
 import { useSupabaseRealtime } from "@/hooks/useSupabaseRealtime";
@@ -14,6 +13,7 @@ import CustomPopup from "@/components/CustomPopup";
 import { Check } from "lucide-react";
 import { useState } from "react";
 import useSuccessParam from "@/hooks/useSuccessParam";
+import { hasUserPremiumOrFreeTrial } from "@/lib/helper/subscriptionHelper";
 
 const BillingPage = () => {
     const { authUser } = useSession();

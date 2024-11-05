@@ -2,7 +2,7 @@
 
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { InitiateStripeCheckoutProcessParams } from "@/interfaces/StripeInterfaces";
-import { updateUserStripeCustomerId } from "@/services/supabase/admin";
+import { updateUserStripeCustomerId } from "@/services/database/UserService";
 import axios from "axios";
 import Stripe from "stripe";
 
@@ -125,12 +125,8 @@ export const getStripeCustomerCreditCardDetails = async (customerId: string) => 
 
 export const handleStripePortalSession = async (stripeCustomerId: string) => {
     try {
-        const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_SITE_URL}/api/stripe/create-portal-session`,
-            {
-                stripeCustomerId,
-            },
-        );
+        const fetchUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/stripe/create-portal-session`;
+        const response = await axios.post(fetchUrl, { stripeCustomerId });
 
         const { url } = response.data;
         return url;

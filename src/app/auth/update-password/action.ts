@@ -1,7 +1,7 @@
 "use server";
 
 import { TextConstants } from "@/constants/TextConstants";
-import { createClient } from "@/services/supabase/server";
+import { getClients } from "@/services/database/BaseService";
 import { revalidatePath } from "next/cache";
 
 interface UpdatePasswordProps {
@@ -10,7 +10,7 @@ interface UpdatePasswordProps {
 }
 
 export const updatePassword = async ({ password, authCode }: UpdatePasswordProps) => {
-    const supabase = createClient();
+    const { supabase } = await getClients();
 
     try {
         const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(authCode);

@@ -15,6 +15,7 @@ const BillingPortal = () => {
         if (!authUser?.email || !authUser?.id) return;
 
         const stripeCustomerId = await getStripeCustomerId(authUser.email, authUser.id);
+
         const url = await handleStripePortalSession(stripeCustomerId ?? "");
         if (url) {
             window.open(url, "_blank");

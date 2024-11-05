@@ -3,8 +3,7 @@
 import { cookies } from "next/headers";
 import { NextResponse as response } from "next/server";
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
-import { checkUserEmailExists } from "@/services/supabase/queries";
-import { createUserTable } from "@/services/supabase/admin";
+import { checkEmailExists, createUserTable } from "@/services/database/UserService";
 
 export const GET = async (request: Request) => {
     const { searchParams, origin } = new URL(request.url);
@@ -38,15 +37,13 @@ export const GET = async (request: Request) => {
         const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
         if (!error && data.session) {
-            const { user } = data.session;
+            const { user: authUser } = data.session;
 
             try {
-                const { emailExists } = await checkUserEmailExists({
-                    userEmail: user.user_metadata.email,
-                });
+                const { emailExists } = await checkEmailExists(authUser.user_metadata.email);
 
                 if (!emailExists) {
-                    await createUserTable({ user });
+                    await createUserTable(authUser);
                 }
 
                 return response.redirect(`${origin}${next}`);

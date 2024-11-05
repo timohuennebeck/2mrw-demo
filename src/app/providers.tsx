@@ -1,20 +1,21 @@
 "use client";
 
+import * as React from "react";
 import { ProductsProvider } from "@/context/ProductsContext";
 import { SessionProvider, useSession } from "@/context/SessionContext";
-import { queryClient } from "@/lib/qClient/qClient";
-import { fetchUser, fetchUserFreeTrial, fetchUserSubscription } from "@/services/supabase/queries";
-import { QueryClientProvider } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@/lib/qClient/qClient";
+import { fetchUserSubscription } from "@/services/database/SubscriptionService";
+import { fetchUserFreeTrial } from "@/services/database/FreeTrialService";
+import { fetchUser } from "@/services/database/UserService";
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
     return (
         <QueryClientProvider client={queryClient}>
             <SessionProvider>
                 <ProductsProvider>
-                    <PreloaderWrapper>
-                        {children}
-                    </PreloaderWrapper>
+                    <PreloaderWrapper>{children}</PreloaderWrapper>
                 </ProductsProvider>
             </SessionProvider>
         </QueryClientProvider>

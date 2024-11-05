@@ -1,7 +1,7 @@
 import { TextConstants } from "@/constants/TextConstants";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { FreeTrial } from "@/interfaces/FreeTrial";
-import { formatDateToHumanFormat } from "@/lib/helper/formatDateToHumanFormat";
+import { formatDateToDayMonthYear } from "@/lib/helper/DateHelper";
 
 interface PlanHeaderParams {
     name: string;
@@ -26,7 +26,7 @@ export const PlanHeader = ({
             return (
                 <div className="mb-4 whitespace-nowrap rounded-md bg-black px-2.5 py-0.5 text-center text-sm text-white">
                     {TextConstants.TEXT__FREE_TRIAL_END_DATE}:{" "}
-                    {formatDateToHumanFormat(freeTrialData.end_date)}
+                    {formatDateToDayMonthYear(freeTrialData.end_date)}
                 </div>
             );
         }

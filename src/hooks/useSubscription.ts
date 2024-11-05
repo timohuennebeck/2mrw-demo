@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
-import { fetchUserSubscription } from "@/services/supabase/queries";
+import { fetchUserSubscription } from "@/services/database/SubscriptionService";
 
 export const useSubscription = (userId: string) => {
     const queryClient = useQueryClient();

@@ -13,7 +13,7 @@ import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { TextConstants } from "@/constants/TextConstants";
 import { PricingModel, StripePrice, SubscriptionInterval } from "@/interfaces/StripePrices";
-import { FeatureService } from "@/services/FeatureService";
+import { getFeaturesWithAvailability } from "@/services/domain/FeatureService";
 
 interface PricingPlanCardProps extends ProductWithPrices {
     supabaseUser: User | null;
@@ -57,8 +57,6 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
         billingCycle,
     } = props;
 
-    const features = FeatureService.getFeaturesWithAvailability(subscription_tier);
-
     const renderPaymentTypeText = () => {
         if (isOneTimePaymentEnabled()) {
             return (
@@ -90,7 +88,7 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
 
                 <p className="mb-4 text-sm text-neutral-500">{description}</p>
 
-                <PlanFeatures features={features} />
+                <PlanFeatures features={getFeaturesWithAvailability(subscription_tier)} />
             </section>
 
             <section>

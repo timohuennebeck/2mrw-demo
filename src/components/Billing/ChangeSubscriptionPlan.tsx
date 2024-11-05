@@ -13,12 +13,20 @@ import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import CustomPopup from "../CustomPopup";
 import { ShieldAlert } from "lucide-react";
 import { SubscriptionInterval } from "@/interfaces/StripePrices";
-import { PricingService } from "@/services/PricingService";
+import {
+    getPrice,
+    getProductDetailsByStripePriceId,
+    getStripePriceIdBasedOnSelectedPlan,
+    isSubscribedToPlan,
+} from "@/services/domain/PricingService";
 import { PricingModel } from "@/interfaces/StripePrices";
 import useClickOutside from "@/hooks/useClickOutside";
 import { useRouter } from "next/navigation";
+import {
+    cancelUserSubscription,
+    startUserSubscription,
+} from "@/services/database/SubscriptionService";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
-import { cancelUserSubscription, startUserSubscription } from "@/services/supabase/admin";
 
 const ChangeSubscriptionPlan = () => {
     const { authUser } = useSession();
@@ -46,7 +54,7 @@ const ChangeSubscriptionPlan = () => {
 
     const activeStripePriceId = subscription?.stripe_price_id ?? freeTrial?.stripe_price_id;
     const activeProductDetails = activeStripePriceId
-        ? PricingService.getProductDetailsByStripePriceId(products, activeStripePriceId)
+        ? getProductDetailsByStripePriceId(products, activeStripePriceId)
         : null;
 
     const isOneTimePaymentPlan = activeProductDetails?.price?.interval === PricingModel.ONE_TIME;
@@ -69,7 +77,7 @@ const ChangeSubscriptionPlan = () => {
 
             const selectedProduct = products.find((p) => p.id === selectedPlanId);
             const isFreeProduct = selectedProduct?.pricing_model === PricingModel.FREE;
-            const stripePriceId = PricingService.getStripePriceIdBasedOnSelectedPlan({
+            const stripePriceId = getStripePriceIdBasedOnSelectedPlan({
                 products,
                 selectedPlanId,
                 subscriptionInterval,
@@ -158,7 +166,7 @@ const ChangeSubscriptionPlan = () => {
                         {products?.map((product) => {
                             const isFreeProduct = product.pricing_model === PricingModel.FREE;
                             const price = !isFreeProduct
-                                ? PricingService.getPrice({
+                                ? getPrice({
                                       product,
                                       pricingModel: isOneTimePaymentPlan
                                           ? PricingModel.ONE_TIME
@@ -170,14 +178,14 @@ const ChangeSubscriptionPlan = () => {
                                   })
                                 : null;
 
-                            const isSubscribedToPlan = isFreeProduct
+                            const subscribedToPlan = isFreeProduct
                                 ? activeProductDetails?.id === product.id
-                                : PricingService.isSubscribedToPlan(
+                                : isSubscribedToPlan(
                                       price?.stripe_price_id ?? "",
                                       activeStripePriceId,
                                   );
 
-                            const isDisabled = isSubscribedToPlan && !userIsOnFreeTrial;
+                            const isDisabled = subscribedToPlan && !userIsOnFreeTrial;
 
                             return (
                                 <div

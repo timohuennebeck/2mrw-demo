@@ -3,8 +3,8 @@
 import { type EmailOtpType } from "@supabase/supabase-js";
 import { type NextRequest } from "next/server";
 import { redirect } from "next/navigation";
-import { createClient } from "@/services/supabase/server";
-import { createUserTable } from "@/services/supabase/admin";
+import { createClient } from "@/services/integration/server";
+import { createUserTable } from "@/services/database/UserService";
 
 export const GET = async (request: NextRequest) => {
     // this route is used for email authentication when the user needs to confirm their email via email
@@ -27,7 +27,7 @@ export const GET = async (request: NextRequest) => {
                 const user = data.user;
 
                 if (user) {
-                    await createUserTable({ user });
+                    await createUserTable(user);
                 } else {
                     console.error("User data not available");
                 }

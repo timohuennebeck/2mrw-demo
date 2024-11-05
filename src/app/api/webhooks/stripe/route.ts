@@ -1,19 +1,18 @@
 "use server";
 
 import { StripeWebhookEvents } from "@/enums/StripeWebhookEvents";
-import { VerifyStripeWebhookParams } from "@/interfaces/StripeInterfaces";
 import { queryClient } from "@/lib/qClient/qClient";
+import { getUserId } from "@/services/database/UserService";
 import {
     handleCheckoutSessionCompleted,
     handleSubscriptionUpdated,
-} from "@/lib/subscriptions/subscriptionManagement";
-import { getUserId } from "@/services/supabase/queries";
+} from "@/services/stripe/StripeWebhookService";
 import { NextRequest as request, NextResponse as response } from "next/server";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 
-const _verifyStripeWebhook = async ({ body, signature }: VerifyStripeWebhookParams) => {
+const _verifyStripeWebhook = async (body: string, signature: string) => {
     try {
         return stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!);
     } catch (err: unknown) {
@@ -21,7 +20,7 @@ const _verifyStripeWebhook = async ({ body, signature }: VerifyStripeWebhookPara
     }
 };
 
-const _retrieveCheckoutSession = async ({ sessionId }: { sessionId: string }) => {
+const _retrieveCheckoutSession = async (sessionId: string) => {
     return await stripe.checkout.sessions.retrieve(sessionId, {
         expand: ["line_items"],
     });
@@ -37,16 +36,13 @@ export const POST = async (req: request) => {
         }
 
         // construct the event and check if the webhook is valid
-        const event = await _verifyStripeWebhook({ body, signature });
+        const event = await _verifyStripeWebhook(body, signature);
         const userId = await getUserId();
 
         switch (event.type) {
             case StripeWebhookEvents.CHECKOUT_SESSION_COMPLETED:
-                const session = await _retrieveCheckoutSession({ sessionId: event.data.object.id });
-                await handleCheckoutSessionCompleted({
-                    session,
-                    userId: userId ?? "",
-                });
+                const session = await _retrieveCheckoutSession(event.data.object.id);
+                await handleCheckoutSessionCompleted(session, userId ?? "");
 
                 if (userId) {
                     queryClient.invalidateQueries({ queryKey: ["freeTrial", userId] });
@@ -54,10 +50,7 @@ export const POST = async (req: request) => {
                 }
                 break;
             case StripeWebhookEvents.CUSTOMER_SUBSCRIPTION_UPDATED:
-                await handleSubscriptionUpdated({
-                    subscription: event.data.object,
-                    userId: userId ?? "",
-                });
+                await handleSubscriptionUpdated(event.data.object, userId ?? "");
 
                 if (userId) {
                     queryClient.invalidateQueries({

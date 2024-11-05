@@ -1,4 +1,4 @@
-import { createClient } from "@/services/supabase/client";
+import { createClient } from "@/services/integration/client";
 import { useEffect } from "react";
 
 interface UseSupabaseRealtimeProps {

@@ -2,8 +2,8 @@
 
 import { TextConstants } from "@/constants/TextConstants";
 import { SupabaseErrors } from "@/enums/SupabaseErrors";
-import { checkUserEmailExists } from "@/services/supabase/queries";
-import { createClient } from "@/services/supabase/server";
+import { checkEmailExists } from "@/services/database/UserService";
+import { createClient } from "@/services/integration/server";
 import { AuthError } from "@supabase/supabase-js";
 
 export const signUp = async ({
@@ -18,7 +18,7 @@ export const signUp = async ({
     const supabase = createClient();
 
     try {
-        const { emailExists } = await checkUserEmailExists({ userEmail: email });
+        const { emailExists } = await checkEmailExists(email);
 
         if (emailExists) {
             return { error: TextConstants.ERROR__EMAIL_ALREADY_IN_USE };

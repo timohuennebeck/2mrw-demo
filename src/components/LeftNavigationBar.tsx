@@ -15,10 +15,11 @@ import { TextConstants } from "@/constants/TextConstants";
 import { useRouter, usePathname } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import Image from "next/image";
-import { createClient } from "@/services/supabase/client";
+import { getClients } from "@/services/database/BaseService";
 
 export const _handleSignOut = async (router: AppRouterInstance) => {
-    const supabase = createClient();
+    const { supabase } = await getClients();
+
     try {
         const { error } = await supabase.auth.signOut();
 

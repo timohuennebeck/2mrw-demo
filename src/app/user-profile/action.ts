@@ -1,11 +1,11 @@
 "use server";
 
-import { createClient } from "@/services/supabase/server";
+import { getClients } from "@/services/database/BaseService";
 import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
 
 export const updateUserEmail = async (userId: string, email: string) => {
-    const supabase = createClient();
+    const { supabase } = await getClients();
 
     const { error } = await supabase.auth.updateUser({
         email: email,
@@ -19,7 +19,7 @@ export const updateUserEmail = async (userId: string, email: string) => {
 };
 
 export const updateUserName = async (userId: string, firstName: string) => {
-    const supabase = createClient();
+    const { supabase } = await getClients();
 
     const { error: databaseError } = await supabase
         .from("users")
@@ -45,7 +45,7 @@ export const updateUserProfileImage = async ({
     userId: string;
     formData: FormData;
 }) => {
-    const supabase = createClient();
+    const { supabase } = await getClients();
 
     try {
         const file = formData.get("file") as File;
@@ -96,7 +96,7 @@ export const updateUserProfileImage = async ({
 };
 
 export async function updateUserPassword(password: string) {
-    const supabase = createClient();
+    const { supabase } = await getClients();
 
     const { error } = await supabase.auth.updateUser({
         password: password,

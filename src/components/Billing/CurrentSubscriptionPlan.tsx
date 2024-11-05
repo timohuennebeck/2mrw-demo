@@ -4,15 +4,15 @@ import { useSession } from "@/context/SessionContext";
 import useSubscription from "@/hooks/useSubscription";
 import useFreeTrial from "@/hooks/useFreeTrial";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
-import { formatDateToHumanFormat } from "@/lib/helper/formatDateToHumanFormat";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { useProducts } from "@/context/ProductsContext";
 import { PlanFeatures } from "../PricingPlan/PlanFeatures";
-import { PricingService } from "@/services/PricingService";
-import { FeatureService } from "@/services/FeatureService";
+import { getProductDetailsByStripePriceId } from "@/services/domain/PricingService";
 import { getCurrency } from "@/config/paymentConfig";
 import { PricingModel, SubscriptionInterval } from "@/interfaces/StripePrices";
-import { Calendar, CalendarClock } from "lucide-react";
+import { CalendarClock } from "lucide-react";
+import { getFeaturesWithAvailability } from "@/services/domain/FeatureService";
+import { formatDateToDayMonthYear } from "@/lib/helper/DateHelper";
 
 const CurrentSubscriptionPlan = () => {
     const { authUser } = useSession();
@@ -25,11 +25,11 @@ const CurrentSubscriptionPlan = () => {
     if (!products) return null;
 
     const productDetails = activeStripePriceId
-        ? PricingService.getProductDetailsByStripePriceId(products, activeStripePriceId)
+        ? getProductDetailsByStripePriceId(products, activeStripePriceId)
         : null;
 
     const features = productDetails
-        ? FeatureService.getFeaturesWithAvailability(productDetails.subscription_tier)
+        ? getFeaturesWithAvailability(productDetails.subscription_tier)
         : [];
 
     const isFreeProduct = productDetails?.pricing_model === PricingModel.FREE;
@@ -77,12 +77,14 @@ const CurrentSubscriptionPlan = () => {
             return null;
         }
 
+        const formattedEndDate = formatDateToDayMonthYear(freeTrial?.end_date ?? subscription?.end_date);
+
         if (freeTrial?.status === FreeTrialStatus.ACTIVE) {
-            return `Your free trial will end on ${formatDateToHumanFormat(freeTrial?.end_date)}!`;
+            return `Your free trial will end on ${formattedEndDate}!`;
         } else if (subscription?.status === SubscriptionStatus.ACTIVE) {
-            return `Your subscription renews on ${formatDateToHumanFormat(subscription?.end_date)}!`;
+            return `Your subscription renews on ${formattedEndDate}!`;
         } else if (subscription?.status === SubscriptionStatus.CANCELLED) {
-            return `Your subscription will be cancelled on ${formatDateToHumanFormat(subscription?.end_date)}!`;
+            return `Your subscription will be cancelled on ${formattedEndDate}!`;
         }
 
         return null;

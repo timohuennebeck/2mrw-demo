@@ -1,17 +1,17 @@
 "use server";
 
 import { TextConstants } from "@/constants/TextConstants";
-import { createClient } from "@/services/supabase/server";
+import { getClients } from "@/services/database/BaseService";
 
 export const sendPasswordResetEmail = async ({ email }: { email: string }) => {
-    const supabase = createClient();
+    const { adminSupabase } = await getClients();
 
     if (!email) {
         return { error: TextConstants.TEXT__PLEASE_ENTER_AN_EMAIL };
     }
 
     try {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        const { error } = await adminSupabase.auth.resetPasswordForEmail(email, {
             redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/update-password`,
         });
 

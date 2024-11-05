@@ -1,4 +1,4 @@
-import { createClient } from "@/services/supabase/client";
+import { createClient } from "@/services/integration/client";
 import { User } from "@supabase/supabase-js";
 import React, { createContext, useContext, useEffect, useState } from "react";
 

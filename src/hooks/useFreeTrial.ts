@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchUserFreeTrial } from "@/services/supabase/queries";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { FreeTrial } from "@/interfaces/FreeTrial";
+import { fetchUserFreeTrial } from "@/services/database/FreeTrialService";
 
 export const useFreeTrial = (userId: string) => {
     const queryClient = useQueryClient();

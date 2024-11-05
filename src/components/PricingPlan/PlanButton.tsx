@@ -1,21 +1,21 @@
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
-import { increaseDate } from "@/lib/helper/increaseDate";
-import { startUserFreeTrial } from "@/services/supabase/admin";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import CustomButton from "../CustomButton";
 import { initiateStripeCheckoutProcess } from "@/lib/stripe/stripeUtils";
 import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
-import { createClient } from "@/services/supabase/client";
+import { createClient } from "@/services/integration/client";
 import moment from "moment";
 import { TextConstants } from "@/constants/TextConstants";
 import { getCurrentPaymentSettings } from "@/config/paymentConfig";
 import { queryClient } from "@/lib/qClient/qClient";
 import { EmailTemplate } from "@/lib/email/emailService";
 import axios from "axios";
+import { startUserFreeTrial } from "@/services/database/FreeTrialService";
+import { increaseDate } from "@/lib/helper/DateHelper";
 
 interface PlanButton {
     stripePriceId: string;

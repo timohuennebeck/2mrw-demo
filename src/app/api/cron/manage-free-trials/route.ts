@@ -1,17 +1,18 @@
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
-import { endUserFreeTrial, getSupabasePowerUser } from "@/services/supabase/admin";
 import moment from "moment";
 import { NextResponse as response } from "next/server";
 import { EmailTemplate, sendEmail } from "@/lib/email/emailService";
 import { validateEmailProps } from "@/lib/validation/emailValidation";
+import { getClients } from "@/services/database/BaseService";
+import { endUserFreeTrial } from "@/services/database/FreeTrialService";
 
 export const dynamic = "force-dynamic";
 
 export const GET = async () => {
-    const supabasePowerUser = await getSupabasePowerUser();
+    const { adminSupabase } = await getClients();
 
     try {
-        const { data: activeTrials, error: fetchError } = await supabasePowerUser
+        const { data: activeTrials, error: fetchError } = await adminSupabase
             .from("free_trials")
             .select("user_id, status, end_date")
             .in("status", [FreeTrialStatus.ACTIVE, FreeTrialStatus.CANCELLED]);
@@ -26,10 +27,10 @@ export const GET = async () => {
 
             // check if trial has ended (now is past the start of end_date)
             if (endDate.isBefore(now)) {
-                const { error } = await endUserFreeTrial({ userId: trial.user_id });
+                const { error } = await endUserFreeTrial(trial.user_id);
                 if (error) throw error;
 
-                await supabasePowerUser.auth.admin.updateUserById(trial.user_id, {
+                await adminSupabase.auth.admin.updateUserById(trial.user_id, {
                     user_metadata: {
                         free_trial_status: FreeTrialStatus.EXPIRED,
                     },
@@ -39,7 +40,7 @@ export const GET = async () => {
 
             // check if trial ends in 2 days
             if (endDate.isSame(twoDaysFromNow, "day")) {
-                const { data: userData, error: userError } = await supabasePowerUser
+                const { data: userData, error: userError } = await adminSupabase
                     .from("users")
                     .select("first_name, email")
                     .eq("id", trial.user_id)

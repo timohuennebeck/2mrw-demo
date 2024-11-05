@@ -1,10 +1,10 @@
 "use server";
 
-import { createClient } from "@/services/supabase/server";
+import { getClients } from "@/services/database/BaseService";
 import { revalidatePath } from "next/cache";
 
 export const signIn = async ({ email, password }: { email: string; password: string }) => {
-    const supabase = createClient();
+    const { supabase } = await getClients();
 
     const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -20,7 +20,7 @@ export const signIn = async ({ email, password }: { email: string; password: str
 };
 
 export const signInUsingGoogle = async () => {
-    const supabase = createClient();
+    const { supabase } = await getClients();
 
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
