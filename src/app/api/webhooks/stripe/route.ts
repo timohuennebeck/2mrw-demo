@@ -16,11 +16,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 
 const _verifyStripeWebhook = async ({ body, signature }: VerifyStripeWebhookParams) => {
     try {
-        return stripe.webhooks.constructEvent(
-            body,
-            signature,
-            process.env.STRIPE_WEBHOOK_SECRET!,
-        );
+        return stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!);
     } catch (err: unknown) {
         throw new Error("Invalid signature");
     }

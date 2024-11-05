@@ -8,7 +8,10 @@ import { formatDateToHumanFormat } from "@/lib/helper/formatDateToHumanFormat";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { useProducts } from "@/context/ProductsContext";
 import { PlanFeatures } from "../PricingPlan/PlanFeatures";
-import { formatPriceDisplay, getProductDetailsByStripePriceId } from "@/lib/helper/priceHelper";
+import { PricingService } from "@/services/PricingService";
+import { FeatureService } from "@/services/FeatureService";
+import { getCurrency } from "@/config/paymentConfig";
+import { PricingModel, SubscriptionInterval } from "@/interfaces/StripePrices";
 
 const CurrentSubscriptionPlan = () => {
     const { authUser } = useSession();
@@ -16,13 +19,19 @@ const CurrentSubscriptionPlan = () => {
     const { subscription } = useSubscription(authUser?.id ?? "");
     const { freeTrial } = useFreeTrial(authUser?.id ?? "");
 
-    const activePriceId = subscription?.stripe_price_id || freeTrial?.stripe_price_id;
+    const activeStripePriceId = subscription?.stripe_price_id ?? freeTrial?.stripe_price_id;
 
     if (!products) return null;
 
-    const productDetails = activePriceId
-        ? getProductDetailsByStripePriceId(products, activePriceId)
+    const productDetails = activeStripePriceId
+        ? PricingService.getProductDetailsByStripePriceId(products, activeStripePriceId)
         : null;
+
+    const features = productDetails
+        ? FeatureService.getFeaturesWithAvailability(productDetails.subscription_tier)
+        : [];
+
+    const isFreeProduct = productDetails?.pricing_model === PricingModel.FREE;
 
     const renderStatusBadge = (text: string, variant: "green" | "yellow" | "red") => {
         const colors = {
@@ -98,9 +107,22 @@ const CurrentSubscriptionPlan = () => {
                         {renderSubscriptionStatus()}
                     </div>
 
-                    <p className="text-2xl font-medium text-gray-700">
-                        {productDetails?.price && formatPriceDisplay(productDetails.price)}
-                    </p>
+                    <div className="text-right">
+                        <div className="whitespace-nowrap text-xl font-medium text-gray-700">
+                            {isFreeProduct
+                                ? "Free"
+                                : productDetails?.price?.current
+                                  ? `${productDetails.price.current} ${getCurrency()}`
+                                  : "N/A"}
+                        </div>
+                        <div className="whitespace-nowrap text-sm font-medium text-gray-500">
+                            {isFreeProduct
+                                ? "FOREVER"
+                                : productDetails?.price?.interval === SubscriptionInterval.MONTHLY
+                                  ? "PER MONTH"
+                                  : "PER YEAR"}
+                        </div>
+                    </div>
                 </div>
                 <p className="mb-4 text-sm text-gray-500">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Et odit autem alias
@@ -109,7 +131,7 @@ const CurrentSubscriptionPlan = () => {
                 <p className="text-sm font-medium">{getSubscriptionStatusMessage()}</p>
 
                 <div className="mt-4">
-                    <PlanFeatures features={productDetails?.features ?? []} />
+                    <PlanFeatures features={features ?? []} />
                 </div>
             </div>
         </div>

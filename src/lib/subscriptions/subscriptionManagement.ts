@@ -14,6 +14,7 @@ import {
 } from "@/services/supabase/admin";
 import {
     checkUserRowExists,
+    fetchPricingModel,
     fetchSubscriptionTier,
     fetchUserFreeTrial,
 } from "@/services/supabase/queries";
@@ -33,9 +34,6 @@ export const handleSubscriptionUpdated = async ({
     const stripePriceId = subscription.items.data[0].price.id;
 
     try {
-        const { subscriptionTier } = await fetchSubscriptionTier(stripePriceId);
-        if (!subscriptionTier) throw new Error("SubscriptionTier not found");
-
         // check if the subscription is set to cancel at the end of the current period
         if (subscription.cancel_at_period_end) {
             const { error: updateError } = await supabasePowerUser
@@ -52,35 +50,39 @@ export const handleSubscriptionUpdated = async ({
                 throw updateError;
             }
 
-            const { error: authUserUpdateError } =
-                await supabasePowerUser.auth.admin.updateUserById(userId, {
-                    user_metadata: {
-                        subscription_status: SubscriptionStatus.CANCELLED,
-                        subscription_updated_at: moment().toISOString(),
-                    },
-                });
+            await supabasePowerUser.auth.admin.updateUserById(userId, {
+                user_metadata: {
+                    subscription_status: SubscriptionStatus.CANCELLED,
+                    subscription_updated_at: moment().toISOString(),
+                },
+            });
 
-            if (authUserUpdateError) {
-                console.error("Error updating auth user:", authUserUpdateError);
-                throw authUserUpdateError;
-            }
+            return { success: true };
         } else {
+            const { subscriptionTier } = await fetchSubscriptionTier(stripePriceId);
+            if (!subscriptionTier) throw new Error("SubscriptionTier not found");
+
+            const { pricingModel } = await fetchPricingModel(stripePriceId);
+            if (!pricingModel) throw new Error("PricingModel not found");
+
             // update subscription end date based on current period end
-            await supabasePowerUser
+            const { error: updateError } = await supabasePowerUser
                 .from("purchased_subscriptions")
                 .update({
                     stripe_price_id: stripePriceId,
                     status: SubscriptionStatus.ACTIVE,
                     subscription_tier: subscriptionTier,
                     stripe_subscription_id: subscription.id,
-                    pricing_model:
-                        subscription.object === "subscription"
-                            ? PricingModel.SUBSCRIPTION
-                            : PricingModel.ONE_TIME,
+                    pricing_model: pricingModel,
                     end_date: moment.unix(subscription.current_period_end).toISOString(),
                     updated_at: moment().toISOString(),
                 })
                 .eq("user_id", userId);
+
+            if (updateError) {
+                console.error("Error updating purchased_subscriptions:", updateError);
+                throw updateError;
+            }
 
             await supabasePowerUser.auth.admin.updateUserById(userId, {
                 user_metadata: {

@@ -196,45 +196,48 @@ export const fetchSubscriptionTier = async (stripePriceId: string) => {
     const supabase = createClient();
 
     try {
-        // query for one-time price id
-        const { data: oneTimeData, error: oneTimeError } = await supabase
-            .from("products")
-            .select("subscription_tier")
-            .eq("pricing->one_time->>stripe_price_id", stripePriceId)
+        const { data: stripePriceData, error: stripePriceError } = await supabase
+            .from("stripe_prices")
+            .select("product_id")
+            .eq("stripe_price_id", stripePriceId)
             .single();
 
-        if (!oneTimeError && oneTimeData) {
-            return { subscriptionTier: oneTimeData.subscription_tier, error: null };
-        }
+        if (stripePriceError) throw stripePriceError;
 
-        // query for monthly subscription price id
-        const { data: monthlyData, error: monthlyError } = await supabase
+        const { data: productData, error: productError } = await supabase
             .from("products")
             .select("subscription_tier")
-            .eq("pricing->subscription->monthly->>stripe_price_id", stripePriceId)
+            .eq("id", stripePriceData?.product_id)
             .single();
 
-        if (!monthlyError && monthlyData) {
-            return { subscriptionTier: monthlyData.subscription_tier, error: null };
-        }
+        if (productError) throw productError;
 
-        // query for yearly subscription price id
-        const { data: yearlyData, error: yearlyError } = await supabase
-            .from("products")
-            .select("subscription_tier")
-            .eq("pricing->subscription->yearly->>stripe_price_id", stripePriceId)
-            .single();
-
-        if (!yearlyError && yearlyData) {
-            return { subscriptionTier: yearlyData.subscription_tier, error: null };
-        }
-
-        // if no match found in any pricing structure
-        throw new Error("No product found with the given stripe_price_id");
+        return { subscriptionTier: productData?.subscription_tier, error: null };
     } catch (error) {
         return {
             subscriptionTier: null,
             error: handleSupabaseError({ error, fnTitle: "fetchSubscriptionTier" }),
+        };
+    }
+};
+
+export const fetchPricingModel = async (stripePriceId: string) => {
+    const supabase = createClient();
+
+    try {
+        const { data, error } = await supabase
+            .from("stripe_prices")
+            .select("pricing_model")
+            .eq("stripe_price_id", stripePriceId)
+            .single();
+
+        if (error) throw error;
+
+        return { pricingModel: data?.pricing_model, error: null };
+    } catch (error) {
+        return {
+            pricingModel: null,
+            error: handleSupabaseError({ error, fnTitle: "fetchPricingModel" }),
         };
     }
 };

@@ -1,34 +1,41 @@
-import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
-import { ProductPricing } from "@/interfaces/ProductInterfaces";
+import { getCurrency, isOneTimePaymentEnabled } from "@/config/paymentConfig";
+import { PricingModel, StripePrice, SubscriptionInterval } from "@/interfaces/StripePrices";
 
 interface PlanPricingProps {
-    pricing: ProductPricing;
-    billingCycle: "monthly" | "yearly";
+    prices: StripePrice[];
+    billingCycle: SubscriptionInterval;
 }
 
-export const PlanPricing = ({ pricing, billingCycle }: PlanPricingProps) => {
+export const PlanPricing = ({ prices, billingCycle }: PlanPricingProps) => {
     const getPriceInfo = () => {
         if (isOneTimePaymentEnabled()) {
+            const oneTimePrice = prices.find((p) => p.pricing_model === PricingModel.ONE_TIME);
+
             return {
-                current: pricing?.one_time?.current ?? 0,
-                previous: pricing?.one_time?.previous ?? 0,
-                currency: pricing?.one_time?.currency ?? "USD",
+                current: oneTimePrice?.current_amount ?? 0,
+                previous: oneTimePrice?.previous_amount ?? 0,
             };
         }
 
-        if (billingCycle === "yearly") {
+        if (billingCycle === SubscriptionInterval.YEARLY) {
+            const yearlyPrice = prices.find(
+                (p) => p.subscription_interval === SubscriptionInterval.YEARLY,
+            );
+
             return {
-                current: pricing?.subscription?.yearly?.current ?? 0,
-                previous: pricing?.subscription?.yearly?.previous ?? 0,
-                currency: pricing?.subscription?.yearly?.currency ?? "USD",
+                current: yearlyPrice?.current_amount ?? 0,
+                previous: yearlyPrice?.previous_amount ?? 0,
+            };
+        } else {
+            const monthlyPrice = prices.find(
+                (p) => p.subscription_interval === SubscriptionInterval.MONTHLY,
+            );
+
+            return {
+                current: monthlyPrice?.current_amount ?? 0,
+                previous: monthlyPrice?.previous_amount ?? 0,
             };
         }
-
-        return {
-            current: pricing?.subscription?.monthly?.current ?? 0,
-            previous: pricing?.subscription?.monthly?.previous ?? 0,
-            currency: pricing?.subscription?.monthly?.currency ?? "USD",
-        };
     };
 
     const priceInfo = getPriceInfo();
@@ -37,17 +44,21 @@ export const PlanPricing = ({ pricing, billingCycle }: PlanPricingProps) => {
         <div className="mb-6">
             {priceInfo.previous !== 0 && (
                 <p className="font-medium text-neutral-600 line-through">
-                    {priceInfo.previous} {priceInfo.currency}
+                    {priceInfo.previous} {getCurrency()}
                 </p>
             )}
             <div className="mb-6">
                 <span className="text-3xl font-medium">
-                    {priceInfo.currency === "EUR" ? "€" : "$"}
+                    {getCurrency() === "EUR" ? "€" : "$"}
                     {priceInfo.current}
                 </span>
                 <span className="ml-2 text-neutral-600">
                     {!isOneTimePaymentEnabled() &&
-                        `/${billingCycle === "yearly" ? "per 12 months" : "per month"}`}
+                        `/${
+                            billingCycle === SubscriptionInterval.YEARLY
+                                ? "per 12 months"
+                                : "per month"
+                        }`}
                 </span>
             </div>
         </div>

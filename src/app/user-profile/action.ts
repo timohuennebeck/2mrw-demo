@@ -56,13 +56,10 @@ export const updateUserProfileImage = async ({
 
         if (profileImageUrl && hasProfileImage) {
             const oldStoragePath = profileImageUrl.split("profile_images/")[1];
-            console.log("→ [LOG] oldStoragePath", oldStoragePath);
 
-            const { data, error: deleteError } = await supabase.storage
+            const { error: deleteError } = await supabase.storage
                 .from("profile_images")
                 .remove([oldStoragePath]);
-
-            console.log("→ [LOG] data", data);
 
             if (deleteError) throw deleteError;
         }
@@ -94,7 +91,6 @@ export const updateUserProfileImage = async ({
 
         return { success: true, publicUrl };
     } catch (error) {
-        console.log("→ [LOG] error", error);
         return { error: "Error uploading profile image" };
     }
 };

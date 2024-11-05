@@ -10,11 +10,17 @@ import { hasUserPremiumOrFreeTrial } from "@/lib/helper/subscriptionHelper";
 import { useSubscription } from "@/hooks/useSubscription";
 import { useFreeTrial } from "@/hooks/useFreeTrial";
 import { useSupabaseRealtime } from "@/hooks/useSupabaseRealtime";
+import CustomPopup from "@/components/CustomPopup";
+import { Check } from "lucide-react";
+import { useState } from "react";
+import useSuccessParam from "@/hooks/useSuccessParam";
 
 const BillingPage = () => {
     const { authUser } = useSession();
     const { invalidateSubscription } = useSubscription(authUser?.id ?? "");
     const { invalidateFreeTrial } = useFreeTrial(authUser?.id ?? "");
+
+    const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
     const hasPremiumOrFreeTrial = hasUserPremiumOrFreeTrial(authUser);
 
@@ -30,8 +36,25 @@ const BillingPage = () => {
         onChange: invalidateFreeTrial,
     });
 
+    useSuccessParam({
+        onSuccess: () => setShowSuccessPopup(true),
+        redirectPath: "/billing",
+    });
+
     return (
         <DashboardLayout>
+            {showSuccessPopup && (
+                <CustomPopup
+                    title="Subscription Confirmed!"
+                    description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
+                    icon={<Check size={32} strokeWidth={1.5} className="text-green-500" />}
+                    iconBackgroundColor="bg-green-100"
+                    mainButtonText="Continue"
+                    onConfirm={() => setShowSuccessPopup(false)}
+                    hideSecondaryButton
+                />
+            )}
+
             <div className="container max-w-3xl bg-white">
                 <HeaderWithDescription
                     title="Billing"

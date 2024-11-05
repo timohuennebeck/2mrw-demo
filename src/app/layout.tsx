@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { Providers } from "./providers";
-import SubscriptionConfirmationHandler from "@/components/SubscriptionConfirmationHandler";
 
 export const metadata: Metadata = {
     title: "Boilerplate",
@@ -21,7 +20,6 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
                 </Providers>
 
                 <Toaster position="bottom-right" />
-                <SubscriptionConfirmationHandler />
             </body>
         </html>
     );

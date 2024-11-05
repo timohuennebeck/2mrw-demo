@@ -1,129 +1,62 @@
 import { TextConstants } from "@/constants/TextConstants";
 import CustomButton from "../CustomButton";
 import HeaderWithDescription from "../HeaderWithDescription";
-import { paymentConfig } from "@/config/paymentConfig";
+import { getCurrency, paymentConfig } from "@/config/paymentConfig";
 import { toast } from "sonner";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useSession } from "@/context/SessionContext";
 import { useProducts } from "@/context/ProductsContext";
 import useFreeTrial from "@/hooks/useFreeTrial";
 import useSubscription from "@/hooks/useSubscription";
-import { Product } from "@/interfaces/ProductInterfaces";
-import {
-    getProductDetailsByStripePriceId,
-    getStripePriceIdBasedOnSelectedPlan,
-} from "@/lib/helper/priceHelper";
 import { initiateStripeCheckoutProcess } from "@/lib/stripe/stripeUtils";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import CustomPopup from "../CustomPopup";
 import { ShieldAlert } from "lucide-react";
-
-const _isExactPlanMatch = ({
-    activeStripePriceId,
-    isOneTimePaymentPlan,
-    selectedBillingCycle,
-    product,
-}: {
-    activeStripePriceId: string;
-    isOneTimePaymentPlan: boolean;
-    selectedBillingCycle: string;
-    product: Product;
-}) => {
-    if (!activeStripePriceId) return false;
-
-    const currentPlanPriceId = isOneTimePaymentPlan
-        ? product.pricing.one_time?.stripe_price_id
-        : selectedBillingCycle === "monthly"
-          ? product.pricing.subscription?.monthly?.stripe_price_id
-          : product.pricing.subscription?.yearly?.stripe_price_id;
-
-    return (
-        _isProductSubscribed({ activeStripePriceId, product }) &&
-        activeStripePriceId === currentPlanPriceId
-    );
-};
-
-const _isProductSubscribed = ({
-    activeStripePriceId,
-    product,
-}: {
-    activeStripePriceId: string;
-    product: Product;
-}) => {
-    if (!activeStripePriceId) return false;
-
-    // get all possible price IDs for this product
-    const productPriceIds = [
-        product.pricing.subscription?.monthly?.stripe_price_id,
-        product.pricing.subscription?.yearly?.stripe_price_id,
-        product.pricing.one_time?.stripe_price_id,
-    ].filter(Boolean);
-
-    // check if the active price ID matches any of the product's price IDs
-    return productPriceIds.includes(activeStripePriceId);
-};
+import { SubscriptionInterval } from "@/interfaces/StripePrices";
+import { PricingService } from "@/services/PricingService";
+import { PricingModel } from "@/interfaces/StripePrices";
+import useClickOutside from "@/hooks/useClickOutside";
+import { useRouter } from "next/navigation";
 
 const ChangeSubscriptionPlan = () => {
-    const { products } = useProducts();
     const { authUser } = useSession();
-
+    const { products } = useProducts();
     const { subscription } = useSubscription(authUser?.id ?? "");
     const { freeTrial } = useFreeTrial(authUser?.id ?? "");
 
-    const formRef = useRef<HTMLFormElement>(null);
+    const router = useRouter();
+    const formRef = useRef(null);
 
-    const [selectedPlan, setSelectedPlan] = useState("");
-    const [selectedBillingCycle, setSelectedBillingCycle] = useState("monthly");
+    const [selectedPlanId, setSelectedPlanId] = useState("");
+    const [subscriptionInterval, setSubscriptionInterval] = useState(SubscriptionInterval.MONTHLY);
     const [isLoading, setIsLoading] = useState(false);
     const [showConfirmationPopup, setShowConfirmationPopup] = useState(false);
-    const [selectedProductDetails, setSelectedProductDetails] = useState<Product | null>(null);
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (
-                !showConfirmationPopup &&
-                formRef.current &&
-                !formRef.current.contains(event.target as Node)
-            ) {
-                setSelectedPlan("");
-            }
-        };
-
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [showConfirmationPopup]);
+    useClickOutside({
+        ref: formRef,
+        handler: () => setSelectedPlanId(""),
+        enabled: !showConfirmationPopup,
+    });
 
     if (!products) return null;
 
-    const isOnFreeTrial = freeTrial?.status === FreeTrialStatus.ACTIVE;
-    const activeStripePriceId = subscription?.stripe_price_id || freeTrial?.stripe_price_id;
+    const userIsOnFreeTrial = freeTrial?.status === FreeTrialStatus.ACTIVE;
+
+    const activeStripePriceId = subscription?.stripe_price_id ?? freeTrial?.stripe_price_id;
     const activeProductDetails = activeStripePriceId
-        ? getProductDetailsByStripePriceId(products, activeStripePriceId)
+        ? PricingService.getProductDetailsByStripePriceId(products, activeStripePriceId)
         : null;
-    const isOneTimePaymentPlan = activeProductDetails?.price?.interval === "one-time";
 
-    const filteredProducts = products?.filter((product: Product) => {
-        if (isOneTimePaymentPlan) {
-            return product.pricing.one_time; // if user is on OTP, only show OTP plans
-        }
-
-        return product.pricing.subscription; // if user is on subscription, only show subscription plans
-    });
+    const isOneTimePaymentPlan = activeProductDetails?.price?.interval === PricingModel.ONE_TIME;
 
     const handleSubscriptionChange = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!authUser?.email || !selectedPlan) {
+        if (!authUser?.email || !selectedPlanId) {
             toast.error("Please select a plan to continue");
             return;
         }
 
-        // find selected product details
-        const selectedProduct = products.find((p) => p.id === selectedPlan);
-        setSelectedProductDetails(selectedProduct || null);
         setShowConfirmationPopup(true);
     };
 
@@ -132,10 +65,10 @@ const ChangeSubscriptionPlan = () => {
             setIsLoading(true);
             setShowConfirmationPopup(false);
 
-            const stripePriceId = getStripePriceIdBasedOnSelectedPlan({
+            const stripePriceId = PricingService.getStripePriceIdBasedOnSelectedPlan({
                 products,
-                selectedPlan,
-                selectedBillingCycle,
+                selectedPlan: selectedPlanId,
+                selectedBillingCycle: subscriptionInterval,
                 isOneTimePaymentPlan,
             });
 
@@ -152,9 +85,7 @@ const ChangeSubscriptionPlan = () => {
                 existingSubscriptionId: subscription?.stripe_subscription_id,
             });
 
-            if (checkoutUrl) {
-                window.location.href = checkoutUrl;
-            }
+            router.replace(checkoutUrl ?? "/billing");
         } catch (error) {
             console.error("Error changing subscription:", error);
             toast.error("Failed to change subscription plan");
@@ -165,10 +96,10 @@ const ChangeSubscriptionPlan = () => {
 
     return (
         <>
-            {showConfirmationPopup && selectedProductDetails && (
+            {showConfirmationPopup && (
                 <CustomPopup
                     title="Confirm Subscription Change"
-                    description={`Change current subscription plan from ${activeProductDetails?.name} to ${selectedProductDetails?.name}?`}
+                    description={`Change current subscription plan from ${activeProductDetails?.name} to ${products.find((p) => p.id === selectedPlanId)?.name}?`}
                     icon={<ShieldAlert size={32} strokeWidth={1.5} className="text-yellow-500" />}
                     iconBackgroundColor="bg-yellow-100"
                     mainButtonText="Confirm"
@@ -187,45 +118,52 @@ const ChangeSubscriptionPlan = () => {
                     <div className="mb-6 flex space-x-4">
                         <CustomButton
                             title={TextConstants.TEXT__MONTHLY.toUpperCase()}
-                            onClick={() => setSelectedBillingCycle("monthly")}
-                            isSecondary={selectedBillingCycle !== "monthly"}
+                            onClick={() => setSubscriptionInterval(SubscriptionInterval.MONTHLY)}
+                            isSecondary={subscriptionInterval !== SubscriptionInterval.MONTHLY}
                         />
                         <CustomButton
                             title={`${TextConstants.TEXT__YEARLY.toUpperCase()} (${paymentConfig.subscriptionSettings.yearlyDiscountPercentage}%)`}
-                            onClick={() => setSelectedBillingCycle("yearly")}
-                            isSecondary={selectedBillingCycle !== "yearly"}
+                            onClick={() => setSubscriptionInterval(SubscriptionInterval.YEARLY)}
+                            isSecondary={subscriptionInterval !== SubscriptionInterval.YEARLY}
                         />
                     </div>
                 )}
 
                 <form onSubmit={handleSubscriptionChange} ref={formRef}>
                     <div className="space-y-4">
-                        {filteredProducts?.map((product) => {
-                            const price = isOneTimePaymentPlan
-                                ? product.pricing.one_time
-                                : selectedBillingCycle === "monthly"
-                                  ? product.pricing.subscription?.monthly
-                                  : product.pricing.subscription?.yearly;
+                        {products?.map((product) => {
+                            const isFreeProduct = product.pricing_model === PricingModel.FREE;
+                            const price = !isFreeProduct
+                                ? PricingService.getPrice({
+                                      product,
+                                      pricingModel: isOneTimePaymentPlan
+                                          ? PricingModel.ONE_TIME
+                                          : PricingModel.SUBSCRIPTION,
+                                      interval:
+                                          subscriptionInterval === SubscriptionInterval.MONTHLY
+                                              ? SubscriptionInterval.MONTHLY
+                                              : SubscriptionInterval.YEARLY,
+                                  })
+                                : null;
 
-                            // check if this is the current active plan
-                            const isCurrentPlan = _isExactPlanMatch({
-                                activeStripePriceId,
-                                isOneTimePaymentPlan,
-                                selectedBillingCycle,
-                                product,
-                            });
+                            const isSubscribedToPlan = isFreeProduct
+                                ? activeProductDetails?.id === product.id
+                                : PricingService.isSubscribedToPlan(
+                                      price?.stripe_price_id ?? "",
+                                      activeStripePriceId,
+                                  );
 
-                            const isDisabled = isCurrentPlan && !isOnFreeTrial;
+                            const isDisabled = isSubscribedToPlan && !userIsOnFreeTrial;
 
                             return (
                                 <div
                                     key={product.id}
                                     className={`relative rounded-lg border ${
-                                        selectedPlan === product.id
+                                        selectedPlanId === product.id
                                             ? "border-blue-500 bg-blue-50"
                                             : "border-gray-200 bg-white"
                                     } ${isDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"} p-4`}
-                                    onClick={() => !isDisabled && setSelectedPlan(product.id)}
+                                    onClick={() => !isDisabled && setSelectedPlanId(product.id)}
                                 >
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center">
@@ -234,7 +172,7 @@ const ChangeSubscriptionPlan = () => {
                                                 id={`${product.id}-plan`}
                                                 name="subscription-plan"
                                                 value={product.id}
-                                                checked={selectedPlan === product.id}
+                                                checked={selectedPlanId === product.id}
                                                 onChange={() => {}}
                                                 disabled={isDisabled}
                                                 className="mr-3 h-4 w-4 text-blue-600 disabled:opacity-50"
@@ -249,23 +187,26 @@ const ChangeSubscriptionPlan = () => {
                                             >
                                                 <div className="font-medium text-gray-700">
                                                     {product.name}
-                                                    {isCurrentPlan && " (Current Plan)"}
+                                                    {isSubscribedToPlan && " (Current Plan)"}
                                                 </div>
-                                                <div className="text-gray-500">
+                                                <div className="pr-8 text-gray-500">
                                                     {product.description}
                                                 </div>
                                             </label>
                                         </div>
                                         <div className="text-right">
                                             <div className="whitespace-nowrap font-medium text-gray-700">
-                                                {price
-                                                    ? `${price.current} ${price.currency}`
-                                                    : "N/A"}
+                                                {isFreeProduct
+                                                    ? "Free"
+                                                    : price
+                                                      ? `${price.current_amount} ${getCurrency()}`
+                                                      : "N/A"}
                                             </div>
                                             <div className="whitespace-nowrap text-sm text-gray-500">
-                                                {isOneTimePaymentPlan
-                                                    ? "ONE-TIME PAYMENT"
-                                                    : selectedBillingCycle === "monthly"
+                                                {isFreeProduct
+                                                    ? "FOREVER"
+                                                    : price?.subscription_interval ===
+                                                        SubscriptionInterval.MONTHLY
                                                       ? "PER MONTH"
                                                       : "PER YEAR"}
                                             </div>
@@ -281,11 +222,11 @@ const ChangeSubscriptionPlan = () => {
                             title={
                                 !subscription
                                     ? TextConstants.TEXT__UNLOCK_PLAN
-                                    : isOnFreeTrial
+                                    : userIsOnFreeTrial
                                       ? TextConstants.TEXT__UPGRADE_PLAN
                                       : TextConstants.TEXT__CHANGE_PLAN
                             }
-                            disabled={!selectedPlan || isLoading}
+                            disabled={!selectedPlanId || isLoading}
                             isLoading={isLoading}
                         />
                     </div>

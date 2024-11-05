@@ -1,4 +1,5 @@
 export enum PricingModel {
+    FREE = "FREE",
     ONE_TIME = "ONE_TIME",
     SUBSCRIPTION = "SUBSCRIPTION",
 }

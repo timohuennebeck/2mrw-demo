@@ -1,6 +1,6 @@
 "use client";
 
-import { Product, ProductWithPrices } from "@/interfaces/ProductInterfaces";
+import { ProductWithPrices } from "@/interfaces/ProductInterfaces";
 import { PlanButton } from "./PlanButton";
 import { PlanFeatures } from "./PlanFeatures";
 import { PlanHeader } from "./PlanHeader";
