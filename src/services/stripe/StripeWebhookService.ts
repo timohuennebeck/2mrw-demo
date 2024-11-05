@@ -104,9 +104,11 @@ const _getSubscriptionDetails = async (stripePriceId: string) => {
     const { billingPlan } = await fetchBillingPlan(stripePriceId);
 
     if (!subscriptionTier || !billingPlan) {
-        throw new Error(
-            !subscriptionTier ? "SubscriptionTier not found!" : "BillingPlan not found!",
-        );
+        const messageToShow = !subscriptionTier
+            ? "SubscriptionTier not found!"
+            : "BillingPlan not found!";
+
+        throw new Error(messageToShow);
     }
 
     return { subscriptionTier, billingPlan };
