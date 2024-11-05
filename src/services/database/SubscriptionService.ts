@@ -157,13 +157,13 @@ export const updateUserSubscription = async ({
     stripePriceId,
     subscriptionTier,
     stripeSubscriptionId,
+    endDate,
     billingPlan,
 }: UpdateUserSubscriptionStatusParams) => {
     try {
-        const { supabase } = await getClients();
-        const endDate = await getEndDate(stripeSubscriptionId ?? "");
+        const { adminSupabase } = await getClients();
 
-        const { error } = await supabase
+        const { error } = await adminSupabase
             .from("purchased_subscriptions")
             .update({
                 stripe_price_id: stripePriceId,
@@ -176,6 +176,13 @@ export const updateUserSubscription = async ({
             .eq("user_id", userId);
 
         if (error) throw error;
+
+        await adminSupabase.auth.admin.updateUserById(userId, {
+            user_metadata: {
+                subscription_status: SubscriptionStatus.ACTIVE,
+                subscription_updated_at: moment().toISOString(),
+            },
+        });
 
         return { success: true, error: null };
     } catch (error) {
@@ -202,6 +209,7 @@ export const cancelUserSubscription = async (userId: string, endDate: string) =>
         await adminSupabase.auth.admin.updateUserById(userId, {
             user_metadata: {
                 subscription_status: SubscriptionStatus.CANCELLED,
+                subscription_updated_at: moment().toISOString(),
             },
         });
 

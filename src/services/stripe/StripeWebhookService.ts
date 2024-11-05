@@ -1,12 +1,12 @@
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import moment from "moment";
 import Stripe from "stripe";
-import { isFreeTrialEnabled } from "@/config/paymentConfig";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { endUserFreeTrial, fetchUserFreeTrial } from "@/services/database/FreeTrialService";
-import { getClients } from "../database/BaseService";
+import { getClients, getEndDate } from "../database/BaseService";
 import { fetchBillingPlan, fetchSubscriptionTier } from "../database/ProductService";
 import {
+    cancelUserSubscription,
     fetchUserSubscription,
     startUserSubscription,
     updateUserSubscription,
@@ -22,6 +22,16 @@ const _handleFreeTrial = async (userId: string) => {
         const { error } = await endUserFreeTrial(userId);
         if (error) throw new Error("Failed to end free trial!");
     }
+};
+
+const _handleSubscriptionCancellation = async (
+    userId: string,
+    subscription: Stripe.Subscription,
+) => {
+    const endDateFromStripe = moment.unix(subscription.current_period_end).toISOString();
+    const { error: cancelError } = await cancelUserSubscription(userId, endDateFromStripe);
+
+    if (cancelError) throw cancelError;
 };
 
 const _getSubscriptionTierBillingPlan = async (stripePriceId: string) => {
@@ -48,6 +58,9 @@ export const handleCheckoutSessionCompleted = async (
     const stripePriceId = session.line_items?.data[0].price?.id;
     if (!stripePriceId) throw new Error("Stripe price id is missing!");
 
+    const stripeSubscriptionId = session.subscription?.toString();
+    if (!stripeSubscriptionId) throw new Error("Stripe subscription id is missing!");
+
     try {
         await _handleFreeTrial(userId);
 
@@ -55,11 +68,15 @@ export const handleCheckoutSessionCompleted = async (
             await _getSubscriptionTierBillingPlan(stripePriceId);
         const { subscription } = await fetchUserSubscription(userId);
 
+        const endDate = await getEndDate(stripeSubscriptionId ?? "");
+        if (!endDate) throw new Error("End date is missing!");
+
         const dataToUpdate = {
             userId,
             stripePriceId,
             subscriptionTier,
-            stripeSubscriptionId: session.subscription?.toString(),
+            stripeSubscriptionId,
+            endDate,
             billingPlan,
         };
 
@@ -87,69 +104,27 @@ export const handleSubscriptionUpdated = async (
     subscription: Stripe.Subscription,
     userId: string,
 ) => {
-    if (!userId) throw new Error("No user ID provided");
+    if (!userId) throw new Error("User id is required!");
 
-    const { adminSupabase } = await getClients();
     const stripePriceId = subscription.items.data[0].price.id;
+    if (!stripePriceId) throw new Error("Stripe price id is missing!");
 
     try {
-        // check if the subscription is set to cancel at the end of the current period
         if (subscription.cancel_at_period_end) {
-            const { error: updateError } = await adminSupabase
-                .from("purchased_subscriptions")
-                .update({
-                    status: SubscriptionStatus.CANCELLED,
-                    end_date: moment.unix(subscription.current_period_end).toISOString(),
-                    updated_at: moment().toISOString(),
-                })
-                .eq("user_id", userId);
-
-            if (updateError) {
-                console.error("Error updating purchased_subscriptions:", updateError);
-                throw updateError;
-            }
-
-            await adminSupabase.auth.admin.updateUserById(userId, {
-                user_metadata: {
-                    subscription_status: SubscriptionStatus.CANCELLED,
-                    subscription_updated_at: moment().toISOString(),
-                },
-            });
-
-            return { success: true };
-        } else {
-            const { subscriptionTier } = await fetchSubscriptionTier(stripePriceId);
-            if (!subscriptionTier) throw new Error("SubscriptionTier not found");
-
-            const { billingPlan } = await fetchBillingPlan(stripePriceId);
-            if (!billingPlan) throw new Error("BillingPlan not found");
-
-            // update subscription end date based on current period end
-            const { error: updateError } = await adminSupabase
-                .from("purchased_subscriptions")
-                .update({
-                    stripe_price_id: stripePriceId,
-                    status: SubscriptionStatus.ACTIVE,
-                    subscription_tier: subscriptionTier,
-                    stripe_subscription_id: subscription.id,
-                    billing_plan: billingPlan,
-                    end_date: moment.unix(subscription.current_period_end).toISOString(),
-                    updated_at: moment().toISOString(),
-                })
-                .eq("user_id", userId);
-
-            if (updateError) {
-                console.error("Error updating purchased_subscriptions:", updateError);
-                throw updateError;
-            }
-
-            await adminSupabase.auth.admin.updateUserById(userId, {
-                user_metadata: {
-                    subscription_status: SubscriptionStatus.ACTIVE,
-                    subscription_updated_at: moment().toISOString(),
-                },
-            });
+            await _handleSubscriptionCancellation(userId, subscription); // check if the subscription is set to cancel at the end of the current period
         }
+
+        const { subscriptionTier, billingPlan } =
+            await _getSubscriptionTierBillingPlan(stripePriceId);
+
+        await updateUserSubscription({
+            userId,
+            stripePriceId,
+            subscriptionTier,
+            stripeSubscriptionId: subscription.id,
+            endDate: moment.unix(subscription.current_period_end).toISOString(),
+            billingPlan,
+        });
 
         return { success: true };
     } catch (error) {

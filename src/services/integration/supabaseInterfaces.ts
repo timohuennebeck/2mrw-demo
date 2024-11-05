@@ -1,4 +1,3 @@
-import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
 import { BillingPlan } from "@/interfaces/StripePrices";
 
@@ -15,6 +14,7 @@ export interface UpdateUserSubscriptionStatusParams {
     stripePriceId: string;
     subscriptionTier: SubscriptionTier;
     stripeSubscriptionId?: string;
+    endDate: string;
     billingPlan: BillingPlan;
 }
 
