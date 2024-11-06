@@ -70,7 +70,7 @@ const BillingPage = () => {
                 />
 
                 <div className="flex flex-col gap-6">
-                    <BillingPortal />
+                    {subscription?.billing_plan === BillingPlan.RECURRING && <BillingPortal />}
 
                     {!products ? (
                         <div className="flex flex-col gap-6">

@@ -1,7 +1,7 @@
 import { getStripeCustomerId, handleStripePortalSession } from "@/lib/stripe/stripeUtils";
 import CustomButton from "../CustomButton";
 import HeaderWithDescription from "../HeaderWithDescription";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSession } from "@/context/SessionContext";
 
 const BillingPortal = () => {
