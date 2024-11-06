@@ -30,8 +30,6 @@ const _getProductPriceByStripePriceId = (product: ProductWithPrices, stripePrice
     const price = product.prices.find((p) => p.stripe_price_id === stripePriceId);
     if (!price) return null;
 
-    console.log("→ [LOG] price", price);
-
     const interval = _getIntervalFromPrice(price);
     if (!interval) return null;
 

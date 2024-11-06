@@ -36,22 +36,26 @@ export const _handleSignOut = async (router: AppRouterInstance) => {
 };
 
 const _handleItemClick = (item: NavigationItem, router: AppRouterInstance) => {
-    // handle external links
-    if (item.isExternal && item.link) {
-        window.open(item.link, "_blank");
-        return;
-    }
+    try {
+        // handle external links
+        if (item.isExternal && item.link) {
+            window.open(item.link, "_blank");
+            return;
+        }
 
-    // handle custom onClick handlers
-    if (item.onClick) {
-        item.onClick();
-        return;
-    }
+        // handle custom onClick handlers
+        if (item.onClick) {
+            item.onClick();
+            return;
+        }
 
-    // handle internal navigation
-    if (item.link) {
-        router.push(item.link);
-        return;
+        // handle internal navigation
+        if (item.link) {
+            router.push(item.link);
+            return;
+        }
+    } catch (error) {
+        console.error("Navigation error:", error);
     }
 };
 

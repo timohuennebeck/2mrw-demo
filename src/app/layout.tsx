@@ -8,13 +8,10 @@ export const metadata: Metadata = {
     description: "Created by Timo Huennebeck",
 };
 
-const RootLayout = async ({ children }: { children: React.ReactNode }) => {
-    // extensions similar to Grammarly, ColorZilla and LanguageTool causes a warning
-    // enabling 'suppressHydrationWarning' disables this in the console
-
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <html className="h-full" lang="en" suppressHydrationWarning={true}>
-            <body className={`h-full`}>
+            <body className={`h-full`} suppressHydrationWarning={true}>
                 <Providers>
                     {children}
                 </Providers>
