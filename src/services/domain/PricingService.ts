@@ -65,7 +65,7 @@ export const getProductDetailsByStripePriceId = (
      * so we need to get the free product details
      */
 
-    if (stripePriceId === null) {
+    if (!stripePriceId) {
         const freeProduct = products.find((p) => p.billing_plan === BillingPlan.NONE);
         if (!freeProduct) return null;
 

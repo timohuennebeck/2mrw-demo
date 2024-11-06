@@ -83,7 +83,7 @@ export const middleware = async (request: nextRequest) => {
      */
 
     let response;
-    if (!hasPremiumOrFreeTrial) {
+    if (hasPremiumOrFreeTrial) {
         response = isPricingPlanPage
             ? nextResponse.next({ request })
             : nextResponse.redirect(new URL("/choose-pricing-plan", request.url));

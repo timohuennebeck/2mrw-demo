@@ -19,7 +19,7 @@ const useSuccessParam = ({ onSuccess, redirectPath }: UseSuccessParamProps) => {
                 if (redirectPath) {
                     router.replace(redirectPath); // clean up the URL without the success parameter
                 }
-            }, 250); // small delay before showing the popup to make it feel more natural
+            }, 1000); // small delay before showing the popup to make it feel more natural
         }
     }, [searchParams, router, onSuccess, redirectPath]);
 };

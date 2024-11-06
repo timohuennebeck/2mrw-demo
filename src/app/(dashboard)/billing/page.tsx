@@ -52,6 +52,7 @@ const BillingPage = () => {
                     mainButtonText="Continue"
                     onConfirm={() => setShowSuccessPopup(false)}
                     hideSecondaryButton
+                    showConfetti
                 />
             )}
 

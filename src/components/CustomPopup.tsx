@@ -37,7 +37,7 @@ const CustomPopup = ({
                 />
             )}
 
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 animate-fadeIn">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800/50 animate-fadeIn">
                 <div className="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-xl">
                     <div className="mb-6 flex justify-center">
                         {icon && (
