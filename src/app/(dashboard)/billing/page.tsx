@@ -28,7 +28,7 @@ const BillingPage = () => {
     const hasPremiumOrFreeTrial = hasUserPremiumOrFreeTrial(authUser);
 
     useSupabaseRealtime({
-        table: "purchased_subscriptions",
+        table: "user_subscriptions",
         filter: `user_id=eq.${authUser?.id}`,
         onChange: invalidateSubscription,
     });

@@ -11,7 +11,7 @@ export const GET = async () => {
 
     try {
         const { data: activeSubscriptions, error: fetchError } = await adminSupabase
-            .from("purchased_subscriptions")
+            .from("user_subscriptions")
             .select("user_id, status, end_date")
             .in("status", [SubscriptionStatus.ACTIVE, SubscriptionStatus.CANCELLED]);
 

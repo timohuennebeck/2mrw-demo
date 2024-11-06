@@ -42,7 +42,7 @@ CREATE TABLE
     );
 
 CREATE TABLE
-    purchased_subscriptions (
+    user_subscriptions (
         id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid (),
         stripe_price_id TEXT NOT NULL,
         stripe_subscription_id TEXT,

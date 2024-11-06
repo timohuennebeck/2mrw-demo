@@ -69,7 +69,7 @@ export const fetchUserSubscription = async (userId: string) => {
         };
 
         const { rowExists, error: rowCheckError } = await checkRowExists(
-            "purchased_subscriptions",
+            "user_subscriptions",
             userId,
         );
 
@@ -78,7 +78,7 @@ export const fetchUserSubscription = async (userId: string) => {
         if (!rowExists) return defaultResponse;
 
         const { data: subscription, error } = await supabase
-            .from("purchased_subscriptions")
+            .from("user_subscriptions")
             .select("*")
             .eq("user_id", userId)
             .single();
@@ -109,7 +109,7 @@ export const startUserSubscription = async ({
 
         const endDate = await getEndDate(stripeSubscriptionId ?? "");
 
-        const { error } = await adminSupabase.from("purchased_subscriptions").insert({
+        const { error } = await adminSupabase.from("user_subscriptions").insert({
             user_id: userId,
             stripe_price_id: stripePriceId,
             status: SubscriptionStatus.ACTIVE,
@@ -146,7 +146,7 @@ export const endUserSubscription = async (userId: string) => {
         const { adminSupabase } = await getClients();
 
         const { error } = await adminSupabase
-            .from("purchased_subscriptions")
+            .from("user_subscriptions")
             .update({
                 updated_at: moment().toISOString(),
                 status: SubscriptionStatus.EXPIRED,
@@ -182,7 +182,7 @@ export const updateUserSubscription = async ({
         const { adminSupabase } = await getClients();
 
         const { error } = await adminSupabase
-            .from("purchased_subscriptions")
+            .from("user_subscriptions")
             .update({
                 stripe_price_id: stripePriceId,
                 subscription_tier: subscriptionTier,
@@ -216,7 +216,7 @@ export const cancelUserSubscription = async (userId: string, endDate: string) =>
         const { adminSupabase } = await getClients();
 
         const { error } = await adminSupabase
-            .from("purchased_subscriptions")
+            .from("user_subscriptions")
             .update({
                 updated_at: moment().toISOString(),
                 status: SubscriptionStatus.CANCELLED,
