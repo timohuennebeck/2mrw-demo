@@ -8,8 +8,6 @@ import { PlanPricing } from "./PlanPricing";
 import { User } from "@supabase/supabase-js";
 import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
-import { FreeTrial } from "@/interfaces/FreeTrial";
-import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { TextConstants } from "@/constants/TextConstants";
 import { BillingPlan, StripePrice, SubscriptionInterval } from "@/interfaces/StripePrices";
@@ -17,8 +15,6 @@ import { getFeaturesWithAvailability } from "@/services/domain/FeatureService";
 
 interface PricingPlanCardProps extends ProductWithPrices {
     supabaseUser: User | null;
-    freeTrialStatus: FreeTrialStatus;
-    freeTrialData: FreeTrial;
     subscriptionStatus: SubscriptionStatus;
     subscriptionData: PurchasedSubscription;
     isLoading: boolean;
@@ -48,8 +44,6 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
         name,
         prices,
         description,
-        freeTrialStatus,
-        freeTrialData,
         subscriptionStatus,
         subscriptionData,
         isLoading,
@@ -77,11 +71,8 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
         <div className="relative flex max-w-lg flex-col justify-between rounded-md border p-8">
             <section className="mb-6">
                 <PlanHeader
-                    freeTrialData={freeTrialData}
-                    freeTrialStatus={freeTrialStatus}
                     isHighlighted={is_highlighted}
                     name={name}
-                    stripePriceId={_getStripePriceId(prices, billingCycle) ?? ""}
                 />
 
                 <PlanPricing prices={prices} billingCycle={billingCycle} />
@@ -93,7 +84,6 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
 
             <section>
                 <PlanButton
-                    freeTrialStatus={freeTrialStatus}
                     isLoading={isLoading}
                     subscriptionTier={subscription_tier}
                     subscriptionData={subscriptionData}

@@ -7,7 +7,6 @@ import { useEffect } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/qClient/qClient";
 import { fetchUserSubscription } from "@/services/database/SubscriptionService";
-import { fetchUserFreeTrial } from "@/services/database/FreeTrialService";
 import { fetchUser } from "@/services/database/UserService";
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
@@ -31,10 +30,6 @@ const PreloaderWrapper = ({ children }: { children: React.ReactNode }) => {
 
             try {
                 await Promise.all([
-                    queryClient.prefetchQuery({
-                        queryKey: ["freeTrial", authUser.id],
-                        queryFn: () => fetchUserFreeTrial(authUser.id),
-                    }),
                     queryClient.prefetchQuery({
                         queryKey: ["subscription", authUser.id],
                         queryFn: () => fetchUserSubscription(authUser.id),

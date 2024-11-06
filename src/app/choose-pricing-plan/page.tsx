@@ -2,7 +2,6 @@
 
 import { PricingPlanCard } from "@/components/PricingPlan/PricingPlanCard";
 import { PricingPlanCardSkeleton } from "@/components/ui/PricingPlanCardSkeleton";
-import { useFreeTrial } from "@/hooks/useFreeTrial";
 import { useSubscription } from "@/hooks/useSubscription";
 import { ProductWithPrices } from "@/interfaces/ProductInterfaces";
 import { useState } from "react";
@@ -25,18 +24,10 @@ const ChoosePricingPlanPage = () => {
     const userId = authUser?.id;
 
     const {
-        status: freeTrialStatus,
-        freeTrial: freeTrialData,
-        isLoading: isFreeTrialLoading,
-    } = useFreeTrial(userId ?? "");
-
-    const {
         status: subscriptionStatus,
         subscription: subscriptionData,
         isLoading: isSubscriptionLoading,
     } = useSubscription(userId ?? "");
-
-    const isLoading = isFreeTrialLoading || isSubscriptionLoading;
 
     const productsOrder = [
         SubscriptionTier.FREE,
@@ -56,7 +47,7 @@ const ChoosePricingPlanPage = () => {
                 {!isOneTimePaymentEnabled() && (
                     <div className="mb-8 flex justify-center">
                         <div className="flex gap-2">
-                            {!products || isLoading ? (
+                            {!products || isSubscriptionLoading ? (
                                 <>
                                     <BillingPlanSkeleton />
                                     <BillingPlanSkeleton isYearly />
@@ -97,7 +88,7 @@ const ChoosePricingPlanPage = () => {
                             : "max-w-6xl md:grid-cols-2"
                     }`}
                 >
-                    {!products || isLoading
+                    {!products || isSubscriptionLoading
                         ? isFreePlanEnabled()
                             ? [1, 2, 3].map((_, index) => <PricingPlanCardSkeleton key={index} />)
                             : [1, 2].map((_, index) => <PricingPlanCardSkeleton key={index} />)
@@ -105,12 +96,10 @@ const ChoosePricingPlanPage = () => {
                               <PricingPlanCard
                                   key={index}
                                   {...product}
-                                  freeTrialStatus={freeTrialStatus}
-                                  freeTrialData={freeTrialData}
                                   subscriptionStatus={subscriptionStatus}
                                   subscriptionData={subscriptionData}
                                   supabaseUser={authUser ?? null}
-                                  isLoading={isLoading}
+                                  isLoading={isSubscriptionLoading}
                                   billingCycle={billingCycle}
                                   setBillingCycle={setBillingCycle}
                               />

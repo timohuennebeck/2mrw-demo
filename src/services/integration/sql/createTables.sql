@@ -1,7 +1,5 @@
 CREATE TYPE SubscriptionStatusEnums AS ENUM ('ACTIVE', 'EXPIRED', 'NOT_PURCHASED', 'CANCELLED');
 
-CREATE TYPE FreeTrialStatusEnums AS ENUM ('ACTIVE', 'EXPIRED', 'NOT_STARTED', 'CANCELLED');
-
 CREATE TYPE SubscriptionTierEnums AS ENUM ('TIER_ZERO', 'TIER_ONE', 'TIER_TWO');
 
 CREATE TYPE BillingPlan AS ENUM ('SUBSCRIPTION', 'ONE_TIME');
@@ -29,16 +27,6 @@ CREATE TABLE
         subscription_tier SubscriptionTierEnums NOT NULL,
         created_at TIMESTAMPTZ NOT NULL,
         updated_at TIMESTAMPTZ NOT NULL
-    );
-
-CREATE TABLE
-    free_trials (
-        id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid (),
-        start_date TIMESTAMPTZ NOT NULL,
-        end_date TIMESTAMPTZ NOT NULL,
-        stripe_price_id TEXT NOT NULL,
-        user_id UNIQUE UUID REFERENCES public.users (id) ON DELETE CASCADE NOT NULL,
-        status FreeTrialStatusEnums NOT NULL
     );
 
 CREATE TABLE

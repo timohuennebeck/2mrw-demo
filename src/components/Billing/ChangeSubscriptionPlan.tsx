@@ -6,10 +6,8 @@ import { toast } from "sonner";
 import { useRef, useState } from "react";
 import { useSession } from "@/context/SessionContext";
 import { useProducts } from "@/context/ProductsContext";
-import useFreeTrial from "@/hooks/useFreeTrial";
 import useSubscription from "@/hooks/useSubscription";
 import { cancelStripeSubscription, initiateStripeCheckoutProcess } from "@/lib/stripe/stripeUtils";
-import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import CustomPopup from "../CustomPopup";
 import { ShieldAlert } from "lucide-react";
 import { SubscriptionInterval } from "@/interfaces/StripePrices";
@@ -26,20 +24,10 @@ import { ProductWithPrices } from "@/interfaces/ProductInterfaces";
 import { formatDateToDayMonthYear } from "@/lib/helper/DateHelper";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 
-const _findButtonTitle = ({
-    isFreePlan,
-    subscriptionStatus,
-    freeTrialStatus,
-}: {
-    isFreePlan: boolean;
-    subscriptionStatus: SubscriptionStatus;
-    freeTrialStatus: FreeTrialStatus;
-}) => {
+const _findButtonTitle = (isFreePlan: boolean, subscriptionStatus: SubscriptionStatus) => {
     if (isFreePlan) return TextConstants.TEXT__DOWNGRADE_TO_FREE_PLAN;
 
     if (!subscriptionStatus) return TextConstants.TEXT__UNLOCK_PLAN;
-
-    if (freeTrialStatus === FreeTrialStatus.ACTIVE) return TextConstants.TEXT__UPGRADE_PLAN;
 
     return TextConstants.TEXT__CHANGE_PLAN;
 };
@@ -52,7 +40,6 @@ const ChangeSubscriptionPlan = () => {
     const { authUser } = useSession();
     const { products } = useProducts();
     const { subscription } = useSubscription(authUser?.id ?? "");
-    const { freeTrial } = useFreeTrial(authUser?.id ?? "");
 
     const router = useRouter();
     const formRef = useRef(null);
@@ -70,9 +57,7 @@ const ChangeSubscriptionPlan = () => {
 
     if (!products) return null;
 
-    const userIsOnFreeTrial = freeTrial?.status === FreeTrialStatus.ACTIVE;
-
-    const activeStripePriceId = subscription?.stripe_price_id ?? freeTrial?.stripe_price_id;
+    const activeStripePriceId = subscription?.stripe_price_id;
     const activeProductDetails = getProductDetailsByStripePriceId(products, activeStripePriceId);
 
     const isOneTimePaymentPlan = activeProductDetails?.price?.interval === BillingPlan.ONE_TIME;
@@ -95,7 +80,7 @@ const ChangeSubscriptionPlan = () => {
             ? activeProductDetails?.id === product.id
             : price?.stripe_price_id === activeStripePriceId;
 
-        const isDisabled = isSubscribedToPlan && !userIsOnFreeTrial;
+        const isDisabled = isSubscribedToPlan;
 
         return {
             isFreePlan,
@@ -299,11 +284,10 @@ const ChangeSubscriptionPlan = () => {
 
                     <div className="mt-6 flex items-start justify-start">
                         <CustomButton
-                            title={_findButtonTitle({
-                                isFreePlan: _isFreePlan(products, selectedPlanId),
-                                subscriptionStatus: subscription?.status,
-                                freeTrialStatus: freeTrial?.status,
-                            })}
+                            title={_findButtonTitle(
+                                _isFreePlan(products, selectedPlanId),
+                                subscription?.status,
+                            )}
                             disabled={!selectedPlanId || isLoading}
                             isLoading={isLoading}
                             className={`${

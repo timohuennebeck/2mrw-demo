@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest as nextRequest, NextResponse as nextResponse } from "next/server";
 import { User } from "@supabase/supabase-js";
-import { hasUserPremiumOrFreeTrial } from "./lib/helper/SubscriptionHelper";
+import { hasUserPremiumPlan } from "./lib/helper/SubscriptionHelper";
 
 const HIDE_ON_PREMIUM_PLAN = ["/choose-pricing-plan"];
 
@@ -73,7 +73,7 @@ export const middleware = async (request: nextRequest) => {
     const routingResponse = await _handleRedirection(request, user);
     if (routingResponse) return routingResponse;
 
-    const hasPremiumOrFreeTrial = hasUserPremiumOrFreeTrial(user);
+    const hasPremiumPlan = hasUserPremiumPlan(user);
     const currentPath = request.nextUrl.pathname;
     const isPricingPlanPage = currentPath === "/choose-pricing-plan";
 
@@ -83,7 +83,7 @@ export const middleware = async (request: nextRequest) => {
      */
 
     let response;
-    if (hasPremiumOrFreeTrial) {
+    if (hasPremiumPlan) {
         response = isPricingPlanPage
             ? nextResponse.next({ request })
             : nextResponse.redirect(new URL("/choose-pricing-plan", request.url));

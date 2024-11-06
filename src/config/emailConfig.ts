@@ -19,14 +19,6 @@ interface CompanyInfo {
 }
 
 interface EmailSettings {
-    freeTrialEmail: {
-        subject: string;
-        isEnabled: boolean;
-    };
-    freeTrialReminderEmail: {
-        subject: string;
-        isEnabled: boolean;
-    };
     subscriptionConfirmationEmail: {
         subject: string;
         isEnabled: boolean;
@@ -57,14 +49,6 @@ export const emailConfig = {
     } as SocialLinks,
 
     settings: {
-        freeTrialEmail: {
-            subject: "Your free trial has started!",
-            isEnabled: true,
-        },
-        freeTrialReminderEmail: {
-            subject: "Your free trial is ending soon!",
-            isEnabled: true,
-        },
         subscriptionConfirmationEmail: {
             subject: "Order Confirmation",
             isEnabled: true,

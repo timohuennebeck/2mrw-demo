@@ -17,9 +17,3 @@ export interface UpdateUserSubscriptionStatusParams {
     endDate: string;
     billingPlan: BillingPlan;
 }
-
-export interface StartUserFreeTrialParams {
-    userId: string;
-    stripePriceId: string;
-    freeTrialEndDate: string;
-}

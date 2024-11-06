@@ -6,7 +6,6 @@ import ChangeSubscriptionPlan from "@/components/Billing/ChangeSubscriptionPlan"
 import HeaderWithDescription from "@/components/HeaderWithDescription";
 import { useSession } from "@/context/SessionContext";
 import { useSubscription } from "@/hooks/useSubscription";
-import { useFreeTrial } from "@/hooks/useFreeTrial";
 import { useSupabaseRealtime } from "@/hooks/useSupabaseRealtime";
 import CustomPopup from "@/components/CustomPopup";
 import { Check } from "lucide-react";
@@ -21,7 +20,6 @@ const BillingPage = () => {
     const { authUser } = useSession();
     const { products } = useProducts();
     const { subscription, invalidateSubscription } = useSubscription(authUser?.id ?? "");
-    const { invalidateFreeTrial } = useFreeTrial(authUser?.id ?? "");
 
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
@@ -29,12 +27,6 @@ const BillingPage = () => {
         table: "user_subscriptions",
         filter: `user_id=eq.${authUser?.id}`,
         onChange: invalidateSubscription,
-    });
-
-    useSupabaseRealtime({
-        table: "free_trials",
-        filter: `user_id=eq.${authUser?.id}`,
-        onChange: invalidateFreeTrial,
     });
 
     useSuccessParam({

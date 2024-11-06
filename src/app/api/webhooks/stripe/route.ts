@@ -45,7 +45,6 @@ export const POST = async (req: request) => {
                 await handleCheckoutSessionCompleted(session, userId ?? "");
 
                 if (userId) {
-                    queryClient.invalidateQueries({ queryKey: ["freeTrial", userId] });
                     queryClient.invalidateQueries({ queryKey: ["subscription", userId] });
                 }
                 break;

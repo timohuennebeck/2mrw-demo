@@ -5,12 +5,8 @@ export const validateEmailProps = (template: EmailTemplate, props: any) => {
         return { error: "Missing required fields" };
     }
 
-    if (template === EmailTemplate.ONBOARDING && !props.purchasedPackage) {
+    if (template === EmailTemplate.SUBSCRIPTION_CONFIRMATION && !props.purchasedPackage) {
         return { error: "Missing purchasedPackage field" };
-    }
-
-    if (template === EmailTemplate.FREE_TRIAL && !props.freeTrialEndDate) {
-        return { error: "Missing freeTrialEndDate field" };
     }
 
     return { success: true };

@@ -19,6 +19,6 @@ export interface PurchasedSubscription {
     subscription_tier: SubscriptionTier;
     billing_plan: BillingPlan;
     end_date: string;
-    updated_at: Date;
-    created_at: Date;
+    updated_at: string;
+    created_at: string;
 }

@@ -2,8 +2,6 @@ import { CheckBadgeIcon } from "@heroicons/react/24/solid";
 import HeaderWithDescription from "../HeaderWithDescription";
 import { useSession } from "@/context/SessionContext";
 import useSubscription from "@/hooks/useSubscription";
-import useFreeTrial from "@/hooks/useFreeTrial";
-import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { useProducts } from "@/context/ProductsContext";
 import { PlanFeatures } from "../PricingPlan/PlanFeatures";
@@ -19,9 +17,8 @@ const CurrentSubscriptionPlan = () => {
     const { authUser } = useSession();
     const { products } = useProducts();
     const { subscription } = useSubscription(authUser?.id ?? "");
-    const { freeTrial } = useFreeTrial(authUser?.id ?? "");
 
-    const activeStripePriceId = subscription?.stripe_price_id ?? freeTrial?.stripe_price_id;
+    const activeStripePriceId = subscription?.stripe_price_id;
 
     if (!products) return null;
 
@@ -48,23 +45,11 @@ const CurrentSubscriptionPlan = () => {
     };
 
     const renderSubscriptionStatus = () => {
-        if (freeTrial?.status === FreeTrialStatus.ACTIVE) {
-            return (
-                <>
-                    {renderStatusBadge("ACTIVE", "green")}
-                    {renderStatusBadge("FREE TRIAL", "yellow")}
-                </>
-            );
-        }
-
         if (subscription?.status === SubscriptionStatus.ACTIVE) {
             return renderStatusBadge("ACTIVE", "green");
         }
 
-        if (
-            subscription?.status === SubscriptionStatus.CANCELLED ||
-            freeTrial?.status === FreeTrialStatus.CANCELLED
-        ) {
+        if (subscription?.status === SubscriptionStatus.CANCELLED) {
             return renderStatusBadge("CANCELLED", "red");
         }
 
@@ -76,21 +61,20 @@ const CurrentSubscriptionPlan = () => {
             return "You are on the free plan which is free forever!";
         }
 
-        if (freeTrial?.end_date === null || subscription?.end_date === null) {
+        if (subscription?.end_date === null) {
             return null;
         }
 
-        if (freeTrial?.status === FreeTrialStatus.ACTIVE) {
-            return `Your free trial will end on ${formatDateToDayMonthYear(freeTrial.end_date)}!`;
-        } else if (subscription?.status === SubscriptionStatus.ACTIVE) {
-            return `Your subscription renews on ${formatDateToDayMonthYear(subscription.end_date)}!`;
-        } else if (subscription?.status === SubscriptionStatus.CANCELLED) {
-            return `Your subscription has been cancelled and will be downgraded to the free plan on ${formatDateToDayMonthYear(
-                subscription.end_date,
-            )}!`;
+        switch (subscription?.status) {
+            case SubscriptionStatus.ACTIVE:
+                return `Your subscription renews on ${formatDateToDayMonthYear(subscription.end_date)}!`;
+            case SubscriptionStatus.CANCELLED:
+                return `Your subscription has been cancelled and will be downgraded to the free plan on ${formatDateToDayMonthYear(
+                    subscription.end_date,
+                )}!`;
+            default:
+                return null;
         }
-
-        return null;
     };
 
     return (

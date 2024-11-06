@@ -1,15 +1,10 @@
 import { BillingPlan } from "@/interfaces/StripePrices";
 
 interface SubscriptionSettings {
-    enableFreeTrial: boolean;
-    freeTrialDays: number;
     yearlyDiscountPercentage: number;
 }
 
-interface OneTimeSettings {
-    enableFreeTrial: boolean;
-    freeTrialDays: number;
-}
+interface OneTimeSettings {}
 
 interface CompletePaymentConfig {
     paymentType: BillingPlan;
@@ -35,16 +30,11 @@ export const paymentConfig: CompletePaymentConfig = {
 
     // subscription settings: used when paymentType is SUBSCRIPTION
     subscriptionSettings: {
-        enableFreeTrial: false,
-        freeTrialDays: 7,
         yearlyDiscountPercentage: 20,
     },
 
     // one-time settings: used when paymentType is ONE_TIME
-    oneTimeSettings: {
-        enableFreeTrial: true,
-        freeTrialDays: 7,
-    },
+    oneTimeSettings: {},
 };
 
 // helper functions to get the active settings
@@ -56,6 +46,5 @@ export const getCurrentPaymentSettings = () => {
 
 // helper to check if subscription features are enabled
 export const isOneTimePaymentEnabled = () => paymentConfig.paymentType === BillingPlan.ONE_TIME;
-export const isFreeTrialEnabled = () => getCurrentPaymentSettings().enableFreeTrial;
 export const isFreePlanEnabled = () => paymentConfig.isFreePlanEnabled;
 export const getCurrency = () => paymentConfig.currency;

@@ -1,8 +1,6 @@
 import { Resend } from "resend";
 import { emailConfig as actualEmailConfig } from "@/config/emailConfig";
 import SubscriptionConfirmationEmail from "@/emails/SubscriptionConfirmationEmail";
-import FreeTrialEmail from "@/emails/FreeTrialEmail";
-import FreeTrialReminderEmail from "@/emails/FreeTrialReminderEmail";
 
 const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_EMAIL_API_KEY ?? "");
 
@@ -10,13 +8,9 @@ interface EmailTemplateProps {
     userEmail: string;
     userFirstName: string;
     purchasedPackage?: string;
-    freeTrialEndDate?: string;
-    upgradeUrl?: string;
 }
 
 export enum EmailTemplate {
-    FREE_TRIAL = "FREE_TRIAL",
-    FREE_TRIAL_REMINDER = "FREE_TRIAL_REMINDER",
     SUBSCRIPTION_CONFIRMATION = "SUBSCRIPTION_CONFIRMATION",
 }
 
@@ -24,33 +18,6 @@ const getEmailConfig = (template: EmailTemplate, props: EmailTemplateProps) => {
     const { settings } = actualEmailConfig;
 
     switch (template) {
-        case EmailTemplate.FREE_TRIAL:
-            if (!settings.freeTrialEmail.isEnabled) {
-                throw new Error("Free trial email is disabled");
-            }
-
-            return {
-                subject: settings.freeTrialEmail.subject,
-                react: FreeTrialEmail({
-                    userFirstName: props.userFirstName,
-                    freeTrialEndDate: props.freeTrialEndDate!,
-                }),
-            };
-
-        case EmailTemplate.FREE_TRIAL_REMINDER:
-            if (!settings.freeTrialReminderEmail.isEnabled) {
-                throw new Error("Free trial reminder email is disabled");
-            }
-
-            return {
-                subject: settings.freeTrialReminderEmail.subject,
-                react: FreeTrialReminderEmail({
-                    userFirstName: props.userFirstName,
-                    freeTrialEndDate: props.freeTrialEndDate!,
-                    upgradeUrl: props.upgradeUrl!,
-                }),
-            };
-
         case EmailTemplate.SUBSCRIPTION_CONFIRMATION:
             if (!settings.subscriptionConfirmationEmail.isEnabled) {
                 throw new Error("Subscription confirmation email is disabled");

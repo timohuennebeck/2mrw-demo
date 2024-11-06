@@ -16,7 +16,6 @@ export const TextConstants = {
     TEXT__HAVE_AN_ACCOUNT: "Have an account?",
     TEXT__FLEXIBLE_CANCELLATION: "Flexible cancellation, no strings attached.",
     TEXT__DO_NOT_HAVE_AN_ACCOUNT: "Don't have an account?",
-    TEXT__FREE_TRIAL_STARTED: "Free Trial has been started",
     TEXT__CURRENT_PLAN: "Current Plan",
     TEXT__CHANGE_PLAN: "Change Plan",
     TEXT__UPGRADE_PLAN: "Upgrade Plan",
@@ -24,9 +23,7 @@ export const TextConstants = {
     TEXT__UNLOCK: "Unlock",
     TEXT__UNLOCK_PLAN: "Unlock Plan",
     TEXT__DOWNGRADE_TO_FREE_PLAN: "Downgrade To Free Plan",
-    TEXT__START_FREE_TRIAL: "Start Free Trial",
     TEXT__DAYS: "Days",
-    TEXT__FREE_TRIAL_END_DATE: "Free Trial End Date",
     TEXT__MOST_POPULAR_OPTION: "Most Popular Option",
     TEXT__ENTER_EMAIL_BELOW:
         "Enter Your email address below and we'll send You a link to reset Your password.",
@@ -56,7 +53,6 @@ export const TextConstants = {
     ERROR__STRIPE_CHECKOUT:
         "Failed to initiate checkout process! Please contact us if the issue persists.",
     ERROR_SIGNING_OUT: "Error signing out",
-    ERROR__STARTING_FREE_TRIAL: "Error starting free trial",
     ERROR__FAILED_TO_RESEND_EMAIL: "Failed to resend email.",
     ERROR__EMAIL_IS_MISSING: "Email is missing.",
     ERROR__EMAIL_IS_MISSING_AT_SIGN: "Email is missing an '@'.",

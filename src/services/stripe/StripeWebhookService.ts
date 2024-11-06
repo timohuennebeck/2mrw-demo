@@ -1,8 +1,6 @@
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import moment from "moment";
 import Stripe from "stripe";
-import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
-import { endUserFreeTrial, fetchUserFreeTrial } from "@/services/database/FreeTrialService";
 import { getEndDate } from "../database/BaseService";
 import { fetchBillingPlan, fetchSubscriptionTier } from "../database/ProductService";
 import {
@@ -12,18 +10,6 @@ import {
     updateUserSubscription,
 } from "../database/SubscriptionService";
 import { createSupabasePowerUserClient } from "../integration/admin";
-
-const _handleFreeTrial = async (userId: string) => {
-    if (!userId) throw new Error("User id is required!");
-
-    const { freeTrial, error: fetchError } = await fetchUserFreeTrial(userId);
-    if (fetchError) throw new Error("Failed to fetch user free trial!");
-
-    if (freeTrial?.status === FreeTrialStatus.ACTIVE) {
-        const { error } = await endUserFreeTrial(userId);
-        if (error) throw new Error("Failed to end free trial!");
-    }
-};
 
 const _handleSubscriptionCancellation = async (
     userId: string,
@@ -63,8 +49,6 @@ export const handleCheckoutSessionCompleted = async (
     if (!stripeSubscriptionId) throw new Error("Stripe subscription id is missing!");
 
     try {
-        await _handleFreeTrial(userId);
-
         const { subscriptionTier, billingPlan } =
             await _getSubscriptionTierBillingPlan(stripePriceId);
         const { subscription } = await fetchUserSubscription(userId);
@@ -89,8 +73,6 @@ export const handleCheckoutSessionCompleted = async (
             user_metadata: {
                 subscription_status: SubscriptionStatus.ACTIVE,
                 subscription_updated_at: new Date().toISOString(),
-                free_trial_status: FreeTrialStatus.EXPIRED,
-                free_trial_end_date: moment().toISOString(),
             },
         });
 
