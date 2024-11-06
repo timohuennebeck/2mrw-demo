@@ -23,6 +23,8 @@ import { cancelUserSubscription } from "@/services/database/SubscriptionService"
 import { ProductWithPrices } from "@/interfaces/ProductInterfaces";
 import { formatDateToDayMonthYear } from "@/lib/helper/DateHelper";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
+import { User } from "@supabase/supabase-js";
+import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
 
 const _findButtonTitle = (isFreePlan: boolean, subscriptionStatus: SubscriptionStatus) => {
     if (isFreePlan) return TextConstants.TEXT__DOWNGRADE_TO_FREE_PLAN;
@@ -34,6 +36,36 @@ const _findButtonTitle = (isFreePlan: boolean, subscriptionStatus: SubscriptionS
 
 const _isFreePlan = (products: ProductWithPrices[], selectedPlanId: string) => {
     return products.find((p) => p.id === selectedPlanId)?.billing_plan === BillingPlan.NONE;
+};
+
+const _handleDowngradeToFreePlan = async (authUser: User, subscription: PurchasedSubscription) => {
+    const router = useRouter();
+
+    if (subscription?.stripe_subscription_id) {
+        const { error: stripeCancellationError } = await cancelStripeSubscription(
+            subscription.stripe_subscription_id,
+        );
+
+        if (stripeCancellationError) {
+            console.error("Failed to cancel Stripe subscription!");
+            toast.error("Failed to cancel subscription in Stripe!");
+            return false;
+        }
+    }
+
+    /**
+     * cancels the user subscription in the database = SubscriptionStatus.CANCELLED
+     * a cron job will run on the next billing date to downgrade the user to the free plan
+     */
+
+    await cancelUserSubscription(authUser?.id ?? "", subscription?.end_date ?? "");
+
+    const subscriptionEndDate = formatDateToDayMonthYear(subscription?.end_date ?? "");
+    const toastInfo = `Your subscription has been cancelled and will be downgraded to the free plan on ${subscriptionEndDate}!`;
+    toast.success(toastInfo);
+
+    router.refresh();
+    return true;
 };
 
 const ChangeSubscriptionPlan = () => {
@@ -90,17 +122,6 @@ const ChangeSubscriptionPlan = () => {
         };
     };
 
-    const handleSubscriptionChange = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        if (!authUser?.email || !selectedPlanId) {
-            toast.error("Please select a plan to continue");
-            return;
-        }
-
-        setShowConfirmationPopup(true);
-    };
-
     const handleConfirmSubscription = async () => {
         try {
             setIsLoading(true);
@@ -109,32 +130,10 @@ const ChangeSubscriptionPlan = () => {
             const selectedProduct = products.find((p) => p.id === selectedPlanId);
             const isFreePlanSelected = selectedProduct?.billing_plan === BillingPlan.NONE;
 
-            if (isFreePlanSelected) {
-                if (subscription?.stripe_subscription_id) {
-                    const { error: stripeCancellationError } = await cancelStripeSubscription(
-                        subscription.stripe_subscription_id,
-                    );
-
-                    if (stripeCancellationError) {
-                        console.error("Failed to cancel Stripe subscription!");
-                        toast.error("Failed to cancel subscription in Stripe!");
-                        return;
-                    }
-                }
-
-                /**
-                 * cancels the user subscription in the database = SubscriptionStatus.CANCELLED
-                 * a cron job will run on the next billing date to downgrade the user to the free plan
-                 */
-
-                await cancelUserSubscription(authUser?.id ?? "", subscription?.end_date ?? "");
-
-                const subscriptionEndDate = formatDateToDayMonthYear(subscription?.end_date ?? "");
-                toast.success(
-                    `Your subscription has been cancelled and will be downgraded to the free plan on ${subscriptionEndDate}!`,
-                );
-                router.refresh();
-                return;
+            // handles the downgrade of the free plan as we use this function for both the downgrade and the upgrade
+            if (isFreePlanSelected && authUser) {
+                const success = await _handleDowngradeToFreePlan(authUser, subscription);
+                if (!success) return;
             }
 
             const stripePriceId = getStripePriceIdBasedOnSelectedPlanId({
@@ -208,7 +207,13 @@ const ChangeSubscriptionPlan = () => {
                     </div>
                 )}
 
-                <form onSubmit={handleSubscriptionChange} ref={formRef}>
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        setShowConfirmationPopup(true);
+                    }}
+                    ref={formRef}
+                >
                     <div className="space-y-4">
                         {products
                             .filter((p) =>
