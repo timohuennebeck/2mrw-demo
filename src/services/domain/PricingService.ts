@@ -58,8 +58,32 @@ export const getPrice = ({ product, billingPlan, interval }: GetPriceParams) => 
 
 export const getProductDetailsByStripePriceId = (
     products: ProductWithPrices[],
-    stripePriceId: string,
+    stripePriceId: string | null,
 ) => {
+    /**
+     * if the stripePriceId is null, the user is on the free plan
+     * so we need to get the free product details
+     */
+
+    if (!stripePriceId) {
+        const freeProduct = products.find((p) => p.billing_plan === BillingPlan.NONE);
+        if (!freeProduct) return null;
+
+        return {
+            id: freeProduct.id,
+            name: freeProduct.name,
+            description: freeProduct.description,
+            subscription_tier: freeProduct.subscription_tier,
+            billing_plan: freeProduct.billing_plan,
+            price: {
+                current_amount: 0,
+                previous_amount: 0,
+                interval: SubscriptionInterval.FREE,
+            },
+        };
+    }
+
+    // handle paid plans
     const product = products.find((p) => {
         return p.prices.find((price) => price.stripe_price_id === stripePriceId);
     });

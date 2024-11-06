@@ -10,14 +10,19 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/services/integration/client";
 import moment from "moment";
 import { TextConstants } from "@/constants/TextConstants";
-import { getCurrentPaymentSettings } from "@/config/paymentConfig";
+import {
+    getCurrentPaymentSettings,
+    isFreePlanEnabled,
+    isFreeTrialEnabled,
+} from "@/config/paymentConfig";
 import { queryClient } from "@/lib/qClient/qClient";
 import { EmailTemplate } from "@/lib/email/emailService";
 import axios from "axios";
 import { startUserFreeTrial } from "@/services/database/FreeTrialService";
 import { increaseDate } from "@/lib/helper/DateHelper";
+import { startFreePlan } from "@/services/database/SubscriptionService";
 
-interface PlanButton {
+interface PlanButtonParams {
     stripePriceId: string;
     freeTrialStatus: FreeTrialStatus | null;
     subscriptionStatus: SubscriptionStatus | null;
@@ -35,7 +40,7 @@ export const PlanButton = ({
     isLoading: dataIsLoading,
     supabaseUser,
     name,
-}: PlanButton) => {
+}: PlanButtonParams) => {
     const supabase = createClient();
 
     const [isLoading, setIsLoading] = useState(dataIsLoading);
@@ -125,18 +130,14 @@ export const PlanButton = ({
     };
 
     const determineButtonProps = () => {
-        const hasPurchasedSubscription = subscriptionStatus === SubscriptionStatus.ACTIVE;
-
         const baseProps = {
             disabled: isLoading,
             isLoading,
         };
 
-        if (
-            !hasPurchasedSubscription &&
-            !freeTrialStatus &&
-            getCurrentPaymentSettings().enableFreeTrial
-        ) {
+        // case I: user is eligible for a free trial
+        const isEligibleForFreeTrial = !subscriptionStatus && !freeTrialStatus;
+        if (isEligibleForFreeTrial && isFreeTrialEnabled()) {
             const freeTrialDuration = getCurrentPaymentSettings().freeTrialDays;
             return {
                 ...baseProps,
@@ -145,12 +146,30 @@ export const PlanButton = ({
             };
         }
 
-        if (hasPurchasedSubscription) {
-            return subscriptionData?.stripe_price_id === stripePriceId
+        // case II: free plan is enabled and user is not on a free plan
+        if (isFreePlanEnabled() && !subscriptionStatus) {
+            return {
+                ...baseProps,
+                title: TextConstants.TEXT__START_FREE_PLAN,
+                onClick: () => {
+                    startFreePlan(supabaseUser?.id ?? "");
+                    queryClient.invalidateQueries({
+                        queryKey: ["subscription", supabaseUser?.id],
+                    });
+                },
+            };
+        }
+
+        // case III: user has an active subscription
+        const hasOnGoingSubscription = subscriptionStatus === SubscriptionStatus.ACTIVE;
+        if (hasOnGoingSubscription) {
+            const isCurrentPlan = subscriptionData?.stripe_price_id === stripePriceId;
+            return isCurrentPlan
                 ? { title: TextConstants.TEXT__CURRENT_PLAN, disabled: true }
                 : { ...baseProps, title: TextConstants.TEXT__CHANGE_PLAN, onClick: handleCheckout };
         }
 
+        // final case: user is not on a free plan and does not have an active subscription
         return {
             ...baseProps,
             title: `${TextConstants.TEXT__UNLOCK} ${name}`,

@@ -16,6 +16,7 @@ import { getProductNameByTier } from "./ProductService";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
 import { createClient } from "../integration/server";
 import { createSupabasePowerUserClient } from "../integration/admin";
+import { BillingPlan } from "@/interfaces/StripePrices";
 
 const _sendSubscriptionConfirmationEmail = async (
     userId: string,
@@ -209,6 +210,32 @@ export const updateUserSubscription = async ({
         return {
             success: null,
             error: handleSupabaseError({ error, fnTitle: "updateUserSubscription" }),
+        };
+    }
+};
+
+export const startFreePlan = async (userId: string) => {
+    try {
+        const supabase = await createClient();
+
+        const { error } = await supabase.from("user_subscriptions").insert({
+            user_id: userId,
+            status: SubscriptionStatus.ACTIVE,
+            subscription_tier: SubscriptionTier.FREE,
+            billing_plan: BillingPlan.NONE,
+            stripe_price_id: null,
+            stripe_subscription_id: null,
+            end_date: null,
+            created_at: moment().toISOString(),
+            updated_at: moment().toISOString(),
+        });
+
+        if (error) throw error;
+        return { success: true, error: null };
+    } catch (error) {
+        return {
+            success: null,
+            error: handleSupabaseError({ error, fnTitle: "startFreePlan" }),
         };
     }
 };

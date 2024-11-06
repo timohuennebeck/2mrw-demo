@@ -20,6 +20,7 @@ export const TextConstants = {
     TEXT__CURRENT_PLAN: "Current Plan",
     TEXT__CHANGE_PLAN: "Change Plan",
     TEXT__UPGRADE_PLAN: "Upgrade Plan",
+    TEXT__START_FREE_PLAN: "Start Free Plan",
     TEXT__UNLOCK: "Unlock",
     TEXT__UNLOCK_PLAN: "Unlock Plan",
     TEXT__START_FREE_TRIAL: "Start Free Trial",

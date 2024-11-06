@@ -50,9 +50,7 @@ const ChangeSubscriptionPlan = () => {
     const userIsOnFreeTrial = freeTrial?.status === FreeTrialStatus.ACTIVE;
 
     const activeStripePriceId = subscription?.stripe_price_id ?? freeTrial?.stripe_price_id;
-    const activeProductDetails = activeStripePriceId
-        ? getProductDetailsByStripePriceId(products, activeStripePriceId)
-        : null;
+    const activeProductDetails = getProductDetailsByStripePriceId(products, activeStripePriceId);
 
     const isOneTimePaymentPlan = activeProductDetails?.price?.interval === BillingPlan.ONE_TIME;
 
@@ -62,9 +60,7 @@ const ChangeSubscriptionPlan = () => {
         const price = !isFreeProduct
             ? getPrice({
                   product,
-                  billingPlan: isOneTimePaymentPlan
-                      ? BillingPlan.ONE_TIME
-                      : BillingPlan.RECURRING,
+                  billingPlan: isOneTimePaymentPlan ? BillingPlan.ONE_TIME : BillingPlan.RECURRING,
                   interval:
                       subscriptionInterval === SubscriptionInterval.MONTHLY
                           ? SubscriptionInterval.MONTHLY
@@ -104,12 +100,6 @@ const ChangeSubscriptionPlan = () => {
 
             const selectedProduct = products.find((p) => p.id === selectedPlanId);
             const isFreeProduct = selectedProduct?.billing_plan === BillingPlan.NONE;
-            const stripePriceId = getStripePriceIdBasedOnSelectedPlanId({
-                products,
-                selectedPlanId,
-                subscriptionInterval,
-                billingPlan: selectedProduct?.billing_plan ?? BillingPlan.RECURRING,
-            });
 
             if (isFreeProduct) {
                 if (subscription?.stripe_subscription_id) {
@@ -128,6 +118,13 @@ const ChangeSubscriptionPlan = () => {
                 router.refresh();
                 return;
             }
+
+            const stripePriceId = getStripePriceIdBasedOnSelectedPlanId({
+                products,
+                selectedPlanId,
+                subscriptionInterval,
+                billingPlan: selectedProduct?.billing_plan ?? BillingPlan.RECURRING,
+            });
 
             if (!stripePriceId) {
                 toast.error("Invalid plan selection");
@@ -156,7 +153,7 @@ const ChangeSubscriptionPlan = () => {
             {showConfirmationPopup && (
                 <CustomPopup
                     title="Confirm Subscription Change"
-                    description={`Change current subscription plan from ${activeProductDetails?.name} to ${products.find((p) => p.id === selectedPlanId)?.name}?`}
+                    description={`You're about to switch to the ${products.find((p) => p.id === selectedPlanId)?.name} plan. Please confirm to continue.`}
                     icon={<ShieldAlert size={32} strokeWidth={1.5} className="text-yellow-500" />}
                     iconBackgroundColor="bg-yellow-100"
                     mainButtonText="Confirm"

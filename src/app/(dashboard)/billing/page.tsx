@@ -15,7 +15,6 @@ import useSuccessParam from "@/hooks/useSuccessParam";
 import { useProducts } from "@/context/ProductsContext";
 import CurrentSubscriptionPlanSkeleton from "@/components/ui/CurrentSubscriptionPlanSkeleton";
 import ChangeSubscriptionPlanSkeleton from "@/components/ui/ChangeSubscriptionPlanSkeleton";
-import { hasUserPremiumOrFreeTrial } from "@/lib/helper/SubscriptionHelper";
 
 const BillingPage = () => {
     const { authUser } = useSession();
@@ -24,8 +23,6 @@ const BillingPage = () => {
     const { invalidateFreeTrial } = useFreeTrial(authUser?.id ?? "");
 
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-
-    const hasPremiumOrFreeTrial = hasUserPremiumOrFreeTrial(authUser);
 
     useSupabaseRealtime({
         table: "user_subscriptions",
@@ -68,14 +65,14 @@ const BillingPage = () => {
                 <div className="flex flex-col gap-6">
                     <BillingPortal />
 
-                    {!products || !subscription ? (
+                    {!products ? (
                         <div className="flex flex-col gap-6">
                             <CurrentSubscriptionPlanSkeleton />
                             <ChangeSubscriptionPlanSkeleton />
                         </div>
                     ) : (
                         <div className="flex flex-col gap-6">
-                            {hasPremiumOrFreeTrial && <CurrentSubscriptionPlan />}
+                            <CurrentSubscriptionPlan />
                             <ChangeSubscriptionPlan />
                         </div>
                     )}

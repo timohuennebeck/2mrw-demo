@@ -13,6 +13,7 @@ import { BillingPlan, SubscriptionInterval } from "@/interfaces/StripePrices";
 import { CalendarClock } from "lucide-react";
 import { getFeaturesWithAvailability } from "@/services/domain/FeatureService";
 import { formatDateToDayMonthYear } from "@/lib/helper/DateHelper";
+import { SubscriptionTier } from "@/enums/SubscriptionTier";
 
 const CurrentSubscriptionPlan = () => {
     const { authUser } = useSession();
@@ -24,9 +25,7 @@ const CurrentSubscriptionPlan = () => {
 
     if (!products) return null;
 
-    const productDetails = activeStripePriceId
-        ? getProductDetailsByStripePriceId(products, activeStripePriceId)
-        : null;
+    const productDetails = getProductDetailsByStripePriceId(products, activeStripePriceId);
 
     const features = productDetails
         ? getFeaturesWithAvailability(productDetails.subscription_tier)
@@ -73,6 +72,10 @@ const CurrentSubscriptionPlan = () => {
     };
 
     const getSubscriptionStatusMessage = () => {
+        if (subscription?.subscription_tier === SubscriptionTier.FREE) {
+            return "You are on the free plan which is free forever!";
+        }
+
         if (freeTrial?.end_date === null || subscription?.end_date === null) {
             return null;
         }
