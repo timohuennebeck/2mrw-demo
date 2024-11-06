@@ -26,6 +26,7 @@ import {
     startUserSubscription,
 } from "@/services/database/SubscriptionService";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
+import { ProductWithPrices } from "@/interfaces/ProductInterfaces";
 
 const ChangeSubscriptionPlan = () => {
     const { authUser } = useSession();
@@ -57,6 +58,36 @@ const ChangeSubscriptionPlan = () => {
         : null;
 
     const isOneTimePaymentPlan = activeProductDetails?.price?.interval === BillingPlan.ONE_TIME;
+
+    const getProductPriceDetails = (product: ProductWithPrices) => {
+        const isFreeProduct = product.billing_plan === BillingPlan.FREE;
+
+        const price = !isFreeProduct
+            ? getPrice({
+                  product,
+                  billingPlan: isOneTimePaymentPlan
+                      ? BillingPlan.ONE_TIME
+                      : BillingPlan.SUBSCRIPTION,
+                  interval:
+                      subscriptionInterval === SubscriptionInterval.MONTHLY
+                          ? SubscriptionInterval.MONTHLY
+                          : SubscriptionInterval.YEARLY,
+              })
+            : null;
+
+        const isSubscribedToPlan = isFreeProduct
+            ? activeProductDetails?.id === product.id
+            : price?.stripe_price_id === activeStripePriceId;
+
+        const isDisabled = isSubscribedToPlan && !userIsOnFreeTrial;
+
+        return {
+            isFreeProduct,
+            price,
+            isSubscribedToPlan,
+            isDisabled,
+        };
+    };
 
     const handleSubscriptionChange = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -155,12 +186,12 @@ const ChangeSubscriptionPlan = () => {
                             />
                         )}
                         <CustomButton
-                            title={TextConstants.TEXT__MONTHLY.toUpperCase()}
+                            title={`${TextConstants.TEXT__MONTHLY.toUpperCase()} (PREMIUM)`}
                             onClick={() => setSubscriptionInterval(SubscriptionInterval.MONTHLY)}
                             isSecondary={subscriptionInterval !== SubscriptionInterval.MONTHLY}
                         />
                         <CustomButton
-                            title={`${TextConstants.TEXT__YEARLY.toUpperCase()} (${paymentConfig.subscriptionSettings.yearlyDiscountPercentage}%)`}
+                            title={`${TextConstants.TEXT__YEARLY.toUpperCase()} - ${paymentConfig.subscriptionSettings.yearlyDiscountPercentage}% OFF (PREMIUM)`}
                             onClick={() => setSubscriptionInterval(SubscriptionInterval.YEARLY)}
                             isSecondary={subscriptionInterval !== SubscriptionInterval.YEARLY}
                         />
@@ -176,25 +207,8 @@ const ChangeSubscriptionPlan = () => {
                                     : p.billing_plan !== BillingPlan.FREE,
                             )
                             .map((product) => {
-                                const isFreeProduct = product.billing_plan === BillingPlan.FREE;
-                                const price = !isFreeProduct
-                                    ? getPrice({
-                                          product,
-                                          billingPlan: isOneTimePaymentPlan
-                                              ? BillingPlan.ONE_TIME
-                                              : BillingPlan.SUBSCRIPTION,
-                                          interval:
-                                              subscriptionInterval === SubscriptionInterval.MONTHLY
-                                                  ? SubscriptionInterval.MONTHLY
-                                                  : SubscriptionInterval.YEARLY,
-                                      })
-                                    : null;
-
-                                const isSubscribedToPlan = isFreeProduct
-                                    ? activeProductDetails?.id === product.id
-                                    : price?.stripe_price_id === activeStripePriceId;
-
-                                const isDisabled = isSubscribedToPlan && !userIsOnFreeTrial;
+                                const { isFreeProduct, price, isSubscribedToPlan, isDisabled } =
+                                    getProductPriceDetails(product);
 
                                 return (
                                     <div
