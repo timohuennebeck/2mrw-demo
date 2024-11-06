@@ -1,7 +1,7 @@
 import { TextConstants } from "@/constants/TextConstants";
 import CustomButton from "../CustomButton";
 import HeaderWithDescription from "../HeaderWithDescription";
-import { getCurrency, isFreePlanEnabled, paymentConfig } from "@/config/paymentConfig";
+import { getCurrency, isFreePlanEnabled, isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { toast } from "sonner";
 import { useRef, useState } from "react";
 import { useSession } from "@/context/SessionContext";
@@ -12,7 +12,7 @@ import CustomPopup from "../CustomPopup";
 import { ShieldAlert } from "lucide-react";
 import { SubscriptionInterval } from "@/interfaces/StripePrices";
 import {
-    getPrice,
+    getPriceForCurrentProduct,
     getProductDetailsByStripePriceId,
     getStripePriceIdBasedOnSelectedPlanId,
 } from "@/services/domain/PricingService";
@@ -90,35 +90,27 @@ const ChangeSubscriptionPlan = () => {
     if (!products) return null;
 
     const activeStripePriceId = subscription?.stripe_price_id;
-    const activeProductDetails = getProductDetailsByStripePriceId(products, activeStripePriceId);
-
-    const isOneTimePaymentPlan = activeProductDetails?.price?.interval === BillingPlan.ONE_TIME;
+    const subscribedProductDetails = getProductDetailsByStripePriceId(
+        products,
+        activeStripePriceId,
+    );
 
     const getProductPriceDetails = (product: ProductWithPrices) => {
         const isFreePlan = product.billing_plan === BillingPlan.NONE;
 
-        const price = !isFreePlan
-            ? getPrice({
-                  product,
-                  billingPlan: isOneTimePaymentPlan ? BillingPlan.ONE_TIME : BillingPlan.RECURRING,
-                  interval:
-                      subscriptionInterval === SubscriptionInterval.MONTHLY
-                          ? SubscriptionInterval.MONTHLY
-                          : SubscriptionInterval.YEARLY,
-              })
-            : null;
+        const pricing = isFreePlan
+            ? null
+            : getPriceForCurrentProduct(product.prices, subscriptionInterval);
 
         const isSubscribedToPlan = isFreePlan
-            ? activeProductDetails?.id === product.id
-            : price?.stripe_price_id === activeStripePriceId;
-
-        const isDisabled = isSubscribedToPlan;
+            ? subscribedProductDetails?.id === product.id
+            : pricing?.stripe_price_id === activeStripePriceId;
 
         return {
             isFreePlan,
-            price,
+            pricing,
             isSubscribedToPlan,
-            isDisabled,
+            planIsDisabled: isSubscribedToPlan,
         };
     };
 
@@ -185,13 +177,13 @@ const ChangeSubscriptionPlan = () => {
                     description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam et odit autem alias aut praesentium vel nisi repudiandae saepe consectetur!"
                 />
 
-                {!isOneTimePaymentPlan && (
+                {!isOneTimePaymentEnabled() && (
                     <div className="mb-6 flex space-x-4">
                         {isFreePlanEnabled() && (
                             <CustomButton
                                 title={TextConstants.TEXT__FREE.toUpperCase()}
-                                onClick={() => setSubscriptionInterval(SubscriptionInterval.FREE)}
-                                isSecondary={subscriptionInterval !== SubscriptionInterval.FREE}
+                                onClick={() => setSubscriptionInterval(SubscriptionInterval.NONE)}
+                                isSecondary={subscriptionInterval !== SubscriptionInterval.NONE}
                             />
                         )}
                         <CustomButton
@@ -200,7 +192,7 @@ const ChangeSubscriptionPlan = () => {
                             isSecondary={subscriptionInterval !== SubscriptionInterval.MONTHLY}
                         />
                         <CustomButton
-                            title={`${TextConstants.TEXT__YEARLY.toUpperCase()} - ${paymentConfig.subscriptionSettings.yearlyDiscountPercentage}% OFF (PREMIUM)`}
+                            title={`${TextConstants.TEXT__YEARLY.toUpperCase()} (PREMIUM)`}
                             onClick={() => setSubscriptionInterval(SubscriptionInterval.YEARLY)}
                             isSecondary={subscriptionInterval !== SubscriptionInterval.YEARLY}
                         />
@@ -216,13 +208,18 @@ const ChangeSubscriptionPlan = () => {
                 >
                     <div className="space-y-4">
                         {products
-                            .filter((p) =>
-                                subscriptionInterval === SubscriptionInterval.FREE
+                            .filter((p) => {
+                                if (isOneTimePaymentEnabled()) {
+                                    return p.billing_plan === BillingPlan.ONE_TIME;
+                                }
+
+                                return subscriptionInterval === SubscriptionInterval.NONE
                                     ? p.billing_plan === BillingPlan.NONE
-                                    : p.billing_plan !== BillingPlan.NONE,
-                            )
+                                    : p.billing_plan !== BillingPlan.NONE &&
+                                          p.billing_plan !== BillingPlan.ONE_TIME;
+                            })
                             .map((product) => {
-                                const { isFreePlan, price, isSubscribedToPlan, isDisabled } =
+                                const { isFreePlan, pricing, isSubscribedToPlan, planIsDisabled } =
                                     getProductPriceDetails(product);
 
                                 return (
@@ -232,8 +229,10 @@ const ChangeSubscriptionPlan = () => {
                                             selectedPlanId === product.id
                                                 ? "border-blue-500 bg-blue-50"
                                                 : "border-gray-200 bg-white"
-                                        } ${isDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"} p-4`}
-                                        onClick={() => !isDisabled && setSelectedPlanId(product.id)}
+                                        } ${planIsDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"} p-4`}
+                                        onClick={() =>
+                                            !planIsDisabled && setSelectedPlanId(product.id)
+                                        }
                                     >
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center">
@@ -244,13 +243,13 @@ const ChangeSubscriptionPlan = () => {
                                                     value={product.id}
                                                     checked={selectedPlanId === product.id}
                                                     onChange={() => {}}
-                                                    disabled={isDisabled}
+                                                    disabled={planIsDisabled}
                                                     className="mr-3 h-4 w-4 text-blue-600 disabled:opacity-50"
                                                 />
                                                 <label
                                                     htmlFor={`${product.id}-plan`}
                                                     className={`text-sm ${
-                                                        isDisabled
+                                                        planIsDisabled
                                                             ? "cursor-not-allowed"
                                                             : "cursor-pointer"
                                                     }`}
@@ -268,14 +267,14 @@ const ChangeSubscriptionPlan = () => {
                                                 <div className="whitespace-nowrap font-medium text-gray-700">
                                                     {isFreePlan
                                                         ? "Free"
-                                                        : price
-                                                          ? `${getCurrency() === "EUR" ? "€" : "$"} ${price.current_amount}`
+                                                        : pricing
+                                                          ? `${getCurrency() === "EUR" ? "€" : "$"} ${pricing.current_amount}`
                                                           : "N/A"}
                                                 </div>
                                                 <div className="whitespace-nowrap text-sm text-gray-500">
                                                     {isFreePlan
                                                         ? "FOREVER"
-                                                        : price?.subscription_interval ===
+                                                        : pricing?.interval ===
                                                             SubscriptionInterval.MONTHLY
                                                           ? "PER MONTH"
                                                           : "PER YEAR"}

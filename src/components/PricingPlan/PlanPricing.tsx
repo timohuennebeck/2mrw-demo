@@ -1,5 +1,6 @@
 import { getCurrency, isOneTimePaymentEnabled } from "@/config/paymentConfig";
-import { BillingPlan, StripePrice, SubscriptionInterval } from "@/interfaces/StripePrices";
+import { StripePrice, SubscriptionInterval } from "@/interfaces/StripePrices";
+import { getPriceForCurrentProduct } from "@/services/domain/PricingService";
 
 interface PlanPricingProps {
     prices: StripePrice[];
@@ -7,57 +8,26 @@ interface PlanPricingProps {
 }
 
 export const PlanPricing = ({ prices, billingCycle }: PlanPricingProps) => {
-    const getPriceInfo = () => {
-        if (isOneTimePaymentEnabled()) {
-            const oneTimePrice = prices.find((p) => p.billing_plan === BillingPlan.ONE_TIME);
-
-            return {
-                current: oneTimePrice?.current_amount ?? 0,
-                previous: oneTimePrice?.previous_amount ?? 0,
-            };
-        }
-
-        if (billingCycle === SubscriptionInterval.YEARLY) {
-            const yearlyPrice = prices.find(
-                (p) => p.subscription_interval === SubscriptionInterval.YEARLY,
-            );
-
-            return {
-                current: yearlyPrice?.current_amount ?? 0,
-                previous: yearlyPrice?.previous_amount ?? 0,
-            };
-        } else {
-            const monthlyPrice = prices.find(
-                (p) => p.subscription_interval === SubscriptionInterval.MONTHLY,
-            );
-
-            return {
-                current: monthlyPrice?.current_amount ?? 0,
-                previous: monthlyPrice?.previous_amount ?? 0,
-            };
-        }
-    };
-
-    const priceInfo = getPriceInfo();
+    const { current_amount, previous_amount } = getPriceForCurrentProduct(prices, billingCycle);
 
     return (
         <div className="mb-6">
-            {priceInfo.previous !== 0 && (
+            {previous_amount !== 0 && (
                 <p className="font-medium text-neutral-600 line-through">
-                    {priceInfo.previous} {getCurrency()}
+                    {previous_amount} {getCurrency()}
                 </p>
             )}
             <div className="mb-6">
                 <span className="text-3xl font-medium">
                     {getCurrency() === "EUR" ? "€" : "$"}
-                    {priceInfo.current}
+                    {current_amount}
                 </span>
-                <span className="ml-2 text-neutral-600">
-                    {!isOneTimePaymentEnabled() &&
-                        `/ ${
-                            billingCycle === SubscriptionInterval.YEARLY ? "PER YEAR" : "PER MONTH"
-                        }`}
-                </span>
+
+                {!isOneTimePaymentEnabled() && (
+                    <span className="ml-2 text-neutral-600">
+                        {`/ ${billingCycle === SubscriptionInterval.YEARLY ? "PER YEAR" : "PER MONTH"}`}
+                    </span>
+                )}
             </div>
         </div>
     );

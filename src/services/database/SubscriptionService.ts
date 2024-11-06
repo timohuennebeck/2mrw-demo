@@ -189,15 +189,17 @@ export const updateUserSubscription = async ({
     try {
         const adminSupabase = await createSupabasePowerUserClient();
 
+        const isOneTimePayment = billingPlan === BillingPlan.ONE_TIME;
+
         const { error } = await adminSupabase
             .from("user_subscriptions")
             .update({
                 stripe_price_id: stripePriceId,
                 status: SubscriptionStatus.ACTIVE,
                 subscription_tier: subscriptionTier,
-                stripe_subscription_id: stripeSubscriptionId,
+                stripe_subscription_id: isOneTimePayment ? null : stripeSubscriptionId,
                 billing_plan: billingPlan,
-                end_date: endDate,
+                end_date: isOneTimePayment ? null : endDate,
                 updated_at: moment().toISOString(),
             })
             .eq("user_id", userId);

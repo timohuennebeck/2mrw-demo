@@ -13,6 +13,18 @@ import { getFeaturesWithAvailability } from "@/services/domain/FeatureService";
 import { formatDateToDayMonthYear } from "@/lib/helper/DateHelper";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
 
+const _getProductPricing = (isFreeProduct: boolean, currentPrice: number) => {
+    if (isFreeProduct) {
+        return "Free";
+    }
+
+    if (currentPrice) {
+        return `${getCurrency() === "EUR" ? "€" : "$"} ${currentPrice}`;
+    }
+
+    return "N/A";
+};
+
 const CurrentSubscriptionPlan = () => {
     const { authUser } = useSession();
     const { products } = useProducts();
@@ -29,6 +41,7 @@ const CurrentSubscriptionPlan = () => {
         : [];
 
     const isFreeProduct = productDetails?.billing_plan === BillingPlan.NONE;
+    const isOneTimePaymentProduct = productDetails?.billing_plan === BillingPlan.ONE_TIME;
 
     const renderStatusBadge = (text: string, variant: "green" | "yellow" | "red") => {
         const colors = {
@@ -99,18 +112,19 @@ const CurrentSubscriptionPlan = () => {
 
                     <div className="text-right">
                         <div className="whitespace-nowrap text-xl font-medium text-gray-700">
-                            {isFreeProduct
-                                ? "Free"
-                                : productDetails?.price?.current_amount
-                                  ? `${getCurrency() === "EUR" ? "€" : "$"} ${productDetails.price.current_amount}`
-                                  : "N/A"}
+                            {_getProductPricing(
+                                isFreeProduct,
+                                productDetails?.price?.current_amount ?? 0,
+                            )}
                         </div>
                         <div className="whitespace-nowrap text-sm font-medium text-gray-500">
-                            {isFreeProduct
-                                ? "FOREVER"
-                                : productDetails?.price?.interval === SubscriptionInterval.MONTHLY
-                                  ? "PER MONTH"
-                                  : "PER YEAR"}
+                            {isOneTimePaymentProduct
+                                ? "ONE-TIME PAYMENT"
+                                : isFreeProduct
+                                  ? "FOREVER"
+                                  : productDetails?.price?.interval === SubscriptionInterval.MONTHLY
+                                    ? "PER MONTH"
+                                    : "PER YEAR"}
                         </div>
                     </div>
                 </div>

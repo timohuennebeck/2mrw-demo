@@ -31,11 +31,7 @@ export const checkRowExists = async (tableId: string, userId: string) => {
 };
 
 export const getEndDate = async (stripeSubscriptionId: string) => {
-    if (isOneTimePaymentEnabled()) {
-        return null;
-    }
-
-    if (!stripeSubscriptionId) {
+    if (isOneTimePaymentEnabled() || !stripeSubscriptionId) {
         return null;
     }
 

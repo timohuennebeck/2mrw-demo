@@ -1,3 +1,4 @@
+import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { ProductWithPrices } from "@/interfaces/ProductInterfaces";
 import { BillingPlan, StripePrice, SubscriptionInterval } from "@/interfaces/StripePrices";
 
@@ -78,12 +79,12 @@ export const getProductDetailsByStripePriceId = (
             price: {
                 current_amount: 0,
                 previous_amount: 0,
-                interval: SubscriptionInterval.FREE,
+                interval: SubscriptionInterval.NONE, // free plan doesn't have an interval as the cycles can either be monthly or yearly
             },
         };
     }
 
-    // handle paid plans
+    // handle paid plans such as monthly, yearly, and one-time payment
     const product = products.find((p) => {
         return p.prices.find((price) => price.stripe_price_id === stripePriceId);
     });
@@ -121,4 +122,44 @@ export const getStripePriceIdBasedOnSelectedPlanId = ({
     return selectedProduct.prices.find(
         (price) => price.subscription_interval === subscriptionInterval,
     )?.stripe_price_id;
+};
+
+export const getPriceForCurrentProduct = (
+    prices: StripePrice[],
+    subscriptionInterval: SubscriptionInterval,
+) => {
+    if (isOneTimePaymentEnabled()) {
+        const oneTimePrice = prices.find((p) => p.billing_plan === BillingPlan.ONE_TIME);
+
+        return {
+            current_amount: oneTimePrice?.current_amount ?? 0,
+            previous_amount: oneTimePrice?.previous_amount ?? 0,
+            stripe_price_id: oneTimePrice?.stripe_price_id ?? "",
+            interval: oneTimePrice?.subscription_interval ?? SubscriptionInterval.NONE,
+        };
+    }
+
+    if (subscriptionInterval === SubscriptionInterval.YEARLY) {
+        const yearlyPrice = prices.find(
+            (p) => p.subscription_interval === SubscriptionInterval.YEARLY,
+        );
+
+        return {
+            current_amount: yearlyPrice?.current_amount ?? 0,
+            previous_amount: yearlyPrice?.previous_amount ?? 0,
+            stripe_price_id: yearlyPrice?.stripe_price_id ?? "",
+            interval: yearlyPrice?.subscription_interval ?? SubscriptionInterval.YEARLY,
+        };
+    } else {
+        const monthlyPrice = prices.find(
+            (p) => p.subscription_interval === SubscriptionInterval.MONTHLY,
+        );
+
+        return {
+            current_amount: monthlyPrice?.current_amount ?? 0,
+            previous_amount: monthlyPrice?.previous_amount ?? 0,
+            stripe_price_id: monthlyPrice?.stripe_price_id ?? "",
+            interval: monthlyPrice?.subscription_interval ?? SubscriptionInterval.MONTHLY,
+        };
+    }
 };

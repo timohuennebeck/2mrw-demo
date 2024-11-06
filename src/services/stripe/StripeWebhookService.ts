@@ -45,16 +45,18 @@ export const handleCheckoutSessionCompleted = async (
     const stripePriceId = session.line_items?.data[0].price?.id;
     if (!stripePriceId) throw new Error("Stripe price id is missing!");
 
-    const stripeSubscriptionId = session.subscription?.toString();
-    if (!stripeSubscriptionId) throw new Error("Stripe subscription id is missing!");
+    // one-time payments don't have a subscription id
+    const stripeSubscriptionId =
+        session.mode === "subscription" ? session.subscription?.toString() : null;
 
     try {
         const { subscriptionTier, billingPlan } =
             await _getSubscriptionTierBillingPlan(stripePriceId);
         const { subscription } = await fetchUserSubscription(userId);
 
-        const endDate = await getEndDate(stripeSubscriptionId ?? "");
-        if (!endDate) throw new Error("End date is missing!");
+        // for one-time payments, end_date will be null
+        const endDate =
+            session.mode === "subscription" ? await getEndDate(stripeSubscriptionId ?? "") : null;
 
         const dataToUpdate = {
             userId,

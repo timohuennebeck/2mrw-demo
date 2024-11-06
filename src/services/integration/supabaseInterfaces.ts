@@ -13,7 +13,7 @@ export interface UpdateUserSubscriptionStatusParams {
     userId: string;
     stripePriceId: string;
     subscriptionTier: SubscriptionTier;
-    stripeSubscriptionId?: string;
-    endDate: string;
+    stripeSubscriptionId?: string | null;
+    endDate: string | null;
     billingPlan: BillingPlan;
 }

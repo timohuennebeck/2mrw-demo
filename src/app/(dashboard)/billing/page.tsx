@@ -14,11 +14,12 @@ import useSuccessParam from "@/hooks/useSuccessParam";
 import { useProducts } from "@/context/ProductsContext";
 import CurrentSubscriptionPlanSkeleton from "@/components/ui/CurrentSubscriptionPlanSkeleton";
 import ChangeSubscriptionPlanSkeleton from "@/components/ui/ChangeSubscriptionPlanSkeleton";
+import { BillingPlan } from "@/interfaces/StripePrices";
 
 const BillingPage = () => {
     const { authUser } = useSession();
     const { products } = useProducts();
-    const { subscription, invalidateSubscription } = useSubscription(authUser?.id ?? "");
+    const { subscription, invalidateSubscription, isLoading } = useSubscription(authUser?.id ?? "");
 
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
@@ -32,6 +33,16 @@ const BillingPage = () => {
         onSuccess: () => setShowSuccessPopup(true),
         redirectPath: "/billing",
     });
+
+    /**
+     * the ChangeSubscriptionPlan component is only displayed for recurring billing plans and if the user has not yet purchased a plan
+     * one-time payments do not have a change plan option, so it's not shown
+     */
+
+    const isRecurringBillingPlan = subscription?.billing_plan === BillingPlan.RECURRING;
+    const hasPurchasedPlan = subscription?.stripe_price_id !== undefined;
+
+    const showChangeSubscriptionPlan = !isLoading && (isRecurringBillingPlan || !hasPurchasedPlan);
 
     return (
         <>
@@ -65,9 +76,11 @@ const BillingPage = () => {
                         </div>
                     ) : (
                         <div className="flex flex-col gap-6">
-                            {subscription && <CurrentSubscriptionPlan />}
+                            {!isLoading && subscription?.stripe_price_id !== undefined && (
+                                <CurrentSubscriptionPlan />
+                            )}
 
-                            <ChangeSubscriptionPlan />
+                            {showChangeSubscriptionPlan && <ChangeSubscriptionPlan />}
                         </div>
                     )}
                 </div>
