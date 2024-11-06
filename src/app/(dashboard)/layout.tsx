@@ -15,7 +15,7 @@ const _generateBreadcrumbs = (pathname: string) => {
             .join(" "),
         href: "/" + paths.slice(0, index + 1).join("/"),
     }));
-}
+};
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     const pathname = usePathname();
@@ -50,7 +50,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                         ))}
                     </div>
 
-                    <div className="h-full p-4">{children}</div>
+                    <div className="pl-2">{children}</div>
                 </main>
             </div>
         </div>
