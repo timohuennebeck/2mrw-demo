@@ -85,7 +85,7 @@ const CurrentSubscriptionPlan = () => {
         } else if (subscription?.status === SubscriptionStatus.ACTIVE) {
             return `Your subscription renews on ${formatDateToDayMonthYear(subscription.end_date)}!`;
         } else if (subscription?.status === SubscriptionStatus.CANCELLED) {
-            return `Your subscription will be cancelled on ${formatDateToDayMonthYear(
+            return `Your subscription has been cancelled and will be downgraded to the free plan on ${formatDateToDayMonthYear(
                 subscription.end_date,
             )}!`;
         }

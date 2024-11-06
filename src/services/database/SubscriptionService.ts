@@ -144,7 +144,12 @@ export const startUserSubscription = async ({
     }
 };
 
-export const endUserSubscription = async (userId: string) => {
+export const terminateUserSubscription = async (userId: string) => {
+    /**
+     * this function is used to terminate the users subscription
+     * its run inside the cron jobs to end the subscription and downgrade the user to the free plan
+     */
+
     try {
         const adminSupabase = await createSupabasePowerUserClient();
 
@@ -168,7 +173,7 @@ export const endUserSubscription = async (userId: string) => {
     } catch (error) {
         return {
             success: null,
-            error: handleSupabaseError({ error, fnTitle: "endUserSubscription" }),
+            error: handleSupabaseError({ error, fnTitle: "terminateUserSubscription" }),
         };
     }
 };
@@ -188,6 +193,7 @@ export const updateUserSubscription = async ({
             .from("user_subscriptions")
             .update({
                 stripe_price_id: stripePriceId,
+                status: SubscriptionStatus.ACTIVE,
                 subscription_tier: subscriptionTier,
                 stripe_subscription_id: stripeSubscriptionId,
                 billing_plan: billingPlan,

@@ -24,6 +24,29 @@ import { useRouter } from "next/navigation";
 import { cancelUserSubscription } from "@/services/database/SubscriptionService";
 import { ProductWithPrices } from "@/interfaces/ProductInterfaces";
 import { formatDateToDayMonthYear } from "@/lib/helper/DateHelper";
+import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
+
+const _findButtonTitle = ({
+    isFreePlan,
+    subscriptionStatus,
+    freeTrialStatus,
+}: {
+    isFreePlan: boolean;
+    subscriptionStatus: SubscriptionStatus;
+    freeTrialStatus: FreeTrialStatus;
+}) => {
+    if (isFreePlan) return TextConstants.TEXT__DOWNGRADE_TO_FREE_PLAN;
+
+    if (!subscriptionStatus) return TextConstants.TEXT__UNLOCK_PLAN;
+
+    if (freeTrialStatus === FreeTrialStatus.ACTIVE) return TextConstants.TEXT__UPGRADE_PLAN;
+
+    return TextConstants.TEXT__CHANGE_PLAN;
+};
+
+const _isFreePlan = (products: ProductWithPrices[], selectedPlanId: string) => {
+    return products.find((p) => p.id === selectedPlanId)?.billing_plan === BillingPlan.NONE;
+};
 
 const ChangeSubscriptionPlan = () => {
     const { authUser } = useSession();
@@ -55,9 +78,9 @@ const ChangeSubscriptionPlan = () => {
     const isOneTimePaymentPlan = activeProductDetails?.price?.interval === BillingPlan.ONE_TIME;
 
     const getProductPriceDetails = (product: ProductWithPrices) => {
-        const isFreeProduct = product.billing_plan === BillingPlan.NONE;
+        const isFreePlan = product.billing_plan === BillingPlan.NONE;
 
-        const price = !isFreeProduct
+        const price = !isFreePlan
             ? getPrice({
                   product,
                   billingPlan: isOneTimePaymentPlan ? BillingPlan.ONE_TIME : BillingPlan.RECURRING,
@@ -68,14 +91,14 @@ const ChangeSubscriptionPlan = () => {
               })
             : null;
 
-        const isSubscribedToPlan = isFreeProduct
+        const isSubscribedToPlan = isFreePlan
             ? activeProductDetails?.id === product.id
             : price?.stripe_price_id === activeStripePriceId;
 
         const isDisabled = isSubscribedToPlan && !userIsOnFreeTrial;
 
         return {
-            isFreeProduct,
+            isFreePlan,
             price,
             isSubscribedToPlan,
             isDisabled,
@@ -99,11 +122,19 @@ const ChangeSubscriptionPlan = () => {
             setShowConfirmationPopup(false);
 
             const selectedProduct = products.find((p) => p.id === selectedPlanId);
-            const isFreeProduct = selectedProduct?.billing_plan === BillingPlan.NONE;
+            const isFreePlanSelected = selectedProduct?.billing_plan === BillingPlan.NONE;
 
-            if (isFreeProduct) {
+            if (isFreePlanSelected) {
                 if (subscription?.stripe_subscription_id) {
-                    await cancelStripeSubscription(subscription.stripe_subscription_id);
+                    const { error: stripeCancellationError } = await cancelStripeSubscription(
+                        subscription.stripe_subscription_id,
+                    );
+
+                    if (stripeCancellationError) {
+                        console.error("Failed to cancel Stripe subscription!");
+                        toast.error("Failed to cancel subscription in Stripe!");
+                        return;
+                    }
                 }
 
                 /**
@@ -114,7 +145,9 @@ const ChangeSubscriptionPlan = () => {
                 await cancelUserSubscription(authUser?.id ?? "", subscription?.end_date ?? "");
 
                 const subscriptionEndDate = formatDateToDayMonthYear(subscription?.end_date ?? "");
-                toast.success(`You'll be downgraded to the free plan on ${subscriptionEndDate}!`);
+                toast.success(
+                    `Your subscription has been cancelled and will be downgraded to the free plan on ${subscriptionEndDate}!`,
+                );
                 router.refresh();
                 return;
             }
@@ -199,7 +232,7 @@ const ChangeSubscriptionPlan = () => {
                                     : p.billing_plan !== BillingPlan.NONE,
                             )
                             .map((product) => {
-                                const { isFreeProduct, price, isSubscribedToPlan, isDisabled } =
+                                const { isFreePlan, price, isSubscribedToPlan, isDisabled } =
                                     getProductPriceDetails(product);
 
                                 return (
@@ -243,14 +276,14 @@ const ChangeSubscriptionPlan = () => {
                                             </div>
                                             <div className="text-right">
                                                 <div className="whitespace-nowrap font-medium text-gray-700">
-                                                    {isFreeProduct
+                                                    {isFreePlan
                                                         ? "Free"
                                                         : price
                                                           ? `${getCurrency() === "EUR" ? "€" : "$"} ${price.current_amount}`
                                                           : "N/A"}
                                                 </div>
                                                 <div className="whitespace-nowrap text-sm text-gray-500">
-                                                    {isFreeProduct
+                                                    {isFreePlan
                                                         ? "FOREVER"
                                                         : price?.subscription_interval ===
                                                             SubscriptionInterval.MONTHLY
@@ -266,15 +299,18 @@ const ChangeSubscriptionPlan = () => {
 
                     <div className="mt-6 flex items-start justify-start">
                         <CustomButton
-                            title={
-                                !subscription
-                                    ? TextConstants.TEXT__UNLOCK_PLAN
-                                    : userIsOnFreeTrial
-                                      ? TextConstants.TEXT__UPGRADE_PLAN
-                                      : TextConstants.TEXT__CHANGE_PLAN
-                            }
+                            title={_findButtonTitle({
+                                isFreePlan: _isFreePlan(products, selectedPlanId),
+                                subscriptionStatus: subscription?.status,
+                                freeTrialStatus: freeTrial?.status,
+                            })}
                             disabled={!selectedPlanId || isLoading}
                             isLoading={isLoading}
+                            className={`${
+                                _isFreePlan(products, selectedPlanId)
+                                    ? "bg-red-600 text-white hover:bg-red-500"
+                                    : ""
+                            }`}
                         />
                     </div>
                 </form>

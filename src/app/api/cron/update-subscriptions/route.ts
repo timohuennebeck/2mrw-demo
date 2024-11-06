@@ -1,6 +1,6 @@
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { createSupabasePowerUserClient } from "@/services/integration/admin";
-import { endUserSubscription } from "@/services/database/SubscriptionService";
+import { terminateUserSubscription } from "@/services/database/SubscriptionService";
 import moment from "moment";
 import { NextResponse as response } from "next/server";
 
@@ -22,7 +22,7 @@ export const GET = async () => {
             const endDate = moment(subscription.end_date);
 
             if (endDate.isBefore(now)) {
-                const { error } = await endUserSubscription(subscription.user_id);
+                const { error } = await terminateUserSubscription(subscription.user_id);
                 if (error) throw error;
 
                 await adminSupabase.auth.admin.updateUserById(subscription.user_id, {

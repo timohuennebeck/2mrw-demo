@@ -10,7 +10,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 
 export const cancelStripeSubscription = async (stripeSubscriptionId: string) => {
     try {
-        await stripe.subscriptions.cancel(stripeSubscriptionId);
+        await stripe.subscriptions.update(stripeSubscriptionId, {
+            cancel_at_period_end: true,
+        });
         return { success: true, error: null };
     } catch (error) {
         console.error("Error canceling Stripe subscription:", error);
@@ -26,13 +28,13 @@ export const initiateStripeCheckoutProcess = async ({
     existingSubscriptionId,
 }: InitiateStripeCheckoutProcessParams) => {
     const stripeCustomerId = await getStripeCustomerId(userEmail);
-    if (!stripeCustomerId) throw new Error("No stripe customer ID found");
+    if (!stripeCustomerId) throw new Error("Stripe customer id is missing!");
 
     if (existingSubscriptionId) {
-        const subscription = await stripe.subscriptions.retrieve(existingSubscriptionId);
+        const existingSubscription = await stripe.subscriptions.retrieve(existingSubscriptionId);
 
-        // get the subscription item ID (each subscription has at least one item)
-        const subscriptionItemId = subscription.items.data[0].id;
+        // get the subscription item id (each subscription has at least one item)
+        const subscriptionItemId = existingSubscription.items.data[0].id;
 
         // if user has an existing subscription, update it immediately
         await stripe.subscriptions.update(existingSubscriptionId, {

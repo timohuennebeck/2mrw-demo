@@ -113,6 +113,7 @@ export const handleSubscriptionUpdated = async (
     try {
         if (subscription.cancel_at_period_end) {
             await _handleSubscriptionCancellation(userId, subscription); // check if the subscription is set to cancel at the end of the current period
+            return { success: true };
         }
 
         const { subscriptionTier, billingPlan } =

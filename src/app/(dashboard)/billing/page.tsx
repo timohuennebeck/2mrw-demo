@@ -15,6 +15,7 @@ import useSuccessParam from "@/hooks/useSuccessParam";
 import { useProducts } from "@/context/ProductsContext";
 import CurrentSubscriptionPlanSkeleton from "@/components/ui/CurrentSubscriptionPlanSkeleton";
 import ChangeSubscriptionPlanSkeleton from "@/components/ui/ChangeSubscriptionPlanSkeleton";
+import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 
 const BillingPage = () => {
     const { authUser } = useSession();
@@ -73,8 +74,11 @@ const BillingPage = () => {
                         </div>
                     ) : (
                         <div className="flex flex-col gap-6">
-                            <CurrentSubscriptionPlan />
-                            <ChangeSubscriptionPlan />
+                            {subscription && <CurrentSubscriptionPlan />}
+
+                            {subscription?.status === SubscriptionStatus.ACTIVE && (
+                                <ChangeSubscriptionPlan />
+                            )}
                         </div>
                     )}
                 </div>
