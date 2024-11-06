@@ -15,6 +15,7 @@ import { useProducts } from "@/context/ProductsContext";
 import CurrentSubscriptionPlanSkeleton from "@/components/ui/CurrentSubscriptionPlanSkeleton";
 import ChangeSubscriptionPlanSkeleton from "@/components/ui/ChangeSubscriptionPlanSkeleton";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
+import { BillingPlan } from "@/interfaces/StripePrices";
 
 const BillingPage = () => {
     const { authUser } = useSession();
@@ -35,14 +36,16 @@ const BillingPage = () => {
     });
 
     /**
-     * the ChangeSubscriptionPlan component is only displayed for recurring billing plans and if the user has not yet purchased a plan
-     * one-time payments do not have a change plan option, so it's not shown
+     * the ChangeSubscriptionPlan component is only shown if the user has not yet purchased a plan (one-time or recurring)
+     * and if he has not cancelled his recurring subscription
+     * otherwise, it's hidden because once a user has purchased a OTP plan, he cannot change the plan
      */
 
-    const hasPurchasedPlan = subscription?.stripe_price_id;
-    const hasCancelledPlan = subscription?.status === SubscriptionStatus.CANCELLED;
+    const hasOneTimePaymentPlan = subscription?.billing_plan === BillingPlan.ONE_TIME;
+    const hasCancelledSubscription = subscription?.status === SubscriptionStatus.CANCELLED;
 
-    const showChangeSubscriptionPlan = !isLoading && (!hasCancelledPlan || !hasPurchasedPlan);
+    const showChangeSubscriptionPlan =
+        !isLoading && !hasOneTimePaymentPlan && !hasCancelledSubscription;
 
     return (
         <>
