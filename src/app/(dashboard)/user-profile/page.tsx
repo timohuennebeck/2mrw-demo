@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import DashboardLayout from "../DashboardLayout";
 import { toast } from "sonner";
 import { useSession } from "@/context/SessionContext";
 import useUser from "@/hooks/useUser";
@@ -104,7 +103,7 @@ const UserProfilePage = () => {
     };
 
     return (
-        <DashboardLayout>
+        <>
             {showDeleteAccountPopup && (
                 <CustomPopup
                     title="Lorem Ipsum"
@@ -308,7 +307,7 @@ const UserProfilePage = () => {
                     </button>
                 </div>
             </div>
-        </DashboardLayout>
+        </>
     );
 };
 

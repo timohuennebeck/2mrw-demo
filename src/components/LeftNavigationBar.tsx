@@ -51,6 +51,7 @@ const _handleItemClick = (item: NavigationItem, router: AppRouterInstance) => {
 
         // handle internal navigation
         if (item.link) {
+            console.log("→ [LOG] Triggered section");
             router.push(item.link);
             return;
         }

@@ -1,6 +1,6 @@
 "use client";
 
-import DashboardLayout from "../DashboardLayout";
+import DashboardLayout from "../../DashboardLayout";
 import BillingPortal from "@/components/Billing/BillingPortal";
 import CurrentSubscriptionPlan from "@/components/Billing/CurrentSubscriptionPlan";
 import ChangeSubscriptionPlan from "@/components/Billing/ChangeSubscriptionPlan";
@@ -46,7 +46,7 @@ const BillingPage = () => {
     });
 
     return (
-        <DashboardLayout>
+        <>
             {showSuccessPopup && (
                 <CustomPopup
                     title="Subscription Confirmed!"
@@ -82,7 +82,7 @@ const BillingPage = () => {
                     )}
                 </div>
             </div>
-        </DashboardLayout>
+        </>
     );
 };
 

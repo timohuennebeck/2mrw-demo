@@ -1,9 +1,8 @@
-import DashboardLayout from "../DashboardLayout";
 import HeaderWithDescription from "@/components/HeaderWithDescription";
 
 const SettingsPage = () => {
     return (
-        <DashboardLayout>
+        <>
             <div className="bg-white">
                 <HeaderWithDescription
                     title="Settings"
@@ -16,7 +15,7 @@ const SettingsPage = () => {
                     src/app/settings/page.tsx
                 </code>
             </div>
-        </DashboardLayout>
+        </>
     );
 };
 

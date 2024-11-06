@@ -1,9 +1,8 @@
 import HeaderWithDescription from "@/components/HeaderWithDescription";
-import DashboardLayout from "./DashboardLayout";
 
 const Home = () => {
     return (
-        <DashboardLayout>
+        <>
             <div className="bg-white">
                 <HeaderWithDescription
                     title="Home"
@@ -16,7 +15,7 @@ const Home = () => {
                     src/app/page.tsx
                 </code>
             </div>
-        </DashboardLayout>
+        </>
     );
 };
 
