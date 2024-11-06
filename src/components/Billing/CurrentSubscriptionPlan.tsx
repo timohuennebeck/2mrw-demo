@@ -11,7 +11,6 @@ import { BillingPlan, SubscriptionInterval } from "@/interfaces/StripePrices";
 import { CalendarClock } from "lucide-react";
 import { getFeaturesWithAvailability } from "@/services/domain/FeatureService";
 import { formatDateToDayMonthYear } from "@/lib/helper/DateHelper";
-import { SubscriptionTier } from "@/enums/SubscriptionTier";
 
 const _getProductPricing = (isFreeProduct: boolean, currentPrice: number) => {
     if (isFreeProduct) {
@@ -70,23 +69,24 @@ const CurrentSubscriptionPlan = () => {
     };
 
     const getSubscriptionStatusMessage = () => {
-        if (subscription?.subscription_tier === SubscriptionTier.FREE) {
+        if (subscription?.billing_plan === BillingPlan.NONE) {
             return "You are on the free plan which is free forever!";
         }
 
-        if (subscription?.end_date === null) {
-            return null;
+        if (subscription?.billing_plan === BillingPlan.ONE_TIME) {
+            return "You have lifetime access to this product!";
         }
 
-        switch (subscription?.status) {
-            case SubscriptionStatus.ACTIVE:
-                return `Your subscription renews on ${formatDateToDayMonthYear(subscription.end_date)}!`;
-            case SubscriptionStatus.CANCELLED:
-                return `Your subscription has been cancelled and will be downgraded to the free plan on ${formatDateToDayMonthYear(
-                    subscription.end_date,
-                )}!`;
-            default:
-                return null;
+        if (subscription?.billing_plan === BillingPlan.RECURRING) {
+            const formattedEndDate = formatDateToDayMonthYear(subscription?.end_date);
+
+            if (subscription?.status === SubscriptionStatus.ACTIVE) {
+                return `Your subscription renews on ${formattedEndDate}!`;
+            }
+
+            if (subscription?.status === SubscriptionStatus.CANCELLED) {
+                return `Your subscription will be downgraded to the free plan on ${formattedEndDate}!`;
+            }
         }
     };
 

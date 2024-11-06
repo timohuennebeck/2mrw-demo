@@ -19,7 +19,7 @@ import {
 import { BillingPlan } from "@/interfaces/StripePrices";
 import useClickOutside from "@/hooks/useClickOutside";
 import { useRouter } from "next/navigation";
-import { cancelUserSubscription } from "@/services/database/SubscriptionService";
+import { cancelUserSubscription, startFreePlan } from "@/services/database/SubscriptionService";
 import { ProductWithPrices } from "@/interfaces/ProductInterfaces";
 import { formatDateToDayMonthYear } from "@/lib/helper/DateHelper";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
@@ -27,14 +27,24 @@ import { User } from "@supabase/supabase-js";
 import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
 
 const _findButtonTitle = (isFreePlan: boolean, subscriptionStatus: SubscriptionStatus) => {
-    if (isFreePlan) return TextConstants.TEXT__DOWNGRADE_TO_FREE_PLAN;
-
     if (!subscriptionStatus) return TextConstants.TEXT__UNLOCK_PLAN;
+
+    if (isFreePlan) return TextConstants.TEXT__DOWNGRADE_TO_FREE_PLAN;
 
     return TextConstants.TEXT__CHANGE_PLAN;
 };
 
-const _isFreePlan = (products: ProductWithPrices[], selectedPlanId: string) => {
+const _isFreePlan = ({
+    products,
+    selectedPlanId,
+    subscriptionStatus,
+}: {
+    products: ProductWithPrices[];
+    selectedPlanId: string;
+    subscriptionStatus: SubscriptionStatus;
+}) => {
+    if (!subscriptionStatus) return false;
+
     return products.find((p) => p.id === selectedPlanId)?.billing_plan === BillingPlan.NONE;
 };
 
@@ -49,7 +59,7 @@ const _handleDowngradeToFreePlan = async (authUser: User, subscription: Purchase
         if (stripeCancellationError) {
             console.error("Failed to cancel Stripe subscription!");
             toast.error("Failed to cancel subscription in Stripe!");
-            return false;
+            return { success: false, error: stripeCancellationError };
         }
     }
 
@@ -65,7 +75,7 @@ const _handleDowngradeToFreePlan = async (authUser: User, subscription: Purchase
     toast.success(toastInfo);
 
     router.refresh();
-    return true;
+    return { success: true, error: null };
 };
 
 const ChangeSubscriptionPlan = () => {
@@ -94,6 +104,11 @@ const ChangeSubscriptionPlan = () => {
         products,
         activeStripePriceId,
     );
+    const isFreePlanSelected = _isFreePlan({
+        products,
+        selectedPlanId,
+        subscriptionStatus: subscription?.status,
+    });
 
     const getProductPriceDetails = (product: ProductWithPrices) => {
         const isFreePlan = product.billing_plan === BillingPlan.NONE;
@@ -102,9 +117,12 @@ const ChangeSubscriptionPlan = () => {
             ? null
             : getPriceForCurrentProduct(product.prices, subscriptionInterval);
 
-        const isSubscribedToPlan = isFreePlan
-            ? subscribedProductDetails?.id === product.id
-            : pricing?.stripe_price_id === activeStripePriceId;
+        // if the subscription is undefined, then there are no entries in the database and the user is not subscribed to any plan
+        const isSubscribedToPlan = subscription
+            ? isFreePlan
+                ? subscribedProductDetails?.id === product.id
+                : pricing?.stripe_price_id === activeStripePriceId
+            : false;
 
         return {
             isFreePlan,
@@ -122,10 +140,19 @@ const ChangeSubscriptionPlan = () => {
             const selectedProduct = products.find((p) => p.id === selectedPlanId);
             const isFreePlanSelected = selectedProduct?.billing_plan === BillingPlan.NONE;
 
+            // if the user isn't subscribed to any plan and wants the free plan, we need to start the free plan
+            if (isFreePlanSelected && !subscription?.status) {
+                const { error } = await startFreePlan(authUser?.id ?? "");
+                if (error) throw error;
+
+                router.replace("/billing?success=true");
+                return;
+            }
+
             // handles the downgrade of the free plan as we use this function for both the downgrade and the upgrade
             if (isFreePlanSelected && authUser) {
-                const success = await _handleDowngradeToFreePlan(authUser, subscription);
-                if (!success) return;
+                const { error } = await _handleDowngradeToFreePlan(authUser, subscription);
+                if (error) throw error;
             }
 
             const stripePriceId = getStripePriceIdBasedOnSelectedPlanId({
@@ -210,7 +237,11 @@ const ChangeSubscriptionPlan = () => {
                         {products
                             .filter((p) => {
                                 if (isOneTimePaymentEnabled()) {
-                                    return p.billing_plan === BillingPlan.ONE_TIME;
+                                    const isOneTimePlan = p.billing_plan === BillingPlan.ONE_TIME;
+                                    const showFreePlan =
+                                        isFreePlanEnabled() && p.billing_plan === BillingPlan.NONE;
+
+                                    return isOneTimePlan || showFreePlan;
                                 }
 
                                 return subscriptionInterval === SubscriptionInterval.NONE
@@ -288,16 +319,11 @@ const ChangeSubscriptionPlan = () => {
 
                     <div className="mt-6 flex items-start justify-start">
                         <CustomButton
-                            title={_findButtonTitle(
-                                _isFreePlan(products, selectedPlanId),
-                                subscription?.status,
-                            )}
+                            title={_findButtonTitle(isFreePlanSelected, subscription?.status)}
                             disabled={!selectedPlanId || isLoading}
                             isLoading={isLoading}
                             className={`${
-                                _isFreePlan(products, selectedPlanId)
-                                    ? "bg-red-600 text-white hover:bg-red-500"
-                                    : ""
+                                isFreePlanSelected ? "bg-red-600 text-white hover:bg-red-500" : ""
                             }`}
                         />
                     </div>

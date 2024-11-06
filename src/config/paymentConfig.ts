@@ -17,7 +17,7 @@ export const paymentConfig: CompletePaymentConfig = {
      */
     isFreePlanEnabled: true,
     currency: DEFAULT_CURRENCY,
-    billingPlan: BillingPlan.ONE_TIME,
+    billingPlan: BillingPlan.RECURRING,
 
     /**
      * the subscriptionSettings and oneTimeSettings are work in progress
