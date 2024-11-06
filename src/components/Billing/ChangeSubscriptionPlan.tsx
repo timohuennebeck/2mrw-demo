@@ -57,7 +57,7 @@ const ChangeSubscriptionPlan = () => {
     const isOneTimePaymentPlan = activeProductDetails?.price?.interval === BillingPlan.ONE_TIME;
 
     const getProductPriceDetails = (product: ProductWithPrices) => {
-        const isFreeProduct = product.billing_plan === BillingPlan.FREE;
+        const isFreeProduct = product.billing_plan === BillingPlan.NONE;
 
         const price = !isFreeProduct
             ? getPrice({
@@ -103,7 +103,7 @@ const ChangeSubscriptionPlan = () => {
             setShowConfirmationPopup(false);
 
             const selectedProduct = products.find((p) => p.id === selectedPlanId);
-            const isFreeProduct = selectedProduct?.billing_plan === BillingPlan.FREE;
+            const isFreeProduct = selectedProduct?.billing_plan === BillingPlan.NONE;
             const stripePriceId = getStripePriceIdBasedOnSelectedPlanId({
                 products,
                 selectedPlanId,
@@ -198,8 +198,8 @@ const ChangeSubscriptionPlan = () => {
                         {products
                             .filter((p) =>
                                 subscriptionInterval === SubscriptionInterval.FREE
-                                    ? p.billing_plan === BillingPlan.FREE
-                                    : p.billing_plan !== BillingPlan.FREE,
+                                    ? p.billing_plan === BillingPlan.NONE
+                                    : p.billing_plan !== BillingPlan.NONE,
                             )
                             .map((product) => {
                                 const { isFreeProduct, price, isSubscribedToPlan, isDisabled } =

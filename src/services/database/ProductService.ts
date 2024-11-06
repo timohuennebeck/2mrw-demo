@@ -32,7 +32,7 @@ export const fetchProductsWithPrices = async () => {
                 prices: prices.filter((price) => price.product_id === product.id),
             }))
             .filter((product) =>
-                isFreePlanEnabled() ? true : product.billing_plan !== BillingPlan.FREE,
+                isFreePlanEnabled() ? true : product.billing_plan !== BillingPlan.NONE,
             );
 
         return { products: productsWithPrices as ProductWithPrices[], error: null };

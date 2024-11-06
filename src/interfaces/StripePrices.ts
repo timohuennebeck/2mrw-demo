@@ -1,7 +1,7 @@
 export enum BillingPlan {
-    FREE = "FREE",
-    ONE_TIME = "ONE_TIME",
-    RECURRING = "RECURRING",
+    NONE = "NONE", // no plan selected -> Free Users
+    ONE_TIME = "ONE_TIME", // one-time payment -> Premium Users
+    RECURRING = "RECURRING", // recurring payment -> Premium Users
 }
 
 export enum SubscriptionInterval {

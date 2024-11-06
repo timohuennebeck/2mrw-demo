@@ -32,7 +32,7 @@ const CurrentSubscriptionPlan = () => {
         ? getFeaturesWithAvailability(productDetails.subscription_tier)
         : [];
 
-    const isFreeProduct = productDetails?.billing_plan === BillingPlan.FREE;
+    const isFreeProduct = productDetails?.billing_plan === BillingPlan.NONE;
 
     const renderStatusBadge = (text: string, variant: "green" | "yellow" | "red") => {
         const colors = {
