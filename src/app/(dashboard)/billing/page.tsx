@@ -1,6 +1,5 @@
 "use client";
 
-import DashboardLayout from "../../DashboardLayout";
 import BillingPortal from "@/components/Billing/BillingPortal";
 import CurrentSubscriptionPlan from "@/components/Billing/CurrentSubscriptionPlan";
 import ChangeSubscriptionPlan from "@/components/Billing/ChangeSubscriptionPlan";
@@ -13,10 +12,10 @@ import CustomPopup from "@/components/CustomPopup";
 import { Check } from "lucide-react";
 import { useState } from "react";
 import useSuccessParam from "@/hooks/useSuccessParam";
-import { hasUserPremiumOrFreeTrial } from "@/lib/helper/subscriptionHelper";
 import { useProducts } from "@/context/ProductsContext";
 import CurrentSubscriptionPlanSkeleton from "@/components/ui/CurrentSubscriptionPlanSkeleton";
 import ChangeSubscriptionPlanSkeleton from "@/components/ui/ChangeSubscriptionPlanSkeleton";
+import { hasUserPremiumOrFreeTrial } from "@/lib/helper/SubscriptionHelper";
 
 const BillingPage = () => {
     const { authUser } = useSession();
