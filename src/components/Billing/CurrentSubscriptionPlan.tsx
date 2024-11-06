@@ -77,16 +77,14 @@ const CurrentSubscriptionPlan = () => {
             return null;
         }
 
-        const formattedEndDate = formatDateToDayMonthYear(
-            freeTrial?.end_date ?? subscription?.end_date,
-        );
-
         if (freeTrial?.status === FreeTrialStatus.ACTIVE) {
-            return `Your free trial will end on ${formattedEndDate}!`;
+            return `Your free trial will end on ${formatDateToDayMonthYear(freeTrial.end_date)}!`;
         } else if (subscription?.status === SubscriptionStatus.ACTIVE) {
-            return `Your subscription renews on ${formattedEndDate}!`;
+            return `Your subscription renews on ${formatDateToDayMonthYear(subscription.end_date)}!`;
         } else if (subscription?.status === SubscriptionStatus.CANCELLED) {
-            return `Your subscription will be cancelled on ${formattedEndDate}!`;
+            return `Your subscription will be cancelled on ${formatDateToDayMonthYear(
+                subscription.end_date,
+            )}!`;
         }
 
         return null;

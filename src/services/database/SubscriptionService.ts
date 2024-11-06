@@ -13,6 +13,51 @@ import { sendEmail } from "@/lib/email/emailService";
 import { checkRowExists, getClients, getEndDate } from "./BaseService";
 import { handleSupabaseError } from "@/lib/helper/SupabaseHelper";
 import { getProductNameByTier } from "./ProductService";
+import { SubscriptionTier } from "@/enums/SubscriptionTier";
+
+const _sendSubscriptionConfirmationEmail = async (
+    userId: string,
+    subscriptionTier: SubscriptionTier,
+) => {
+    try {
+        const { supabase } = await getClients();
+
+        const { data: userData, error: userError } = await supabase
+            .from("users")
+            .select("first_name, email")
+            .eq("id", userId)
+            .single();
+
+        if (userError) {
+            console.error("Failed to fetch user data for email:", userError);
+            return { success: true, error: null };
+        }
+
+        const purchasedPackage = await getProductNameByTier(subscriptionTier);
+
+        const { error: validationError } = validateEmailProps(
+            EmailTemplate.SUBSCRIPTION_CONFIRMATION,
+            {
+                userEmail: userData.email,
+                userFirstName: userData.first_name,
+                purchasedPackage,
+            },
+        );
+
+        if (validationError) {
+            console.error("Invalid email props:", validationError);
+            return { success: true, error: null };
+        }
+
+        await sendEmail(EmailTemplate.SUBSCRIPTION_CONFIRMATION, {
+            userEmail: userData.email,
+            userFirstName: userData.first_name,
+            purchasedPackage,
+        });
+    } catch (emailError) {
+        console.error("Failed to send onboarding email:", emailError);
+    }
+};
 
 export const fetchUserSubscription = async (userId: string) => {
     try {
@@ -60,10 +105,11 @@ export const startUserSubscription = async ({
     billingPlan,
 }: CreatePurchasedSubscriptionTableParams) => {
     try {
-        const { supabase } = await getClients();
+        const { adminSupabase } = await getClients();
+
         const endDate = await getEndDate(stripeSubscriptionId ?? "");
 
-        const { error } = await supabase.from("purchased_subscriptions").insert({
+        const { error } = await adminSupabase.from("purchased_subscriptions").insert({
             user_id: userId,
             stripe_price_id: stripePriceId,
             status: SubscriptionStatus.ACTIVE,
@@ -77,42 +123,14 @@ export const startUserSubscription = async ({
 
         if (error) throw error;
 
-        try {
-            const { data: userData, error: userError } = await supabase
-                .from("users")
-                .select("first_name, email")
-                .eq("id", userId)
-                .single();
+        await adminSupabase.auth.admin.updateUserById(userId, {
+            user_metadata: {
+                subscription_status: SubscriptionStatus.ACTIVE,
+                subscription_updated_at: moment().toISOString(),
+            },
+        });
 
-            if (userError) {
-                console.error("Failed to fetch user data for email:", userError);
-                return { success: true, error: null };
-            }
-
-            const purchasedPackage = await getProductNameByTier(subscriptionTier);
-
-            const { error: validationError } = validateEmailProps(
-                EmailTemplate.SUBSCRIPTION_CONFIRMATION,
-                {
-                    userEmail: userData.email,
-                    userFirstName: userData.first_name,
-                    purchasedPackage,
-                },
-            );
-
-            if (validationError) {
-                console.error("Invalid email props:", validationError);
-                return { success: true, error: null };
-            }
-
-            await sendEmail(EmailTemplate.SUBSCRIPTION_CONFIRMATION, {
-                userEmail: userData.email,
-                userFirstName: userData.first_name,
-                purchasedPackage,
-            });
-        } catch (emailError) {
-            console.error("Failed to send onboarding email:", emailError);
-        }
+        await _sendSubscriptionConfirmationEmail(userId, subscriptionTier);
 
         return { success: true, error: null };
     } catch (error) {

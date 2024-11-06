@@ -21,7 +21,7 @@ interface CompletePaymentConfig {
 
 export const paymentConfig: CompletePaymentConfig = {
     // TOOD: remove this as we now have billing_plan inside the database
-    paymentType: BillingPlan.SUBSCRIPTION, // set which payment type is active
+    paymentType: BillingPlan.RECURRING, // set which payment type is active
     isFreePlanEnabled: true,
     currency: "EUR",
 
@@ -43,7 +43,7 @@ export const paymentConfig: CompletePaymentConfig = {
 
 // helper functions to get the active settings
 export const getCurrentPaymentSettings = () => {
-    return paymentConfig.paymentType === BillingPlan.SUBSCRIPTION
+    return paymentConfig.paymentType === BillingPlan.RECURRING
         ? paymentConfig.subscriptionSettings
         : paymentConfig.oneTimeSettings;
 };

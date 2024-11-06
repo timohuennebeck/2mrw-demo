@@ -32,7 +32,7 @@ const _getStripePriceId = (prices: StripePrice[], billingCycle: SubscriptionInte
         return oneTimePrice?.stripe_price_id ?? "";
     }
 
-    const subscriptionPrices = prices.filter((p) => p.billing_plan === BillingPlan.SUBSCRIPTION);
+    const subscriptionPrices = prices.filter((p) => p.billing_plan === BillingPlan.RECURRING);
 
     const subscriptionPrice =
         subscriptionPrices.find((p) => p.subscription_interval === billingCycle)?.stripe_price_id ??

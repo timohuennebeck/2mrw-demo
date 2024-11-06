@@ -1,7 +1,7 @@
 export enum BillingPlan {
     FREE = "FREE",
     ONE_TIME = "ONE_TIME",
-    SUBSCRIPTION = "SUBSCRIPTION",
+    RECURRING = "RECURRING",
 }
 
 export enum SubscriptionInterval {

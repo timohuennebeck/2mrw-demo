@@ -21,12 +21,9 @@ import {
 import { BillingPlan } from "@/interfaces/StripePrices";
 import useClickOutside from "@/hooks/useClickOutside";
 import { useRouter } from "next/navigation";
-import {
-    cancelUserSubscription,
-    startUserSubscription,
-} from "@/services/database/SubscriptionService";
-import { SubscriptionTier } from "@/enums/SubscriptionTier";
+import { cancelUserSubscription } from "@/services/database/SubscriptionService";
 import { ProductWithPrices } from "@/interfaces/ProductInterfaces";
+import { formatDateToDayMonthYear } from "@/lib/helper/DateHelper";
 
 const ChangeSubscriptionPlan = () => {
     const { authUser } = useSession();
@@ -67,7 +64,7 @@ const ChangeSubscriptionPlan = () => {
                   product,
                   billingPlan: isOneTimePaymentPlan
                       ? BillingPlan.ONE_TIME
-                      : BillingPlan.SUBSCRIPTION,
+                      : BillingPlan.RECURRING,
                   interval:
                       subscriptionInterval === SubscriptionInterval.MONTHLY
                           ? SubscriptionInterval.MONTHLY
@@ -111,7 +108,7 @@ const ChangeSubscriptionPlan = () => {
                 products,
                 selectedPlanId,
                 subscriptionInterval,
-                billingPlan: selectedProduct?.billing_plan ?? BillingPlan.SUBSCRIPTION,
+                billingPlan: selectedProduct?.billing_plan ?? BillingPlan.RECURRING,
             });
 
             if (isFreeProduct) {
@@ -119,17 +116,15 @@ const ChangeSubscriptionPlan = () => {
                     await cancelStripeSubscription(subscription.stripe_subscription_id);
                 }
 
+                /**
+                 * cancels the user subscription in the database = SubscriptionStatus.CANCELLED
+                 * a cron job will run on the next billing date to downgrade the user to the free plan
+                 */
+
                 await cancelUserSubscription(authUser?.id ?? "", subscription?.end_date ?? "");
 
-                await startUserSubscription({
-                    userId: authUser?.id ?? "",
-                    stripePriceId: null,
-                    subscriptionTier: SubscriptionTier.FREE,
-                    stripeSubscriptionId: null,
-                    billingPlan: BillingPlan.FREE,
-                });
-
-                toast.success("You've been downgraded to the free plan.");
+                const subscriptionEndDate = formatDateToDayMonthYear(subscription?.end_date ?? "");
+                toast.success(`You'll be downgraded to the free plan on ${subscriptionEndDate}!`);
                 router.refresh();
                 return;
             }
