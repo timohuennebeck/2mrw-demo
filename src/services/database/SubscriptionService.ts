@@ -220,6 +220,40 @@ export const updateUserSubscription = async ({
     }
 };
 
+export const downgradeUserToFreePlan = async (userId: string) => {
+    try {
+        const adminSupabase = await createSupabasePowerUserClient();
+
+        const { error } = await adminSupabase
+            .from("user_subscriptions")
+            .update({
+                status: SubscriptionStatus.ACTIVE,
+                subscription_tier: SubscriptionTier.FREE,
+                billing_plan: BillingPlan.NONE,
+                stripe_price_id: null,
+                stripe_subscription_id: null,
+                end_date: null,
+                updated_at: moment().toISOString(),
+            })
+            .eq("user_id", userId);
+
+        await adminSupabase.auth.admin.updateUserById(userId, {
+            user_metadata: {
+                subscription_status: SubscriptionStatus.ACTIVE,
+                subscription_updated_at: moment().toISOString(),
+            },
+        });
+
+        if (error) throw error;
+        return { success: true, error: null };
+    } catch (error) {
+        return {
+            success: null,
+            error: handleSupabaseError({ error, fnTitle: "startFreePlan" }),
+        };
+    }
+};
+
 export const startFreePlan = async (userId: string) => {
     try {
         const adminSupabase = await createSupabasePowerUserClient();
@@ -232,7 +266,6 @@ export const startFreePlan = async (userId: string) => {
             stripe_price_id: null,
             stripe_subscription_id: null,
             end_date: null,
-            created_at: moment().toISOString(),
             updated_at: moment().toISOString(),
         });
 

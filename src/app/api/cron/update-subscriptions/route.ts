@@ -1,6 +1,9 @@
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { createSupabasePowerUserClient } from "@/services/integration/admin";
-import { terminateUserSubscription } from "@/services/database/SubscriptionService";
+import {
+    downgradeUserToFreePlan,
+    terminateUserSubscription,
+} from "@/services/database/SubscriptionService";
 import moment from "moment";
 import { NextResponse as response } from "next/server";
 
@@ -25,11 +28,10 @@ export const GET = async () => {
                 const { error } = await terminateUserSubscription(subscription.user_id);
                 if (error) throw error;
 
-                await adminSupabase.auth.admin.updateUserById(subscription.user_id, {
-                    user_metadata: {
-                        subscription_status: SubscriptionStatus.EXPIRED,
-                    },
-                });
+                const { error: updateUserError } = await downgradeUserToFreePlan(
+                    subscription.user_id,
+                ); // downgrade the user to the free plan as he has not renewed the subscription
+                if (updateUserError) throw updateUserError;
             }
         });
 
