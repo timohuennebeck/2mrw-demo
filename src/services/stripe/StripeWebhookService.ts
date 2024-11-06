@@ -3,7 +3,7 @@ import moment from "moment";
 import Stripe from "stripe";
 import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { endUserFreeTrial, fetchUserFreeTrial } from "@/services/database/FreeTrialService";
-import { getClients, getEndDate } from "../database/BaseService";
+import { getEndDate } from "../database/BaseService";
 import { fetchBillingPlan, fetchSubscriptionTier } from "../database/ProductService";
 import {
     cancelUserSubscription,
@@ -11,6 +11,7 @@ import {
     startUserSubscription,
     updateUserSubscription,
 } from "../database/SubscriptionService";
+import { createSupabasePowerUserClient } from "../integration/admin";
 
 const _handleFreeTrial = async (userId: string) => {
     if (!userId) throw new Error("User id is required!");
@@ -53,7 +54,7 @@ export const handleCheckoutSessionCompleted = async (
     session: Stripe.Checkout.Session,
     userId: string,
 ) => {
-    const { adminSupabase } = await getClients();
+    const adminSupabase = await createSupabasePowerUserClient();
 
     const stripePriceId = session.line_items?.data[0].price?.id;
     if (!stripePriceId) throw new Error("Stripe price id is missing!");

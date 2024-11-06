@@ -1,7 +1,7 @@
 "use server";
 
 import { TextConstants } from "@/constants/TextConstants";
-import { getClients } from "@/services/database/BaseService";
+import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { revalidatePath } from "next/cache";
 
 interface UpdatePasswordProps {
@@ -10,12 +10,12 @@ interface UpdatePasswordProps {
 }
 
 export const updatePassword = async ({ password, authCode }: UpdatePasswordProps) => {
-    const { supabase } = await getClients();
+    const adminSupabase = await createSupabasePowerUserClient();
 
     try {
-        const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(authCode);
+        const { error: exchangeError } = await adminSupabase.auth.exchangeCodeForSession(authCode);
 
-        const { error } = await supabase.auth.updateUser({ password });
+        const { error } = await adminSupabase.auth.updateUser({ password });
 
         if (error || exchangeError) throw error;
 

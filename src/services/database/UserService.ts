@@ -2,15 +2,17 @@
 
 import { User } from "@/interfaces/UserInterfaces";
 import { User as SupabaseUser } from "@supabase/supabase-js";
-import { getClients } from "./BaseService";
 import moment from "moment";
 import { handleSupabaseError } from "@/lib/helper/SupabaseHelper";
+import { createClient } from "../integration/server";
 
 export const checkEmailExists = async (userEmail: string) => {
     try {
-        const { supabase } = await getClients();
+        const supabase = createClient();
 
-        const { error } = await supabase
+        console.log("→ [LOG] userEmail", userEmail);
+
+        const { data, error } = await supabase
             .from("users")
             .select("email")
             .eq("email", userEmail)
@@ -29,7 +31,7 @@ export const checkEmailExists = async (userEmail: string) => {
 
 export const fetchUser = async (userId: string) => {
     try {
-        const { supabase } = await getClients();
+        const supabase = createClient();
 
         const { data: user, error } = await supabase
             .from("users")
@@ -50,7 +52,7 @@ export const fetchUser = async (userId: string) => {
 
 export const getUserId = async () => {
     try {
-        const { supabase } = await getClients();
+        const supabase = createClient();
         const { data, error } = await supabase.from("users").select("id").single();
 
         if (error) throw error;
@@ -63,7 +65,7 @@ export const getUserId = async () => {
 
 export const createUserTable = async (authUser: SupabaseUser) => {
     try {
-        const { supabase } = await getClients();
+        const supabase = createClient();
 
         const { error } = await supabase.from("users").insert({
             id: authUser.id,
@@ -86,7 +88,7 @@ export const createUserTable = async (authUser: SupabaseUser) => {
 
 export const updateUserStripeCustomerId = async (userId: string, stripeCustomerId: string) => {
     try {
-        const { supabase } = await getClients();
+        const supabase = createClient();
 
         const { error } = await supabase
             .from("users")

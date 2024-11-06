@@ -1,10 +1,10 @@
 "use server";
 
 import { TextConstants } from "@/constants/TextConstants";
-import { getClients } from "@/services/database/BaseService";
+import { createSupabasePowerUserClient } from "@/services/integration/admin";
 
 export const sendPasswordResetEmail = async ({ email }: { email: string }) => {
-    const { adminSupabase } = await getClients();
+    const adminSupabase = await createSupabasePowerUserClient();
 
     if (!email) {
         return { error: TextConstants.TEXT__PLEASE_ENTER_AN_EMAIL };

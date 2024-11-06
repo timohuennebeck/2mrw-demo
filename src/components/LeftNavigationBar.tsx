@@ -15,13 +15,13 @@ import { TextConstants } from "@/constants/TextConstants";
 import { useRouter, usePathname } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import Image from "next/image";
-import { getClients } from "@/services/database/BaseService";
+import { createSupabasePowerUserClient } from "@/services/integration/admin";
 
 export const _handleSignOut = async (router: AppRouterInstance) => {
-    const { supabase } = await getClients();
+    const adminSupabase = await createSupabasePowerUserClient();
 
     try {
-        const { error } = await supabase.auth.signOut();
+        const { error } = await adminSupabase.auth.signOut();
 
         if (error) {
             toast.error(`${TextConstants.ERROR_SIGNING_OUT}: ${error.message}`);

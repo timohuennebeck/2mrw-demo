@@ -1,15 +1,14 @@
 "use server";
 
 import Stripe from "stripe";
-import { createSupabasePowerUserClient } from "../integration/admin";
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import moment from "moment";
-import { createClient } from "../integration/client";
+import { createClient } from "../integration/server";
 
-const supabase = createClient();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 
 export const checkRowExists = async (tableId: string, userId: string) => {
+    const supabase = createClient();
     try {
         const { error } = await supabase
             .from(tableId)
@@ -47,9 +46,3 @@ export const getEndDate = async (stripeSubscriptionId: string) => {
         return null;
     }
 };
-
-export const getClients = async () => ({
-    supabase,
-    adminSupabase: await createSupabasePowerUserClient(),
-    stripe,
-});

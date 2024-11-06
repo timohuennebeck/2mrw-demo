@@ -3,13 +3,13 @@ import moment from "moment";
 import { NextResponse as response } from "next/server";
 import { EmailTemplate, sendEmail } from "@/lib/email/emailService";
 import { validateEmailProps } from "@/lib/validation/emailValidation";
-import { getClients } from "@/services/database/BaseService";
+import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { endUserFreeTrial } from "@/services/database/FreeTrialService";
 
 export const dynamic = "force-dynamic";
 
 export const GET = async () => {
-    const { adminSupabase } = await getClients();
+    const adminSupabase = await createSupabasePowerUserClient();
 
     try {
         const { data: activeTrials, error: fetchError } = await adminSupabase

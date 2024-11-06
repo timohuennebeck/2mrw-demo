@@ -10,17 +10,19 @@ import moment from "moment";
 import { EmailTemplate } from "@/lib/email/emailService";
 import { validateEmailProps } from "@/lib/validation/emailValidation";
 import { sendEmail } from "@/lib/email/emailService";
-import { checkRowExists, getClients, getEndDate } from "./BaseService";
+import { checkRowExists, getEndDate } from "./BaseService";
 import { handleSupabaseError } from "@/lib/helper/SupabaseHelper";
 import { getProductNameByTier } from "./ProductService";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
+import { createClient } from "../integration/server";
+import { createSupabasePowerUserClient } from "../integration/admin";
 
 const _sendSubscriptionConfirmationEmail = async (
     userId: string,
     subscriptionTier: SubscriptionTier,
 ) => {
     try {
-        const { supabase } = await getClients();
+        const supabase = createClient();
 
         const { data: userData, error: userError } = await supabase
             .from("users")
@@ -61,7 +63,7 @@ const _sendSubscriptionConfirmationEmail = async (
 
 export const fetchUserSubscription = async (userId: string) => {
     try {
-        const { supabase } = await getClients();
+        const supabase = createClient();
 
         const defaultResponse = {
             subscription: null,
@@ -105,7 +107,7 @@ export const startUserSubscription = async ({
     billingPlan,
 }: CreatePurchasedSubscriptionTableParams) => {
     try {
-        const { adminSupabase } = await getClients();
+        const adminSupabase = await createSupabasePowerUserClient();
 
         const endDate = await getEndDate(stripeSubscriptionId ?? "");
 
@@ -143,7 +145,7 @@ export const startUserSubscription = async ({
 
 export const endUserSubscription = async (userId: string) => {
     try {
-        const { adminSupabase } = await getClients();
+        const adminSupabase = await createSupabasePowerUserClient();
 
         const { error } = await adminSupabase
             .from("user_subscriptions")
@@ -179,7 +181,7 @@ export const updateUserSubscription = async ({
     billingPlan,
 }: UpdateUserSubscriptionStatusParams) => {
     try {
-        const { adminSupabase } = await getClients();
+        const adminSupabase = await createSupabasePowerUserClient();
 
         const { error } = await adminSupabase
             .from("user_subscriptions")
@@ -213,7 +215,7 @@ export const updateUserSubscription = async ({
 
 export const cancelUserSubscription = async (userId: string, endDate: string) => {
     try {
-        const { adminSupabase } = await getClients();
+        const adminSupabase = await createSupabasePowerUserClient();
 
         const { error } = await adminSupabase
             .from("user_subscriptions")

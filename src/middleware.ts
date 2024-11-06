@@ -1,7 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest as nextRequest, NextResponse as nextResponse } from "next/server";
 import { User } from "@supabase/supabase-js";
-import { hasUserPremiumOrFreeTrial } from "./lib/helper/subscriptionHelper";
+import { hasUserPremiumOrFreeTrial } from "./lib/helper/SubscriptionHelper";
+
 
 const HIDE_ON_PREMIUM_PLAN = ["/choose-pricing-plan"];
 
@@ -60,6 +61,8 @@ export const middleware = async (request: nextRequest) => {
     const {
         data: { user },
     } = await supabaseClient.auth.getUser();
+
+    console.log('→ [LOG] user', user);
 
     const routingResponse = await _handleRedirection({ request, user });
     if (routingResponse) return routingResponse;

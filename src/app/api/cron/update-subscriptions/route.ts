@@ -1,5 +1,5 @@
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
-import { getClients } from "@/services/database/BaseService";
+import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { endUserSubscription } from "@/services/database/SubscriptionService";
 import moment from "moment";
 import { NextResponse as response } from "next/server";
@@ -7,7 +7,7 @@ import { NextResponse as response } from "next/server";
 export const dynamic = "force-dynamic";
 
 export const GET = async () => {
-    const { adminSupabase } = await getClients();
+    const adminSupabase = await createSupabasePowerUserClient();
 
     try {
         const { data: activeSubscriptions, error: fetchError } = await adminSupabase

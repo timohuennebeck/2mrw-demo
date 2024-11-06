@@ -3,7 +3,7 @@
 import { TextConstants } from "@/constants/TextConstants";
 import { SupabaseErrors } from "@/enums/SupabaseErrors";
 import { checkEmailExists } from "@/services/database/UserService";
-import { createClient } from "@/services/integration/server";
+import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { AuthError } from "@supabase/supabase-js";
 
 export const signUp = async ({
@@ -15,7 +15,7 @@ export const signUp = async ({
     email: string;
     password: string;
 }) => {
-    const supabase = createClient();
+    const adminSupabase = await createSupabasePowerUserClient();
 
     try {
         const { emailExists } = await checkEmailExists(email);
@@ -24,7 +24,7 @@ export const signUp = async ({
             return { error: TextConstants.ERROR__EMAIL_ALREADY_IN_USE };
         }
 
-        const { data, error } = await supabase.auth.signUp({
+        const { data, error } = await adminSupabase.auth.signUp({
             email,
             password,
             options: {
@@ -51,14 +51,14 @@ export const signUp = async ({
 };
 
 export const sendConfirmationEmail = async ({ email }: { email: string }) => {
-    const supabase = createClient();
+    const adminSupabase = await createSupabasePowerUserClient();
 
     if (!email) {
         return { error: TextConstants.ERROR__EMAIL_IS_MISSING };
     }
 
     try {
-        const { error } = await supabase.auth.resend({
+        const { error } = await adminSupabase.auth.resend({
             type: "signup",
             email: email,
         });

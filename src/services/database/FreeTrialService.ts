@@ -4,11 +4,13 @@ import { FreeTrialStatus } from "@/enums/FreeTrialStatus";
 import { FreeTrial } from "@/interfaces/FreeTrial";
 import moment from "moment";
 import { StartUserFreeTrialParams } from "../integration/supabaseInterfaces";
-import { checkRowExists, getClients } from "./BaseService";
+import { checkRowExists } from "./BaseService";
 import { handleSupabaseError } from "@/lib/helper/SupabaseHelper";
+import { createClient } from "../integration/server";
+import { createSupabasePowerUserClient } from "../integration/admin";
 
 export const fetchUserFreeTrial = async (userId: string) => {
-    const { supabase } = await getClients();
+    const supabase = createClient();
 
     try {
         const { rowExists, error: rowCheckError } = await checkRowExists("free_trials", userId);
@@ -47,7 +49,7 @@ export const startUserFreeTrial = async ({
     stripePriceId,
     freeTrialEndDate,
 }: StartUserFreeTrialParams) => {
-    const { adminSupabase } = await getClients();
+    const supabase = createClient();
 
     try {
         const { error } = await adminSupabase.from("free_trials").insert({
@@ -72,7 +74,7 @@ export const startUserFreeTrial = async ({
 };
 
 export const endUserFreeTrial = async (userId: string) => {
-    const { adminSupabase } = await getClients();
+    const adminSupabase = await createSupabasePowerUserClient();
 
     try {
         const { error } = await adminSupabase
@@ -101,7 +103,7 @@ export const endUserFreeTrial = async (userId: string) => {
 };
 
 export const cancelUserFreeTrial = async (userId: string) => {
-    const { adminSupabase } = await getClients();
+    const adminSupabase = await createSupabasePowerUserClient();
 
     try {
         const { error } = await adminSupabase
