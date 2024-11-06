@@ -8,10 +8,10 @@ import { PlanPricing } from "./PlanPricing";
 import { User } from "@supabase/supabase-js";
 import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
-import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { TextConstants } from "@/constants/TextConstants";
 import { BillingPlan, StripePrice, SubscriptionInterval } from "@/interfaces/StripePrices";
 import { getFeaturesWithAvailability } from "@/services/domain/FeatureService";
+import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 
 interface PricingPlanCardProps extends ProductWithPrices {
     supabaseUser: User | null;

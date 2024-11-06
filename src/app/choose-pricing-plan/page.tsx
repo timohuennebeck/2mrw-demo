@@ -5,13 +5,12 @@ import { PricingPlanCardSkeleton } from "@/components/ui/PricingPlanCardSkeleton
 import { useSubscription } from "@/hooks/useSubscription";
 import { ProductWithPrices } from "@/interfaces/ProductInterfaces";
 import { useState } from "react";
-import { isFreePlanEnabled, isOneTimePaymentEnabled, paymentConfig } from "@/config/paymentConfig";
+import { isFreePlanEnabled, isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { TextConstants } from "@/constants/TextConstants";
 import { useProducts } from "@/context/ProductsContext";
 import { useSession } from "@/context/SessionContext";
 import { SubscriptionInterval } from "@/interfaces/StripePrices";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
-import BillingPlanSkeleton from "@/components/ui/BillingPlanSkeleton";
 
 const ChoosePricingPlanPage = () => {
     const [billingCycle, setBillingCycle] = useState<SubscriptionInterval>(
@@ -41,43 +40,31 @@ const ChoosePricingPlanPage = () => {
         );
     });
 
+    const getSubscriptionIntervalText = (interval: SubscriptionInterval) => {
+        return interval === SubscriptionInterval.YEARLY
+            ? `${TextConstants.TEXT__YEARLY.toUpperCase()}`
+            : `${TextConstants.TEXT__MONTHLY.toUpperCase()}`;
+    };
+
+    const SubscriptionIntervalButton = ({ interval }: { interval: SubscriptionInterval }) => (
+        <button
+            onClick={() => setBillingCycle(interval)}
+            className={`rounded px-3 py-1 text-sm ${
+                billingCycle === interval ? "bg-neutral-900 text-white" : "bg-neutral-100"
+            }`}
+        >
+            {getSubscriptionIntervalText(interval)}
+        </button>
+    );
+
     return (
         <div className="flex h-full min-h-screen w-full items-center justify-center">
             <div className="container px-4 py-8">
                 {!isOneTimePaymentEnabled() && (
                     <div className="mb-8 flex justify-center">
                         <div className="flex gap-2">
-                            {!products || isSubscriptionLoading ? (
-                                <>
-                                    <BillingPlanSkeleton />
-                                    <BillingPlanSkeleton isYearly />
-                                </>
-                            ) : (
-                                <>
-                                    <button
-                                        onClick={() =>
-                                            setBillingCycle(SubscriptionInterval.MONTHLY)
-                                        }
-                                        className={`rounded px-3 py-1 text-sm ${
-                                            billingCycle === SubscriptionInterval.MONTHLY
-                                                ? "bg-neutral-900 text-white"
-                                                : "bg-neutral-100"
-                                        }`}
-                                    >
-                                        {TextConstants.TEXT__MONTHLY.toUpperCase()}
-                                    </button>
-                                    <button
-                                        onClick={() => setBillingCycle(SubscriptionInterval.YEARLY)}
-                                        className={`rounded px-3 py-1 text-sm ${
-                                            billingCycle === SubscriptionInterval.YEARLY
-                                                ? "bg-neutral-900 text-white"
-                                                : "bg-neutral-100"
-                                        }`}
-                                    >
-                                        {`${TextConstants.TEXT__YEARLY.toUpperCase()} (${paymentConfig.subscriptionSettings.yearlyDiscountPercentage}%)`}
-                                    </button>
-                                </>
-                            )}
+                            <SubscriptionIntervalButton interval={SubscriptionInterval.MONTHLY} />
+                            <SubscriptionIntervalButton interval={SubscriptionInterval.YEARLY} />
                         </div>
                     </div>
                 )}
