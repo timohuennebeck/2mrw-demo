@@ -14,7 +14,7 @@ import useSuccessParam from "@/hooks/useSuccessParam";
 import { useProducts } from "@/context/ProductsContext";
 import CurrentSubscriptionPlanSkeleton from "@/components/ui/CurrentSubscriptionPlanSkeleton";
 import ChangeSubscriptionPlanSkeleton from "@/components/ui/ChangeSubscriptionPlanSkeleton";
-import { BillingPlan } from "@/interfaces/StripePrices";
+import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 
 const BillingPage = () => {
     const { authUser } = useSession();
@@ -39,10 +39,10 @@ const BillingPage = () => {
      * one-time payments do not have a change plan option, so it's not shown
      */
 
-    const isRecurringBillingPlan = subscription?.billing_plan === BillingPlan.RECURRING;
-    const hasPurchasedPlan = subscription?.stripe_price_id !== undefined;
+    const hasPurchasedPlan = subscription?.stripe_price_id;
+    const hasCancelledPlan = subscription?.status === SubscriptionStatus.CANCELLED;
 
-    const showChangeSubscriptionPlan = !isLoading && (isRecurringBillingPlan || !hasPurchasedPlan);
+    const showChangeSubscriptionPlan = !isLoading && (!hasCancelledPlan || !hasPurchasedPlan);
 
     return (
         <>

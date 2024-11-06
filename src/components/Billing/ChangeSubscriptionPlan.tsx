@@ -48,36 +48,6 @@ const _isFreePlan = ({
     return products.find((p) => p.id === selectedPlanId)?.billing_plan === BillingPlan.NONE;
 };
 
-const _handleDowngradeToFreePlan = async (authUser: User, subscription: PurchasedSubscription) => {
-    const router = useRouter();
-
-    if (subscription?.stripe_subscription_id) {
-        const { error: stripeCancellationError } = await cancelStripeSubscription(
-            subscription.stripe_subscription_id,
-        );
-
-        if (stripeCancellationError) {
-            console.error("Failed to cancel Stripe subscription!");
-            toast.error("Failed to cancel subscription in Stripe!");
-            return { success: false, error: stripeCancellationError };
-        }
-    }
-
-    /**
-     * cancels the user subscription in the database = SubscriptionStatus.CANCELLED
-     * a cron job will run on the next billing date to downgrade the user to the free plan
-     */
-
-    await cancelUserSubscription(authUser?.id ?? "", subscription?.end_date ?? "");
-
-    const subscriptionEndDate = formatDateToDayMonthYear(subscription?.end_date ?? "");
-    const toastInfo = `Your subscription has been cancelled and will be downgraded to the free plan on ${subscriptionEndDate}!`;
-    toast.success(toastInfo);
-
-    router.refresh();
-    return { success: true, error: null };
-};
-
 const ChangeSubscriptionPlan = () => {
     const { authUser } = useSession();
     const { products } = useProducts();
@@ -132,6 +102,37 @@ const ChangeSubscriptionPlan = () => {
         };
     };
 
+    const handleDowngradeToFreePlan = async (
+        authUser: User,
+        subscription: PurchasedSubscription,
+    ) => {
+        if (subscription?.stripe_subscription_id) {
+            const { error: stripeCancellationError } = await cancelStripeSubscription(
+                subscription.stripe_subscription_id,
+            );
+
+            if (stripeCancellationError) {
+                console.error("Failed to cancel Stripe subscription!");
+                toast.error("Failed to cancel subscription in Stripe!");
+                return { success: false, error: stripeCancellationError };
+            }
+        }
+
+        /**
+         * cancels the user subscription in the database = SubscriptionStatus.CANCELLED
+         * a cron job will run on the next billing date to downgrade the user to the free plan
+         */
+
+        await cancelUserSubscription(authUser?.id ?? "", subscription?.end_date ?? "");
+
+        const subscriptionEndDate = formatDateToDayMonthYear(subscription?.end_date ?? "");
+        const toastInfo = `Your subscription has been cancelled and will be downgraded to the free plan on ${subscriptionEndDate}!`;
+        toast.success(toastInfo);
+
+        router.refresh();
+        return { success: true, error: null };
+    };
+
     const handleConfirmSubscription = async () => {
         try {
             setIsLoading(true);
@@ -144,15 +145,14 @@ const ChangeSubscriptionPlan = () => {
             if (isFreePlanSelected && !subscription?.status) {
                 const { error } = await startFreePlan(authUser?.id ?? "");
                 if (error) throw error;
-
-                router.replace("/billing?success=true");
                 return;
             }
 
             // handles the downgrade of the free plan as we use this function for both the downgrade and the upgrade
             if (isFreePlanSelected && authUser) {
-                const { error } = await _handleDowngradeToFreePlan(authUser, subscription);
+                const { error } = await handleDowngradeToFreePlan(authUser, subscription);
                 if (error) throw error;
+                return;
             }
 
             const stripePriceId = getStripePriceIdBasedOnSelectedPlanId({
