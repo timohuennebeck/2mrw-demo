@@ -216,9 +216,9 @@ export const updateUserSubscription = async ({
 
 export const startFreePlan = async (userId: string) => {
     try {
-        const supabase = await createClient();
+        const adminSupabase = await createSupabasePowerUserClient();
 
-        const { error } = await supabase.from("user_subscriptions").insert({
+        const { error } = await adminSupabase.from("user_subscriptions").insert({
             user_id: userId,
             status: SubscriptionStatus.ACTIVE,
             subscription_tier: SubscriptionTier.FREE,
@@ -228,6 +228,13 @@ export const startFreePlan = async (userId: string) => {
             end_date: null,
             created_at: moment().toISOString(),
             updated_at: moment().toISOString(),
+        });
+
+        await adminSupabase.auth.admin.updateUserById(userId, {
+            user_metadata: {
+                subscription_status: SubscriptionStatus.ACTIVE,
+                subscription_updated_at: moment().toISOString(),
+            },
         });
 
         if (error) throw error;

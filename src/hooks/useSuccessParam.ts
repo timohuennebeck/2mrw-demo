@@ -14,10 +14,12 @@ const useSuccessParam = ({ onSuccess, redirectPath }: UseSuccessParamProps) => {
     useEffect(() => {
         const success = searchParams.get("success");
         if (success === "true") {
-            onSuccess?.();
-            if (redirectPath) {
-                router.replace(redirectPath); // clean up the URL without the success parameter
-            }
+            setTimeout(() => {
+                onSuccess?.();
+                if (redirectPath) {
+                    router.replace(redirectPath); // clean up the URL without the success parameter
+                }
+            }, 250); // small delay before showing the popup to make it feel more natural
         }
     }, [searchParams, router, onSuccess, redirectPath]);
 };

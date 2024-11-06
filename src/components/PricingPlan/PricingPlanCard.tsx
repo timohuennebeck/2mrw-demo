@@ -95,6 +95,7 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
                 <PlanButton
                     freeTrialStatus={freeTrialStatus}
                     isLoading={isLoading}
+                    subscriptionTier={subscription_tier}
                     subscriptionData={subscriptionData}
                     subscriptionStatus={subscriptionStatus}
                     supabaseUser={supabaseUser ?? null}

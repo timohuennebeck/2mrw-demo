@@ -22,6 +22,12 @@ interface CompletePaymentConfig {
 export const paymentConfig: CompletePaymentConfig = {
     // TOOD: remove this as we now have billing_plan inside the database
     paymentType: BillingPlan.RECURRING, // set which payment type is active
+
+    /**
+     * if free plan is still shown after disabling it, reload the page
+     * as it needs to refetch the products from the database
+     */
+
     isFreePlanEnabled: true,
     currency: "EUR",
 
@@ -30,7 +36,7 @@ export const paymentConfig: CompletePaymentConfig = {
     // subscription settings: used when paymentType is SUBSCRIPTION
     subscriptionSettings: {
         enableFreeTrial: false,
-        freeTrialDays: 0,
+        freeTrialDays: 7,
         yearlyDiscountPercentage: 20,
     },
 

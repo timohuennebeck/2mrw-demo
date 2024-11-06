@@ -21,9 +21,11 @@ import axios from "axios";
 import { startUserFreeTrial } from "@/services/database/FreeTrialService";
 import { increaseDate } from "@/lib/helper/DateHelper";
 import { startFreePlan } from "@/services/database/SubscriptionService";
+import { SubscriptionTier } from "@/enums/SubscriptionTier";
 
 interface PlanButtonParams {
     stripePriceId: string;
+    subscriptionTier: SubscriptionTier;
     freeTrialStatus: FreeTrialStatus | null;
     subscriptionStatus: SubscriptionStatus | null;
     subscriptionData: PurchasedSubscription;
@@ -35,6 +37,7 @@ interface PlanButtonParams {
 export const PlanButton = ({
     stripePriceId,
     freeTrialStatus,
+    subscriptionTier,
     subscriptionStatus,
     subscriptionData,
     isLoading: dataIsLoading,
@@ -135,28 +138,37 @@ export const PlanButton = ({
             isLoading,
         };
 
-        // case I: user is eligible for a free trial
+        // case I: free plan is enabled and user is not on a free plan
+        const isEligibleForFreePlan = isFreePlanEnabled() && !subscriptionStatus;
+        if (subscriptionTier === SubscriptionTier.FREE && isEligibleForFreePlan) {
+            return {
+                ...baseProps,
+                title: TextConstants.TEXT__UNLOCK_FREE_PLAN,
+                onClick: async () => {
+                    setIsLoading(true);
+                    await startFreePlan(supabaseUser?.id ?? "");
+
+                    setTimeout(() => {
+                        setIsLoading(false); // adds a small delay so the user doesn't see the loading state toggling off before navigating
+                    }, 1000);
+
+                    router.push("/?success=true"); // this is used to show the success popup
+
+                    queryClient.invalidateQueries({
+                        queryKey: ["subscription", supabaseUser?.id],
+                    });
+                },
+            };
+        }
+
+        // case II: user is eligible for a free trial
         const isEligibleForFreeTrial = !subscriptionStatus && !freeTrialStatus;
         if (isEligibleForFreeTrial && isFreeTrialEnabled()) {
             const freeTrialDuration = getCurrentPaymentSettings().freeTrialDays;
             return {
                 ...baseProps,
-                title: `${TextConstants.TEXT__START_FREE_TRIAL} (${freeTrialDuration} ${TextConstants.TEXT__DAYS})`,
+                title: `${TextConstants.TEXT__START_FREE_TRIAL} (${freeTrialDuration} ${TextConstants.TEXT__DAYS.toUpperCase()})`,
                 onClick: startFreeTrial,
-            };
-        }
-
-        // case II: free plan is enabled and user is not on a free plan
-        if (isFreePlanEnabled() && !subscriptionStatus) {
-            return {
-                ...baseProps,
-                title: TextConstants.TEXT__START_FREE_PLAN,
-                onClick: () => {
-                    startFreePlan(supabaseUser?.id ?? "");
-                    queryClient.invalidateQueries({
-                        queryKey: ["subscription", supabaseUser?.id],
-                    });
-                },
             };
         }
 

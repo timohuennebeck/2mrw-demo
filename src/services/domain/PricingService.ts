@@ -60,12 +60,12 @@ export const getProductDetailsByStripePriceId = (
     products: ProductWithPrices[],
     stripePriceId: string | null,
 ) => {
-    /**
+    /*
      * if the stripePriceId is null, the user is on the free plan
      * so we need to get the free product details
      */
 
-    if (!stripePriceId) {
+    if (stripePriceId === null) {
         const freeProduct = products.find((p) => p.billing_plan === BillingPlan.NONE);
         if (!freeProduct) return null;
 
