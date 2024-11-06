@@ -8,9 +8,7 @@ import { createClient } from "../integration/server";
 
 export const checkEmailExists = async (userEmail: string) => {
     try {
-        const supabase = createClient();
-
-        console.log("→ [LOG] userEmail", userEmail);
+        const supabase = await createClient();
 
         const { data, error } = await supabase
             .from("users")
@@ -31,7 +29,7 @@ export const checkEmailExists = async (userEmail: string) => {
 
 export const fetchUser = async (userId: string) => {
     try {
-        const supabase = createClient();
+        const supabase = await createClient();
 
         const { data: user, error } = await supabase
             .from("users")
@@ -52,7 +50,7 @@ export const fetchUser = async (userId: string) => {
 
 export const getUserId = async () => {
     try {
-        const supabase = createClient();
+        const supabase = await createClient();
         const { data, error } = await supabase.from("users").select("id").single();
 
         if (error) throw error;
@@ -65,7 +63,7 @@ export const getUserId = async () => {
 
 export const createUserTable = async (authUser: SupabaseUser) => {
     try {
-        const supabase = createClient();
+        const supabase = await createClient();
 
         const { error } = await supabase.from("users").insert({
             id: authUser.id,
@@ -88,7 +86,7 @@ export const createUserTable = async (authUser: SupabaseUser) => {
 
 export const updateUserStripeCustomerId = async (userId: string, stripeCustomerId: string) => {
     try {
-        const supabase = createClient();
+        const supabase = await createClient();
 
         const { error } = await supabase
             .from("users")

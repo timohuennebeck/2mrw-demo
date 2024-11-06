@@ -4,7 +4,7 @@ import { type EmailOtpType } from "@supabase/supabase-js";
 import { type NextRequest } from "next/server";
 import { redirect } from "next/navigation";
 import { createUserTable } from "@/services/database/UserService";
-import { createSupabasePowerUserClient } from "@/services/integration/admin";
+import { createClient } from "@/services/integration/server";
 
 export const GET = async (request: NextRequest) => {
     /**
@@ -17,25 +17,25 @@ export const GET = async (request: NextRequest) => {
     const type = searchParams.get("type") as EmailOtpType | null;
     const next = searchParams.get("next") ?? "/";
 
-    const adminSupabase = await createSupabasePowerUserClient();
-
     if (token_hash && type) {
-        const { data, error } = await adminSupabase.auth.verifyOtp({
+        const supabase = await createClient();
+
+        const { data, error } = await supabase.auth.verifyOtp({
             type,
             token_hash,
         });
 
         if (!error) {
             try {
-                const user = data.user;
+                const authUser = data.user;
 
-                if (user) {
-                    await createUserTable(user);
+                if (authUser) {
+                    await createUserTable(authUser);
                 } else {
-                    console.error("User data not available");
+                    console.error("authUser data not available");
                 }
-            } catch (emailError) {
-                console.error("Error sending free trial email:", emailError);
+            } catch (error) {
+                console.error("Error verifying OTP:", error);
             }
 
             return redirect(next);

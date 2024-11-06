@@ -22,7 +22,7 @@ const _sendSubscriptionConfirmationEmail = async (
     subscriptionTier: SubscriptionTier,
 ) => {
     try {
-        const supabase = createClient();
+        const supabase = await createClient();
 
         const { data: userData, error: userError } = await supabase
             .from("users")
@@ -63,7 +63,7 @@ const _sendSubscriptionConfirmationEmail = async (
 
 export const fetchUserSubscription = async (userId: string) => {
     try {
-        const supabase = createClient();
+        const supabase = await createClient();
 
         const defaultResponse = {
             subscription: null,

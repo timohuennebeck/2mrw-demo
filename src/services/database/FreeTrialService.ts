@@ -10,7 +10,7 @@ import { createClient } from "../integration/server";
 import { createSupabasePowerUserClient } from "../integration/admin";
 
 export const fetchUserFreeTrial = async (userId: string) => {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     try {
         const { rowExists, error: rowCheckError } = await checkRowExists("free_trials", userId);
@@ -49,10 +49,10 @@ export const startUserFreeTrial = async ({
     stripePriceId,
     freeTrialEndDate,
 }: StartUserFreeTrialParams) => {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     try {
-        const { error } = await adminSupabase.from("free_trials").insert({
+        const { error } = await supabase.from("free_trials").insert({
             user_id: userId,
             start_date: moment().toISOString(),
             end_date: moment(freeTrialEndDate).toISOString(),
@@ -74,6 +74,11 @@ export const startUserFreeTrial = async ({
 };
 
 export const endUserFreeTrial = async (userId: string) => {
+    /**
+     * requires the adminSupabase as its called from the stripe webhook
+     * and not from the client, thus we don't have an authUser
+     */
+
     const adminSupabase = await createSupabasePowerUserClient();
 
     try {
@@ -102,6 +107,7 @@ export const endUserFreeTrial = async (userId: string) => {
     }
 };
 
+// TODO: use this fn
 export const cancelUserFreeTrial = async (userId: string) => {
     const adminSupabase = await createSupabasePowerUserClient();
 

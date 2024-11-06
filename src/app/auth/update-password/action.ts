@@ -1,7 +1,7 @@
 "use server";
 
 import { TextConstants } from "@/constants/TextConstants";
-import { createSupabasePowerUserClient } from "@/services/integration/admin";
+import { createClient } from "@/services/integration/server";
 import { revalidatePath } from "next/cache";
 
 interface UpdatePasswordProps {
@@ -10,14 +10,19 @@ interface UpdatePasswordProps {
 }
 
 export const updatePassword = async ({ password, authCode }: UpdatePasswordProps) => {
-    const adminSupabase = await createSupabasePowerUserClient();
+    const supabase = await createClient();
 
     try {
-        const { error: exchangeError } = await adminSupabase.auth.exchangeCodeForSession(authCode);
+        /**
+         * requires the exchangeCodeForSession to be called first
+         * to verify the auth code that was sent to him via the reset password email
+         */
 
-        const { error } = await adminSupabase.auth.updateUser({ password });
+        const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(authCode);
+        if (exchangeError) throw exchangeError;
 
-        if (error || exchangeError) throw error;
+        const { error } = await supabase.auth.updateUser({ password });
+        if (error) throw error;
 
         revalidatePath("/", "layout");
         return { success: true, redirect: "/" };

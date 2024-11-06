@@ -1,11 +1,12 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createSupabasePowerUserClient } from "@/services/integration/admin";
-export const signIn = async ({ email, password }: { email: string; password: string }) => {
-    const adminSupabase = await createSupabasePowerUserClient();
+import { createClient } from "@/services/integration/server";
 
-    const { error } = await adminSupabase.auth.signInWithPassword({
+export const signIn = async ({ email, password }: { email: string; password: string }) => {
+    const supabase = await createClient();
+
+    const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
     });
@@ -19,9 +20,9 @@ export const signIn = async ({ email, password }: { email: string; password: str
 };
 
 export const signInUsingGoogle = async () => {
-    const adminSupabase = await createSupabasePowerUserClient();
+    const supabase = await createClient();
 
-    const { data, error } = await adminSupabase.auth.signInWithOAuth({
+    const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
             redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,

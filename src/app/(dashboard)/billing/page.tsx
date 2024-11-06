@@ -15,7 +15,7 @@ import useSuccessParam from "@/hooks/useSuccessParam";
 import { useProducts } from "@/context/ProductsContext";
 import CurrentSubscriptionPlanSkeleton from "@/components/ui/CurrentSubscriptionPlanSkeleton";
 import ChangeSubscriptionPlanSkeleton from "@/components/ui/ChangeSubscriptionPlanSkeleton";
-import { hasUserPremiumOrFreeTrial } from "@/lib/helper/subscriptionHelper";
+import { hasUserPremiumOrFreeTrial } from "@/lib/helper/SubscriptionHelper";
 
 const BillingPage = () => {
     const { authUser } = useSession();

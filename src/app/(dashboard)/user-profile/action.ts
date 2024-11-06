@@ -1,39 +1,14 @@
 "use server";
 
-import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { createClient } from "@/services/integration/server";
 import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
 
 export const updateUserEmail = async (userId: string, email: string) => {
-    const adminSupabase = await createSupabasePowerUserClient();
-
-    const { error } = await adminSupabase.auth.updateUser({
-        email: email,
-    });
-
-    if (error) {
-        return { error: "Error updating email." };
-    }
-
     return { success: true };
 };
 
 export const updateUserName = async (userId: string, firstName: string) => {
-    const supabase = createClient();
-
-    const { error: databaseError } = await supabase
-        .from("users")
-        .update({
-            first_name: firstName,
-            updated_at: moment().toISOString(),
-        })
-        .eq("id", userId);
-
-    if (databaseError) {
-        return { error: "Error updating name." };
-    }
-
     return { success: true };
 };
 
@@ -46,7 +21,7 @@ export const updateUserProfileImage = async ({
     userId: string;
     formData: FormData;
 }) => {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     try {
         const file = formData.get("file") as File;
@@ -97,9 +72,9 @@ export const updateUserProfileImage = async ({
 };
 
 export async function updateUserPassword(password: string) {
-    const adminSupabase = await createSupabasePowerUserClient();
+    const supabase = await createClient();
 
-    const { error } = await adminSupabase.auth.updateUser({
+    const { error } = await supabase.auth.updateUser({
         password: password,
     });
 

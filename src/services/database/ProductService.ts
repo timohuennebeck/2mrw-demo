@@ -8,7 +8,7 @@ import { createClient } from "../integration/server";
 
 export const fetchProductsWithPrices = async () => {
     try {
-        const supabase = createClient();
+        const supabase = await createClient();
 
         const { data: products, error: productsError } = await supabase
             .from("products")
@@ -45,7 +45,7 @@ export const fetchProductsWithPrices = async () => {
 };
 
 export const getProductNameByTier = async (subscriptionTier: string) => {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     const { data: packageData, error: packageError } = await supabase
         .from("products")
@@ -60,7 +60,7 @@ export const getProductNameByTier = async (subscriptionTier: string) => {
 
 export const fetchSubscriptionTier = async (stripePriceId: string) => {
     try {
-        const supabase = createClient();
+        const supabase = await createClient();
 
         const { data: stripePriceData, error: stripePriceError } = await supabase
             .from("stripe_prices")
@@ -89,7 +89,7 @@ export const fetchSubscriptionTier = async (stripePriceId: string) => {
 
 export const fetchBillingPlan = async (stripePriceId: string) => {
     try {
-        const supabase = createClient();
+        const supabase = await createClient();
 
         const { data, error } = await supabase
             .from("stripe_prices")

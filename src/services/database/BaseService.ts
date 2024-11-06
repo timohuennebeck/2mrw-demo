@@ -8,7 +8,8 @@ import { createClient } from "../integration/server";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 
 export const checkRowExists = async (tableId: string, userId: string) => {
-    const supabase = createClient();
+    const supabase = await createClient();
+
     try {
         const { error } = await supabase
             .from(tableId)

@@ -15,13 +15,13 @@ import { TextConstants } from "@/constants/TextConstants";
 import { useRouter, usePathname } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import Image from "next/image";
-import { createSupabasePowerUserClient } from "@/services/integration/admin";
+import { createClient } from "@/services/integration/client";
 
 export const _handleSignOut = async (router: AppRouterInstance) => {
-    const adminSupabase = await createSupabasePowerUserClient();
+    const supabase = createClient();
 
     try {
-        const { error } = await adminSupabase.auth.signOut();
+        const { error } = await supabase.auth.signOut();
 
         if (error) {
             toast.error(`${TextConstants.ERROR_SIGNING_OUT}: ${error.message}`);
@@ -51,7 +51,6 @@ const _handleItemClick = (item: NavigationItem, router: AppRouterInstance) => {
 
         // handle internal navigation
         if (item.link) {
-            console.log("→ [LOG] Triggered section");
             router.push(item.link);
             return;
         }
