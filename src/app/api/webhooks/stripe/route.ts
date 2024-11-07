@@ -28,6 +28,7 @@ const _retrieveCheckoutSession = async (sessionId: string) => {
 
 const _getUserIdFromStripeCustomerId = async (customerId: string) => {
     const adminSupabase = await createSupabasePowerUserClient();
+
     const { data: userData, error: userError } = await adminSupabase
         .from("users")
         .select("id")
@@ -53,11 +54,12 @@ export const POST = async (req: request) => {
         // construct the event and check if the webhook is valid
         const event = await _verifyStripeWebhook(body, signature);
         const subscription = event.data.object as Stripe.Subscription;
-        const customerId = subscription.customer as string;
-        const userId = await _getUserIdFromStripeCustomerId(customerId);
 
         switch (event.type) {
-            case StripeWebhookEvents.CHECKOUT_SESSION_COMPLETED:
+            case StripeWebhookEvents.CHECKOUT_SESSION_COMPLETED: {
+                const customerId = subscription.customer as string;
+                const userId = await _getUserIdFromStripeCustomerId(customerId);
+
                 const session = await _retrieveCheckoutSession(event.data.object.id);
                 await handleCheckoutSessionCompleted(session, userId ?? "");
 
@@ -65,13 +67,18 @@ export const POST = async (req: request) => {
                     queryClient.invalidateQueries({ queryKey: ["subscription", userId] });
                 }
                 break;
-            case StripeWebhookEvents.CUSTOMER_SUBSCRIPTION_UPDATED:
+            }
+            case StripeWebhookEvents.CUSTOMER_SUBSCRIPTION_UPDATED: {
+                const customerId = subscription.customer as string;
+                const userId = await _getUserIdFromStripeCustomerId(customerId);
+
                 await handleSubscriptionUpdated(event.data.object, userId);
 
                 if (userId) {
                     queryClient.invalidateQueries({ queryKey: ["subscription", userId] });
                 }
                 break;
+            }
             default:
                 break;
         }

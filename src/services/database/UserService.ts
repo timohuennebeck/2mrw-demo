@@ -70,26 +70,3 @@ export const createUserTable = async (authUser: SupabaseUser) => {
         };
     }
 };
-
-export const updateUserStripeCustomerId = async (userId: string, stripeCustomerId: string) => {
-    try {
-        const supabase = await createClient();
-
-        const { error } = await supabase
-            .from("users")
-            .update({
-                stripe_customer_id: stripeCustomerId,
-                updated_at: moment().toISOString(),
-            })
-            .eq("id", userId);
-
-        if (error) throw error;
-
-        return { success: true, error: null };
-    } catch (error) {
-        return {
-            success: null,
-            error: handleSupabaseError({ error, fnTitle: "updateUserStripeCustomerId" }),
-        };
-    }
-};

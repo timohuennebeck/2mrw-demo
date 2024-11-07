@@ -4,7 +4,6 @@ export interface VerifyStripeWebhookParams {
 }
 
 export interface InitiateStripeCheckoutProcessParams {
-    userEmail: string;
     stripePriceId: string;
     successUrl: string;
     cancelUrl: string;

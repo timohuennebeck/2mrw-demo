@@ -1,12 +1,115 @@
 "use server";
 
-import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { InitiateStripeCheckoutProcessParams } from "@/interfaces/StripeInterfaces";
-import { updateUserStripeCustomerId } from "@/services/database/UserService";
-import axios from "axios";
+import { createClient } from "@/services/integration/server";
+import moment from "moment";
 import Stripe from "stripe";
+import { handleSupabaseError } from "../helper/SupabaseHelper";
+import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
+import axios from "axios";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
+
+const _getStripeCustomerIdFromSupabase = async (userId: string) => {
+    const supabase = await createClient();
+
+    const { data, error: userError } = await supabase
+        .from("users")
+        .select("stripe_customer_id")
+        .eq("id", userId)
+        .single();
+
+    if (userError) {
+        throw new Error("Error getting stripe customer id from supabase: " + userError);
+    }
+
+    return { stripeCustomerId: data?.stripe_customer_id, error: null };
+};
+
+const _getStripeCustomerIdFromStripe = async (email: string) => {
+    const customers = await stripe.customers.list({
+        email: email,
+        limit: 1,
+    });
+
+    return { stripeCustomerId: customers.data[0]?.id ?? null, error: null };
+};
+
+const _updateUserStripeCustomerId = async (userId: string, stripeCustomerId: string) => {
+    try {
+        const supabase = await createClient();
+
+        const { error } = await supabase
+            .from("users")
+            .update({
+                stripe_customer_id: stripeCustomerId,
+                updated_at: moment().toISOString(),
+            })
+            .eq("id", userId);
+
+        if (error) throw error;
+
+        return { success: true, error: null };
+    } catch (error) {
+        return {
+            success: null,
+            error: handleSupabaseError({ error, fnTitle: "_updateUserStripeCustomerId" }),
+        };
+    }
+};
+
+const _createStripeCustomer = async (email: string) => {
+    const newCustomer = await stripe.customers.create({ email });
+    return { stripeCustomerId: newCustomer.id, error: null };
+};
+
+export const getStripeCustomerId = async () => {
+    /**
+     * IMPORTANT: Do NOT use this inside the stripe webhook handler as it will cause an infinite loop
+     * because if no user exists this function will create a new user in stripe, thus triggering the webhook handler again
+     */
+
+    const supabaseClient = await createClient();
+
+    const {
+        data: { user },
+    } = await supabaseClient.auth.getUser();
+    const userId = user?.id ?? "";
+    const userEmail = user?.email ?? "";
+
+    try {
+        // case I: If userId is provided, check Supabase first
+        if (userId) {
+            const { stripeCustomerId } = await _getStripeCustomerIdFromSupabase(userId);
+            if (stripeCustomerId) return stripeCustomerId;
+        }
+
+        // case II: check Stripe (for both with and without userId)
+        const { stripeCustomerId: existingStripeId } =
+            await _getStripeCustomerIdFromStripe(userEmail);
+
+        if (existingStripeId) {
+            // update Supabase if we have a userId
+            if (userId) {
+                await _updateUserStripeCustomerId(userId, existingStripeId);
+            }
+            return existingStripeId;
+        }
+
+        // case III: create new customer if none exists
+        const { stripeCustomerId: newStripeId } = await _createStripeCustomer(userEmail);
+
+        // update Supabase if we have a userId
+        if (userId) {
+            await _updateUserStripeCustomerId(userId, newStripeId);
+        }
+
+        return newStripeId;
+    } catch (error) {
+        console.error("Error getting or creating Stripe customer:", error);
+        throw error;
+    }
+};
 
 export const cancelStripeSubscription = async (stripeSubscriptionId: string) => {
     try {
@@ -21,13 +124,12 @@ export const cancelStripeSubscription = async (stripeSubscriptionId: string) => 
 };
 
 export const initiateStripeCheckoutProcess = async ({
-    userEmail,
     stripePriceId,
     successUrl,
     cancelUrl,
     existingSubscriptionId,
 }: InitiateStripeCheckoutProcessParams) => {
-    const stripeCustomerId = await getStripeCustomerId(userEmail);
+    const stripeCustomerId = await getStripeCustomerId();
     if (!stripeCustomerId) throw new Error("Stripe customer id is missing!");
 
     if (existingSubscriptionId) {
@@ -59,70 +161,6 @@ export const initiateStripeCheckoutProcess = async ({
 
         return { checkoutUrl: session.url };
     }
-};
-
-export const updateStripeCustomer = async (
-    customerId: string,
-    updates: { name?: string; email?: string },
-) => {
-    // only include fields that are provided
-    const updateData: { name?: string; email?: string } = {};
-    if (updates.name) updateData.name = updates.name;
-    if (updates.email) updateData.email = updates.email;
-
-    // update the customer in Stripe only if there are changes
-    if (Object.keys(updateData).length !== 0) {
-        return await stripe.customers.update(customerId, updateData);
-    }
-};
-
-export const getStripeCustomerId = async (email: string, userId?: string) => {
-    try {
-        const customers = await stripe.customers.list({
-            email: email,
-            limit: 1,
-        });
-
-        if (customers.data.length !== 0) {
-            return customers.data[0].id;
-        }
-
-        // create new customer if no customer exists
-        const newCustomer = await stripe.customers.create({
-            email: email,
-        });
-
-        if (userId) {
-            await updateUserStripeCustomerId(userId, newCustomer.id);
-        }
-
-        return newCustomer.id;
-    } catch (error) {
-        console.error("Error getting/creating Stripe customer:", error);
-        throw error;
-    }
-};
-
-export const getStripeCustomerCreditCardDetails = async (customerId: string) => {
-    const paymentMethods = await stripe.paymentMethods.list({
-        customer: customerId,
-        type: "card",
-    });
-
-    const defaultPaymentMethod = paymentMethods.data[0];
-
-    if (!defaultPaymentMethod) {
-        return null;
-    }
-
-    const card = defaultPaymentMethod.card;
-
-    return {
-        brand: card?.brand ?? "",
-        last4Digits: card?.last4 ?? "",
-        expirationMonth: card?.exp_month ?? 0,
-        expirationYear: card?.exp_year ?? 0,
-    };
 };
 
 export const handleStripePortalSession = async (stripeCustomerId: string) => {

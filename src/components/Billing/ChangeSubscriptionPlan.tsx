@@ -168,7 +168,6 @@ const ChangeSubscriptionPlan = () => {
             }
 
             const { checkoutUrl } = await initiateStripeCheckoutProcess({
-                userEmail: authUser?.email ?? "",
                 stripePriceId,
                 successUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/billing?success=true&session_id={CHECKOUT_SESSION_ID}`,
                 cancelUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/billing`,

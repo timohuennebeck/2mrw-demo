@@ -9,8 +9,6 @@ import { useEffect, useState } from "react";
 import { TextConstants } from "@/constants/TextConstants";
 import { isFreePlanEnabled } from "@/config/paymentConfig";
 import { queryClient } from "@/lib/qClient/qClient";
-import { EmailTemplate } from "@/lib/email/emailService";
-import axios from "axios";
 import { startFreePlan } from "@/services/database/SubscriptionService";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
 
@@ -46,7 +44,6 @@ export const PlanButton = ({
             setIsLoading(true);
 
             const { checkoutUrl } = await initiateStripeCheckoutProcess({
-                userEmail: supabaseUser?.email ?? "",
                 stripePriceId: stripePriceId,
                 successUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/?success=true&session_id={CHECKOUT_SESSION_ID}`,
                 cancelUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan`,

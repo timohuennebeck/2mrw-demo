@@ -2,19 +2,14 @@ import { getStripeCustomerId, handleStripePortalSession } from "@/lib/stripe/str
 import CustomButton from "../CustomButton";
 import HeaderWithDescription from "../HeaderWithDescription";
 import { useState } from "react";
-import { useSession } from "@/context/SessionContext";
 
 const BillingPortal = () => {
-    const { authUser } = useSession();
-
     const [isOpeningBillingPortal, setIsOpeningBillingPortal] = useState(false);
 
     const handlePortalOpen = async () => {
         setIsOpeningBillingPortal(true);
 
-        if (!authUser?.email || !authUser?.id) return;
-
-        const stripeCustomerId = await getStripeCustomerId(authUser.email, authUser.id);
+        const stripeCustomerId = await getStripeCustomerId();
 
         const url = await handleStripePortalSession(stripeCustomerId ?? "");
         if (url) {
