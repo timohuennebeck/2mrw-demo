@@ -129,14 +129,12 @@ const ChangeSubscriptionPlan = () => {
         const toastInfo = `Your subscription has been cancelled and will be downgraded to the free plan on ${subscriptionEndDate}!`;
         toast.success(toastInfo);
 
-        router.refresh();
         return { success: true, error: null };
     };
 
     const handleConfirmSubscription = async () => {
         try {
             setIsLoading(true);
-            setShowConfirmationPopup(false);
 
             const selectedProduct = products.find((p) => p.id === selectedPlanId);
             const isFreePlanSelected = selectedProduct?.billing_plan === BillingPlan.NONE;
@@ -174,11 +172,12 @@ const ChangeSubscriptionPlan = () => {
                 existingSubscriptionId: subscription?.stripe_subscription_id,
             });
 
-            router.replace(checkoutUrl ?? "/billing");
+            router.push(checkoutUrl ?? "/billing", { scroll: false });
         } catch (error) {
             console.error("Error changing subscription:", error);
             toast.error("Failed to change subscription plan");
         } finally {
+            setShowConfirmationPopup(false);
             setIsLoading(false);
         }
     };
@@ -193,6 +192,7 @@ const ChangeSubscriptionPlan = () => {
                     iconBackgroundColor="bg-yellow-100"
                     mainButtonText="Confirm"
                     onConfirm={handleConfirmSubscription}
+                    mainButtonIsLoading={isLoading}
                     onCancel={() => setShowConfirmationPopup(false)}
                 />
             )}
@@ -319,8 +319,7 @@ const ChangeSubscriptionPlan = () => {
                     <div className="mt-6 flex items-start justify-start">
                         <CustomButton
                             title={_findButtonTitle(isFreePlanSelected, subscription?.status)}
-                            disabled={!selectedPlanId || isLoading}
-                            isLoading={isLoading}
+                            disabled={!selectedPlanId}
                             className={`${
                                 isFreePlanSelected ? "bg-red-600 text-white hover:bg-red-500" : ""
                             }`}
