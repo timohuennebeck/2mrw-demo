@@ -21,6 +21,20 @@ const _handleRedirection = async (request: nextRequest, user: User | null) => {
      */
 
     if (request.nextUrl.pathname.startsWith("/auth")) {
+        /**
+         * IMPORTANT: do NOT remove this logic
+         * these routes are used for when a user clicks on the confirmation link in their signup confirmation email
+         * and when clicking on the confirmation link in their email change confirmation email
+         * if these routes are removed, users would not be able to authenticate via email
+         */
+
+        const isConfirmRoute = request.nextUrl.pathname === "/auth/confirm";
+        const isEmailChangeRoute = request.nextUrl.pathname === "/auth/email-change";
+
+        if (isConfirmRoute || isEmailChangeRoute) {
+            return nextResponse.next({ request });
+        }
+
         return user
             ? nextResponse.redirect(new URL("/", request.url))
             : nextResponse.next({ request });
@@ -36,6 +50,8 @@ const _handleRedirection = async (request: nextRequest, user: User | null) => {
 };
 
 export const middleware = async (request: nextRequest) => {
+    console.log("[LOG] Middleware hit:", request.nextUrl.pathname);
+
     let supabaseResponse = nextResponse.next({
         request,
     });

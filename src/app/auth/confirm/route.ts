@@ -15,7 +15,6 @@ export const GET = async (request: NextRequest) => {
     const { searchParams } = new URL(request.url);
     const token_hash = searchParams.get("token_hash");
     const type = searchParams.get("type") as EmailOtpType | null;
-    const next = searchParams.get("next") ?? "/";
 
     if (token_hash && type) {
         const supabase = await createClient();
@@ -30,7 +29,7 @@ export const GET = async (request: NextRequest) => {
             const userExists = await fetchUser(authUser?.id ?? "");
 
             if (userExists.user) {
-                return redirect(next); // user already exists, redirect
+                return redirect("/"); // user already exists, redirect
             }
 
             try {
@@ -43,7 +42,7 @@ export const GET = async (request: NextRequest) => {
                 console.error("Error creating user:", error);
             }
 
-            return redirect(next);
+            return redirect("/");
         }
     }
 
