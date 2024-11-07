@@ -18,7 +18,8 @@ const UpdatePassword = () => {
 
     const router = useRouter();
     const searchParams = useSearchParams();
-    const authCode = searchParams.get("code") ?? "";
+    const accessToken = searchParams.get("access_token");
+    const refreshToken = searchParams.get("refresh_token");
 
     const handleSubmit = async () => {
         if (password === "") {
@@ -37,7 +38,11 @@ const UpdatePassword = () => {
         }
 
         setIsUpdating(true);
-        const result = await updatePassword({ password, authCode });
+        const result = await updatePassword({
+            password,
+            accessToken: accessToken ?? "",
+            refreshToken: refreshToken ?? "",
+        });
         setIsUpdating(false);
 
         if (result.success) {
@@ -88,13 +93,10 @@ const UpdatePassword = () => {
                     </div>
 
                     <CustomButton
-                        title={
-                            isUpdating
-                                ? TextConstants.TEXT__UPDATING
-                                : TextConstants.TEXT__UPDATE_PASSWORD
-                        }
+                        title={TextConstants.TEXT__UPDATE_PASSWORD}
                         disabled={isUpdating}
                         onClick={handleSubmit}
+                        isLoading={isUpdating}
                     />
                 </form>
 

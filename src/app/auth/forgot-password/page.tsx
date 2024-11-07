@@ -67,13 +67,10 @@ const ForgotPasswordPage = () => {
                     />
 
                     <CustomButton
-                        title={
-                            isSending
-                                ? TextConstants.TEXT__SENDING
-                                : TextConstants.TEXT__SEND_RESET_LINK
-                        }
+                        title={TextConstants.TEXT__SEND_RESET_LINK}
                         disabled={isSending}
                         onClick={handleSubmit}
+                        isLoading={isSending}
                     />
                 </form>
 

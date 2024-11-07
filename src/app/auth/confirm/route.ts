@@ -1,15 +1,36 @@
 "use server";
 
-import { type EmailOtpType } from "@supabase/supabase-js";
-import { type NextRequest } from "next/server";
+import { User, type EmailOtpType } from "@supabase/supabase-js";
+import { NextResponse as nextResponse, type NextRequest } from "next/server";
 import { redirect } from "next/navigation";
 import { createUserTable, fetchUser } from "@/services/database/UserService";
 import { createClient } from "@/services/integration/server";
 
+const _handleCreateUser = async (authUser: User) => {
+    const { error } = await createUserTable(authUser);
+
+    if (error) {
+        return nextResponse.json({ error: "Failed to create user" }, { status: 500 });
+    }
+};
+
+const _updateUserEmail = async (userId: string, email: string) => {
+    const supabase = await createClient();
+
+    const { error } = await supabase.from("users").update({ email }).eq("id", userId);
+
+    if (error) {
+        return nextResponse.json({ error: "Failed to update user email" }, { status: 500 });
+    }
+};
+
 export const GET = async (request: NextRequest) => {
     /**
-     * this route is used for email authentication
-     * the user will be redirected to this route after clicking on the confirmation link in their email
+     * this route is used for the following scenarios when clicking on the confirmation link in the user's email:
+     * - signup authentication (type: "signup")
+     * - magic link authentication (type: "magiclink")
+     * - email change authentication (type: "email_change")
+     * - password reset authentication (type: "recovery")
      */
 
     const { searchParams } = new URL(request.url);
@@ -24,27 +45,49 @@ export const GET = async (request: NextRequest) => {
             token_hash,
         });
 
-        if (!error) {
-            const authUser = data.user;
-            const userExists = await fetchUser(authUser?.id ?? "");
+        if (error) {
+            return nextResponse.json(
+                { error: "Error verifying token_hash or type" },
+                { status: 400 },
+            );
+        }
 
-            if (userExists.user) {
-                return redirect("/"); // user already exists, redirect
+        const {
+            data: { session },
+        } = await supabase.auth.getSession();
+        const authUser = data.user;
+
+        switch (type) {
+            case "recovery": {
+                return redirect(
+                    `/auth/update-password?access_token=${session?.access_token}&refresh_token=${session?.refresh_token}`,
+                );
             }
+            case "email":
+            case "signup": {
+                const supabaseUser = await fetchUser(authUser?.id ?? "");
 
-            try {
-                if (authUser) {
-                    await createUserTable(authUser);
-                } else {
-                    console.error("authUser data not available");
+                if (supabaseUser.user) {
+                    return redirect("/"); // user already exists in Supabase, redirect and don't create a new user
                 }
-            } catch (error) {
-                console.error("Error creating user:", error);
+
+                if (authUser) {
+                    await _handleCreateUser(authUser);
+                    return redirect("/");
+                }
             }
 
-            return redirect("/");
+            case "magiclink": {
+                return redirect("/"); // no additional action needed and just redirect the user after verifying the magic link
+            }
+
+            case "email_change": {
+                await _updateUserEmail(authUser?.id ?? "", authUser?.email ?? "");
+                return redirect("/settings");
+            }
+
+            default:
+                return nextResponse.json({ error: "Invalid type" }, { status: 400 });
         }
     }
-
-    redirect("/error");
 };
