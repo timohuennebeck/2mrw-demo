@@ -3,7 +3,7 @@
 import { type EmailOtpType } from "@supabase/supabase-js";
 import { type NextRequest } from "next/server";
 import { redirect } from "next/navigation";
-import { createUserTable } from "@/services/database/UserService";
+import { createUserTable, fetchUser } from "@/services/database/UserService";
 import { createClient } from "@/services/integration/server";
 
 export const GET = async (request: NextRequest) => {
@@ -26,16 +26,21 @@ export const GET = async (request: NextRequest) => {
         });
 
         if (!error) {
-            try {
-                const authUser = data.user;
+            const authUser = data.user;
+            const userExists = await fetchUser(authUser?.id ?? "");
 
+            if (userExists.user) {
+                return redirect(next); // user already exists, redirect
+            }
+
+            try {
                 if (authUser) {
                     await createUserTable(authUser);
                 } else {
                     console.error("authUser data not available");
                 }
             } catch (error) {
-                console.error("Error verifying OTP:", error);
+                console.error("Error creating user:", error);
             }
 
             return redirect(next);

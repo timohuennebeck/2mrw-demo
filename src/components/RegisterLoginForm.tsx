@@ -20,16 +20,23 @@ interface RegisterLoginForm {
         email: string;
         password: string;
         firstName: string;
-    }) => {};
+    }) => void;
+    loginWithMagicLink: (email: string) => void;
     isLoading: boolean;
 }
 
-const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm) => {
+const RegisterLoginForm = ({
+    mode,
+    handleSubmit,
+    loginWithMagicLink,
+    isLoading,
+}: RegisterLoginForm) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [firstName, setFirstName] = useState("");
     const [isPasswordFocused, setIsPasswordFocused] = useState(false);
     const [showStrengthChecker, setShowStrengthChecker] = useState(false);
+    const [authType, setAuthType] = useState("magicLink");
 
     const handlePasswordFocus = () => {
         if (mode === "signup") {
@@ -92,42 +99,70 @@ const RegisterLoginForm = ({ mode, handleSubmit, isLoading }: RegisterLoginForm)
                             id="email"
                             label="Email"
                             name="email"
-                            type="text"
+                            type="email"
                             placeholder={TextConstants.TEXT__EMAIL_PLACEHOLDER}
                             onChange={setEmail}
                         />
-                        <InputField
-                            id="password"
-                            label="Password"
-                            name="password"
-                            type="password"
-                            onChange={setPassword}
-                            onFocus={() => mode === "signup" && handlePasswordFocus()}
-                            onBlur={() => mode === "signup" && handlePasswordBlur()}
-                        />
+                        {(authType === "password" || mode === "signup") && (
+                            <InputField
+                                id="password"
+                                label="Password"
+                                name="password"
+                                type="password"
+                                onChange={setPassword}
+                                onFocus={() => mode === "signup" && handlePasswordFocus()}
+                                onBlur={() => mode === "signup" && handlePasswordBlur()}
+                            />
+                        )}
 
                         {mode === "signup" && (isPasswordFocused || showStrengthChecker) && (
                             <PasswordStrengthChecker password={password} />
                         )}
 
-                        <div className="flex items-center">
-                            <Link
-                                href="/auth/forgot-password"
-                                className="ml-auto inline-block text-sm underline"
-                            >
-                                Forgot password?
-                            </Link>
-                        </div>
+                        {mode === "signin" && authType === "password" && (
+                            <div className="flex items-center">
+                                <Link
+                                    href="/auth/forgot-password"
+                                    className="ml-auto inline-block text-sm underline"
+                                >
+                                    Forgot password?
+                                </Link>
+                            </div>
+                        )}
 
                         <CustomButton
                             title={
-                                mode === "signup"
-                                    ? TextConstants.TEXT__SIGN_UP
-                                    : TextConstants.TEXT__SIGN_IN
+                                authType === "magicLink" && mode === "signin"
+                                    ? TextConstants.TEXT__LOGIN_WITH_MAGIC_LINK
+                                    : mode === "signup"
+                                      ? TextConstants.TEXT__SIGN_UP
+                                      : TextConstants.TEXT__SIGN_IN
                             }
-                            onClick={() => handleSubmit({ email, password, firstName })}
+                            onClick={() =>
+                                authType === "magicLink"
+                                    ? loginWithMagicLink(email)
+                                    : handleSubmit({ email, password, firstName })
+                            }
                             disabled={isLoading}
                         />
+
+                        {mode === "signin" && authType === "magicLink" && (
+                            <p className="text-center text-sm text-neutral-500">
+                                You'll be emailed a magic code for a password-free sign in or{" "}
+                                <button
+                                    onClick={() =>
+                                        setAuthType(
+                                            authType === "magicLink" ? "password" : "magicLink",
+                                        )
+                                    }
+                                    className="underline"
+                                >
+                                    {authType === "magicLink"
+                                        ? "sign in with password instead"
+                                        : "use magic link instead"}
+                                </button>
+                            </p>
+                        )}
 
                         {!isPasswordFocused && (
                             <>

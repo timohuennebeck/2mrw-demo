@@ -10,6 +10,7 @@ export const TextConstants = {
     TEXT__SIGN_IN_EMAIL_OR_ANOTHER_SERVICE: "Sign in using email or another service to continue!",
     TEXT__SIGN_UP: "Sign Up",
     TEXT__SIGN_IN: "Log In",
+    TEXT__LOGIN_WITH_MAGIC_LINK: "Login with Magic Link",
     TEXT__FREE: "Free",
     TEXT__MONTHLY: "Monthly",
     TEXT__YEARLY: "Yearly",
@@ -39,6 +40,7 @@ export const TextConstants = {
     TEXT__SIGNING_IN: "Signing in...",
     TEXT__SIGNING_UP: "Signing up...",
     TEXT__SIGN_IN_SUCCESSFUL: "Sign in successful!",
+    TEXT__MAGIC_LINK_SENT: "Magic link has been sent!",
     TEXT__SIGN_UP_SUCCESSFUL_CHECK_EMAIL: "Sign up successful! Please check email inbox.",
     TEXT__PASSWORD_HAS_BEEN_UPDATED: "Password has been updated",
     TEXT__RESET_PASSWORD_EMAIL_SENT: "Password reset email has been sent.",
@@ -50,6 +52,7 @@ export const TextConstants = {
     TEXT__HAS_ONE_DIGIT: "Has at least one digit",
 
     ERROR__UNEXPECTED_ERROR: "There has been an unexpected error.",
+    ERROR__INVALID_EMAIL: "Invalid email address.",
     ERROR__STRIPE_CHECKOUT:
         "Failed to initiate checkout process! Please contact us if the issue persists.",
     ERROR_SIGNING_OUT: "Error signing out",

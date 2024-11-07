@@ -19,7 +19,7 @@ function ContinueWithGoogleButton() {
 
     return (
         <button
-            className="flex w-full items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium outline-none transition-colors hover:bg-neutral-100"
+            className="flex w-full items-center justify-center gap-2 rounded-md border border-gray-300 px-4 py-2.5 text-sm font-medium outline-none transition-colors hover:bg-neutral-100"
             onClick={continueWithGoogle}
         >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48">
