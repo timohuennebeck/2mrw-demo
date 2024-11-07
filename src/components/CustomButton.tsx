@@ -25,7 +25,7 @@ const CustomButton = ({
             onClick={onClick}
             disabled={isDisabledOrLoading}
             type="submit"
-            className={`flex items-center justify-center rounded-md px-4 py-2.5 text-sm font-medium outline-none transition-colors ${className} ${
+            className={`flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium outline-none transition-colors ${className} ${
                 isDisabledOrLoading
                     ? "cursor-not-allowed border border-transparent bg-neutral-300 text-neutral-500 opacity-60"
                     : isSecondary

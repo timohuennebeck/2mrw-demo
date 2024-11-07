@@ -8,6 +8,7 @@ interface CustomPopupProps {
     iconBackgroundColor?: string;
     mainButtonColor?: string;
     mainButtonText?: string;
+    mainButtonIsLoading?: boolean;
     hideSecondaryButton?: boolean;
     showConfetti?: boolean;
     onConfirm: () => void;
@@ -21,6 +22,7 @@ const CustomPopup = ({
     iconBackgroundColor,
     mainButtonColor,
     mainButtonText = "Confirm",
+    mainButtonIsLoading,
     hideSecondaryButton,
     showConfetti = false,
     onConfirm,
@@ -57,6 +59,8 @@ const CustomPopup = ({
                             title={mainButtonText}
                             onClick={onConfirm}
                             className={mainButtonColor}
+                            isLoading={mainButtonIsLoading}
+                            disabled={mainButtonIsLoading}
                         />
                     </div>
                 </div>

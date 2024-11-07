@@ -12,10 +12,14 @@ import Image from "next/image";
 import { AlertTriangle, Loader, UserRound } from "lucide-react";
 import { updateUserProfileImage, updateUserEmail, updateUserPassword } from "./action";
 import CustomPopup from "@/components/CustomPopup";
+import { createSupabasePowerUserClient } from "@/services/integration/admin";
+import { useRouter } from "next/navigation";
 
 const UserProfilePage = () => {
     const { authUser } = useSession();
     const { dbUser } = useUser(authUser?.id ?? "");
+
+    const router = useRouter();
 
     const [firstName, setFirstName] = useState("");
     const [email, setEmail] = useState("");
@@ -30,6 +34,7 @@ const UserProfilePage = () => {
     const [isUploadingProfileImage, setIsUploadingProfileImage] = useState(false);
     const [pendingEmail, setPendingEmail] = useState<string | null>(null);
     const [showDeleteAccountPopup, setShowDeleteAccountPopup] = useState(false);
+    const [deletingInProgress, setDeletingInProgress] = useState(false);
 
     useEffect(() => {
         if (dbUser) {
@@ -102,6 +107,39 @@ const UserProfilePage = () => {
         }
     };
 
+    const handleDeletionConfirmation = async () => {
+        try {
+            const adminSupabase = await createSupabasePowerUserClient();
+            const userId = authUser?.id ?? "";
+
+            setDeletingInProgress(true);
+
+            // delete related records first (order matters due to foreign key constraints)
+            await adminSupabase.from("free_trials").delete().eq("user_id", userId);
+
+            await adminSupabase.from("user_subscriptions").delete().eq("user_id", userId);
+
+            await adminSupabase.from("users").delete().eq("id", userId);
+
+            const { error: authError } = await adminSupabase.auth.admin.deleteUser(userId);
+
+            if (authError) {
+                throw new Error(authError.message);
+            }
+
+            router.push("/auth/sign-in");
+
+            setTimeout(() => {
+                setDeletingInProgress(false);
+                toast.success("Your account has been deleted");
+            }, 1250);
+        } catch (error) {
+            setDeletingInProgress(false);
+            toast.error("Failed to delete account");
+            console.error("Error deleting account:", error);
+        }
+    };
+
     return (
         <>
             {showDeleteAccountPopup && (
@@ -110,9 +148,10 @@ const UserProfilePage = () => {
                     description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
                     icon={<AlertTriangle size={32} strokeWidth={1.5} className="text-red-500" />}
                     iconBackgroundColor="bg-red-100"
-                    mainButtonColor="bg-red-600 hover:bg-red-700"
+                    mainButtonColor="bg-red-600 hover:bg-red-700 text-white"
                     mainButtonText="Confirm Deletion"
-                    onConfirm={() => {}}
+                    mainButtonIsLoading={deletingInProgress}
+                    onConfirm={handleDeletionConfirmation}
                     onCancel={() => setShowDeleteAccountPopup(false)}
                 />
             )}

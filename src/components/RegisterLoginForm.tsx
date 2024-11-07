@@ -21,7 +21,7 @@ interface RegisterLoginForm {
         password: string;
         firstName: string;
     }) => void;
-    loginWithMagicLink: (email: string) => void;
+    loginWithMagicLink?: (email: string) => void;
     isLoading: boolean;
 }
 
@@ -139,11 +139,12 @@ const RegisterLoginForm = ({
                                       : TextConstants.TEXT__SIGN_IN
                             }
                             onClick={() =>
-                                authType === "magicLink"
-                                    ? loginWithMagicLink(email)
+                                authType === "magicLink" && mode === "signin"
+                                    ? loginWithMagicLink?.(email)
                                     : handleSubmit({ email, password, firstName })
                             }
                             disabled={isLoading}
+                            isLoading={isLoading}
                         />
 
                         {mode === "signin" && authType === "magicLink" && (
