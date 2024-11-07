@@ -50,8 +50,6 @@ const _handleRedirection = async (request: nextRequest, user: User | null) => {
 };
 
 export const middleware = async (request: nextRequest) => {
-    console.log("[LOG] Middleware hit:", request.nextUrl.pathname);
-
     let supabaseResponse = nextResponse.next({
         request,
     });
