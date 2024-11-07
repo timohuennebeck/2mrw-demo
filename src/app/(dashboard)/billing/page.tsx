@@ -74,8 +74,11 @@ const BillingPage = () => {
 
                     {!products ? (
                         <div className="flex flex-col gap-6">
-                            <CurrentSubscriptionPlanSkeleton />
-                            <ChangeSubscriptionPlanSkeleton />
+                            {subscription?.stripe_price_id !== undefined && (
+                                <CurrentSubscriptionPlanSkeleton />
+                            )}
+
+                            {showChangeSubscriptionPlan && <ChangeSubscriptionPlanSkeleton />}
                         </div>
                     ) : (
                         <div className="flex flex-col gap-6">

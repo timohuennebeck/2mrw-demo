@@ -2,7 +2,7 @@
 
 import { StripeWebhookEvents } from "@/enums/StripeWebhookEvents";
 import { queryClient } from "@/lib/qClient/qClient";
-import { getUserId } from "@/services/database/UserService";
+import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import {
     handleCheckoutSessionCompleted,
     handleSubscriptionUpdated,
@@ -26,6 +26,21 @@ const _retrieveCheckoutSession = async (sessionId: string) => {
     });
 };
 
+const _getUserIdFromStripeCustomerId = async (customerId: string) => {
+    const adminSupabase = await createSupabasePowerUserClient();
+    const { data: userData, error: userError } = await adminSupabase
+        .from("users")
+        .select("id")
+        .eq("stripe_customer_id", customerId)
+        .single();
+
+    if (userError) {
+        throw new Error("User not found for stripe customer id: " + customerId);
+    }
+
+    return userData.id;
+};
+
 export const POST = async (req: request) => {
     try {
         const body = await req.text();
@@ -37,7 +52,9 @@ export const POST = async (req: request) => {
 
         // construct the event and check if the webhook is valid
         const event = await _verifyStripeWebhook(body, signature);
-        const userId = await getUserId();
+        const subscription = event.data.object as Stripe.Subscription;
+        const customerId = subscription.customer as string;
+        const userId = await _getUserIdFromStripeCustomerId(customerId);
 
         switch (event.type) {
             case StripeWebhookEvents.CHECKOUT_SESSION_COMPLETED:
@@ -49,12 +66,10 @@ export const POST = async (req: request) => {
                 }
                 break;
             case StripeWebhookEvents.CUSTOMER_SUBSCRIPTION_UPDATED:
-                await handleSubscriptionUpdated(event.data.object, userId ?? "");
+                await handleSubscriptionUpdated(event.data.object, userId);
 
                 if (userId) {
-                    queryClient.invalidateQueries({
-                        queryKey: ["subscription", userId],
-                    });
+                    queryClient.invalidateQueries({ queryKey: ["subscription", userId] });
                 }
                 break;
             default:

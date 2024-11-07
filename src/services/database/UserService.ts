@@ -48,19 +48,6 @@ export const fetchUser = async (userId: string) => {
     }
 };
 
-export const getUserId = async () => {
-    try {
-        const supabase = await createClient();
-        const { data, error } = await supabase.from("users").select("id").single();
-
-        if (error) throw error;
-
-        return data?.id;
-    } catch (error) {
-        return null;
-    }
-};
-
 export const createUserTable = async (authUser: SupabaseUser) => {
     try {
         const supabase = await createClient();
