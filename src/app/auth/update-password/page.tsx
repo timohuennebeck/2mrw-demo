@@ -72,12 +72,13 @@ const UpdatePassword = () => {
                     </p>
                 </div>
 
-                <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
+                <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()} suppressHydrationWarning>
                     <InputField
                         label={TextConstants.TEXT__NEW_PASSWORD}
                         id="password"
                         type="password"
                         name="password"
+                        value={password}
                         onChange={setPassword}
                     />
                     <InputField
@@ -85,7 +86,9 @@ const UpdatePassword = () => {
                         id="confirmPassword"
                         type="password"
                         name="confirmPassword"
+                        value={confirmPassword}
                         onChange={setConfirmPassword}
+                        disabled={password === ""}
                     />
 
                     <div className="pb-4">
