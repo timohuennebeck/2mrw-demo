@@ -44,8 +44,7 @@ const BillingPage = () => {
     const hasOneTimePaymentPlan = subscription?.billing_plan === BillingPlan.ONE_TIME;
     const hasCancelledSubscription = subscription?.status === SubscriptionStatus.CANCELLED;
 
-    const showChangeSubscriptionPlan =
-        !isLoading && !hasOneTimePaymentPlan && !hasCancelledSubscription;
+    const showChangeSubscriptionPlan = !hasOneTimePaymentPlan && !hasCancelledSubscription;
 
     return (
         <>
@@ -72,7 +71,7 @@ const BillingPage = () => {
                 <div className="flex flex-col gap-6">
                     {subscription?.billing_plan === BillingPlan.RECURRING && <BillingPortal />}
 
-                    {!products ? (
+                    {!products || isLoading ? (
                         <div className="flex flex-col gap-6">
                             {subscription?.stripe_price_id !== undefined && (
                                 <CurrentSubscriptionPlanSkeleton />
@@ -83,10 +82,12 @@ const BillingPage = () => {
                     ) : (
                         <div className="flex flex-col gap-6">
                             {!isLoading && subscription?.stripe_price_id !== undefined && (
-                                <CurrentSubscriptionPlan />
+                                <CurrentSubscriptionPlan products={products} />
                             )}
 
-                            {showChangeSubscriptionPlan && <ChangeSubscriptionPlan />}
+                            {showChangeSubscriptionPlan && (
+                                <ChangeSubscriptionPlan products={products} />
+                            )}
                         </div>
                     )}
                 </div>

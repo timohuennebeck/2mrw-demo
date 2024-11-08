@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
     return (
-        <html className="h-full" lang="en" suppressHydrationWarning={true}>
-            <body className={`h-full`} suppressHydrationWarning={true}>
+        <html className="h-full" lang="en">
+            <body className={`h-full`}>
                 <Providers>{children}</Providers>
 
                 <Toaster position="top-right" expand closeButton />

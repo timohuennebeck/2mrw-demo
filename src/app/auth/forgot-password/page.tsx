@@ -64,6 +64,7 @@ const ForgotPasswordPage = () => {
                         type="email"
                         name="email"
                         placeholder={TextConstants.TEXT__EMAIL_PLACEHOLDER}
+                        value={email}
                         onChange={setEmail}
                     />
 
