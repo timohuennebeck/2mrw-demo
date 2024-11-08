@@ -62,26 +62,17 @@ const SignInPage = () => {
             return;
         }
 
-        toast.promise(
-            supabase.auth.signInWithOtp({
-                email,
-                options: {
-                    shouldCreateUser: true, // set this to false if you do not want the user to be automatically signed up
-                    emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/settings`,
-                },
-            }),
-            {
-                loading: TextConstants.TEXT__SENDING,
-                success: () => {
-                    setIsLoading(false);
-                    return TextConstants.TEXT__MAGIC_LINK_SENT;
-                },
-                error: (err) => {
-                    setIsLoading(false);
-                    return err.message;
-                },
+        setIsLoading(true);
+        await supabase.auth.signInWithOtp({
+            email,
+            options: {
+                shouldCreateUser: true, // set this to false if you do not want the user to be automatically signed up
+                emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/settings`,
             },
-        );
+        });
+        setIsLoading(false);
+
+        toast.success(TextConstants.TEXT__MAGIC_LINK_SENT);
     };
 
     return (
