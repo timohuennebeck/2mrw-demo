@@ -3,7 +3,6 @@ import HeaderWithDescription from "../HeaderWithDescription";
 import { useSession } from "@/context/SessionContext";
 import useSubscription from "@/hooks/useSubscription";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
-import { useProducts } from "@/context/ProductsContext";
 import { PlanFeatures } from "../PricingPlan/PlanFeatures";
 import { getProductDetailsByStripePriceId } from "@/services/domain/PricingService";
 import { getCurrency } from "@/config/paymentConfig";
@@ -11,6 +10,7 @@ import { BillingPlan, SubscriptionInterval } from "@/interfaces/StripePrices";
 import { CalendarClock } from "lucide-react";
 import { getFeaturesWithAvailability } from "@/services/domain/FeatureService";
 import { formatDateToDayMonthYear } from "@/lib/helper/DateHelper";
+import { ProductWithPrices } from "@/interfaces/ProductInterfaces";
 
 const _getProductPricing = (isFreeProduct: boolean, currentPrice: number) => {
     if (isFreeProduct) {
@@ -24,14 +24,11 @@ const _getProductPricing = (isFreeProduct: boolean, currentPrice: number) => {
     return "N/A";
 };
 
-const CurrentSubscriptionPlan = () => {
+const CurrentSubscriptionPlan = ({ products }: { products: ProductWithPrices[] }) => {
     const { authUser } = useSession();
-    const { products } = useProducts();
     const { subscription } = useSubscription(authUser?.id ?? "");
 
     const activeStripePriceId = subscription?.stripe_price_id;
-
-    if (!products) return null;
 
     const productDetails = getProductDetailsByStripePriceId(products, activeStripePriceId);
 

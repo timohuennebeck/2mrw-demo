@@ -5,7 +5,6 @@ import { getCurrency, isFreePlanEnabled, isOneTimePaymentEnabled } from "@/confi
 import { toast } from "sonner";
 import { useRef, useState } from "react";
 import { useSession } from "@/context/SessionContext";
-import { useProducts } from "@/context/ProductsContext";
 import useSubscription from "@/hooks/useSubscription";
 import { cancelStripeSubscription, initiateStripeCheckoutProcess } from "@/lib/stripe/stripeUtils";
 import CustomPopup from "../CustomPopup";
@@ -48,9 +47,8 @@ const _isFreePlan = ({
     return products.find((p) => p.id === selectedPlanId)?.billing_plan === BillingPlan.NONE;
 };
 
-const ChangeSubscriptionPlan = () => {
+const ChangeSubscriptionPlan = ({ products }: { products: ProductWithPrices[] }) => {
     const { authUser } = useSession();
-    const { products } = useProducts();
     const { subscription } = useSubscription(authUser?.id ?? "");
 
     const router = useRouter();
@@ -67,7 +65,6 @@ const ChangeSubscriptionPlan = () => {
         enabled: !showConfirmationPopup,
     });
 
-    if (!products) return null;
 
     const activeStripePriceId = subscription?.stripe_price_id;
     const subscribedProductDetails = getProductDetailsByStripePriceId(
