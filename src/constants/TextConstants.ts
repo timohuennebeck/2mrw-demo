@@ -28,7 +28,6 @@ export const TextConstants = {
     TEXT__MOST_POPULAR_OPTION: "Most Popular Option",
     TEXT__ENTER_EMAIL_BELOW:
         "Enter Your email address below and we'll send You a link to reset Your password.",
-    TEXT__SENDING: "Sending",
     TEXT__SEND_RESET_LINK: "Send Reset Link",
     TEXT__REMEMBER_PASSWORD: "Remember password?",
     TEXT__RESENDING_EMAIL: "Resending Email...",
