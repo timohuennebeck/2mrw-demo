@@ -5,6 +5,8 @@ import { NextResponse as nextResponse, type NextRequest } from "next/server";
 import { redirect } from "next/navigation";
 import { createUserTable, fetchUser } from "@/services/database/UserService";
 import { createClient } from "@/services/integration/server";
+import Stripe from "stripe";
+import { getStripeCustomerId } from "@/lib/stripe/stripeUtils";
 
 const _handleCreateUser = async (authUser: User) => {
     const { error } = await createUserTable(authUser);
@@ -17,10 +19,26 @@ const _handleCreateUser = async (authUser: User) => {
 const _updateUserEmail = async (userId: string, email: string) => {
     const supabase = await createClient();
 
-    const { error } = await supabase.from("users").update({ email }).eq("id", userId);
+    const { error: supabaseError } = await supabase
+        .from("users")
+        .update({ email })
+        .eq("id", userId);
 
-    if (error) {
+    if (supabaseError) {
         return nextResponse.json({ error: "Failed to update user email" }, { status: 500 });
+    }
+
+    await _updateUserEmailInStripe(email);
+};
+
+const _updateUserEmailInStripe = async (email: string) => {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
+    const stripeCustomerId = await getStripeCustomerId();
+
+    if (stripeCustomerId) {
+        await stripe.customers.update(stripeCustomerId, {
+            email,
+        });
     }
 };
 
