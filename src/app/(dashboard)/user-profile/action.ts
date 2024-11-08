@@ -4,14 +4,6 @@ import { createClient } from "@/services/integration/server";
 import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
 
-export const updateUserEmail = async (userId: string, email: string) => {
-    return { success: true };
-};
-
-export const updateUserName = async (userId: string, firstName: string) => {
-    return { success: true };
-};
-
 export const updateUserProfileImage = async ({
     profileImageUrl,
     userId,

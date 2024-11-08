@@ -8,6 +8,7 @@ import { sendPasswordResetEmail } from "./action";
 import Image from "next/image";
 import CustomButton from "@/components/CustomButton";
 import { TextConstants } from "@/constants/TextConstants";
+import { validateEmailFormat } from "@/lib/validation/validateEmailFormat";
 
 const ForgotPasswordPage = () => {
     const [isSending, setIsSending] = useState(false);
@@ -19,8 +20,8 @@ const ForgotPasswordPage = () => {
             return;
         }
 
-        if (!email.includes("@")) {
-            toast.error(TextConstants.ERROR__EMAIL_IS_MISSING_AT_SIGN);
+        if (!validateEmailFormat(email)) {
+            toast.error(TextConstants.ERROR__INVALID_EMAIL);
             return;
         }
 

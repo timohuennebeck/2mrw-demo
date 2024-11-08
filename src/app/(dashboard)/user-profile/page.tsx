@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useSession } from "@/context/SessionContext";
 import useUser from "@/hooks/useUser";
@@ -10,16 +10,50 @@ import PasswordStrengthChecker from "@/components/PasswordStrengthChecker";
 import CustomButton from "@/components/CustomButton";
 import Image from "next/image";
 import { AlertTriangle, Loader, UserRound } from "lucide-react";
-import { updateUserProfileImage, updateUserEmail, updateUserPassword } from "./action";
+import { updateUserProfileImage, updateUserPassword } from "./action";
 import CustomPopup from "@/components/CustomPopup";
 import { createSupabasePowerUserClient } from "@/services/integration/admin";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { createClient } from "@/services/integration/client";
+import { TextConstants } from "@/constants/TextConstants";
+import { validateEmailFormat } from "@/lib/validation/validateEmailFormat";
+
+const _updateUserName = async (userId: string, firstName: string) => {
+    const supabase = createClient();
+
+    const { error } = await supabase
+        .from("users")
+        .update({
+            first_name: firstName,
+        })
+        .eq("id", userId);
+
+    const { error: authError } = await supabase.auth.updateUser({
+        data: {
+            full_name: firstName,
+        },
+    });
+
+    if (error || authError) {
+        return { error: "Error updating first name" };
+    }
+};
+
+const _checkForEmptyFieldPersonalInformation = (firstName: string, email: string) => {
+    return firstName === "" || email === "";
+};
+
+const _checkForEmptyFieldPassword = (password: string, confirmPassword: string) => {
+    return password === "" || confirmPassword === "";
+};
 
 const UserProfilePage = () => {
     const { authUser } = useSession();
     const { dbUser } = useUser(authUser?.id ?? "");
 
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const supabase = createClient();
 
     const [firstName, setFirstName] = useState("");
     const [email, setEmail] = useState("");
@@ -32,9 +66,23 @@ const UserProfilePage = () => {
     const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [isUploadingProfileImage, setIsUploadingProfileImage] = useState(false);
-    const [pendingEmail, setPendingEmail] = useState<string | null>(null);
     const [showDeleteAccountPopup, setShowDeleteAccountPopup] = useState(false);
     const [deletingInProgress, setDeletingInProgress] = useState(false);
+
+    const hasShownToastRef = useRef(false);
+
+    useEffect(() => {
+        const message = searchParams.get("message");
+        if (message === "email-updated" && !hasShownToastRef.current) {
+            // prevent the toast from being shown multiple times due to useEffect being triggered multiple times
+            hasShownToastRef.current = true;
+            // requires a timeout to ensure the toast doesn't get lost in the render cycle
+            setTimeout(() => {
+                toast.success("Your email has been updated");
+            }, 100);
+            router.replace("/user-profile", { scroll: false });
+        }
+    }, [searchParams, router]);
 
     useEffect(() => {
         if (dbUser) {
@@ -51,10 +99,38 @@ const UserProfilePage = () => {
     };
 
     const handlePersonalInfoSubmit = async () => {
+        if (!validateEmailFormat(email)) {
+            toast.error(TextConstants.ERROR__INVALID_EMAIL);
+            return;
+        }
+
         setIsUpdatingPersonalInfo(true);
 
         if (email !== dbUser?.email) {
-            await updateUserEmail(authUser?.id ?? "", email); // if email changed, request email update
+            /**
+             * sends a confirmation email to the new email address
+             * the user will have to click on the link in the email and will be redirect to /auth/confirm
+             * which will then verify his credentials and afterwards update the email in supabase
+             */
+
+            toast.info("To update the email, please confirm in the email we just sent.");
+            const { error } = await supabase.auth.updateUser({
+                email: email,
+            });
+
+            if (error) {
+                toast.error(error.message);
+            }
+        }
+
+        if (firstName !== dbUser?.first_name) {
+            const result = await _updateUserName(authUser?.id ?? "", firstName);
+
+            if (result?.error) {
+                toast.error(result.error);
+            } else {
+                toast.success("Your name has been updated!");
+            }
         }
 
         setIsUpdatingPersonalInfo(false);
@@ -221,6 +297,7 @@ const UserProfilePage = () => {
                                     name="name"
                                     value={firstName}
                                     onChange={(value) => setFirstName(value)}
+                                    placeholder="Elon Musk"
                                 />
                             </div>
                         </div>
@@ -238,32 +315,22 @@ const UserProfilePage = () => {
                                     name="email"
                                     value={email}
                                     onChange={(value) => setEmail(value)}
+                                    placeholder="m@example.com"
                                 />
-
-                                {pendingEmail && (
-                                    <div className="mt-2 flex items-center gap-2 text-sm">
-                                        <span className="text-amber-600">
-                                            Email verification pending for: {pendingEmail}
-                                        </span>
-                                        <button
-                                            onClick={() => setPendingEmail(null)}
-                                            className="rounded-md border border-gray-300 px-2 py-0.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
-                                        >
-                                            Cancel
-                                        </button>
-                                    </div>
-                                )}
                             </div>
                         </div>
                     </div>
 
                     <div className="mt-4">
                         <CustomButton
-                            title={
-                                isUpdatingPersonalInfo ? "Updating..." : "Save Personal Information"
-                            }
+                            title="Save Personal Information"
                             onClick={handlePersonalInfoSubmit}
-                            disabled={isUpdatingPersonalInfo || !hasPersonalInfoChanged()}
+                            disabled={
+                                isUpdatingPersonalInfo ||
+                                !hasPersonalInfoChanged() ||
+                                _checkForEmptyFieldPersonalInformation(firstName, email)
+                            }
+                            isLoading={isUpdatingPersonalInfo}
                         />
                     </div>
                 </form>
@@ -290,6 +357,7 @@ const UserProfilePage = () => {
                                     type="password"
                                     name="new-password"
                                     onChange={(value) => setPassword(value)}
+                                    placeholder="********"
                                 />
                             </div>
                         </div>
@@ -311,6 +379,7 @@ const UserProfilePage = () => {
                                     type="password"
                                     name="confirm-password"
                                     onChange={(value) => setConfirmPassword(value)}
+                                    placeholder="********"
                                 />
                             </div>
                         </div>
@@ -324,9 +393,13 @@ const UserProfilePage = () => {
 
                     <div className="mt-4">
                         <CustomButton
-                            title={isUpdatingPassword ? "Updating..." : "Update Password"}
+                            title="Update Password"
                             onClick={handleChangePasswordSubmit}
-                            disabled={isUpdatingPassword || password === ""}
+                            disabled={
+                                isUpdatingPassword ||
+                                _checkForEmptyFieldPassword(password, confirmPassword)
+                            }
+                            isLoading={isUpdatingPassword}
                         />
                     </div>
                 </form>

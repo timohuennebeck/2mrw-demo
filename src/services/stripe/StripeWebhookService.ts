@@ -67,6 +67,8 @@ export const handleCheckoutSessionCompleted = async (
             billingPlan,
         };
 
+        // TODO: fix purchased package is missing.
+
         await (subscription
             ? updateUserSubscription(dataToUpdate)
             : startUserSubscription(dataToUpdate));
@@ -96,7 +98,12 @@ export const handleSubscriptionUpdated = async (
 
     try {
         if (subscription.cancel_at_period_end) {
-            await _handleSubscriptionCancellation(userId, subscription); // check if the subscription is set to cancel at the end of the current period
+            /**
+             * checks if the subscription is set to cancel at the end of the current period
+             * if it is, cancel the subscripton and return the success response, so that we don't continue to process the subscription
+             */
+
+            await _handleSubscriptionCancellation(userId, subscription);
             return { success: true };
         }
 

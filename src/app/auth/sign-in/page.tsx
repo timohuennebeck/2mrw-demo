@@ -7,6 +7,7 @@ import { signIn } from "./action";
 import RegisterLoginForm from "@/components/RegisterLoginForm";
 import { TextConstants } from "@/constants/TextConstants";
 import { createClient } from "@/services/integration/client";
+import { validateEmailFormat } from "@/lib/validation/validateEmailFormat";
 
 const SignInPage = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -55,7 +56,7 @@ const SignInPage = () => {
             return;
         }
 
-        if (!email.includes("@")) {
+        if (!validateEmailFormat(email)) {
             toast.error(TextConstants.ERROR__INVALID_EMAIL);
             setIsLoading(false);
             return;

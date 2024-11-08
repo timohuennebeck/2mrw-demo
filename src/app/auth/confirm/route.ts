@@ -59,9 +59,8 @@ export const GET = async (request: NextRequest) => {
 
         switch (type) {
             case "recovery": {
-                return redirect(
-                    `/auth/update-password?access_token=${session?.access_token}&refresh_token=${session?.refresh_token}`,
-                );
+                const urlToRedirectTo = `/auth/update-password?access_token=${session?.access_token}&refresh_token=${session?.refresh_token}`;
+                return redirect(urlToRedirectTo);
             }
             case "email":
             case "signup": {
@@ -83,7 +82,7 @@ export const GET = async (request: NextRequest) => {
 
             case "email_change": {
                 await _updateUserEmail(authUser?.id ?? "", authUser?.email ?? "");
-                return redirect("/settings");
+                return redirect("/user-profile?message=email-updated");
             }
 
             default:
