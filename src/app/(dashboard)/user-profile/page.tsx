@@ -113,12 +113,14 @@ const UserProfilePage = () => {
              * which will then verify his credentials and afterwards update the email in supabase
              */
 
-            toast.info("To update the email, please confirm in the email we just sent.");
             const { error } = await supabase.auth.updateUser({
                 email: email,
             });
+            setIsUpdatingPersonalInfo(false);
+            toast.info("To update the email, please confirm in the email we just sent.");
 
             if (error) {
+                setIsUpdatingPersonalInfo(false);
                 toast.error(error.message);
             }
         }
@@ -127,13 +129,13 @@ const UserProfilePage = () => {
             const result = await _updateUserName(authUser?.id ?? "", firstName);
 
             if (result?.error) {
+                setIsUpdatingPersonalInfo(false);
                 toast.error(result.error);
             } else {
+                setIsUpdatingPersonalInfo(false);
                 toast.success("Your name has been updated!");
             }
         }
-
-        setIsUpdatingPersonalInfo(false);
     };
 
     const handleProfileImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
