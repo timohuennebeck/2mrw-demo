@@ -87,9 +87,11 @@ const RegisterLoginForm = ({
                             <div className="grid gap-2">
                                 <InputField
                                     id="firstName"
+                                    dataTestId="first-name-input"
                                     label="First name"
                                     name="firstName"
                                     type="text"
+                                    value={firstName}
                                     placeholder={TextConstants.TEXT__FIRST_NAME_PLACEHOLDER}
                                     onChange={setFirstName}
                                 />
@@ -97,18 +99,22 @@ const RegisterLoginForm = ({
                         )}
                         <InputField
                             id="email"
+                            dataTestId="email-input"
                             label="Email"
                             name="email"
                             type="email"
                             placeholder={TextConstants.TEXT__EMAIL_PLACEHOLDER}
+                            value={email}
                             onChange={setEmail}
                         />
                         {(authType === "password" || mode === "signup") && (
                             <InputField
                                 id="password"
+                                dataTestId="password-input"
                                 label="Password"
                                 name="password"
                                 type="password"
+                                value={password}
                                 onChange={setPassword}
                                 onFocus={() => mode === "signup" && handlePasswordFocus()}
                                 onBlur={() => mode === "signup" && handlePasswordBlur()}
@@ -131,6 +137,7 @@ const RegisterLoginForm = ({
                         )}
 
                         <CustomButton
+                            dataTestId="sign-in-button"
                             title={
                                 authType === "magicLink" && mode === "signin"
                                     ? TextConstants.TEXT__LOGIN_WITH_MAGIC_LINK
@@ -151,16 +158,11 @@ const RegisterLoginForm = ({
                             <p className="text-center text-sm text-neutral-500">
                                 You'll be emailed a magic code for a password-free sign in or{" "}
                                 <button
-                                    onClick={() =>
-                                        setAuthType(
-                                            authType === "magicLink" ? "password" : "magicLink",
-                                        )
-                                    }
+                                    data-testid="password-sign-in-toggle"
+                                    onClick={() => setAuthType("password")}
                                     className="underline"
                                 >
-                                    {authType === "magicLink"
-                                        ? "sign in with password instead"
-                                        : "use magic link instead"}
+                                    sign in with password instead
                                 </button>
                             </p>
                         )}

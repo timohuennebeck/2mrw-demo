@@ -9,6 +9,7 @@ function InputField({
     value,
     type,
     name,
+    dataTestId,
     placeholder,
     onChange,
     onFocus,
@@ -21,6 +22,7 @@ function InputField({
     value?: string;
     type: string;
     name: string;
+    dataTestId?: string;
     placeholder?: string;
     onChange: (value: string) => void;
     onFocus?: () => void;
@@ -48,6 +50,7 @@ function InputField({
                     onFocus={onFocus}
                     onBlur={onBlur}
                     disabled={disabled}
+                    data-testid={dataTestId}
                 />
 
                 {type === "password" && !disabled && (

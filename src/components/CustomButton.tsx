@@ -8,6 +8,7 @@ interface CustomButtonParams {
     isSecondary?: boolean;
     disabled?: boolean;
     isLoading?: boolean;
+    dataTestId?: string;
 }
 
 const CustomButton = ({
@@ -17,6 +18,7 @@ const CustomButton = ({
     isLoading,
     isSecondary,
     className,
+    dataTestId,
 }: CustomButtonParams) => {
     const isDisabledOrLoading = disabled || isLoading;
 
@@ -32,6 +34,7 @@ const CustomButton = ({
                       ? "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
                       : "border border-transparent bg-black text-white hover:bg-neutral-700"
             } `}
+            data-testid={dataTestId}
         >
             {isLoading ? <Loader size={20} strokeWidth={2} className="animate-spin" /> : title}
         </button>

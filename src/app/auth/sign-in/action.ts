@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/services/integration/server";
+import { TextConstants } from "@/constants/TextConstants";
 
 export const signIn = async ({ email, password }: { email: string; password: string }) => {
     const supabase = await createClient();
@@ -12,6 +13,10 @@ export const signIn = async ({ email, password }: { email: string; password: str
     });
 
     if (error) {
+        if (error.message === "Invalid login credentials") {
+            return { error: TextConstants.TEXT__INVALID_CREDENTIALS };
+        }
+
         return { error: error.message };
     }
 

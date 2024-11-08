@@ -24,6 +24,12 @@ const SignInPage = () => {
             return;
         }
 
+        if (!validateEmailFormat(email)) {
+            toast.error(TextConstants.ERROR__INVALID_EMAIL);
+            setIsLoading(false);
+            return;
+        }
+
         if (password === "") {
             toast.error(TextConstants.ERROR__PASSWORD_IS_MISSING);
             setIsLoading(false);
