@@ -1,0 +1,50 @@
+import { TextConstants } from "../../../src/constants/TextConstants";
+
+describe("magic link authentication", () => {
+    beforeEach(() => {
+        cy.visit("http://localhost:3000/auth/sign-in");
+        cy.contains("sign in with password instead").should("be.visible").click();
+    });
+
+    describe("error flows", () => {
+        it("should show error message when email is missing", () => {
+            cy.get("button").contains(TextConstants.TEXT__SIGN_IN).should("be.visible").click();
+            cy.contains(TextConstants.ERROR__EMAIL_IS_MISSING).should("be.visible");
+        });
+
+        it("should show error message when email is invalid", () => {
+            cy.get("input[name='email']").should("be.visible").type("invalid-email");
+            cy.get("button").contains(TextConstants.TEXT__SIGN_IN).should("be.visible").click();
+            cy.contains(TextConstants.ERROR__INVALID_EMAIL).should("be.visible");
+        });
+
+        it("should show error message when email is missing but password is present", () => {
+            cy.get("input[name='password']").should("be.visible").type("password");
+            cy.get("button").contains(TextConstants.TEXT__SIGN_IN).should("be.visible").click();
+            cy.contains(TextConstants.ERROR__EMAIL_IS_MISSING).should("be.visible");
+        });
+
+        it("should show error message when password is missing but email is present", () => {
+            cy.get("input[name='email']").should("be.visible").type("example@example.com");
+            cy.get("button").contains(TextConstants.TEXT__SIGN_IN).should("be.visible").click();
+            cy.contains(TextConstants.ERROR__PASSWORD_IS_MISSING).should("be.visible");
+        });
+
+        it.only("should show error message when email and password are invalid", () => {
+            cy.get("input[name='email']").should("be.visible").type("example@example.com");
+            cy.get("input[name='password']").should("be.visible").type("invalid-password");
+            cy.get("button").contains(TextConstants.TEXT__SIGN_IN).should("be.visible").click();
+            cy.contains(TextConstants.TEXT__INVALID_CREDENTIALS).should("be.visible");
+        });
+    });
+
+    describe("success flows", () => {
+        it("shoud login user with credentials", () => {
+            cy.get("input[name='email']").should("be.visible").type("timo.huennebeck+e2e@outlook.de");
+            cy.get("input[name='password']").should("be.visible").type("JH7pYHEj4#Gzh$X8");
+            cy.get("button").contains(TextConstants.TEXT__SIGN_IN).should("be.visible").click();
+            cy.contains(TextConstants.TEXT__SIGN_IN_SUCCESSFUL).should("be.visible");
+            cy.url().should("include", "/");
+        });
+    });
+});

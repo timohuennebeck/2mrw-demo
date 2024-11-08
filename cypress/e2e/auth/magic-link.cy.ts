@@ -7,7 +7,10 @@ describe("magic link authentication", () => {
 
     describe("error flows", () => {
         it("should show error message when email is missing", () => {
-            cy.contains(TextConstants.TEXT__LOGIN_WITH_MAGIC_LINK).should("be.visible").click();
+            cy.get("button")
+                .contains(TextConstants.TEXT__LOGIN_WITH_MAGIC_LINK)
+                .should("be.visible")
+                .click();
             cy.contains(TextConstants.ERROR__EMAIL_IS_MISSING).should("be.visible");
         });
 
