@@ -23,6 +23,11 @@ describe("magic link authentication", () => {
             cy.get('[data-testid="email-input"]').should("be.visible").type("example@example.com");
             cy.get('[data-testid="sign-in-button"]').should("be.visible").click();
             cy.contains(TextConstants.TEXT__MAGIC_LINK_SENT).should("be.visible");
+
+            // requires a 5000ms timeout because the message is only shown after 4000ms
+            cy.contains(TextConstants.TEXT__DIDNT_RECEIVE_EMAIL, { timeout: 5000 }).should(
+                "be.visible",
+            );
         });
     });
 });

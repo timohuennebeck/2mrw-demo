@@ -62,6 +62,7 @@ function InputField({
                     <div
                         className="absolute inset-y-0 right-3.5 flex h-full w-5 cursor-pointer"
                         onClick={() => setShowPassword(!showPassword)}
+                        data-testid="password-toggle"
                     >
                         {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
                     </div>
