@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+import { OctagonX } from "lucide-react";
 
 function InputField({
     label,
@@ -11,6 +12,8 @@ function InputField({
     name,
     dataTestId,
     placeholder,
+    error,
+    hasError,
     onChange,
     onFocus,
     onBlur,
@@ -24,6 +27,8 @@ function InputField({
     name: string;
     dataTestId?: string;
     placeholder?: string;
+    error?: string;
+    hasError?: boolean;
     onChange: (value: string) => void;
     onFocus?: () => void;
     onBlur?: () => void;
@@ -46,7 +51,7 @@ function InputField({
                     placeholder={placeholder}
                     value={value ?? ""}
                     onChange={(e) => onChange(e.target.value)}
-                    className={`w-full rounded-md border border-neutral-300 px-3 py-2.5 text-sm outline-neutral-800 ${type === "password" && "pr-10"} ${disabled && "bg-neutral-100 text-neutral-400"}`}
+                    className={`w-full rounded-md border px-3 py-2.5 text-sm outline-neutral-800 ${type === "password" && "pr-10"} ${disabled && "bg-neutral-100 text-neutral-400"} ${hasError ? "border-red-500" : "border-neutral-300"} ${hasError ? "focus:border-red-500" : "focus:border-neutral-800"}`}
                     onFocus={onFocus}
                     onBlur={onBlur}
                     disabled={disabled}
@@ -62,6 +67,15 @@ function InputField({
                     </div>
                 )}
             </div>
+
+            {error && (
+                <div className="flex items-center gap-1">
+                    <OctagonX className="h-4 w-4 text-red-500" />
+                    <p className="mt-1 text-sm text-red-500" data-testid={`${dataTestId}-error`}>
+                        {error}
+                    </p>
+                </div>
+            )}
         </div>
     );
 }

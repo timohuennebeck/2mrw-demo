@@ -9,6 +9,7 @@ import InputField from "./InputField";
 import CustomButton from "./CustomButton";
 import { TextConstants } from "@/constants/TextConstants";
 import PasswordStrengthChecker from "./PasswordStrengthChecker";
+import { validateEmailFormat } from "@/lib/validation/validateEmailFormat";
 
 interface RegisterLoginForm {
     mode: string;
@@ -37,6 +38,47 @@ const RegisterLoginForm = ({
     const [isPasswordFocused, setIsPasswordFocused] = useState(false);
     const [showStrengthChecker, setShowStrengthChecker] = useState(false);
     const [authType, setAuthType] = useState("magicLink");
+    const [errors, setErrors] = useState({
+        email: "",
+        password: "",
+        firstName: "",
+    });
+
+    const checkFormInput = () => {
+        const newErrors = {
+            email: "",
+            password: "",
+            firstName: "",
+        };
+
+        if (email === "") {
+            newErrors.email = TextConstants.ERROR__EMAIL_IS_MISSING;
+        } else if (!validateEmailFormat(email)) {
+            newErrors.email = TextConstants.ERROR__INVALID_EMAIL;
+        }
+
+        if ((authType === "password" || mode === "signup") && password === "") {
+            console.log("→ [LOG] Triggered section");
+            newErrors.password = TextConstants.ERROR__PASSWORD_IS_MISSING;
+        }
+
+        if (mode === "signup" && firstName === "") {
+            newErrors.firstName = TextConstants.ERROR__FIRST_NAME_IS_MISSING;
+        }
+
+        setErrors(newErrors);
+        return !Object.values(newErrors).some((error) => error !== "");
+    };
+
+    const handleFormSubmit = () => {
+        if (!checkFormInput()) return;
+
+        if (authType === "magicLink" && mode === "signin") {
+            loginWithMagicLink?.(email);
+        } else {
+            handleSubmit({ email, password, firstName });
+        }
+    };
 
     const handlePasswordFocus = () => {
         if (mode === "signup") {
@@ -82,7 +124,7 @@ const RegisterLoginForm = ({
                         </p>
                     </div>
 
-                    <form className="grid gap-4" onSubmit={(e) => e.preventDefault()}>
+                    <form className="grid gap-4" onSubmit={(e) => e.preventDefault()} noValidate>
                         {mode === "signup" && (
                             <div className="grid gap-2">
                                 <InputField
@@ -93,7 +135,12 @@ const RegisterLoginForm = ({
                                     type="text"
                                     value={firstName}
                                     placeholder={TextConstants.TEXT__FIRST_NAME_PLACEHOLDER}
-                                    onChange={setFirstName}
+                                    onChange={(value) => {
+                                        setFirstName(value);
+                                        setErrors((prev) => ({ ...prev, firstName: "" }));
+                                    }}
+                                    error={errors.firstName}
+                                    hasError={!!errors.firstName}
                                 />
                             </div>
                         )}
@@ -105,7 +152,12 @@ const RegisterLoginForm = ({
                             type="email"
                             placeholder={TextConstants.TEXT__EMAIL_PLACEHOLDER}
                             value={email}
-                            onChange={setEmail}
+                            onChange={(value) => {
+                                setEmail(value);
+                                setErrors((prev) => ({ ...prev, email: "" }));
+                            }}
+                            error={errors.email}
+                            hasError={!!errors.email}
                         />
                         {(authType === "password" || mode === "signup") && (
                             <InputField
@@ -115,7 +167,12 @@ const RegisterLoginForm = ({
                                 name="password"
                                 type="password"
                                 value={password}
-                                onChange={setPassword}
+                                onChange={(value) => {
+                                    setPassword(value);
+                                    setErrors((prev) => ({ ...prev, password: "" }));
+                                }}
+                                error={errors.password}
+                                hasError={!!errors.password}
                                 onFocus={() => mode === "signup" && handlePasswordFocus()}
                                 onBlur={() => mode === "signup" && handlePasswordBlur()}
                             />
@@ -137,7 +194,7 @@ const RegisterLoginForm = ({
                         )}
 
                         <CustomButton
-                            dataTestId="sign-in-button"
+                            dataTestId={`${mode === "signup" ? "sign-up" : "sign-in"}-button`}
                             title={
                                 authType === "magicLink" && mode === "signin"
                                     ? TextConstants.TEXT__LOGIN_WITH_MAGIC_LINK
@@ -145,11 +202,7 @@ const RegisterLoginForm = ({
                                       ? TextConstants.TEXT__SIGN_UP
                                       : TextConstants.TEXT__SIGN_IN
                             }
-                            onClick={() =>
-                                authType === "magicLink" && mode === "signin"
-                                    ? loginWithMagicLink?.(email)
-                                    : handleSubmit({ email, password, firstName })
-                            }
+                            onClick={handleFormSubmit}
                             disabled={isLoading}
                             isLoading={isLoading}
                         />
@@ -182,6 +235,7 @@ const RegisterLoginForm = ({
                         <Link
                             href={mode === "signup" ? "/auth/sign-in" : "/auth/sign-up"}
                             className="underline"
+                            data-testid={`${mode === "signup" ? "signup" : "signin"}-toggle`}
                         >
                             {mode === "signup"
                                 ? TextConstants.TEXT__SIGN_IN
