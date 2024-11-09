@@ -13,6 +13,7 @@ export const TextConstants = {
     TEXT__LOGIN_WITH_MAGIC_LINK: "Login with Magic Link",
     TEXT__INVALID_CREDENTIALS:
         "Hmm, those login details don't match our records. Please check them.",
+    TEXT__USER_DOES_NOT_EXIST: "Hmm, we couldn't find a user with that email address.",
     TEXT__FREE: "Free",
     TEXT__MONTHLY: "Monthly",
     TEXT__YEARLY: "Yearly",
@@ -41,7 +42,7 @@ export const TextConstants = {
     TEXT__SIGNING_IN: "Signing in...",
     TEXT__SIGNING_UP: "Signing up...",
     TEXT__SIGN_IN_SUCCESSFUL: "You've been logged in!",
-    TEXT__MAGIC_LINK_SENT: "We've sent you a magic link. Please check your email to continue.",
+    TEXT__MAGIC_LINK_SENT: "Magic link sent! Check your email inbox to continue signing in securely.",
     TEXT__SIGN_UP_SUCCESSFUL_CHECK_EMAIL: "Sign up successful! Please check email inbox.",
     TEXT__PASSWORD_HAS_BEEN_UPDATED: "Password has been updated",
     TEXT__RESET_PASSWORD_EMAIL_SENT: "Password reset email has been sent.",

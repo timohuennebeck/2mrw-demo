@@ -10,6 +10,7 @@ import CustomButton from "./CustomButton";
 import { TextConstants } from "@/constants/TextConstants";
 import PasswordStrengthChecker from "./PasswordStrengthChecker";
 import { validateEmailFormat } from "@/lib/validation/validateEmailFormat";
+import FormStatusMessage from "./FormStatusMessage";
 
 interface RegisterLoginForm {
     mode: string;
@@ -24,6 +25,10 @@ interface RegisterLoginForm {
     }) => void;
     loginWithMagicLink?: (email: string) => void;
     isLoading: boolean;
+    statusMessage?: {
+        type: "error" | "info";
+        message: string;
+    } | null;
 }
 
 const RegisterLoginForm = ({
@@ -31,6 +36,7 @@ const RegisterLoginForm = ({
     handleSubmit,
     loginWithMagicLink,
     isLoading,
+    statusMessage,
 }: RegisterLoginForm) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -124,6 +130,12 @@ const RegisterLoginForm = ({
                         </p>
                     </div>
 
+                    {statusMessage && (
+                        <FormStatusMessage
+                            message={statusMessage.message}
+                            type={statusMessage.type}
+                        />
+                    )}
                     <form className="grid gap-4" onSubmit={(e) => e.preventDefault()} noValidate>
                         {mode === "signup" && (
                             <div className="grid gap-2">

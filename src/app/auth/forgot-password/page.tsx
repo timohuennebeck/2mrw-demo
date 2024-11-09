@@ -3,38 +3,75 @@
 import InputField from "@/components/InputField";
 import Link from "next/link";
 import { useState } from "react";
-import { toast } from "sonner";
 import { sendPasswordResetEmail } from "./action";
 import Image from "next/image";
 import CustomButton from "@/components/CustomButton";
 import { TextConstants } from "@/constants/TextConstants";
 import { validateEmailFormat } from "@/lib/validation/validateEmailFormat";
+import FormStatusMessage from "@/components/FormStatusMessage";
+import { createClient } from "@/services/integration/client";
+import { StatusMessage } from "@/interfaces/FormStatusInterface";
+
+const _checkIfUserExists = async (email: string) => {
+    const supabase = createClient();
+    const { data } = await supabase.from("users").select("email").eq("email", email);
+    return { userExists: data?.length !== 0 };
+};
 
 const ForgotPasswordPage = () => {
-    const [isSending, setIsSending] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [email, setEmail] = useState("");
+    const [errors, setErrors] = useState({
+        email: "",
+    });
+    const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(null);
 
-    const handleSubmit = async () => {
+    const checkFormInput = () => {
+        const newErrors = {
+            email: "",
+        };
+
         if (email === "") {
-            toast.error(TextConstants.ERROR__EMAIL_IS_MISSING);
-            return;
+            newErrors.email = TextConstants.ERROR__EMAIL_IS_MISSING;
+        } else if (!validateEmailFormat(email)) {
+            newErrors.email = TextConstants.ERROR__INVALID_EMAIL;
         }
 
-        if (!validateEmailFormat(email)) {
-            toast.error(TextConstants.ERROR__INVALID_EMAIL);
+        setErrors(newErrors);
+        return !Object.values(newErrors).some((error) => error !== "");
+    };
+
+    const handleFormSubmit = async () => {
+        if (!checkFormInput()) return;
+
+        setIsLoading(true);
+        const { userExists } = await _checkIfUserExists(email);
+        if (!userExists) {
+            setIsLoading(false);
+            setStatusMessage({
+                type: "error",
+                message: TextConstants.TEXT__USER_DOES_NOT_EXIST,
+            });
+            setTimeout(() => setStatusMessage(null), 5000);
             return;
         }
-
-        setIsSending(true);
 
         const { success, error } = await sendPasswordResetEmail({ email });
 
-        setIsSending(false);
-
         if (error) {
-            toast.error(error);
+            setIsLoading(false);
+            setStatusMessage({
+                type: "error",
+                message: error,
+            });
+            setTimeout(() => setStatusMessage(null), 5000);
         } else if (success) {
-            toast.success(success);
+            setIsLoading(false);
+            setStatusMessage({
+                type: "info",
+                message: success,
+            });
+            setTimeout(() => setStatusMessage(null), 5000);
         }
     };
 
@@ -57,6 +94,8 @@ const ForgotPasswordPage = () => {
                     </p>
                 </div>
 
+                <FormStatusMessage message={statusMessage?.message} type={statusMessage?.type} />
+
                 <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
                     <InputField
                         label="Email"
@@ -65,14 +104,19 @@ const ForgotPasswordPage = () => {
                         name="email"
                         placeholder={TextConstants.TEXT__EMAIL_PLACEHOLDER}
                         value={email}
-                        onChange={setEmail}
+                        onChange={(value) => {
+                            setEmail(value);
+                            setErrors((prev) => ({ ...prev, email: "" }));
+                        }}
+                        error={errors.email}
+                        hasError={!!errors.email}
                     />
 
                     <CustomButton
                         title={TextConstants.TEXT__SEND_RESET_LINK}
-                        disabled={isSending}
-                        onClick={handleSubmit}
-                        isLoading={isSending}
+                        disabled={isLoading}
+                        onClick={handleFormSubmit}
+                        isLoading={isLoading}
                     />
                 </form>
 
