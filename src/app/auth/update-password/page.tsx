@@ -49,31 +49,33 @@ const UpdatePassword = () => {
         });
         setIsUpdating(false);
 
-        if (result.success) {
-            setStatusMessage({
-                type: "info",
-                message: `${TextConstants.TEXT__PASSWORD_HAS_BEEN_UPDATED}. ${TextConstants.TEXT__REDIRECTING_TO_HOME}`,
-            });
-
-            setCountdown(3);
-            const timer = setInterval(() => {
-                setCountdown((prev) => {
-                    if (prev === undefined || prev <= 1) {
-                        clearInterval(timer);
-                        router.replace(result.redirect ?? "/");
-                        return undefined;
-                    }
-                    return prev - 1;
-                });
-            }, 1000);
-
-            return () => clearInterval(timer);
-        } else {
+        if (result.error) {
             setStatusMessage({
                 type: "error",
                 message: result.error ?? TextConstants.ERROR__UNEXPECTED_ERROR,
             });
+            setTimeout(() => setStatusMessage(null), 5000);
+            return;
         }
+
+        setStatusMessage({
+            type: "info",
+            message: `${TextConstants.TEXT__PASSWORD_HAS_BEEN_UPDATED}. ${TextConstants.TEXT__REDIRECTING_TO_HOME}`,
+        });
+
+        setCountdown(3);
+        const timer = setInterval(() => {
+            setCountdown((prev) => {
+                if (prev === undefined || prev <= 1) {
+                    clearInterval(timer);
+                    router.replace(result.redirect ?? "/");
+                    return undefined;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(timer);
     };
 
     return (

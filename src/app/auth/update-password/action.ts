@@ -23,14 +23,10 @@ export const updatePassword = async ({
          * we get the access_token and refresh_token from the confirm route when the user clicks on the confirm link in the password reset email
          */
 
-        const {
-            data: { user },
-        } = await supabase.auth.setSession({
+        await supabase.auth.setSession({
             access_token: accessToken,
             refresh_token: refreshToken,
         });
-
-        if (!user) throw new Error("User is missing!");
 
         const { error: updateError } = await supabase.auth.updateUser({
             password,
