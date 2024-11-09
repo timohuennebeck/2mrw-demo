@@ -1,6 +1,6 @@
 import { TextConstants } from "../../../src/constants/TextConstants";
 
-describe("magic link authentication", () => {
+describe("sign in", () => {
     beforeEach(() => {
         cy.visit("http://localhost:3000/auth/sign-in");
         cy.get('[data-testid="password-sign-in-toggle"]').should("be.visible").click();
@@ -50,7 +50,7 @@ describe("magic link authentication", () => {
             cy.url().should("include", "/");
         });
 
-        it.only("should handle failed login", () => {
+        it("should handle failed login", () => {
             cy.get('[data-testid="email-input"]').should("be.visible").type("wrong@example.com");
             cy.get('[data-testid="password-input"]').should("be.visible").type("wrongpass");
             cy.get('[data-testid="sign-in-button"]').should("be.visible").click();
