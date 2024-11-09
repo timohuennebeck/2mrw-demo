@@ -3,15 +3,21 @@
 import InputField from "@/components/InputField";
 import Link from "next/link";
 import { useState } from "react";
-import { sendPasswordResetEmail } from "./action";
 import Image from "next/image";
 import CustomButton from "@/components/CustomButton";
 import { TextConstants } from "@/constants/TextConstants";
 import { validateEmailFormat } from "@/lib/validation/validateEmailFormat";
 import FormStatusMessage from "@/components/FormStatusMessage";
-import { createClient } from "@/services/integration/client";
 import { StatusMessage } from "@/interfaces/FormStatusInterface";
 import { checkUserEmailExists } from "@/services/database/UserService";
+import { createClient } from "@/services/integration/client";
+
+const _sendPasswordResetEmail = async (email: string) => {
+    const supabase = createClient();
+
+    const result = await supabase.auth.resetPasswordForEmail(email);
+    return result;
+};
 
 const ForgotPasswordPage = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -51,26 +57,33 @@ const ForgotPasswordPage = () => {
             return;
         }
 
-        const result = await sendPasswordResetEmail({ email });
-
-        if (result.success) {
+        const result = await _sendPasswordResetEmail(email);
+        if (result.error) {
             setIsLoading(false);
             setStatusMessage({
-                type: "info",
-                message: result.success,
+                type: "error",
+                message: result.error.message,
             });
             setTimeout(() => setStatusMessage(null), 5000);
             return;
         }
 
-        if (result.error) {
-            setIsLoading(false);
+        setIsLoading(false);
+        setStatusMessage({
+            type: "info",
+            message: TextConstants.TEXT__RESET_PASSWORD_EMAIL_SENT,
+        });
+
+        setTimeout(() => {
             setStatusMessage({
-                type: "error",
-                message: result.error,
+                type: "info",
+                message: TextConstants.TEXT__DIDNT_RECEIVE_EMAIL,
+                action: {
+                    label: TextConstants.TEXT__RESEND_EMAIL,
+                    onClick: async () => await _sendPasswordResetEmail(email),
+                },
             });
-            setTimeout(() => setStatusMessage(null), 5000);
-        }
+        }, 4000);
     };
 
     return (

@@ -1,4 +1,5 @@
-import { Info, OctagonX } from "lucide-react";
+import { Info, Loader, OctagonX } from "lucide-react";
+import { useState } from "react";
 
 type MessageType = "error" | "info";
 
@@ -12,7 +13,17 @@ interface FormStatusMessageProps {
 }
 
 const FormStatusMessage = ({ message, type = "error", action }: FormStatusMessageProps) => {
+    const [isLoading, setIsLoading] = useState(false);
+
     if (!message) return null;
+
+    const handleUserOnClick = async () => {
+        if (action) {
+            setIsLoading(true);
+            action.onClick();
+            setTimeout(() => setIsLoading(false), 500);
+        }
+    };
 
     const styles = {
         error: {
@@ -35,10 +46,10 @@ const FormStatusMessage = ({ message, type = "error", action }: FormStatusMessag
             <p>{message}</p>
             {action && (
                 <button
-                    onClick={action.onClick}
+                    onClick={handleUserOnClick}
                     className={`ml-auto rounded px-2 py-0.5 text-xs font-medium ${type === "error" ? "bg-red-100 hover:bg-red-200" : "bg-blue-100 hover:bg-blue-200"} transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 ${type === "error" ? "focus:ring-red-500" : "focus:ring-blue-500"}`}
                 >
-                    {action.label}
+                    {isLoading ? <Loader className="h-3 w-3 animate-spin" /> : action.label}
                 </button>
             )}
         </div>

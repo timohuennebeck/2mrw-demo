@@ -46,7 +46,7 @@ export const TextConstants = {
         "Magic link sent! Check your email inbox to continue signing in securely.",
     TEXT__SIGN_UP_SUCCESSFUL_CHECK_EMAIL: "Sign up successful! Please check email inbox.",
     TEXT__PASSWORD_HAS_BEEN_UPDATED: "Password has been updated",
-    TEXT__RESET_PASSWORD_EMAIL_SENT: "Password reset email has been sent.",
+    TEXT__RESET_PASSWORD_EMAIL_SENT: "Success! Password reset email has been sent",
     TEXT__PLEASE_ENTER_AN_EMAIL: "Please enter an email address.",
     TEXT__CONFIRMATION_EMAIL_SENT: "Confirmation email has been sent",
     TEXT__HAS_SIX_PLUS_CHARACTERS: "Has 6+ characters",

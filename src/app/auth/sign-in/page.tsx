@@ -6,18 +6,25 @@ import { signIn } from "./action";
 import RegisterLoginForm from "@/components/RegisterLoginForm";
 import { TextConstants } from "@/constants/TextConstants";
 import { createClient } from "@/services/integration/client";
+import { StatusMessage } from "@/interfaces/FormStatusInterface";
 
-interface StatusMessage {
-    type: "error" | "info";
-    message: string;
-}
+const _sendMagicLink = async (email: string) => {
+    const supabase = createClient();
+
+    const result = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+            emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/settings`,
+        },
+    });
+    return result;
+};
 
 const SignInPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(null);
 
     const router = useRouter();
-    const supabase = createClient();
 
     const handleSubmit = async ({ email, password }: { email: string; password: string }) => {
         setIsLoading(true);
@@ -47,20 +54,33 @@ const SignInPage = () => {
     const loginWithMagicLink = async (email: string) => {
         setIsLoading(true);
 
-        await supabase.auth.signInWithOtp({
-            email,
-            options: {
-                shouldCreateUser: true, // set this to false if you do not want the user to be automatically signed up
-                emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/settings`,
-            },
-        });
-        setIsLoading(false);
+        const result = await _sendMagicLink(email);
+
+        if (result.error) {
+            setIsLoading(false);
+            setStatusMessage({
+                type: "error",
+                message: result.error.message,
+            });
+            setTimeout(() => setStatusMessage(null), 5000);
+            return;
+        }
 
         setStatusMessage({
             type: "info",
             message: TextConstants.TEXT__MAGIC_LINK_SENT,
         });
-        setTimeout(() => setStatusMessage(null), 5000);
+
+        setTimeout(() => {
+            setStatusMessage({
+                type: "info",
+                message: TextConstants.TEXT__DIDNT_RECEIVE_EMAIL,
+                action: {
+                    label: TextConstants.TEXT__RESEND_EMAIL,
+                    onClick: async () => await _sendMagicLink(email),
+                },
+            });
+        }, 4000);
         setIsLoading(false);
     };
 
