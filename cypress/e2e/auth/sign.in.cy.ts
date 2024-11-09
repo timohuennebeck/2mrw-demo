@@ -45,8 +45,17 @@ describe("magic link authentication", () => {
                 .type("timo.huennebeck+e2e@outlook.de");
             cy.get('[data-testid="password-input"]').should("be.visible").type("JH7pYHEj4#Gzh$X8");
             cy.get('[data-testid="sign-in-button"]').should("be.visible").click();
+
             cy.contains(TextConstants.TEXT__SIGN_IN_SUCCESSFUL).should("be.visible");
             cy.url().should("include", "/");
+        });
+
+        it.only("should handle failed login", () => {
+            cy.get('[data-testid="email-input"]').should("be.visible").type("wrong@example.com");
+            cy.get('[data-testid="password-input"]').should("be.visible").type("wrongpass");
+            cy.get('[data-testid="sign-in-button"]').should("be.visible").click();
+
+            cy.contains(TextConstants.TEXT__INVALID_CREDENTIALS).should("be.visible");
         });
     });
 });
