@@ -10,11 +10,15 @@ import CustomButton from "@/components/CustomButton";
 import { useRouter, useSearchParams } from "next/navigation";
 import { TextConstants } from "@/constants/TextConstants";
 import PasswordStrengthChecker from "@/components/PasswordStrengthChecker";
+import { StatusMessage } from "@/interfaces/FormStatusInterface";
+import FormStatusMessage from "@/components/FormStatusMessage";
 
 const UpdatePassword = () => {
     const [isUpdating, setIsUpdating] = useState(false);
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(null);
+    const [countdown, setCountdown] = useState<number | undefined>(undefined);
 
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -46,10 +50,29 @@ const UpdatePassword = () => {
         setIsUpdating(false);
 
         if (result.success) {
-            router.replace(result.redirect ?? "/");
-            toast.success(TextConstants.TEXT__PASSWORD_HAS_BEEN_UPDATED);
+            setStatusMessage({
+                type: "info",
+                message: `${TextConstants.TEXT__PASSWORD_HAS_BEEN_UPDATED}. ${TextConstants.TEXT__REDIRECTING_TO_HOME}`,
+            });
+
+            setCountdown(3);
+            const timer = setInterval(() => {
+                setCountdown((prev) => {
+                    if (prev === undefined || prev <= 1) {
+                        clearInterval(timer);
+                        router.replace(result.redirect ?? "/");
+                        return undefined;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+
+            return () => clearInterval(timer);
         } else {
-            toast.error(result.error);
+            setStatusMessage({
+                type: "error",
+                message: result.error ?? TextConstants.ERROR__UNEXPECTED_ERROR,
+            });
         }
     };
 
@@ -72,7 +95,19 @@ const UpdatePassword = () => {
                     </p>
                 </div>
 
-                <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()} suppressHydrationWarning>
+                {statusMessage && (
+                    <FormStatusMessage
+                        message={statusMessage.message}
+                        type={statusMessage.type}
+                        countdown={countdown ?? undefined}
+                    />
+                )}
+
+                <form
+                    className="flex flex-col gap-4"
+                    onSubmit={(e) => e.preventDefault()}
+                    suppressHydrationWarning
+                >
                     <InputField
                         label={TextConstants.TEXT__NEW_PASSWORD}
                         id="password"
