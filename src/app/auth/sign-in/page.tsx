@@ -27,7 +27,6 @@ const SignInPage = () => {
     const router = useRouter();
 
     const handleSubmit = async ({ email, password }: { email: string; password: string }) => {
-        setIsLoading(true);
         const result = await signIn({ email, password });
 
         if (result?.success) {
@@ -35,9 +34,7 @@ const SignInPage = () => {
                 type: "info",
                 message: TextConstants.TEXT__SIGN_IN_SUCCESSFUL,
             });
-            setTimeout(() => setStatusMessage(null), 5000);
 
-            setIsLoading(false);
             router.replace(result.redirect ?? "/");
         }
 
@@ -47,8 +44,9 @@ const SignInPage = () => {
                 message: result.error,
             });
             setTimeout(() => setStatusMessage(null), 5000);
-            setIsLoading(false);
         }
+
+        setIsLoading(false);
     };
 
     const loginWithMagicLink = async (email: string) => {

@@ -1,9 +1,8 @@
-import { TextConstants } from "@/constants/TextConstants";
 import { StatusMessage } from "@/interfaces/FormStatusInterface";
 import { Info, Loader, OctagonX } from "lucide-react";
 import { useState } from "react";
 
-const FormStatusMessage = ({ message, type = "error", action, countdown }: StatusMessage) => {
+const FormStatusMessage = ({ message, type = "error", action }: StatusMessage) => {
     const [isLoading, setIsLoading] = useState(false);
 
     if (!message) return null;
@@ -34,9 +33,7 @@ const FormStatusMessage = ({ message, type = "error", action, countdown }: Statu
     return (
         <div className={`flex items-center gap-2 rounded-md ${background} p-3 text-sm ${text}`}>
             {icon}
-            <p>
-                {message} {countdown !== undefined && `${countdown}`}
-            </p>
+            <p>{message}</p>
             {action && (
                 <button
                     onClick={handleUserOnClick}

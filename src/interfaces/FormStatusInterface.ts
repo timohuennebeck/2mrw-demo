@@ -5,5 +5,4 @@ export interface StatusMessage {
         label: string;
         onClick: () => void;
     };
-    countdown?: number;
 }

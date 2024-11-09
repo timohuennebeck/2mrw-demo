@@ -18,7 +18,6 @@ const UpdatePassword = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(null);
-    const [countdown, setCountdown] = useState<number | undefined>(undefined);
 
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -60,22 +59,8 @@ const UpdatePassword = () => {
 
         setStatusMessage({
             type: "info",
-            message: `${TextConstants.TEXT__PASSWORD_HAS_BEEN_UPDATED}. ${TextConstants.TEXT__REDIRECTING_TO_HOME}`,
+            message: TextConstants.TEXT__PASSWORD_HAS_BEEN_UPDATED,
         });
-
-        setCountdown(3);
-        const timer = setInterval(() => {
-            setCountdown((prev) => {
-                if (prev === undefined || prev <= 1) {
-                    clearInterval(timer);
-                    router.replace(result.redirect ?? "/");
-                    return undefined;
-                }
-                return prev - 1;
-            });
-        }, 1000);
-
-        return () => clearInterval(timer);
     };
 
     return (
@@ -101,7 +86,6 @@ const UpdatePassword = () => {
                     <FormStatusMessage
                         message={statusMessage.message}
                         type={statusMessage.type}
-                        countdown={countdown ?? undefined}
                     />
                 )}
 
