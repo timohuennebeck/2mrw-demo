@@ -6,11 +6,11 @@ import moment from "moment";
 import { handleSupabaseError } from "@/lib/helper/SupabaseHelper";
 import { createClient } from "../integration/server";
 
-export const checkEmailExists = async (userEmail: string) => {
+export const checkUserEmailExists = async (userEmail: string) => {
     try {
         const supabase = await createClient();
 
-        const { data, error } = await supabase
+        const { error } = await supabase
             .from("users")
             .select("email")
             .eq("email", userEmail)

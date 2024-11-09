@@ -11,6 +11,7 @@ import { TextConstants } from "@/constants/TextConstants";
 import PasswordStrengthChecker from "./PasswordStrengthChecker";
 import { validateEmailFormat } from "@/lib/validation/validateEmailFormat";
 import FormStatusMessage from "./FormStatusMessage";
+import { StatusMessage } from "@/interfaces/FormStatusInterface";
 
 interface RegisterLoginForm {
     mode: string;
@@ -25,10 +26,7 @@ interface RegisterLoginForm {
     }) => void;
     loginWithMagicLink?: (email: string) => void;
     isLoading: boolean;
-    statusMessage?: {
-        type: "error" | "info";
-        message: string;
-    } | null;
+    statusMessage?: StatusMessage | null;
 }
 
 const RegisterLoginForm = ({
@@ -134,6 +132,7 @@ const RegisterLoginForm = ({
                         <FormStatusMessage
                             message={statusMessage.message}
                             type={statusMessage.type}
+                            action={statusMessage.action}
                         />
                     )}
                     <form className="grid gap-4" onSubmit={(e) => e.preventDefault()} noValidate>

@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { NextResponse as response } from "next/server";
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
-import { checkEmailExists, createUserTable } from "@/services/database/UserService";
+import { checkUserEmailExists, createUserTable } from "@/services/database/UserService";
 
 export const GET = async (request: Request) => {
     const { searchParams, origin } = new URL(request.url);
@@ -42,7 +42,7 @@ export const GET = async (request: Request) => {
             const { user: authUser } = data.session;
 
             try {
-                const { emailExists } = await checkEmailExists(authUser.user_metadata.email);
+                const { emailExists } = await checkUserEmailExists(authUser.user_metadata.email);
 
                 if (!emailExists) {
                     await createUserTable(authUser);

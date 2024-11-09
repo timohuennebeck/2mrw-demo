@@ -15,6 +15,7 @@ interface StatusMessage {
 const SignInPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(null);
+
     const router = useRouter();
     const supabase = createClient();
 

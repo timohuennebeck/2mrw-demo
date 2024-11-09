@@ -11,12 +11,7 @@ import { validateEmailFormat } from "@/lib/validation/validateEmailFormat";
 import FormStatusMessage from "@/components/FormStatusMessage";
 import { createClient } from "@/services/integration/client";
 import { StatusMessage } from "@/interfaces/FormStatusInterface";
-
-const _checkIfUserExists = async (email: string) => {
-    const supabase = createClient();
-    const { data } = await supabase.from("users").select("email").eq("email", email);
-    return { userExists: data?.length !== 0 };
-};
+import { checkUserEmailExists } from "@/services/database/UserService";
 
 const ForgotPasswordPage = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -45,8 +40,8 @@ const ForgotPasswordPage = () => {
         if (!checkFormInput()) return;
 
         setIsLoading(true);
-        const { userExists } = await _checkIfUserExists(email);
-        if (!userExists) {
+        const { emailExists } = await checkUserEmailExists(email);
+        if (!emailExists) {
             setIsLoading(false);
             setStatusMessage({
                 type: "error",
@@ -56,20 +51,23 @@ const ForgotPasswordPage = () => {
             return;
         }
 
-        const { success, error } = await sendPasswordResetEmail({ email });
+        const result = await sendPasswordResetEmail({ email });
 
-        if (error) {
-            setIsLoading(false);
-            setStatusMessage({
-                type: "error",
-                message: error,
-            });
-            setTimeout(() => setStatusMessage(null), 5000);
-        } else if (success) {
+        if (result.success) {
             setIsLoading(false);
             setStatusMessage({
                 type: "info",
-                message: success,
+                message: result.success,
+            });
+            setTimeout(() => setStatusMessage(null), 5000);
+            return;
+        }
+
+        if (result.error) {
+            setIsLoading(false);
+            setStatusMessage({
+                type: "error",
+                message: result.error,
             });
             setTimeout(() => setStatusMessage(null), 5000);
         }
@@ -94,7 +92,11 @@ const ForgotPasswordPage = () => {
                     </p>
                 </div>
 
-                <FormStatusMessage message={statusMessage?.message} type={statusMessage?.type} />
+                <FormStatusMessage
+                    message={statusMessage?.message ?? ""}
+                    type={statusMessage?.type}
+                    action={statusMessage?.action}
+                />
 
                 <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
                     <InputField

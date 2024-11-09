@@ -2,11 +2,10 @@
 
 import { TextConstants } from "@/constants/TextConstants";
 import { SupabaseErrors } from "@/enums/SupabaseErrors";
-import { checkEmailExists } from "@/services/database/UserService";
 import { createClient } from "@/services/integration/server";
 import { AuthError } from "@supabase/supabase-js";
 
-export const signUp = async ({
+export const signUpUserToSupabase = async ({
     firstName,
     email,
     password,
@@ -18,12 +17,6 @@ export const signUp = async ({
     const supabase = await createClient();
 
     try {
-        const { emailExists } = await checkEmailExists(email);
-
-        if (emailExists) {
-            return { error: TextConstants.ERROR__EMAIL_ALREADY_IN_USE };
-        }
-
         const { data, error } = await supabase.auth.signUp({
             email,
             password,
@@ -44,18 +37,14 @@ export const signUp = async ({
             return { error: TextConstants.ERROR__USER_CREATION_FAILED };
         }
 
-        return { success: true };
+        return { success: true, error: null };
     } catch (err) {
-        return { error: TextConstants.ERRROR__DURING_SIGN_UP };
+        return { success: false, error: TextConstants.ERROR__DURING_SIGN_UP };
     }
 };
 
 export const sendConfirmationEmail = async ({ email }: { email: string }) => {
     const supabase = await createClient();
-
-    if (!email) {
-        return { error: TextConstants.ERROR__EMAIL_IS_MISSING };
-    }
 
     try {
         const { error } = await supabase.auth.resend({
