@@ -19,7 +19,7 @@ const SignUpPage = () => {
 
     const handleSendConfirmationEmail = async (email: string) => {
         setIsLoading(true);
-        const result = await sendConfirmationEmail({ email });
+        const result = await sendConfirmationEmail(email);
 
         if (result.success) {
             setStatusMessage({

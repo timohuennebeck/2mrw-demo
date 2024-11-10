@@ -43,7 +43,7 @@ export const signUpUserToSupabase = async ({
     }
 };
 
-export const sendConfirmationEmail = async ({ email }: { email: string }) => {
+export const sendConfirmationEmail = async (email: string) => {
     const supabase = await createClient();
 
     try {
