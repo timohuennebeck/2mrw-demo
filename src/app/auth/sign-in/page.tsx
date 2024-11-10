@@ -27,8 +27,9 @@ const SignInPage = () => {
     const router = useRouter();
 
     const handleSubmit = async ({ email, password }: { email: string; password: string }) => {
-        const result = await signIn({ email, password });
+        setIsLoading(true);
 
+        const result = await signIn({ email, password });
         if (result?.success) {
             setStatusMessage({
                 type: "info",
