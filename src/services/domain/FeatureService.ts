@@ -1,5 +1,5 @@
 import { FEATURES } from "@/config/featureConfig";
-import { SubscriptionTier } from "@/interfaces";
+import { SubscriptionTier } from "@/enums";
 
 export const getFeaturesWithAvailability = (tier: SubscriptionTier) => {
     return Object.values(FEATURES).map((feature) => ({

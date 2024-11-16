@@ -1,6 +1,6 @@
 "use client";
 
-import { PricingPlanCard } from "@/components/PricingPlan/PricingPlanCard";
+import { PricingPlanCard } from "@/components/PricingPlanCard/PricingPlanCard";
 import { PricingPlanCardSkeleton } from "@/components/ui/PricingPlanCardSkeleton";
 import { useState } from "react";
 import { isFreePlanEnabled, isOneTimePaymentEnabled } from "@/config/paymentConfig";
@@ -8,7 +8,8 @@ import { TextConstants } from "@/constants/TextConstants";
 import { useProducts } from "@/context/ProductsContext";
 import { useSession } from "@/context/SessionContext";
 import { useSubscription } from "@/context/SubscriptionContext";
-import { SubscriptionInterval, ProductWithPrices, SubscriptionTier } from "@/interfaces";
+import { ProductWithPrices } from "@/interfaces";
+import { SubscriptionInterval, SubscriptionTier } from "@/enums";
 
 const ChoosePricingPlanPage = () => {
     const [billingCycle, setBillingCycle] = useState<SubscriptionInterval>(

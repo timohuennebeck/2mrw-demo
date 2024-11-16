@@ -1,4 +1,4 @@
-import { EmailTemplate } from "@/services/email/emailService";
+import { EmailTemplate } from "@/enums";
 
 export const validateEmailProps = (template: EmailTemplate, props: any) => {
     if (!props.userEmail || !props.userFirstName) {

@@ -1,5 +1,6 @@
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
-import { ProductWithPrices, BillingPlan, StripePrice, SubscriptionInterval } from "@/interfaces";
+import { ProductWithPrices, StripePrice } from "@/interfaces";
+import { BillingPlan, SubscriptionInterval } from "@/enums";
 
 interface GetPriceParams {
     product: ProductWithPrices;

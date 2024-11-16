@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import CustomButton from "../../../common/buttons/CustomButton/CustomButton";
+import CustomButton from "../CustomButton/CustomButton";
 import { useEffect, useState } from "react";
 import { TextConstants } from "@/constants/TextConstants";
 import { isFreePlanEnabled } from "@/config/paymentConfig";

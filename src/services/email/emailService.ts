@@ -1,7 +1,8 @@
 import { emailConfig as actualEmailConfig } from "@/config/emailConfig";
 import SubscriptionConfirmationEmail from "@/emails/templates/SubscriptionConfirmationEmail";
 import { resend } from "./client";
-import { EmailTemplate, EmailTemplateProps } from "@/interfaces";
+import { EmailTemplateProps } from "@/interfaces";
+import { EmailTemplate } from "@/enums";
 
 const getEmailConfig = (template: EmailTemplate, props: EmailTemplateProps) => {
     const { settings } = actualEmailConfig;

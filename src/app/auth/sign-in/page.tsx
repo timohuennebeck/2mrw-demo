@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "./action";
-import RegisterLoginForm from "@/components/RegisterLoginForm";
+import RegisterLoginForm from "@/components/RegisterLoginForm/RegisterLoginForm";
 import { TextConstants } from "@/constants/TextConstants";
 import { createClient } from "@/services/integration/client";
 import { StatusMessage } from "@/interfaces";

@@ -1,5 +1,5 @@
 import ReactConfetti from "react-confetti";
-import CustomButton from "../CustomButton/CustomButton";
+import CustomButton from "@/components/CustomButton/CustomButton";
 import { CustomPopupParams } from "./CustomPopup.interface";
 
 const CustomPopup = ({

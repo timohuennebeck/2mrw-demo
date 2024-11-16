@@ -1,11 +1,7 @@
 "use client";
 
-import BillingPortal from "@/components/billing/portal/BillingPortal";
-import CurrentSubscriptionPlan from "@/components/billing/subscription/CurrentSubscriptionPlan";
-import ChangeSubscriptionPlan from "@/components/billing/subscription/ChangeSubscriptionPlan";
 import { useSession } from "@/context/SessionContext";
 import { useSupabaseRealtime } from "@/hooks/useSupabaseRealtime";
-import CustomPopup from "@/components/common/CustomPopup";
 import { Check } from "lucide-react";
 import { useState } from "react";
 import useSuccessParam from "@/hooks/useSuccessParam";
@@ -14,8 +10,12 @@ import CurrentSubscriptionPlanSkeleton from "@/components/ui/CurrentSubscription
 import ChangeSubscriptionPlanSkeleton from "@/components/ui/ChangeSubscriptionPlanSkeleton";
 import { TextConstants } from "@/constants/TextConstants";
 import { useSubscription } from "@/context/SubscriptionContext";
-import { BillingPlan, SubscriptionStatus } from "@/interfaces";
-import FormHeader from "@/components/forms/FormHeader";
+import CustomPopup from "@/components/CustomPopup/CustomPopup";
+import { BillingPlan, SubscriptionStatus } from "@/enums";
+import FormHeader from "@/components/FormHeader/FormHeader";
+import CurrentSubscriptionPlan from "@/components/CurrentSubscriptionPlan/CurrentSubscriptionPlan";
+import ChangeSubscriptionPlan from "@/components/ChangeSubscriptionPlan/ChangeSubscriptionPlan";
+import BillingPortal from "@/components/BillingPortal/BillingPortal";
 
 const BillingPage = () => {
     const { authUser } = useSession();

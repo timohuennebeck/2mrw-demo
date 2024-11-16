@@ -84,6 +84,6 @@ const SubscriptionConfirmationEmail = ({
 SubscriptionConfirmationEmail.PreviewProps = {
     userFirstName: "Katja",
     purchasedPackage: "Premium Plan (20% off)",
-} as PaidPlanEmailTemplateProps;
+} as SubscriptionConfirmationEmailProps;
 
 export default SubscriptionConfirmationEmail;

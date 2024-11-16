@@ -1,13 +1,12 @@
 import { CheckBadgeIcon } from "@heroicons/react/24/solid";
-import { PlanFeatures } from "../../pricing/PlanFeatures/PlanFeatures";
+import { PlanFeatures } from "@/components/PlanFeatures/PlanFeatures";
 import { getProductDetailsByStripePriceId } from "@/services/domain/pricingService";
 import { getCurrency } from "@/config/paymentConfig";
 import { CalendarClock } from "lucide-react";
 import { getFeaturesWithAvailability } from "@/services/domain/featureService";
 import { formatDateToDayMonthYear } from "@/utils/date/dateHelper";
 import { useSubscription } from "@/context/SubscriptionContext";
-import { ProductWithPrices } from "@/interfaces";
-import FormHeader from "../../../forms/FormHeader/FormHeader";
+import FormHeader from "@/components/FormHeader/FormHeader";
 import { BillingPlan, SubscriptionInterval, SubscriptionStatus } from "@/enums";
 import { CurrentSubscriptionPlanParams } from "./CurrentSubscriptionPlan.interface";
 

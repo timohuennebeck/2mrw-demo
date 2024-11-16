@@ -9,14 +9,11 @@ import { createSupabasePowerUserClient } from "../integration/admin";
 import { validateEmailProps } from "@/utils/validators/emailValidator";
 import { handleSupabaseError } from "@/utils/errors/supabaseError";
 import {
-    SubscriptionTier,
-    SubscriptionStatus,
     PurchasedSubscription,
     CreatePurchasedSubscriptionTableParams,
     UpdateUserSubscriptionStatusParams,
-    BillingPlan,
-    EmailTemplate,
 } from "@/interfaces";
+import { BillingPlan, EmailTemplate, SubscriptionStatus, SubscriptionTier } from "@/enums";
 
 const _sendSubscriptionConfirmationEmail = async (
     userId: string,

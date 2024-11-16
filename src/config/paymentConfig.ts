@@ -1,4 +1,4 @@
-import { BillingPlan } from "@/interfaces";
+import { BillingPlan } from "@/enums";
 
 interface CompletePaymentConfig {
     isFreePlanEnabled: boolean;

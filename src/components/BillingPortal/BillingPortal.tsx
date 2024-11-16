@@ -1,8 +1,8 @@
 import { handleStripePortalSession } from "@/services/stripe/stripeService";
-import CustomButton from "../../../common/buttons/CustomButton/CustomButton";
+import CustomButton from "@/components/CustomButton/CustomButton";
 import { useState } from "react";
 import { getStripeCustomerId } from "@/services/stripe/stripeCustomer";
-import FormHeader from "@/components/forms/FormHeader/FormHeader";
+import FormHeader from "@/components/FormHeader/FormHeader";
 
 const BillingPortal = () => {
     const [isOpeningBillingPortal, setIsOpeningBillingPortal] = useState(false);

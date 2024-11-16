@@ -1,6 +1,6 @@
 "use client";
 
-import GoogleButton from "@/components/common/buttons/GoogleButton/GoogleButton";
+import GoogleButton from "@/components/GoogleButton/GoogleButton";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -8,9 +8,9 @@ import { validateEmailFormat } from "@/utils/validators/formatValidator";
 import { RegisterLoginFormParams } from "./RegisterLoginForm.interface";
 import { TextConstants } from "@/constants/TextConstants";
 import FormStatusMessage from "../FormStatusMessage/FormStatusMessage";
-import InputField from "@/components/common/InputField/InputField";
+import InputField from "@/components/InputField/InputField";
 import PasswordStrengthChecker from "../PasswordStrengthChecker/PasswordStrengthChecker";
-import CustomButton from "@/components/common/buttons/CustomButton/CustomButton";
+import CustomButton from "@/components/CustomButton/CustomButton";
 import FormDivider from "../FormDivider/FormDivider";
 
 const RegisterLoginForm = ({

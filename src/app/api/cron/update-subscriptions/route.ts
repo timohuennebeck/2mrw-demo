@@ -3,7 +3,7 @@ import {
     terminateUserSubscription,
 } from "@/services/database/subscriptionService";
 import { createSupabasePowerUserClient } from "@/services/integration/admin";
-import { SubscriptionStatus } from "@/interfaces";
+import { SubscriptionStatus } from "@/enums";
 import moment from "moment";
 import { NextResponse as response } from "next/server";
 

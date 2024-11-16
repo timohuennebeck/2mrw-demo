@@ -1,7 +1,7 @@
 "use client";
 
-import CustomPopup from "@/components/common/buttons/CustomPopup/CustomPopup";
-import FormHeader from "@/components/forms/FormHeader/FormHeader";
+import CustomPopup from "@/components/CustomPopup/CustomPopup";
+import FormHeader from "@/components/FormHeader/FormHeader";
 import useSuccessParam from "@/hooks/useSuccessParam";
 import { Check } from "lucide-react";
 import { useState } from "react";

@@ -1,16 +1,16 @@
 "use client";
 
-import InputField from "@/components/common/InputField/InputField";
+import InputField from "@/components/InputField/InputField";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense, useState } from "react";
 import { toast } from "sonner";
 import { updatePassword } from "./action";
-import CustomButton from "@/components/common/buttons/CustomButton";
+import CustomButton from "@/components/CustomButton/CustomButton";
 import { useRouter, useSearchParams } from "next/navigation";
 import { TextConstants } from "@/constants/TextConstants";
-import PasswordStrengthChecker from "@/components/forms/PasswordStrengthChecker";
-import FormStatusMessage from "@/components/FormStatusMessage";
+import PasswordStrengthChecker from "@/components/PasswordStrengthChecker/PasswordStrengthChecker";
+import FormStatusMessage from "@/components/FormStatusMessage/FormStatusMessage";
 import { StatusMessage } from "@/interfaces";
 
 const UpdatePassword = () => {

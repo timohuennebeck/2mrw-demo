@@ -9,7 +9,7 @@ import {
     updateUserSubscription,
 } from "../database/subscriptionService";
 import { createSupabasePowerUserClient } from "../integration/admin";
-import { SubscriptionStatus } from "@/interfaces";
+import { SubscriptionStatus } from "@/enums";
 
 const _handleSubscriptionCancellation = async (
     userId: string,

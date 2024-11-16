@@ -20,11 +20,11 @@ import { ShieldAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import CustomButton from "../../../common/buttons/CustomButton/CustomButton";
-import FormHeader from "../../../forms/FormHeader/FormHeader";
 import { BillingPlan, SubscriptionInterval, SubscriptionStatus } from "@/enums";
-import CustomPopup from "@/components/common/buttons/CustomPopup/CustomPopup";
+import CustomPopup from "@/components/CustomPopup/CustomPopup";
 import { ChangeSubscriptionPlanParams } from "./ChangeSubscriptionPlan.interface";
+import CustomButton from "@/components/CustomButton/CustomButton";
+import FormHeader from "@/components/FormHeader/FormHeader";
 
 const _findButtonTitle = (isFreePlan: boolean, subscriptionStatus: SubscriptionStatus) => {
     if (!subscriptionStatus) return TextConstants.TEXT__UNLOCK_PLAN;
