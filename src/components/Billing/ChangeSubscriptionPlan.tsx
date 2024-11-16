@@ -65,7 +65,6 @@ const ChangeSubscriptionPlan = ({ products }: { products: ProductWithPrices[] })
         enabled: !showConfirmationPopup,
     });
 
-
     const activeStripePriceId = subscription?.stripe_price_id;
     const subscribedProductDetails = getProductDetailsByStripePriceId(
         products,
@@ -183,11 +182,12 @@ const ChangeSubscriptionPlan = ({ products }: { products: ProductWithPrices[] })
         <>
             {showConfirmationPopup && (
                 <CustomPopup
-                    title="Confirm Subscription Change"
+                    dataTestId="change-subscription-popup"
+                    title={TextConstants.TEXT__CONFIRM_SUBSCRIPTION_CHANGE}
                     description={`You're about to switch to the ${products.find((p) => p.id === selectedPlanId)?.name} plan. Please confirm to continue.`}
                     icon={<ShieldAlert size={32} strokeWidth={1.5} className="text-yellow-500" />}
                     iconBackgroundColor="bg-yellow-100"
-                    mainButtonText="Confirm"
+                    mainButtonText={TextConstants.TEXT__CONFIRM}
                     onConfirm={handleConfirmSubscription}
                     mainButtonIsLoading={isLoading}
                     onCancel={() => setShowConfirmationPopup(false)}
@@ -204,17 +204,20 @@ const ChangeSubscriptionPlan = ({ products }: { products: ProductWithPrices[] })
                     <div className="mb-6 flex space-x-4">
                         {isFreePlanEnabled() && (
                             <CustomButton
+                                dataTestId="free-subscription-button"
                                 title={TextConstants.TEXT__FREE.toUpperCase()}
                                 onClick={() => setSubscriptionInterval(SubscriptionInterval.NONE)}
                                 isSecondary={subscriptionInterval !== SubscriptionInterval.NONE}
                             />
                         )}
                         <CustomButton
+                            dataTestId="monthly-subscription-button"
                             title={`${TextConstants.TEXT__MONTHLY.toUpperCase()} (PREMIUM)`}
                             onClick={() => setSubscriptionInterval(SubscriptionInterval.MONTHLY)}
                             isSecondary={subscriptionInterval !== SubscriptionInterval.MONTHLY}
                         />
                         <CustomButton
+                            dataTestId="yearly-subscription-button"
                             title={`${TextConstants.TEXT__YEARLY.toUpperCase()} (PREMIUM)`}
                             onClick={() => setSubscriptionInterval(SubscriptionInterval.YEARLY)}
                             isSecondary={subscriptionInterval !== SubscriptionInterval.YEARLY}
@@ -252,6 +255,7 @@ const ChangeSubscriptionPlan = ({ products }: { products: ProductWithPrices[] })
                                 return (
                                     <div
                                         key={product.id}
+                                        data-testid={`subscription-plan-${product.subscription_tier.toLowerCase()}`}
                                         className={`relative rounded-lg border ${
                                             selectedPlanId === product.id
                                                 ? "border-blue-500 bg-blue-50"
@@ -315,6 +319,7 @@ const ChangeSubscriptionPlan = ({ products }: { products: ProductWithPrices[] })
 
                     <div className="mt-6 flex items-start justify-start">
                         <CustomButton
+                            dataTestId="change-subscription-button"
                             title={_findButtonTitle(isFreePlanSelected, subscription?.status)}
                             disabled={!selectedPlanId}
                             className={`${

@@ -16,6 +16,7 @@ import CurrentSubscriptionPlanSkeleton from "@/components/ui/CurrentSubscription
 import ChangeSubscriptionPlanSkeleton from "@/components/ui/ChangeSubscriptionPlanSkeleton";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { BillingPlan } from "@/interfaces/StripePrices";
+import { TextConstants } from "@/constants/TextConstants";
 
 const BillingPage = () => {
     const { authUser } = useSession();
@@ -50,11 +51,12 @@ const BillingPage = () => {
         <>
             {showSuccessPopup && (
                 <CustomPopup
-                    title="Subscription Confirmed!"
+                    dataTestId="subscription-success-popup"
+                    title={TextConstants.TEXT__SUBSCRIPTION_CONFIRMED}
                     description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
                     icon={<Check size={32} strokeWidth={1.5} className="text-green-500" />}
                     iconBackgroundColor="bg-green-100"
-                    mainButtonText="Continue"
+                    mainButtonText={TextConstants.TEXT__CONTINUE}
                     onConfirm={() => setShowSuccessPopup(false)}
                     hideSecondaryButton
                     showConfetti

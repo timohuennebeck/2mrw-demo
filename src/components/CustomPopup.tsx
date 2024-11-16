@@ -11,6 +11,7 @@ interface CustomPopupProps {
     mainButtonIsLoading?: boolean;
     hideSecondaryButton?: boolean;
     showConfetti?: boolean;
+    dataTestId?: string;
     onConfirm: () => void;
     onCancel?: () => void;
 }
@@ -25,6 +26,7 @@ const CustomPopup = ({
     mainButtonIsLoading,
     hideSecondaryButton,
     showConfetti = false,
+    dataTestId,
     onConfirm,
     onCancel,
 }: CustomPopupProps) => {
@@ -39,7 +41,10 @@ const CustomPopup = ({
                 />
             )}
 
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800/50 animate-fadeIn">
+            <div
+                data-testid={dataTestId}
+                className="fixed inset-0 z-50 flex animate-fadeIn items-center justify-center bg-gray-800/50"
+            >
                 <div className="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-xl">
                     <div className="mb-6 flex justify-center">
                         {icon && (
@@ -53,7 +58,12 @@ const CustomPopup = ({
 
                     <div className="flex justify-center space-x-4">
                         {!hideSecondaryButton && (
-                            <CustomButton title="Cancel" onClick={onCancel} isSecondary />
+                            <CustomButton
+                                title="Cancel"
+                                onClick={onCancel}
+                                isSecondary
+                                dataTestId="custom-popup-secondary-button"
+                            />
                         )}
                         <CustomButton
                             title={mainButtonText}
@@ -61,6 +71,7 @@ const CustomPopup = ({
                             className={mainButtonColor}
                             isLoading={mainButtonIsLoading}
                             disabled={mainButtonIsLoading}
+                            dataTestId="custom-popup-primary-button"
                         />
                     </div>
                 </div>
