@@ -10,13 +10,13 @@ import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { TextConstants } from "@/constants/TextConstants";
 import { BillingPlan, StripePrice, SubscriptionInterval } from "@/interfaces/StripePrices";
-import { getFeaturesWithAvailability } from "@/services/domain/FeatureService";
+import { getFeaturesWithAvailability } from "@/services/domain/featureService";
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 
 interface PricingPlanCardProps extends ProductWithPrices {
     supabaseUser: User | null;
     subscriptionStatus: SubscriptionStatus;
-    subscriptionData: PurchasedSubscription;
+    subscriptionData: PurchasedSubscription | null;
     isLoading: boolean;
     billingCycle: SubscriptionInterval;
     setBillingCycle: (cycle: SubscriptionInterval) => void;
@@ -86,7 +86,7 @@ export const PricingPlanCard = (props: PricingPlanCardProps) => {
                 <PlanButton
                     isLoading={isLoading}
                     subscriptionTier={subscription_tier}
-                    subscriptionData={subscriptionData}
+                    subscriptionData={subscriptionData ?? null}
                     subscriptionStatus={subscriptionStatus}
                     supabaseUser={supabaseUser ?? null}
                     name={name}

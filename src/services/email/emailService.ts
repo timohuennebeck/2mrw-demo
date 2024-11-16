@@ -1,8 +1,7 @@
 import { Resend } from "resend";
 import { emailConfig as actualEmailConfig } from "@/config/emailConfig";
 import SubscriptionConfirmationEmail from "@/emails/SubscriptionConfirmationEmail";
-
-const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_EMAIL_API_KEY ?? "");
+import { resend } from "./client";
 
 interface EmailTemplateProps {
     userEmail: string;

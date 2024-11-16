@@ -3,10 +3,11 @@
 import { User, type EmailOtpType } from "@supabase/supabase-js";
 import { NextResponse as nextResponse, type NextRequest } from "next/server";
 import { redirect } from "next/navigation";
-import { createUserTable, fetchUser } from "@/services/database/UserService";
+import { createUserTable, fetchUser } from "@/services/database/userService";
 import { createClient } from "@/services/integration/server";
 import Stripe from "stripe";
-import { getStripeCustomerId } from "@/lib/stripe/stripeUtils";
+import { getStripeCustomerId } from "@/services/stripe/stripeCustomer";
+import { stripe } from "@/services/stripe/config";
 
 const _handleCreateUser = async (authUser: User) => {
     const { error } = await createUserTable(authUser);
@@ -32,7 +33,6 @@ const _updateUserEmail = async (userId: string, email: string) => {
 };
 
 const _updateUserEmailInStripe = async (email: string) => {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
     const stripeCustomerId = await getStripeCustomerId();
 
     if (stripeCustomerId) {

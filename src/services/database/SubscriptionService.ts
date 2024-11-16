@@ -4,19 +4,19 @@ import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
 import {
     CreatePurchasedSubscriptionTableParams,
     UpdateUserSubscriptionStatusParams,
-} from "../integration/supabaseInterfaces";
+} from "../../interfaces/supabaseInterfaces";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import moment from "moment";
-import { EmailTemplate } from "@/lib/email/emailService";
-import { validateEmailProps } from "@/lib/validation/emailValidation";
-import { sendEmail } from "@/lib/email/emailService";
-import { checkRowExists, getEndDate } from "./BaseService";
-import { handleSupabaseError } from "@/lib/helper/SupabaseHelper";
-import { getProductNameByTier } from "./ProductService";
+import { EmailTemplate } from "@/services/email/emailService";
+import { sendEmail } from "@/services/email/emailService";
+import { checkRowExists, getEndDate } from "./baseService";
+import { getProductNameByTier } from "./productService";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
 import { createClient } from "../integration/server";
 import { createSupabasePowerUserClient } from "../integration/admin";
 import { BillingPlan } from "@/interfaces/StripePrices";
+import { validateEmailProps } from "@/utils/validators/emailValidator";
+import { handleSupabaseError } from "@/utils/errors/supabaseError";
 
 const _sendSubscriptionConfirmationEmail = async (
     userId: string,

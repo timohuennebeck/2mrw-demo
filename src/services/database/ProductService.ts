@@ -1,10 +1,10 @@
 "use server";
 
 import { ProductWithPrices } from "@/interfaces/ProductInterfaces";
-import { handleSupabaseError } from "@/lib/helper/SupabaseHelper";
 import { BillingPlan } from "@/interfaces/StripePrices";
 import { isFreePlanEnabled } from "@/config/paymentConfig";
 import { createClient } from "../integration/server";
+import { handleSupabaseError } from "@/utils/errors/supabaseError";
 
 export const fetchProductsWithPrices = async () => {
     try {

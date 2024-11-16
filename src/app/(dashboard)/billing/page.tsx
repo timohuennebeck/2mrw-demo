@@ -5,7 +5,6 @@ import CurrentSubscriptionPlan from "@/components/Billing/CurrentSubscriptionPla
 import ChangeSubscriptionPlan from "@/components/Billing/ChangeSubscriptionPlan";
 import HeaderWithDescription from "@/components/HeaderWithDescription";
 import { useSession } from "@/context/SessionContext";
-import { useSubscription } from "@/hooks/useSubscription";
 import { useSupabaseRealtime } from "@/hooks/useSupabaseRealtime";
 import CustomPopup from "@/components/CustomPopup";
 import { Check } from "lucide-react";
@@ -17,11 +16,12 @@ import ChangeSubscriptionPlanSkeleton from "@/components/ui/ChangeSubscriptionPl
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { BillingPlan } from "@/interfaces/StripePrices";
 import { TextConstants } from "@/constants/TextConstants";
+import { useSubscription } from "@/context/SubscriptionContext";
 
 const BillingPage = () => {
     const { authUser } = useSession();
     const { products } = useProducts();
-    const { subscription, invalidateSubscription, isLoading } = useSubscription(authUser?.id ?? "");
+    const { subscription, invalidateSubscription } = useSubscription();
 
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
@@ -73,7 +73,7 @@ const BillingPage = () => {
                 <div className="flex flex-col gap-6">
                     {subscription?.billing_plan === BillingPlan.RECURRING && <BillingPortal />}
 
-                    {!products || isLoading ? (
+                    {!products ? (
                         <div className="flex flex-col gap-6">
                             {subscription?.stripe_price_id !== undefined && (
                                 <CurrentSubscriptionPlanSkeleton />
@@ -83,7 +83,7 @@ const BillingPage = () => {
                         </div>
                     ) : (
                         <div className="flex flex-col gap-6">
-                            {!isLoading && subscription?.stripe_price_id !== undefined && (
+                            {subscription?.stripe_price_id !== undefined && (
                                 <CurrentSubscriptionPlan products={products} />
                             )}
 

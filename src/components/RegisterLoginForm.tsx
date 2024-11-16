@@ -9,9 +9,9 @@ import InputField from "./InputField";
 import CustomButton from "./CustomButton";
 import { TextConstants } from "@/constants/TextConstants";
 import PasswordStrengthChecker from "./PasswordStrengthChecker";
-import { validateEmailFormat } from "@/lib/validation/validateEmailFormat";
 import FormStatusMessage from "./FormStatusMessage";
 import { StatusMessage } from "@/interfaces/FormStatusInterface";
+import { validateEmailFormat } from "@/utils/validators/formatValidator";
 
 interface RegisterLoginForm {
     mode: string;

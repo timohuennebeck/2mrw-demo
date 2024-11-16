@@ -1,9 +1,9 @@
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
-import { createSupabasePowerUserClient } from "@/services/integration/admin";
+import { createSupabasePowerUserClient } from "@/services/integration/supabase/admin";
 import {
     downgradeUserToFreePlan,
     terminateUserSubscription,
-} from "@/services/database/SubscriptionService";
+} from "@/services/database/subscriptionService";
 import moment from "moment";
 import { NextResponse as response } from "next/server";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { ProductWithPrices } from "@/interfaces/ProductInterfaces";
-import { fetchProductsWithPrices } from "@/services/database/ProductService";
+import { fetchProductsWithPrices } from "@/services/database/productService";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
 

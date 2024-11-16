@@ -6,11 +6,11 @@ import { useState } from "react";
 import Image from "next/image";
 import CustomButton from "@/components/CustomButton";
 import { TextConstants } from "@/constants/TextConstants";
-import { validateEmailFormat } from "@/lib/validation/validateEmailFormat";
 import FormStatusMessage from "@/components/FormStatusMessage";
 import { StatusMessage } from "@/interfaces/FormStatusInterface";
-import { checkUserEmailExists } from "@/services/database/UserService";
+import { checkUserEmailExists } from "@/services/database/userService";
 import { createClient } from "@/services/integration/client";
+import { validateEmailFormat } from "@/utils/validators/formatValidator";
 
 const _sendPasswordResetEmail = async (email: string) => {
     const supabase = createClient();

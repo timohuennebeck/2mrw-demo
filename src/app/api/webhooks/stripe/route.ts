@@ -2,15 +2,12 @@
 
 import { StripeWebhookEvents } from "@/enums/StripeWebhookEvents";
 import { queryClient } from "@/lib/qClient/qClient";
-import { createSupabasePowerUserClient } from "@/services/integration/admin";
-import {
-    handleCheckoutSessionCompleted,
-    handleSubscriptionUpdated,
-} from "@/services/stripe/StripeWebhookService";
+import { stripe } from "@/services/stripe/config";
+import { createSupabasePowerUserClient } from "@/services/integration/supabase/admin";
+import { handleCheckoutSessionCompleted, handleSubscriptionUpdated } from "@/services/stripe/stripeWebhook";
 import { NextRequest as request, NextResponse as response } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 
 const _verifyStripeWebhook = async (body: string, signature: string) => {
     try {

@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest as nextRequest, NextResponse as nextResponse } from "next/server";
 import { User } from "@supabase/supabase-js";
-import { hasUserPremiumPlan } from "./lib/helper/SubscriptionHelper";
+import { hasUserPremiumPlan } from "./services/domain/subscriptionService";
 
 const HIDE_ON_PREMIUM_PLAN = ["/choose-pricing-plan"];
 

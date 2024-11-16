@@ -1,6 +1,6 @@
 import { getCurrency, isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { StripePrice, SubscriptionInterval } from "@/interfaces/StripePrices";
-import { getPriceForCurrentProduct } from "@/services/domain/PricingService";
+import { getPriceForCurrentProduct } from "@/services/domain/pricingService";
 
 interface PlanPricingProps {
     prices: StripePrice[];

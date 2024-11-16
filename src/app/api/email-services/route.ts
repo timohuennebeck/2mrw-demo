@@ -1,5 +1,5 @@
-import { sendEmail } from "@/lib/email/emailService";
-import { validateEmailProps } from "@/lib/validation/emailValidation";
+import { sendEmail } from "@/services/email/emailService";
+import { validateEmailProps } from "@/utils/validation/emailValidation";
 import { NextResponse as response, NextRequest as request } from "next/server";
 
 export const POST = async (req: request) => {

@@ -1,11 +1,9 @@
 "use server";
 
-import Stripe from "stripe";
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import moment from "moment";
 import { createClient } from "../integration/server";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
+import { stripe } from "../stripe/client";
 
 export const checkRowExists = async (tableId: string, userId: string) => {
     const supabase = await createClient();

@@ -5,7 +5,7 @@ import RegisterLoginForm from "@/components/RegisterLoginForm";
 import { sendConfirmationEmail, signUpUserToSupabase } from "./action";
 import { TextConstants } from "@/constants/TextConstants";
 import { StatusMessage } from "@/interfaces/FormStatusInterface";
-import { checkUserEmailExists } from "@/services/database/UserService";
+import { checkUserEmailExists } from "@/services/database/userService";
 
 interface HandleSubmitParams {
     firstName: string;

@@ -6,24 +6,21 @@ import { toast } from "sonner";
 import { useRef, useState } from "react";
 import { useSession } from "@/context/SessionContext";
 import useSubscription from "@/hooks/useSubscription";
-import { cancelStripeSubscription, initiateStripeCheckoutProcess } from "@/lib/stripe/stripeUtils";
 import CustomPopup from "../CustomPopup";
 import { ShieldAlert } from "lucide-react";
 import { SubscriptionInterval } from "@/interfaces/StripePrices";
-import {
-    getPriceForCurrentProduct,
-    getProductDetailsByStripePriceId,
-    getStripePriceIdBasedOnSelectedPlanId,
-} from "@/services/domain/PricingService";
 import { BillingPlan } from "@/interfaces/StripePrices";
 import useClickOutside from "@/hooks/useClickOutside";
 import { useRouter } from "next/navigation";
-import { cancelUserSubscription, startFreePlan } from "@/services/database/SubscriptionService";
+import { cancelUserSubscription, startFreePlan } from "@/services/database/subscriptionService";
 import { ProductWithPrices } from "@/interfaces/ProductInterfaces";
-import { formatDateToDayMonthYear } from "@/lib/helper/DateHelper";
 import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import { User } from "@supabase/supabase-js";
 import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
+import { getPriceForCurrentProduct, getStripePriceIdBasedOnSelectedPlanId } from "@/services/domain/pricingService";
+import { getProductDetailsByStripePriceId } from "@/services/domain/pricingService";
+import { cancelStripeSubscription, initiateStripeCheckoutProcess } from "@/services/stripe/stripeService";
+import { formatDateToDayMonthYear } from "@/utils/date/dateHelper";
 
 const _findButtonTitle = (isFreePlan: boolean, subscriptionStatus: SubscriptionStatus) => {
     if (!subscriptionStatus) return TextConstants.TEXT__UNLOCK_PLAN;

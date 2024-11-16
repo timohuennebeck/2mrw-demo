@@ -3,8 +3,8 @@
 import { User } from "@/interfaces/UserInterfaces";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import moment from "moment";
-import { handleSupabaseError } from "@/lib/helper/SupabaseHelper";
 import { createClient } from "../integration/server";
+import { handleSupabaseError } from "@/utils/errors/supabaseError";
 
 export const checkUserEmailExists = async (userEmail: string) => {
     try {

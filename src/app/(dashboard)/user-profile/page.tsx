@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useSession } from "@/context/SessionContext";
-import useUser from "@/hooks/useUser";
 import InputField from "@/components/InputField";
 import HeaderWithDescription from "@/components/HeaderWithDescription";
 import PasswordStrengthChecker from "@/components/PasswordStrengthChecker";
@@ -12,11 +11,12 @@ import Image from "next/image";
 import { AlertTriangle, Loader, UserRound } from "lucide-react";
 import { updateUserProfileImage, updateUserPassword } from "./action";
 import CustomPopup from "@/components/CustomPopup";
-import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/services/integration/client";
 import { TextConstants } from "@/constants/TextConstants";
-import { validateEmailFormat } from "@/lib/validation/validateEmailFormat";
+import { validateEmailFormat } from "@/utils/validators/formatValidator";
+import { createSupabasePowerUserClient } from "@/services/integration/admin";
+import { useUser } from "@/context/UserContext";
 
 const _updateUserName = async (userId: string, firstName: string) => {
     const supabase = createClient();
@@ -49,7 +49,7 @@ const _checkForEmptyFieldPassword = (password: string, confirmPassword: string) 
 
 const UserProfilePage = () => {
     const { authUser } = useSession();
-    const { dbUser } = useUser(authUser?.id ?? "");
+    const { dbUser } = useUser();
 
     const router = useRouter();
     const searchParams = useSearchParams();

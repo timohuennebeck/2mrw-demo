@@ -1,4 +1,4 @@
-import { EmailTemplate } from "@/lib/email/emailService";
+import { EmailTemplate } from "@/services/email/emailService";
 
 export const validateEmailProps = (template: EmailTemplate, props: any) => {
     if (!props.userEmail || !props.userFirstName) {

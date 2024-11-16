@@ -3,20 +3,20 @@ import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import CustomButton from "../CustomButton";
-import { initiateStripeCheckoutProcess } from "@/lib/stripe/stripeUtils";
 import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { TextConstants } from "@/constants/TextConstants";
 import { isFreePlanEnabled } from "@/config/paymentConfig";
 import { queryClient } from "@/lib/qClient/qClient";
-import { startFreePlan } from "@/services/database/SubscriptionService";
+import { startFreePlan } from "@/services/database/subscriptionService";
 import { SubscriptionTier } from "@/enums/SubscriptionTier";
+import { initiateStripeCheckoutProcess } from "@/services/stripe/stripeService";
 
 interface PlanButtonParams {
     stripePriceId: string;
     subscriptionTier: SubscriptionTier;
     subscriptionStatus: SubscriptionStatus | null;
-    subscriptionData: PurchasedSubscription;
+    subscriptionData: PurchasedSubscription | null;
     isLoading: boolean;
     supabaseUser: User | null;
     name: string;
