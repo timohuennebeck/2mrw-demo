@@ -1,4 +1,6 @@
 export interface FormHeaderParams {
     title: string;
-    subtitle: string;
+    description: string;
+    isPageHeader?: boolean;
+    color?: string;
 }

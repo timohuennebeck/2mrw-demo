@@ -13,22 +13,18 @@ import {
     cancelStripeSubscription,
     initiateStripeCheckoutProcess,
 } from "@/services/stripe/stripeService";
-import {
-    BillingPlan,
-    ProductWithPrices,
-    PurchasedSubscription,
-    SubscriptionInterval,
-    SubscriptionStatus,
-} from "@/interfaces";
+import { ProductWithPrices, PurchasedSubscription } from "@/interfaces";
 import { formatDateToDayMonthYear } from "@/utils/date/dateHelper";
 import { User } from "@supabase/supabase-js";
 import { ShieldAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import CustomButton from "../../common/buttons/CustomButton/CustomButton";
-import CustomPopup from "../../common/CustomPopup";
-import FormHeaderWithDescription from "../../forms/FormHeaderWithDescription/FormHeaderWithDescription";
+import CustomButton from "../../../common/buttons/CustomButton/CustomButton";
+import FormHeader from "../../../forms/FormHeader/FormHeader";
+import { BillingPlan, SubscriptionInterval, SubscriptionStatus } from "@/enums";
+import CustomPopup from "@/components/common/buttons/CustomPopup/CustomPopup";
+import { ChangeSubscriptionPlanParams } from "./ChangeSubscriptionPlan.interface";
 
 const _findButtonTitle = (isFreePlan: boolean, subscriptionStatus: SubscriptionStatus) => {
     if (!subscriptionStatus) return TextConstants.TEXT__UNLOCK_PLAN;
@@ -52,7 +48,7 @@ const _isFreePlan = ({
     return products.find((p) => p.id === selectedPlanId)?.billing_plan === BillingPlan.NONE;
 };
 
-const ChangeSubscriptionPlan = ({ products }: { products: ProductWithPrices[] }) => {
+const ChangeSubscriptionPlan = ({ products }: ChangeSubscriptionPlanParams) => {
     const { authUser } = useSession();
     const { subscription } = useSubscription();
 
@@ -78,7 +74,7 @@ const ChangeSubscriptionPlan = ({ products }: { products: ProductWithPrices[] })
     const isFreePlanSelected = _isFreePlan({
         products,
         selectedPlanId,
-        subscriptionStatus: subscription?.status,
+        subscriptionStatus: subscription?.status ?? SubscriptionStatus.EXPIRED,
     });
 
     const getProductPriceDetails = (product: ProductWithPrices) => {
@@ -200,7 +196,7 @@ const ChangeSubscriptionPlan = ({ products }: { products: ProductWithPrices[] })
             )}
 
             <div>
-                <FormHeaderWithDescription
+                <FormHeader
                     title="Change Your Plan"
                     description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam et odit autem alias aut praesentium vel nisi repudiandae saepe consectetur!"
                 />
@@ -325,7 +321,10 @@ const ChangeSubscriptionPlan = ({ products }: { products: ProductWithPrices[] })
                     <div className="mt-6 flex items-start justify-start">
                         <CustomButton
                             dataTestId="change-subscription-button"
-                            title={_findButtonTitle(isFreePlanSelected, subscription?.status)}
+                            title={_findButtonTitle(
+                                isFreePlanSelected,
+                                subscription?.status ?? SubscriptionStatus.EXPIRED,
+                            )}
                             disabled={!selectedPlanId}
                             className={`${
                                 isFreePlanSelected ? "bg-red-600 text-white hover:bg-red-500" : ""

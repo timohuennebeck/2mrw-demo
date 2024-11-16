@@ -15,7 +15,7 @@ import ChangeSubscriptionPlanSkeleton from "@/components/ui/ChangeSubscriptionPl
 import { TextConstants } from "@/constants/TextConstants";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { BillingPlan, SubscriptionStatus } from "@/interfaces";
-import FormHeaderWithDescription from "@/components/forms/FormHeaderWithDescription";
+import FormHeader from "@/components/forms/FormHeader";
 
 const BillingPage = () => {
     const { authUser } = useSession();
@@ -63,7 +63,7 @@ const BillingPage = () => {
             )}
 
             <div className="container max-w-3xl bg-white">
-                <FormHeaderWithDescription
+                <FormHeader
                     title="Billing"
                     description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
                     isPageHeader

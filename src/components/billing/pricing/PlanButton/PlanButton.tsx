@@ -1,24 +1,14 @@
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import CustomButton from "../../common/buttons/CustomButton/CustomButton";
-import { User } from "@supabase/supabase-js";
+import CustomButton from "../../../common/buttons/CustomButton/CustomButton";
 import { useEffect, useState } from "react";
 import { TextConstants } from "@/constants/TextConstants";
 import { isFreePlanEnabled } from "@/config/paymentConfig";
 import { queryClient } from "@/lib/qClient/qClient";
 import { startFreePlan } from "@/services/database/subscriptionService";
-import { SubscriptionTier, SubscriptionStatus, PurchasedSubscription } from "@/interfaces";
 import { initiateStripeCheckoutProcess } from "@/services/stripe/stripeService";
-
-interface PlanButtonParams {
-    stripePriceId: string;
-    subscriptionTier: SubscriptionTier;
-    subscriptionStatus: SubscriptionStatus | null;
-    subscriptionData: PurchasedSubscription | null;
-    isLoading: boolean;
-    supabaseUser: User | null;
-    name: string;
-}
+import { SubscriptionTier, SubscriptionStatus } from "@/enums";
+import { PlanButtonParams } from "./PlanButton.interface";
 
 export const PlanButton = ({
     stripePriceId,

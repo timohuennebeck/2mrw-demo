@@ -1,30 +1,15 @@
 "use client";
 
-import { PlanButton } from "./PlanButton";
-import { PlanFeatures } from "./PlanFeatures";
-import { PlanHeader } from "./PlanHeader";
-import { PlanPricing } from "./PlanPricing";
-import { User } from "@supabase/supabase-js";
+import { PlanButton } from "../PlanButton/PlanButton";
+import { PlanFeatures } from "../PlanFeatures/PlanFeatures";
+import { PlanHeader } from "../PlanHeader/PlanHeader";
+import { PlanPricing } from "../PlanPricing/PlanPricing";
 import { TextConstants } from "@/constants/TextConstants";
 import { getFeaturesWithAvailability } from "@/services/domain/featureService";
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
-import {
-    SubscriptionInterval,
-    ProductWithPrices,
-    PurchasedSubscription,
-    SubscriptionStatus,
-    StripePrice,
-    BillingPlan,
-} from "@/interfaces";
-
-interface PricingPlanCardProps extends ProductWithPrices {
-    supabaseUser: User | null;
-    subscriptionStatus: SubscriptionStatus;
-    subscriptionData: PurchasedSubscription | null;
-    isLoading: boolean;
-    billingCycle: SubscriptionInterval;
-    setBillingCycle: (cycle: SubscriptionInterval) => void;
-}
+import { StripePrice } from "@/interfaces";
+import { BillingPlan, SubscriptionInterval } from "@/enums";
+import { PricingPlanCardParams } from "./PricingPlanCard.interface";
 
 const _getStripePriceId = (prices: StripePrice[], billingCycle: SubscriptionInterval) => {
     if (isOneTimePaymentEnabled()) {
@@ -41,7 +26,7 @@ const _getStripePriceId = (prices: StripePrice[], billingCycle: SubscriptionInte
     return subscriptionPrice;
 };
 
-export const PricingPlanCard = (props: PricingPlanCardProps) => {
+export const PricingPlanCard = (props: PricingPlanCardParams) => {
     const {
         is_highlighted,
         subscription_tier,

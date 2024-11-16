@@ -1,8 +1,8 @@
 import { handleStripePortalSession } from "@/services/stripe/stripeService";
-import CustomButton from "../../common/buttons/CustomButton/CustomButton";
+import CustomButton from "../../../common/buttons/CustomButton/CustomButton";
 import { useState } from "react";
 import { getStripeCustomerId } from "@/services/stripe/stripeCustomer";
-import FormHeaderWithDescription from "@/components/forms/FormHeaderWithDescription";
+import FormHeader from "@/components/forms/FormHeader/FormHeader";
 
 const BillingPortal = () => {
     const [isOpeningBillingPortal, setIsOpeningBillingPortal] = useState(false);
@@ -21,7 +21,7 @@ const BillingPortal = () => {
 
     return (
         <div>
-            <FormHeaderWithDescription
+            <FormHeader
                 title="Manage Your Billing Information"
                 description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam et odit autem alias aut praesentium vel nisi repudiandae saepe consectetur!"
             />

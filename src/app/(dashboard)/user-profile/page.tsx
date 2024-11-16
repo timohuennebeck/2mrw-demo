@@ -16,7 +16,7 @@ import { TextConstants } from "@/constants/TextConstants";
 import { validateEmailFormat } from "@/utils/validators/formatValidator";
 import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { useUser } from "@/context/UserContext";
-import FormHeaderWithDescription from "@/components/forms/FormHeaderWithDescription";
+import FormHeader from "@/components/forms/FormHeader";
 
 const _updateUserName = async (userId: string, firstName: string) => {
     const supabase = createClient();
@@ -235,7 +235,7 @@ const UserProfilePage = () => {
             )}
 
             <div className="container h-full max-w-3xl bg-white">
-                <FormHeaderWithDescription
+                <FormHeader
                     title="Personal Profile"
                     isPageHeader
                     description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
@@ -281,7 +281,7 @@ const UserProfilePage = () => {
                 </div>
 
                 <form onSubmit={handlePersonalInfoSubmit} className="mt-6">
-                    <FormHeaderWithDescription
+                    <FormHeader
                         title="Personal Information"
                         description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
                     />
@@ -338,7 +338,7 @@ const UserProfilePage = () => {
                 </form>
 
                 <form onSubmit={handleChangePasswordSubmit} className="mt-6">
-                    <FormHeaderWithDescription
+                    <FormHeader
                         title="Change Password"
                         description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
                     />
@@ -407,7 +407,7 @@ const UserProfilePage = () => {
                 </form>
 
                 <div className="mt-6">
-                    <FormHeaderWithDescription
+                    <FormHeader
                         title="Irreversible Operations"
                         description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
                         color="text-red-600"

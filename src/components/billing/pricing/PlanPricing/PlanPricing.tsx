@@ -1,13 +1,9 @@
 import { getCurrency, isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { getPriceForCurrentProduct } from "@/services/domain/pricingService";
-import { StripePrice, SubscriptionInterval } from "@/interfaces";
+import { SubscriptionInterval } from "@/enums";
+import { PlanPricingParams } from "./PlanPricing.interface";
 
-interface PlanPricingProps {
-    prices: StripePrice[];
-    billingCycle: SubscriptionInterval;
-}
-
-export const PlanPricing = ({ prices, billingCycle }: PlanPricingProps) => {
+export const PlanPricing = ({ prices, billingCycle }: PlanPricingParams) => {
     const { current_amount, previous_amount } = getPriceForCurrentProduct(prices, billingCycle);
 
     return (

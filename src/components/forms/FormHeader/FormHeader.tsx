@@ -1,11 +1,19 @@
-import React from "react";
 import { FormHeaderParams } from "./FormHeader.interface";
 
-const FormHeader = ({ title, subtitle }: FormHeaderParams) => {
+const FormHeader = ({
+    title,
+    description,
+    isPageHeader = false,
+    color,
+}: FormHeaderParams) => {
     return (
-        <div className="mb-6 flex flex-col gap-2">
-            <h2 className="text-center text-2xl font-semibold">{title}</h2>
-            <p className="text-center text-sm text-neutral-600">{subtitle}</p>
+        <div className={`${isPageHeader ? "mb-12" : "mb-4"}`}>
+            <h3
+                className={`mb-2 ${isPageHeader ? "text-2xl" : "text-lg"} font-medium ${color ?? ""}`}
+            >
+                {title}
+            </h3>
+            <p className="mb-4 text-sm text-gray-500">{description}</p>
         </div>
     );
 };

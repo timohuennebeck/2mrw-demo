@@ -1,9 +1,5 @@
 import { TextConstants } from "@/constants/TextConstants";
-
-interface PlanHeaderParams {
-    name: string;
-    isHighlighted: boolean;
-}
+import { PlanHeaderParams } from "./PlanHeader.interface";
 
 export const PlanHeader = ({ name, isHighlighted }: PlanHeaderParams) => {
     const indicatorText = () => {

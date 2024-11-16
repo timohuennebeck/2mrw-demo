@@ -1,13 +1,15 @@
 import { CheckBadgeIcon } from "@heroicons/react/24/solid";
-import { PlanFeatures } from "../pricing/PlanFeatures";
+import { PlanFeatures } from "../../pricing/PlanFeatures/PlanFeatures";
 import { getProductDetailsByStripePriceId } from "@/services/domain/pricingService";
 import { getCurrency } from "@/config/paymentConfig";
 import { CalendarClock } from "lucide-react";
 import { getFeaturesWithAvailability } from "@/services/domain/featureService";
 import { formatDateToDayMonthYear } from "@/utils/date/dateHelper";
 import { useSubscription } from "@/context/SubscriptionContext";
-import { BillingPlan, ProductWithPrices, SubscriptionInterval, SubscriptionStatus } from "@/interfaces";
-import FormHeaderWithDescription from "../../forms/FormHeaderWithDescription/FormHeaderWithDescription";
+import { ProductWithPrices } from "@/interfaces";
+import FormHeader from "../../../forms/FormHeader/FormHeader";
+import { BillingPlan, SubscriptionInterval, SubscriptionStatus } from "@/enums";
+import { CurrentSubscriptionPlanParams } from "./CurrentSubscriptionPlan.interface";
 
 const _getProductPricing = (isFreeProduct: boolean, currentPrice: number) => {
     if (isFreeProduct) {
@@ -21,7 +23,7 @@ const _getProductPricing = (isFreeProduct: boolean, currentPrice: number) => {
     return "N/A";
 };
 
-const CurrentSubscriptionPlan = ({ products }: { products: ProductWithPrices[] }) => {
+const CurrentSubscriptionPlan = ({ products }: CurrentSubscriptionPlanParams) => {
     const { subscription } = useSubscription();
 
     const activeStripePriceId = subscription?.stripe_price_id ?? null;
@@ -85,7 +87,7 @@ const CurrentSubscriptionPlan = ({ products }: { products: ProductWithPrices[] }
 
     return (
         <div>
-            <FormHeaderWithDescription
+            <FormHeader
                 title="Your Plan"
                 description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam et odit autem alias aut praesentium vel nisi repudiandae saepe consectetur!"
             />

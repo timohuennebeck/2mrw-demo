@@ -1,19 +1,8 @@
 import React from "react";
 import { CheckBadgeIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { SparklesIcon } from "lucide-react";
+import { PlanFeaturesParams } from "./PlanFeatures.interface";
 
-interface Feature {
-    id: string;
-    name: string;
-    description: string;
-    isAvailable: boolean;
-}
-
-interface PlanFeaturesProps {
-    features: Feature[];
-}
-
-export const PlanFeatures = ({ features }: PlanFeaturesProps) => (
+export const PlanFeatures = ({ features }: PlanFeaturesParams) => (
     <ul className="flex flex-col gap-3" aria-label="Plan features">
         {features.map((feature) => (
             <li key={feature.id} className="flex items-center gap-2">
