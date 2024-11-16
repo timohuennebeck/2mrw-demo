@@ -1,10 +1,10 @@
 "use server";
 
-import { User } from "@/interfaces/UserInterfaces";
+import { User } from "@/interfaces";
+import { handleSupabaseError } from "@/utils/errors/supabaseError";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import moment from "moment";
 import { createClient } from "../integration/server";
-import { handleSupabaseError } from "@/utils/errors/supabaseError";
 
 export const checkUserEmailExists = async (userEmail: string) => {
     try {

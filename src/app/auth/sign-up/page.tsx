@@ -4,8 +4,8 @@ import { useState } from "react";
 import RegisterLoginForm from "@/components/RegisterLoginForm";
 import { sendConfirmationEmail, signUpUserToSupabase } from "./action";
 import { TextConstants } from "@/constants/TextConstants";
-import { StatusMessage } from "@/interfaces/FormStatusInterface";
 import { checkUserEmailExists } from "@/services/database/userService";
+import { StatusMessage } from "@/interfaces";
 
 interface HandleSubmitParams {
     firstName: string;

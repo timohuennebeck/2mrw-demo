@@ -1,8 +1,8 @@
 "use server";
 
 import { TextConstants } from "@/constants/TextConstants";
-import { SupabaseErrors } from "@/enums/SupabaseErrors";
 import { createClient } from "@/services/integration/server";
+import { SupabaseErrors } from "@/interfaces";
 import { AuthError } from "@supabase/supabase-js";
 
 export const signUpUserToSupabase = async ({

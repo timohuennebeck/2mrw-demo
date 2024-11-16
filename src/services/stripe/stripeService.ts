@@ -1,11 +1,10 @@
 "use server";
 
-import { InitiateStripeCheckoutProcessParams } from "@/interfaces/StripeInterfaces";
-import Stripe from "stripe";
 import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import axios from "axios";
 import { getStripeCustomerId } from "./stripeCustomer";
 import { stripe } from "./client";
+import { InitiateStripeCheckoutProcessParams } from "@/interfaces";
 
 export const cancelStripeSubscription = async (stripeSubscriptionId: string) => {
     try {

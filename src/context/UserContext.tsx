@@ -1,8 +1,8 @@
-import { User } from "@/interfaces/UserInterfaces";
 import { fetchUser } from "@/services/database/userService";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
 import { useSession } from "./SessionContext";
+import { User } from "@/interfaces";
 
 interface UserContextType {
     dbUser: User | null;

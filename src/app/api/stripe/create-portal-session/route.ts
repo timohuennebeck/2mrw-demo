@@ -1,4 +1,4 @@
-import { stripe } from "@/services/stripe/config";
+import { stripe } from "@/services/stripe/client";
 import { NextResponse as response } from "next/server";
 
 export async function POST(request: Request) {

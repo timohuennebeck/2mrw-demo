@@ -2,8 +2,8 @@ import { createContext, useContext } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchUserSubscription } from "@/services/database/subscriptionService";
 import { useSession } from "./SessionContext";
-import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
-import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
+import { PurchasedSubscription } from "@/interfaces";
+import { SubscriptionStatus } from "@/enums";
 
 interface SubscriptionContextType {
     subscription: PurchasedSubscription | null;

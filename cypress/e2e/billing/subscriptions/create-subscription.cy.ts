@@ -1,4 +1,4 @@
-import { SubscriptionTier } from "../../../../src/enums/SubscriptionTier";
+import { SubscriptionTier } from "../../../../src/interfaces/SubscriptionTier";
 import { TextConstants } from "../../../../src/constants/TextConstants";
 
 describe("subscription flow", () => {

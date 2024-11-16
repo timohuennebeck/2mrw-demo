@@ -1,4 +1,4 @@
-import { SubscriptionTier } from "../../src/enums/SubscriptionTier";
+import { SubscriptionTier } from "../../src/interfaces/SubscriptionTier";
 
 Cypress.Commands.add("selectSubscriptionPlan", () => {
     cy.get('[data-testid="monthly-subscription-button"]').should("be.visible").click();

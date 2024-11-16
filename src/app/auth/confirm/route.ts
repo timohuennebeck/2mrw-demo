@@ -5,9 +5,8 @@ import { NextResponse as nextResponse, type NextRequest } from "next/server";
 import { redirect } from "next/navigation";
 import { createUserTable, fetchUser } from "@/services/database/userService";
 import { createClient } from "@/services/integration/server";
-import Stripe from "stripe";
 import { getStripeCustomerId } from "@/services/stripe/stripeCustomer";
-import { stripe } from "@/services/stripe/config";
+import { stripe } from "@/services/stripe/client";
 
 const _handleCreateUser = async (authUser: User) => {
     const { error } = await createUserTable(authUser);

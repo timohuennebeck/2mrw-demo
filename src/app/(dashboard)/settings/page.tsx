@@ -1,10 +1,10 @@
-import HeaderWithDescription from "@/components/HeaderWithDescription";
+import FormHeaderWithDescription from "@/components/forms/FormHeaderWithDescription";
 
 const SettingsPage = () => {
     return (
         <>
             <div className="bg-white">
-                <HeaderWithDescription
+                <FormHeaderWithDescription
                     title="Settings"
                     description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
                     isPageHeader

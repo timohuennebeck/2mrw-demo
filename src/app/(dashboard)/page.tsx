@@ -1,7 +1,7 @@
 "use client";
 
-import CustomPopup from "@/components/CustomPopup";
-import HeaderWithDescription from "@/components/HeaderWithDescription";
+import CustomPopup from "@/components/common/buttons/CustomPopup/CustomPopup";
+import FormHeaderWithDescription from "@/components/forms/FormHeaderWithDescription/FormHeaderWithDescription";
 import useSuccessParam from "@/hooks/useSuccessParam";
 import { Check } from "lucide-react";
 import { useState } from "react";
@@ -32,7 +32,7 @@ const Home = () => {
             )}
 
             <div className="bg-white">
-                <HeaderWithDescription
+                <FormHeaderWithDescription
                     title="Home"
                     description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
                     isPageHeader

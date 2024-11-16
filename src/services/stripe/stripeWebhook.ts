@@ -1,4 +1,3 @@
-import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import moment from "moment";
 import Stripe from "stripe";
 import { getEndDate } from "../database/baseService";
@@ -10,6 +9,7 @@ import {
     updateUserSubscription,
 } from "../database/subscriptionService";
 import { createSupabasePowerUserClient } from "../integration/admin";
+import { SubscriptionStatus } from "@/interfaces";
 
 const _handleSubscriptionCancellation = async (
     userId: string,

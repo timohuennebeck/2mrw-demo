@@ -1,16 +1,16 @@
 "use client";
 
-import InputField from "@/components/InputField";
+import InputField from "@/components/common/InputField/InputField";
 import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
-import CustomButton from "@/components/CustomButton";
+import CustomButton from "@/components/common/buttons/CustomButton";
 import { TextConstants } from "@/constants/TextConstants";
 import FormStatusMessage from "@/components/FormStatusMessage";
-import { StatusMessage } from "@/interfaces/FormStatusInterface";
 import { checkUserEmailExists } from "@/services/database/userService";
 import { createClient } from "@/services/integration/client";
 import { validateEmailFormat } from "@/utils/validators/formatValidator";
+import { StatusMessage } from "@/interfaces";
 
 const _sendPasswordResetEmail = async (email: string) => {
     const supabase = createClient();

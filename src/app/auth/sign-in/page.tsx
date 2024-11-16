@@ -6,7 +6,7 @@ import { signIn } from "./action";
 import RegisterLoginForm from "@/components/RegisterLoginForm";
 import { TextConstants } from "@/constants/TextConstants";
 import { createClient } from "@/services/integration/client";
-import { StatusMessage } from "@/interfaces/FormStatusInterface";
+import { StatusMessage } from "@/interfaces";
 
 const _sendMagicLink = async (email: string) => {
     const supabase = createClient();

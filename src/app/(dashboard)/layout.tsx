@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import LeftNavigationBar from "@/components/LeftNavigationBar";
 import { ChevronRight } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import LeftNavigationBar from "@/components/ui/LeftNavigationBar/LeftNavigationBar";
 
 const _generateBreadcrumbs = (pathname: string) => {
     const paths = pathname.split("/").filter((path) => path);

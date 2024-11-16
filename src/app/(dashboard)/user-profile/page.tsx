@@ -3,20 +3,20 @@
 import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useSession } from "@/context/SessionContext";
-import InputField from "@/components/InputField";
-import HeaderWithDescription from "@/components/HeaderWithDescription";
-import PasswordStrengthChecker from "@/components/PasswordStrengthChecker";
-import CustomButton from "@/components/CustomButton";
+import InputField from "@/components/common/InputField/InputField";
+import PasswordStrengthChecker from "@/components/forms/PasswordStrengthChecker";
+import CustomButton from "@/components/common/buttons/CustomButton";
 import Image from "next/image";
 import { AlertTriangle, Loader, UserRound } from "lucide-react";
 import { updateUserProfileImage, updateUserPassword } from "./action";
-import CustomPopup from "@/components/CustomPopup";
+import CustomPopup from "@/components/common/CustomPopup";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/services/integration/client";
 import { TextConstants } from "@/constants/TextConstants";
 import { validateEmailFormat } from "@/utils/validators/formatValidator";
 import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { useUser } from "@/context/UserContext";
+import FormHeaderWithDescription from "@/components/forms/FormHeaderWithDescription";
 
 const _updateUserName = async (userId: string, firstName: string) => {
     const supabase = createClient();
@@ -235,7 +235,7 @@ const UserProfilePage = () => {
             )}
 
             <div className="container h-full max-w-3xl bg-white">
-                <HeaderWithDescription
+                <FormHeaderWithDescription
                     title="Personal Profile"
                     isPageHeader
                     description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
@@ -281,7 +281,7 @@ const UserProfilePage = () => {
                 </div>
 
                 <form onSubmit={handlePersonalInfoSubmit} className="mt-6">
-                    <HeaderWithDescription
+                    <FormHeaderWithDescription
                         title="Personal Information"
                         description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
                     />
@@ -338,7 +338,7 @@ const UserProfilePage = () => {
                 </form>
 
                 <form onSubmit={handleChangePasswordSubmit} className="mt-6">
-                    <HeaderWithDescription
+                    <FormHeaderWithDescription
                         title="Change Password"
                         description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
                     />
@@ -407,7 +407,7 @@ const UserProfilePage = () => {
                 </form>
 
                 <div className="mt-6">
-                    <HeaderWithDescription
+                    <FormHeaderWithDescription
                         title="Irreversible Operations"
                         description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
                         color="text-red-600"

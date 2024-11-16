@@ -2,15 +2,13 @@
 
 import { PricingPlanCard } from "@/components/PricingPlan/PricingPlanCard";
 import { PricingPlanCardSkeleton } from "@/components/ui/PricingPlanCardSkeleton";
-import { ProductWithPrices } from "@/interfaces/ProductInterfaces";
 import { useState } from "react";
 import { isFreePlanEnabled, isOneTimePaymentEnabled } from "@/config/paymentConfig";
 import { TextConstants } from "@/constants/TextConstants";
 import { useProducts } from "@/context/ProductsContext";
 import { useSession } from "@/context/SessionContext";
-import { SubscriptionInterval } from "@/interfaces/StripePrices";
-import { SubscriptionTier } from "@/enums/SubscriptionTier";
 import { useSubscription } from "@/context/SubscriptionContext";
+import { SubscriptionInterval, ProductWithPrices, SubscriptionTier } from "@/interfaces";
 
 const ChoosePricingPlanPage = () => {
     const [billingCycle, setBillingCycle] = useState<SubscriptionInterval>(

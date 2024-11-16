@@ -1,22 +1,22 @@
 "use server";
 
-import { PurchasedSubscription } from "@/interfaces/SubscriptionInterfaces";
-import {
-    CreatePurchasedSubscriptionTableParams,
-    UpdateUserSubscriptionStatusParams,
-} from "../../interfaces/supabaseInterfaces";
-import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
 import moment from "moment";
-import { EmailTemplate } from "@/services/email/emailService";
 import { sendEmail } from "@/services/email/emailService";
 import { checkRowExists, getEndDate } from "./baseService";
 import { getProductNameByTier } from "./productService";
-import { SubscriptionTier } from "@/enums/SubscriptionTier";
 import { createClient } from "../integration/server";
 import { createSupabasePowerUserClient } from "../integration/admin";
-import { BillingPlan } from "@/interfaces/StripePrices";
 import { validateEmailProps } from "@/utils/validators/emailValidator";
 import { handleSupabaseError } from "@/utils/errors/supabaseError";
+import {
+    SubscriptionTier,
+    SubscriptionStatus,
+    PurchasedSubscription,
+    CreatePurchasedSubscriptionTableParams,
+    UpdateUserSubscriptionStatusParams,
+    BillingPlan,
+    EmailTemplate,
+} from "@/interfaces";
 
 const _sendSubscriptionConfirmationEmail = async (
     userId: string,

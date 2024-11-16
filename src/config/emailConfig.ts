@@ -1,29 +1,4 @@
-interface SocialLinks {
-    twitter: {
-        founder: {
-            url: string;
-            tag: string;
-        };
-        company: {
-            url: string;
-            tag: string;
-        };
-    };
-}
-
-interface CompanyInfo {
-    name: string;
-    supportEmail: string;
-    senderEmail: string;
-    logoUrl: string;
-}
-
-interface EmailSettings {
-    subscriptionConfirmationEmail: {
-        subject: string;
-        isEnabled: boolean;
-    };
-}
+import { CompanyInfo, SocialLinks, EmailSettings } from "@/interfaces";
 
 const COMPANY_NAME = "2mrw";
 

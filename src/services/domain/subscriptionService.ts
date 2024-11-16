@@ -1,5 +1,5 @@
 import { User } from "@supabase/supabase-js";
-import { SubscriptionStatus } from "@/enums/SubscriptionStatus";
+import { SubscriptionStatus } from "@/interfaces";
 
 export const hasUserPremiumPlan = (authUser: User | null) => {
     if (!authUser) return false;

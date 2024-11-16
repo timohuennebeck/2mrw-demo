@@ -1,4 +1,4 @@
-import { BillingPlan } from "@/interfaces/StripePrices";
+import { BillingPlan } from "@/interfaces";
 
 interface CompletePaymentConfig {
     isFreePlanEnabled: boolean;

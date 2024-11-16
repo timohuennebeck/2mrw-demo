@@ -1,10 +1,10 @@
 "use server";
 
-import { StripeWebhookEvents } from "@/enums/StripeWebhookEvents";
 import { queryClient } from "@/lib/qClient/qClient";
-import { stripe } from "@/services/stripe/config";
-import { createSupabasePowerUserClient } from "@/services/integration/supabase/admin";
+import { createSupabasePowerUserClient } from "@/services/integration/admin";
+import { stripe } from "@/services/stripe/client";
 import { handleCheckoutSessionCompleted, handleSubscriptionUpdated } from "@/services/stripe/stripeWebhook";
+import { StripeWebhookEvents } from "@/interfaces";
 import { NextRequest as request, NextResponse as response } from "next/server";
 import Stripe from "stripe";
 

@@ -1,4 +1,4 @@
-import { SubscriptionTier } from "@/enums/SubscriptionTier";
+import { SubscriptionTier } from "@/interfaces";
 
 interface Feature {
     id: string;
