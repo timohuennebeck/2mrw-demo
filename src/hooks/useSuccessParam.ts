@@ -14,14 +14,18 @@ const useSuccessParam = ({ onSuccess, redirectPath }: UseSuccessParamProps) => {
     useEffect(() => {
         const success = searchParams.get("success");
         if (success === "true") {
-            setTimeout(() => {
+            // store in ref to prevent multiple triggers
+            const timeoutId = setTimeout(() => {
                 onSuccess?.();
                 if (redirectPath) {
-                    router.replace(redirectPath); // clean up the URL without the success parameter
+                    router.replace(redirectPath);
                 }
-            }, 1000); // small delay before showing the popup to make it feel more natural
+            }, 1000);
+
+            return () => clearTimeout(timeoutId);
         }
-    }, [searchParams, router, onSuccess, redirectPath]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchParams.get("success")]); // only depend on the success param value
 };
 
 export default useSuccessParam;
