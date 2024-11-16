@@ -48,6 +48,10 @@ describe("sign in", () => {
 
             cy.contains(TextConstants.TEXT__SIGN_IN_SUCCESSFUL).should("be.visible");
             cy.url().should("include", "/");
+
+            // requires a small delay to wait for the auth state to be updated
+            cy.visit("http://localhost:3000/user-profile", { timeout: 2000 });
+            cy.url().should("include", "/user-profile");
         });
 
         it("should handle failed login", () => {
