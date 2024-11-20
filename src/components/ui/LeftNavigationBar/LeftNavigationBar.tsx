@@ -131,7 +131,7 @@ const LeftNavigationBar = () => {
                     />
                 </div>
                 <span className="text-sm font-semibold">Untitled UI</span>
-                <span className="ml-auto text-xs text-neutral-400">v4.0</span>
+                <span className="ml-auto text-xs text-gray-400">v4.0</span>
             </div>
 
             {/* Navigation Items */}
@@ -139,7 +139,7 @@ const LeftNavigationBar = () => {
                 {navigationItems.map((section, sectionIndex) => (
                     <div key={sectionIndex} className="w-full">
                         {section.category && (
-                            <h3 className="mb-2 mt-4 text-xs font-semibold text-neutral-400">
+                            <h3 className="mb-2 mt-4 text-xs font-semibold text-gray-400">
                                 {section.category}
                             </h3>
                         )}
@@ -148,8 +148,8 @@ const LeftNavigationBar = () => {
                                 key={itemIndex}
                                 className={`group flex h-10 cursor-pointer items-center justify-between rounded-md px-3 ${
                                     pathname === item.link
-                                        ? "bg-neutral-100 text-neutral-900"
-                                        : "text-neutral-500 hover:bg-neutral-100"
+                                        ? "bg-gray-100 text-gray-900"
+                                        : "text-gray-500 hover:bg-gray-100"
                                 }`}
                                 onClick={() => _handleItemClick(item, router)}
                             >

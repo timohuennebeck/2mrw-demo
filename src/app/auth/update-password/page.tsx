@@ -77,7 +77,7 @@ const UpdatePassword = () => {
 
                 <div className="grid gap-2">
                     <h1 className="text-2xl font-medium">{TextConstants.TEXT__UPDATE_PASSWORD}</h1>
-                    <p className="text-sm text-neutral-400">
+                    <p className="text-sm text-gray-400">
                         {TextConstants.TEXT__ENTER_PASSWORD_BELOW}
                     </p>
                 </div>

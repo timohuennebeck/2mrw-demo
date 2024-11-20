@@ -43,14 +43,14 @@ export const PricingPlanCard = (props: PricingPlanCardParams) => {
     const renderPaymentTypeText = () => {
         if (isOneTimePaymentEnabled()) {
             return (
-                <div className="flex flex-col items-center gap-1 text-sm text-neutral-500">
+                <div className="flex flex-col items-center gap-1 text-sm text-gray-500">
                     <p>Purchase once, own forever.</p>
                 </div>
             );
         }
 
         return (
-            <div className="flex flex-col items-center gap-1 text-sm text-neutral-500">
+            <div className="flex flex-col items-center gap-1 text-sm text-gray-500">
                 <p>{TextConstants.TEXT__FLEXIBLE_CANCELLATION}</p>
             </div>
         );
@@ -63,7 +63,7 @@ export const PricingPlanCard = (props: PricingPlanCardParams) => {
 
                 <PlanPricing prices={prices} billingCycle={billingCycle} />
 
-                <p className="mb-4 text-sm text-neutral-500">{description}</p>
+                <p className="mb-4 text-sm text-gray-500">{description}</p>
 
                 <PlanFeatures features={getFeaturesWithAvailability(subscription_tier)} />
             </section>

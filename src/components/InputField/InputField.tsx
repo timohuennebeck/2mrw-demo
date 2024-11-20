@@ -24,7 +24,7 @@ function InputField({
     return (
         <div>
             {!hideLabel && (
-                <label htmlFor={id} className="mb-1 block text-sm font-medium text-neutral-700">
+                <label htmlFor={id} className="mb-1 block text-sm font-medium text-gray-700">
                     {`${label}*`}
                 </label>
             )}
@@ -37,7 +37,7 @@ function InputField({
                     placeholder={placeholder}
                     value={value ?? ""}
                     onChange={(e) => onChange(e.target.value)}
-                    className={`w-full rounded-md border px-3 py-2.5 text-sm outline-neutral-800 ${type === "password" && "pr-10"} ${disabled && "bg-neutral-100 text-neutral-400"} ${hasError ? "border-red-500" : "border-neutral-300"} ${hasError ? "focus:border-red-500" : "focus:border-neutral-800"}`}
+                    className={`w-full rounded-md border px-3 py-2.5 text-sm outline-gray-800 ${type === "password" && "pr-10"} ${disabled && "bg-gray-100 text-gray-400"} ${hasError ? "border-red-500" : "border-gray-300"} ${hasError ? "focus:border-red-500" : "focus:border-gray-800"}`}
                     onFocus={onFocus}
                     onBlur={onBlur}
                     disabled={disabled}

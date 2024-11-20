@@ -9,7 +9,7 @@ export const PlanPricing = ({ prices, billingCycle }: PlanPricingParams) => {
     return (
         <div className="mb-6">
             {previous_amount !== 0 && (
-                <p className="font-medium text-neutral-600 line-through">
+                <p className="font-medium text-gray-600 line-through">
                     {previous_amount} {getCurrency()}
                 </p>
             )}
@@ -20,7 +20,7 @@ export const PlanPricing = ({ prices, billingCycle }: PlanPricingParams) => {
                 </span>
 
                 {!isOneTimePaymentEnabled() && (
-                    <span className="ml-2 text-neutral-600">
+                    <span className="ml-2 text-gray-600">
                         {`/ ${billingCycle === SubscriptionInterval.YEARLY ? "PER YEAR" : "PER MONTH"}`}
                     </span>
                 )}

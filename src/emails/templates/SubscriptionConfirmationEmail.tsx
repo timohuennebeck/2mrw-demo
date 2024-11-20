@@ -30,7 +30,7 @@ const SubscriptionConfirmationEmail = ({
             <Head />
             <Tailwind>
                 <Body className="mx-auto my-auto bg-white px-2 font-sans">
-                    <Container className="mx-auto my-[40px] max-w-[528px] rounded border border-solid border-neutral-200 p-[20px]">
+                    <Container className="mx-auto my-[40px] max-w-[528px] rounded border border-solid border-gray-200 p-[20px]">
                         <Section className="mt-[32px]">
                             <Img
                                 src={companyInformation.logoUrl}
@@ -66,9 +66,9 @@ const SubscriptionConfirmationEmail = ({
                             </Link>
                         </Text>
 
-                        <Hr className="mx-0 my-[26px] w-full border border-solid border-neutral-200" />
+                        <Hr className="mx-0 my-[26px] w-full border border-solid border-gray-200" />
 
-                        <Text className="text-[12px] leading-[24px] text-neutral-500">
+                        <Text className="text-[12px] leading-[24px] text-gray-500">
                             Thanks again,
                             <br />
                             Timo

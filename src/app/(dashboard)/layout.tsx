@@ -29,7 +29,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                     <div className="mb-4 flex items-center space-x-2 text-sm text-gray-500">
                         <Link
                             href="/"
-                            className="font-medium text-neutral-500 hover:text-neutral-800"
+                            className="font-medium text-gray-500 hover:text-gray-800"
                         >
                             Home
                         </Link>
@@ -40,8 +40,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                                     href={breadcrumb.href}
                                     className={`font-medium ${
                                         index === breadcrumbs.length - 1
-                                            ? "text-neutral-800"
-                                            : "text-neutral-500 hover:text-neutral-800"
+                                            ? "text-gray-800"
+                                            : "text-gray-500 hover:text-gray-800"
                                     }`}
                                 >
                                     {breadcrumb.label}

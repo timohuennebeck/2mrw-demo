@@ -32,7 +32,7 @@ const PasswordStrengthChecker = ({ password }: PasswordStrengthCheckerParams) =>
             {passwordRequirements.map((requirement, index) => (
                 <div key={index} className="flex flex-row items-center gap-2">
                     <CheckCircleIcon
-                        className={`w-4 ${requirement.condition ? "text-neutral-800" : "text-neutral-300"}`}
+                        className={`w-4 ${requirement.condition ? "text-gray-800" : "text-gray-300"}`}
                     />
                     <p className="text-xs">{requirement.text}</p>
                 </div>

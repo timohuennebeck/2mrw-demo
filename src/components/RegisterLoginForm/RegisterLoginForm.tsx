@@ -105,7 +105,7 @@ const RegisterLoginForm = ({
                                 : TextConstants.TEXT__SIGN_IN}{" "}
                             to {TextConstants.TEXT__COMPANY_TITLE}
                         </h1>
-                        <p className="text-sm text-neutral-400">
+                        <p className="text-sm text-gray-400">
                             {mode === "signup"
                                 ? TextConstants.TEXT__SIGN_UP_EMAIIL_OR_ANOTHER_SERVICE
                                 : TextConstants.TEXT__SIGN_IN_EMAIL_OR_ANOTHER_SERVICE}
@@ -203,7 +203,7 @@ const RegisterLoginForm = ({
                         />
 
                         {mode === "signin" && authType === "magicLink" && (
-                            <p className="text-center text-sm text-neutral-500">
+                            <p className="text-center text-sm text-gray-500">
                                 You'll be emailed a magic code for a password-free sign in or{" "}
                                 <button
                                     data-testid="password-sign-in-toggle"

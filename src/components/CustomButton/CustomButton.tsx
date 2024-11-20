@@ -20,10 +20,10 @@ const CustomButton = ({
             type="submit"
             className={`flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium outline-none transition-colors ${className} ${
                 isDisabledOrLoading
-                    ? "cursor-not-allowed border border-transparent bg-neutral-300 text-neutral-500 opacity-60"
+                    ? "cursor-not-allowed border border-transparent bg-gray-300 text-gray-500 opacity-60"
                     : isSecondary
                       ? "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-                      : "border border-transparent bg-black text-white hover:bg-neutral-700"
+                      : "border border-transparent bg-black text-white hover:bg-gray-700"
             } `}
             data-testid={dataTestId}
         >

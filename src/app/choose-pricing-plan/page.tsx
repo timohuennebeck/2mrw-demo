@@ -47,7 +47,7 @@ const ChoosePricingPlanPage = () => {
         <button
             onClick={() => setBillingCycle(interval)}
             className={`rounded px-3 py-1 text-sm ${
-                billingCycle === interval ? "bg-neutral-900 text-white" : "bg-neutral-100"
+                billingCycle === interval ? "bg-gray-900 text-white" : "bg-gray-100"
             }`}
         >
             {getSubscriptionIntervalText(interval)}
