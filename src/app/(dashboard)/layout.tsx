@@ -25,7 +25,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         <div className="flex h-screen overflow-hidden">
             <LeftNavigationBar />
             <div className="h-full flex-1 p-2 pl-0">
-                <main className="h-full overflow-scroll rounded-lg border border-neutral-200 bg-white p-6 scrollbar-hide">
+                <main className="h-full overflow-scroll bg-white p-6 scrollbar-hide">
                     <div className="mb-4 flex items-center space-x-2 text-sm text-gray-500">
                         <Link
                             href="/"
