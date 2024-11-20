@@ -260,7 +260,7 @@ const ChangeSubscriptionPlan = ({ products }: ChangeSubscriptionPlanParams) => {
                                         className={`relative rounded-lg border ${
                                             selectedPlanId === product.id
                                                 ? "border-blue-500 bg-blue-50"
-                                                : "border-gray-200 bg-white"
+                                                : "border-gray-200 bg-white hover:bg-gray-50"
                                         } ${planIsDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"} p-4`}
                                         onClick={() =>
                                             !planIsDisabled && setSelectedPlanId(product.id)

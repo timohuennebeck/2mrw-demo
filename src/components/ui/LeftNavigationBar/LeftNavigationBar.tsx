@@ -119,7 +119,7 @@ const LeftNavigationBar = () => {
     ];
 
     return (
-        <nav className="flex h-full flex-col items-start justify-start gap-2 overflow-y-auto px-4 py-2">
+        <nav className="flex h-full flex-col items-start justify-start gap-2 overflow-y-auto px-6 py-4">
             {/* Logo */}
             <div className="mb-4 flex w-full items-center py-2">
                 <div className="mr-2">

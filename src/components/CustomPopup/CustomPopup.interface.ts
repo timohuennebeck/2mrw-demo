@@ -3,7 +3,7 @@ export interface CustomPopupParams {
     description: string;
     icon: React.ReactNode;
     iconBackgroundColor: string;
-    mainButtonColor: string;
+    mainButtonColor?: string;
     mainButtonText?: string;
     mainButtonIsLoading?: boolean;
     hideSecondaryButton?: boolean;

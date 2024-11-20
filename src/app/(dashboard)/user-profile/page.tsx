@@ -273,7 +273,7 @@ const UserProfilePage = () => {
                             onChange={handleProfileImageUpload}
                         />
                         <CustomButton
-                            title={isUploadingProfileImage ? "Uploading..." : "Change avatar"}
+                            title={isUploadingProfileImage ? "Uploading..." : "Change Profile Picture"}
                             onClick={() => document.getElementById("avatar")?.click()}
                             disabled={isUploadingProfileImage}
                         />
