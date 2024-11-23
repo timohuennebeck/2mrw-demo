@@ -1,5 +1,5 @@
 import { emailConfig as actualEmailConfig } from "@/config/emailConfig";
-import SubscriptionConfirmationEmail from "@/emails/templates/SubscriptionConfirmationEmail";
+import PaidPlanEmailConfirmation from "@/emails/templates/PaidPlanEmailConfirmation";
 import { resend } from "./client";
 import { EmailTemplateProps } from "@/interfaces";
 import { EmailTemplate } from "@/enums";
@@ -15,7 +15,7 @@ const getEmailConfig = (template: EmailTemplate, props: EmailTemplateProps) => {
 
             return {
                 subject: `${settings.subscriptionConfirmationEmail.subject} - ${props.purchasedPackage}`,
-                react: SubscriptionConfirmationEmail({
+                react: PaidPlanEmailConfirmation({
                     userFirstName: props.userFirstName,
                     purchasedPackage: props.purchasedPackage!,
                 }),

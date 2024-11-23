@@ -32,7 +32,7 @@ export interface CompanyInfo {
 }
 
 export interface EmailSettings {
-    subscriptionConfirmationEmail: {
+    paidPlanEmailConfirmation: {
         subject: string;
         isEnabled: boolean;
     };

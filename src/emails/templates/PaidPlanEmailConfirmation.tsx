@@ -14,15 +14,15 @@ import {
 } from "@react-email/components";
 import { emailConfig } from "@/config/emailConfig";
 
-interface SubscriptionConfirmationEmailProps {
+interface PaidPlanEmailConfirmationProps {
     userFirstName: string;
     purchasedPackage: string;
 }
 
-const SubscriptionConfirmationEmail = ({
+const PaidPlanEmailConfirmation = ({
     userFirstName,
     purchasedPackage,
-}: SubscriptionConfirmationEmailProps) => {
+}: PaidPlanEmailConfirmationProps) => {
     const { companyInformation, socialLinks } = emailConfig;
 
     return (
@@ -81,9 +81,9 @@ const SubscriptionConfirmationEmail = ({
 };
 
 // enable this during development to preview what the email will look like
-SubscriptionConfirmationEmail.PreviewProps = {
+PaidPlanEmailConfirmation.PreviewProps = {
     userFirstName: "Katja",
     purchasedPackage: "Premium Plan (20% off)",
-} as SubscriptionConfirmationEmailProps;
+} as PaidPlanEmailConfirmationProps;
 
-export default SubscriptionConfirmationEmail;
+export default PaidPlanEmailConfirmation;

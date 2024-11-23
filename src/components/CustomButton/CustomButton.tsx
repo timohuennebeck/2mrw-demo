@@ -23,7 +23,7 @@ const CustomButton = ({
                     ? "cursor-not-allowed border border-transparent bg-gray-300 text-gray-500 opacity-60"
                     : isSecondary
                       ? "border border-gray-300 bg-white text-gray-700 hover:bg-gray-100"
-                      : "border border-transparent bg-gray-800 text-white hover:bg-gray-700"
+                      : "border border-transparent bg-gray-800 text-white hover:bg-gray-700nv"
             } `}
             data-testid={dataTestId}
         >

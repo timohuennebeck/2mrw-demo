@@ -24,7 +24,7 @@ export const emailConfig = {
     } as SocialLinks,
 
     settings: {
-        subscriptionConfirmationEmail: {
+        paidPlanEmailConfirmation: {
             subject: "Order Confirmation",
             isEnabled: true,
         },
