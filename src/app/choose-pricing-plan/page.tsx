@@ -1,6 +1,6 @@
 "use client";
 
-import { PricingPlanCard } from "@/components/PricingPlanCard/PricingPlanCard";
+import { PricingPlanCard } from "@/components/application/PricingPlanCard/PricingPlanCard";
 import { PricingPlanCardSkeleton } from "@/components/ui/PricingPlanCardSkeleton";
 import { useState } from "react";
 import { isFreePlanEnabled, isOneTimePaymentEnabled } from "@/config/paymentConfig";
