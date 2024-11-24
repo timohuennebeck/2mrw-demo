@@ -22,15 +22,12 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     const breadcrumbs = _generateBreadcrumbs(pathname);
 
     return (
-        <div className="flex h-screen overflow-hidden">
+        <div className="flex h-screen overflow-hidden bg-gray-100">
             <LeftNavigationBar />
             <div className="h-full flex-1 p-2 pl-0">
-                <main className="h-full overflow-scroll bg-white p-6 scrollbar-hide">
+                <main className="h-full overflow-scroll rounded-lg border border-gray-200 bg-white p-6 shadow-sm scrollbar-hide">
                     <div className="mb-4 flex items-center space-x-2 text-sm text-gray-500">
-                        <Link
-                            href="/"
-                            className="font-medium text-gray-500 hover:text-gray-800"
-                        >
+                        <Link href="/" className="font-medium text-gray-500 hover:text-gray-800">
                             Home
                         </Link>
                         {breadcrumbs.map((breadcrumb, index) => (

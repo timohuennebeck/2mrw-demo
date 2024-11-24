@@ -66,18 +66,13 @@ const LeftNavigationBar = () => {
 
     const navigationItems: NavigationItems[] = [
         {
-            category: "MENU",
+            category: "Menu",
             items: [
                 {
                     name: "Home",
                     icon: <MapPinHouse size={20} strokeWidth={2} />,
                     link: "/",
                 },
-            ],
-        },
-        {
-            category: "BILLING",
-            items: [
                 {
                     name: "Billing",
                     icon: <CreditCard size={20} strokeWidth={2} />,
@@ -86,7 +81,7 @@ const LeftNavigationBar = () => {
             ],
         },
         {
-            category: "HELP AND LEARNING",
+            category: "Help and Learning",
             items: [
                 {
                     name: "Documentation",
@@ -97,7 +92,7 @@ const LeftNavigationBar = () => {
             ],
         },
         {
-            category: "PREFERENCES",
+            category: "Preferences",
             items: [
                 {
                     name: "Settings",
@@ -139,7 +134,7 @@ const LeftNavigationBar = () => {
                 {navigationItems.map((section, sectionIndex) => (
                     <div key={sectionIndex} className="w-full">
                         {section.category && (
-                            <h3 className="mb-2 mt-4 text-xs font-semibold text-gray-400">
+                            <h3 className="mb-2 mt-4 text-xs font-medium text-gray-400">
                                 {section.category}
                             </h3>
                         )}
@@ -149,7 +144,7 @@ const LeftNavigationBar = () => {
                                 className={`group flex h-10 cursor-pointer items-center justify-between rounded-md px-3 ${
                                     pathname === item.link
                                         ? "bg-gray-100 text-gray-900"
-                                        : "text-gray-500 hover:bg-gray-100"
+                                        : "text-gray-500 hover:bg-gray-200 hover:text-gray-900"
                                 }`}
                                 onClick={() => _handleItemClick(item, router)}
                             >
