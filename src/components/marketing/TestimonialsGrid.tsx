@@ -53,7 +53,7 @@ const testimonials: Testimonial[] = [
     },
     {
         content: {
-            text: "The seamless integration with third-party services saved me a ton of time and resources. Highly recommend!",
+            text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem atque incidunt dolor architecto explicabo qui. \n\n Eem veritatis unde laborum eveniet assumenda.",
         },
         author: {
             name: "Samantha Lee",
@@ -66,7 +66,7 @@ const testimonials: Testimonial[] = [
     },
     {
         content: {
-            text: "The user interface is incredibly intuitive, making it easy for my team to onboard and start building right away.",
+            text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. \n\n Dolorem atque incidunt dolor architecto explicabo qui rem veritatis unde laborum eveniet assumenda, aperiam reprehenderit soluta voluptatem ducimus! Possimus libero harum nihil!",
         },
         author: {
             name: "Michael Brown",
@@ -79,7 +79,7 @@ const testimonials: Testimonial[] = [
     },
     {
         content: {
-            text: "The scalability of the platform has been a game-changer for our business. We've been able to grow rapidly without any hiccups.",
+            text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. \n\n Optio provident facere ratione reprehenderit accusamus quasi, sit hic. Iusto, consequatur perferendis.",
         },
         author: {
             name: "Jessica Patel",
@@ -92,7 +92,7 @@ const testimonials: Testimonial[] = [
     },
     {
         content: {
-            text: "The customer support team has been responsive and helpful throughout our journey. We couldn't be happier with the service.",
+            text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. \n\n Dolorem atque incidunt dolor architecto explicabo qui rem veritatis unde laborum eveniet assumenda, aperiam reprehenderit soluta voluptatem ducimus! Possimus libero harum nihil!",
         },
         author: {
             name: "David Kim",
@@ -102,6 +102,58 @@ const testimonials: Testimonial[] = [
         },
         rating: 5,
         date: "2024-03-15",
+    },
+    {
+        content: {
+            text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem atque incidunt dolor architecto explicabo qui rem veritatis. \n\n Unde laborum eveniet assumenda, aperiam reprehenderit soluta voluptatem ducimus! Possimus libero harum nihil!",
+        },
+        author: {
+            name: "David Kim",
+            role: "Marketing Director",
+            company: "RetailTech Solutions",
+            image: "https://i.imgur.com/E6nCVLy.jpeg",
+        },
+        rating: 5,
+        date: "2024-03-15",
+    },
+    {
+        content: {
+            text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio provident facere ratione reprehenderit accusamus quasi, sit hic. Iusto, consequatur perferendis.",
+        },
+        author: {
+            name: "David Kim",
+            role: "Marketing Director",
+            company: "RetailTech Solutions",
+            image: "https://i.imgur.com/E6nCVLy.jpeg",
+        },
+        rating: 5,
+        date: "2024-03-15",
+    },
+    {
+        content: {
+            text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. \n\n Dolorem atque incidunt dolor architecto explicabo qui rem veritatis unde laborum eveniet assumenda, aperiam reprehenderit soluta voluptatem ducimus! Possimus libero harum nihil!",
+        },
+        author: {
+            name: "Michael Brown",
+            role: "DevOps Engineer",
+            company: "HealthTech Innovations",
+            image: "https://i.imgur.com/E6nCVLy.jpeg",
+        },
+        rating: 4,
+        date: "2024-03-13",
+    },
+    {
+        content: {
+            text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. \n\n Optio provident facere ratione reprehenderit accusamus quasi, sit hic. Iusto, consequatur perferendis.",
+        },
+        author: {
+            name: "Jessica Patel",
+            role: "CEO",
+            company: "EduTech Ventures",
+            image: "https://i.imgur.com/E6nCVLy.jpeg",
+        },
+        rating: 5,
+        date: "2024-03-14",
     },
 ];
 
@@ -119,6 +171,9 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
             );
         });
 
+        // Replace newlines with <br /> tags
+        result = result.replace(/\n/g, "<br />");
+
         return (
             <p
                 className="mb-8 text-lg text-gray-900"
@@ -128,7 +183,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
     };
 
     return (
-        <div className="flex flex-col justify-between rounded-lg border border-gray-200 p-8">
+        <div className="mb-8 break-inside-avoid rounded-lg border border-gray-200 p-8">
             <div>
                 <div className="mb-4 flex items-center justify-between">
                     {testimonial.rating && (
@@ -186,6 +241,9 @@ const FeaturedTestimonialCard = ({ testimonial }: { testimonial: Testimonial }) 
                 `<span class="rounded-lg bg-white/10 px-2 py-0.5 text-white">${highlight}</span>`,
             );
         });
+
+        // Replace newlines with <br /> tags
+        result = result.replace(/\n/g, "<br />");
 
         return (
             <p
@@ -344,7 +402,7 @@ const TestimonialsGrid = () => {
                     )}
 
                     {/* Regular Testimonials */}
-                    <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="columns-1 gap-8 sm:columns-2 lg:columns-3">
                         {displayedTestimonials.map((testimonial, index) => (
                             <TestimonialCard key={index} testimonial={testimonial} />
                         ))}
