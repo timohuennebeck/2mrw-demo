@@ -1,3 +1,5 @@
+"use client";
+
 import Section from "@/components/ui/Section";
 import BeforeAfter from "@/components/marketing/BeforeAfter";
 import CTASection from "@/components/marketing/CTASection";
@@ -38,7 +40,25 @@ const LandingPage = () => {
                     className="bg-black text-white"
                 />
                 <Header />
-                <HeroSection />
+                <HeroSection
+                    promoText="GET €30 OFF - 50 CODES LEFT"
+                    title={
+                        <>
+                            Build Your MVP in a <span className="text-black">WEEKEND</span>, not
+                            Months, with <span className="text-gray-400">Next.js and Supabase</span>
+                        </>
+                    }
+                    subtitle="Launch in as little as 48 hours with this lightweight Next.js Supabase boilerplate that handles all the boring stuff such user authentication, stripe, etc."
+                    primaryCTA={{
+                        text: "Get Started Now",
+                        href: "/get-started",
+                    }}
+                    secondaryCTA={{
+                        text: "Watch Demo",
+                        onClick: () => {},
+                    }}
+                    demoVideoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
+                />
             </div>
             <div className="mx-auto mt-28 flex w-full max-w-7xl flex-col gap-36">
                 <Section>
