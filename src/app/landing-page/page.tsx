@@ -17,6 +17,7 @@ import StatsSection from "@/components/marketing/StatsSection";
 import TestimonialsGrid from "@/components/marketing/TestimonialsGrid";
 import { Manrope } from "next/font/google";
 import { authFeatures, databaseFeatures, emailFeatures } from "@/data/marketing/features";
+import { featuresList } from "@/data/marketing/featuresList";
 
 const manrope = Manrope({
     subsets: ["latin"],
@@ -172,7 +173,12 @@ const LandingPage = () => {
                     />
                 </Section>
                 <Section>
-                    <FeaturesList />
+                    <FeaturesList
+                        heading="Your Custom Heading"
+                        description="Your custom description text goes here."
+                        features={featuresList}
+                        sectionTitle="Optional Custom Section Title" // optional
+                    />
                 </Section>
                 <Section>
                     <PricingComparison />

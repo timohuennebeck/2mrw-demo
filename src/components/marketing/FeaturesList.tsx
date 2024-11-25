@@ -1,54 +1,28 @@
 import { Check } from "lucide-react";
 
-const features = [
-    {
-        title: "Invite team members",
-        description: "Rerum repellat labore necessitatibus reprehenderit molestiae praesentium.",
-    },
-    {
-        title: "List view",
-        description:
-            "Corporis asperiores ea nulla temporibus asperiores non tempore assumenda aut.",
-    },
-    {
-        title: "Keyboard shortcuts",
-        description:
-            "In sit qui aliquid deleniti et. Ad nobis sunt omnis. Quo sapiente dicta laboriosam.",
-    },
-    {
-        title: "Calendars",
-        description: "Sed rerum sunt dignissimos ullam. Iusto iure occaecati voluptate eligendi.",
-    },
-    {
-        title: "Notifications",
-        description: "Quos inventore harum enim nesciunt. Aut repellat rerum omnis adipisci.",
-    },
-    {
-        title: "Boards",
-        description: "Quae sit sunt excepturi fugit veniam voluptatem ipsum commodi.",
-    },
-    {
-        title: "Reporting",
-        description: "Eos laudantium repellat sed architecto earum unde incidunt.",
-    },
-    {
-        title: "Mobile app",
-        description: "Nulla est saepe accusamus nostrum est est fugit omnis.",
-    },
-];
+interface Feature {
+    title: string;
+    description: string;
+}
 
-const FeaturesList = () => {
+interface FeaturesListProps {
+    sectionTitle?: string;
+    heading: string;
+    description: string;
+    features: Feature[];
+}
+
+const FeaturesList = ({ sectionTitle = "Features List", heading, description, features }: FeaturesListProps) => {
     return (
         <div className="grid grid-cols-1 gap-x-20 gap-y-16 lg:grid-cols-3">
             {/* Header Column */}
             <div className="flex flex-col gap-6">
-                <p className="text-sm font-medium text-blue-600">Features List</p>
+                <p className="text-sm font-medium text-blue-600">{sectionTitle}</p>
                 <h2 className="max-w-4xl text-4xl font-medium tracking-tight md:text-5xl">
-                    Lorem ipsum dolor sit amet.
+                    {heading}
                 </h2>
                 <p className="max-w-3xl text-lg text-gray-600">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit
-                    perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.
+                    {description}
                 </p>
             </div>
 
