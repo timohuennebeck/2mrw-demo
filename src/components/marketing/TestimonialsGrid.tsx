@@ -113,7 +113,7 @@ const FeaturedTestimonialCard = ({ testimonial }: { testimonial: Testimonial }) 
         content.highlights?.forEach((highlight) => {
             result = result.replace(
                 highlight,
-                `<span class="rounded-lg bg-white/10 px-2 py-0.5 text-white">${highlight}</span>`,
+                `<span class="rounded-lg bg-white/80 px-2 py-0.5 text-gray-900">${highlight}</span>`,
             );
         });
 

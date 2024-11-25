@@ -4,7 +4,7 @@ export const testimonials: Testimonial[] = [
     {
         content: {
             text: "This solution saved us countless hours of development time. We launched our MVP in just a weekend, something that would've taken months otherwise.",
-            highlights: ["countless hours", "just a weekend"],
+            highlights: ["saved us countless hours"],
         },
         author: {
             name: "Sarah Chen",
@@ -65,7 +65,7 @@ export const testimonials: Testimonial[] = [
     {
         content: {
             text: "Clean code, great documentation, and excellent support.\nEverything you need to get started quickly.",
-            highlights: ["excellent support", "started quickly"],
+            highlights: ["excellent support"],
         },
         author: {
             name: "Lisa Thompson",
