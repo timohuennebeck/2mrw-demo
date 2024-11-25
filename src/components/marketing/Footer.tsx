@@ -30,9 +30,9 @@ const footerLinks = {
 const Footer = () => {
     return (
         <footer className="bg-white">
-            <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 flex flex-col gap-8">
                 {/* Top section with logo and description */}
-                <div className="mb-8">
+                <div className="flex flex-col gap-4">
                     <Link href="/" className="flex items-center">
                         <Image
                             src="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
@@ -42,7 +42,7 @@ const Footer = () => {
                             className="h-8 w-auto"
                         />
                     </Link>
-                    <p className="mt-4 max-w-2xl text-sm text-gray-600">
+                    <p className="max-w-2xl text-sm text-gray-600">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque ea
                         obcaecati, veniam veritatis accusamus corporis nesciunt nihil iste dicta
                         sequi!
@@ -53,11 +53,11 @@ const Footer = () => {
                 <div className="h-px bg-gray-200" />
 
                 {/* Main links section */}
-                <div className="grid grid-cols-2 gap-8 py-8 md:grid-cols-4">
-                    {/* Links Columns */}
-                    <div>
+                <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+                    {/* Solutions Column */}
+                    <div className="flex flex-col gap-6">
                         <h3 className="text-sm font-semibold text-gray-900">Solutions</h3>
-                        <ul className="mt-6 space-y-4">
+                        <ul className="flex flex-col gap-4">
                             {footerLinks.solutions.map((link) => (
                                 <li key={link.name}>
                                     <Link
@@ -71,9 +71,10 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    <div>
+                    {/* Support Column */}
+                    <div className="flex flex-col gap-6">
                         <h3 className="text-sm font-semibold text-gray-900">Support</h3>
-                        <ul className="mt-6 space-y-4">
+                        <ul className="flex flex-col gap-4">
                             {footerLinks.support.map((link) => (
                                 <li key={link.name}>
                                     <Link
@@ -87,9 +88,10 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    <div>
+                    {/* Company Column */}
+                    <div className="flex flex-col gap-6">
                         <h3 className="text-sm font-semibold text-gray-900">2mrw</h3>
-                        <ul className="mt-6 space-y-4">
+                        <ul className="flex flex-col gap-4">
                             {footerLinks.company.map((link) => (
                                 <li key={link.name}>
                                     <Link
@@ -103,9 +105,10 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    <div>
+                    {/* Legal Column */}
+                    <div className="flex flex-col gap-6">
                         <h3 className="text-sm font-semibold text-gray-900">Legal</h3>
-                        <ul className="mt-6 space-y-4">
+                        <ul className="flex flex-col gap-4">
                             {footerLinks.legal.map((link) => (
                                 <li key={link.name}>
                                     <Link
@@ -124,16 +127,13 @@ const Footer = () => {
                 <div className="h-px bg-gray-200" />
 
                 {/* Bottom section with copyright */}
-                <div className="flex items-center justify-between pt-8">
+                <div className="flex items-center justify-between">
                     <p className="text-sm text-gray-600">© 2024 2mrw, Inc. All rights reserved.</p>
                     <div className="flex space-x-6">
                         <Link href="/privacy" className="text-sm text-gray-600 hover:text-gray-900">
                             Terms and Conditions
                         </Link>
-                        <Link
-                            href="/changelog"
-                            className="text-sm text-gray-600 hover:text-gray-900"
-                        >
+                        <Link href="/changelog" className="text-sm text-gray-600 hover:text-gray-900">
                             Changelog
                         </Link>
                     </div>

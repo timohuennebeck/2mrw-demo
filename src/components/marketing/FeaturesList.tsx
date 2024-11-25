@@ -43,12 +43,12 @@ const FeaturesList = () => {
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 gap-x-20 gap-y-16 lg:grid-cols-3">
                     {/* Header Column */}
-                    <div>
+                    <div className="flex flex-col gap-6">
                         <p className="text-sm font-medium text-blue-600">Features List</p>
-                        <h2 className="mt-4 text-4xl font-medium tracking-tight md:text-5xl">
+                        <h2 className="text-4xl font-medium tracking-tight md:text-5xl">
                             Lorem ipsum dolor sit amet.
                         </h2>
-                        <p className="mt-6 text-lg text-gray-600">
+                        <p className="text-lg text-gray-600">
                             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores
                             impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis
                             ratione.
@@ -63,9 +63,9 @@ const FeaturesList = () => {
                                     <div className="flex-shrink-0">
                                         <Check className="h-6 w-6 text-blue-600" />
                                     </div>
-                                    <div>
+                                    <div className="flex flex-col gap-2">
                                         <h3 className="text-lg font-medium">{feature.title}</h3>
-                                        <p className="mt-2 text-base text-gray-600">
+                                        <p className="text-base text-gray-600">
                                             {feature.description}
                                         </p>
                                     </div>

@@ -176,16 +176,16 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
 
         return (
             <p
-                className="mb-8 text-lg text-gray-900"
+                className="text-lg text-gray-900"
                 dangerouslySetInnerHTML={{ __html: `"${result}"` }}
             />
         );
     };
 
     return (
-        <div className="mb-8 break-inside-avoid rounded-lg border border-gray-200 p-8">
-            <div>
-                <div className="mb-4 flex items-center justify-between">
+        <div className="break-inside-avoid rounded-lg border border-gray-200 p-8 flex flex-col gap-8">
+            <div className="flex flex-col gap-8">
+                <div className="flex items-center justify-between">
                     {testimonial.rating && (
                         <div className="flex gap-1">
                             {[...Array(testimonial.rating)].map((_, i) => (
@@ -198,7 +198,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
                         </div>
                     )}
                 </div>
-                <blockquote className="mb-8 text-lg text-gray-900">
+                <blockquote className="text-lg text-gray-900">
                     {renderContent(testimonial.content)}
                 </blockquote>
             </div>
@@ -210,7 +210,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
                     height={40}
                     className="h-10 w-10 rounded-full bg-gray-200"
                 />
-                <div>
+                <div className="flex flex-col gap-1">
                     <div className="font-medium">{testimonial.author.name}</div>
                     <div className="text-sm text-gray-500">
                         {testimonial.author.role} @{testimonial.author.company}
@@ -247,7 +247,7 @@ const FeaturedTestimonialCard = ({ testimonial }: { testimonial: Testimonial }) 
 
         return (
             <p
-                className="mb-8 text-xl font-medium"
+                className="text-xl font-medium"
                 dangerouslySetInnerHTML={{ __html: `"${result}"` }}
             />
         );
@@ -255,10 +255,10 @@ const FeaturedTestimonialCard = ({ testimonial }: { testimonial: Testimonial }) 
 
     return (
         <div className="rounded-lg bg-black p-8 text-white">
-            <div className="flex h-full flex-col justify-between">
-                <div>
-                    <Image src={QuoteImg} alt="Quote" width={48} height={48} className="mb-6" />
-                    <blockquote className="mb-8 text-xl font-medium">
+            <div className="flex h-full flex-col gap-8">
+                <div className="flex flex-col gap-8">
+                    <Image src={QuoteImg} alt="Quote" width={48} height={48} />
+                    <blockquote className="text-xl font-medium">
                         {renderContent(testimonial.content)}
                     </blockquote>
                 </div>
@@ -321,9 +321,9 @@ const TestimonialsGrid = () => {
 
     return (
         <section className="py-24">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col gap-12">
                 {/* Section Header */}
-                <div className="mx-auto max-w-2xl text-center">
+                <div className="mx-auto max-w-2xl text-center flex flex-col gap-6">
                     <div className="flex items-center justify-center gap-2">
                         <div className="rounded-lg bg-purple-50 p-2">
                             <Star className="h-5 w-5 text-purple-600" />
@@ -332,61 +332,58 @@ const TestimonialsGrid = () => {
                             TRUSTED BY FOUNDERS
                         </span>
                     </div>
-                    <h2 className="mt-6 text-4xl font-medium tracking-tight md:text-5xl">
+                    <h2 className="text-4xl font-medium tracking-tight md:text-5xl">
                         Lorem ipsum dolor sit amet.{" "}
                         <span className="text-gray-400">Lorem, ipsum dolor.</span>
                     </h2>
-                    <p className="mt-6 text-lg text-gray-600">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae ducimus
-                        explicabo laboriosam ullam quaerat quae.
+                    <p className="text-lg text-gray-600">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
                     </p>
                 </div>
 
                 {/* Filters & Search */}
-                <div className="mb-12 mt-16">
-                    <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-                        {/* Rating Filters */}
-                        <div className="flex flex-wrap gap-2">
-                            {[5, 4, 3].map((rating) => (
-                                <button
-                                    key={rating}
-                                    onClick={() =>
-                                        setFilterRating(filterRating === rating ? null : rating)
-                                    }
-                                    className={`rounded-lg px-4 py-2 text-sm transition-colors ${
-                                        filterRating === rating
-                                            ? "bg-black text-white"
-                                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                                    }`}
-                                >
-                                    {rating} Stars
-                                </button>
-                            ))}
-                        </div>
-
-                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                            {/* Search */}
-                            <div className="relative">
-                                <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                                <input
-                                    type="text"
-                                    placeholder="Search testimonials..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="w-full rounded-md border border-gray-300 py-2 pl-10 pr-4 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:w-64"
-                                />
-                            </div>
-
-                            {/* Sort */}
-                            <select
-                                value={sortBy}
-                                onChange={(e) => setSortBy(e.target.value as "recent" | "rating")}
-                                className="rounded-md border border-gray-300 px-4 py-2 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+                <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                    {/* Rating Filters */}
+                    <div className="flex flex-wrap gap-2">
+                        {[5, 4, 3].map((rating) => (
+                            <button
+                                key={rating}
+                                onClick={() =>
+                                    setFilterRating(filterRating === rating ? null : rating)
+                                }
+                                className={`rounded-lg px-4 py-2 text-sm transition-colors ${
+                                    filterRating === rating
+                                        ? "bg-black text-white"
+                                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                }`}
                             >
-                                <option value="recent">Most Recent</option>
-                                <option value="rating">Highest Rated</option>
-                            </select>
+                                {rating} Stars
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                        {/* Search */}
+                        <div className="relative">
+                            <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                            <input
+                                type="text"
+                                placeholder="Search testimonials..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full rounded-md border border-gray-300 py-2 pl-10 pr-4 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:w-64"
+                            />
                         </div>
+
+                        {/* Sort */}
+                        <select
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value as "recent" | "rating")}
+                            className="rounded-md border border-gray-300 px-4 py-2 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+                        >
+                            <option value="recent">Most Recent</option>
+                            <option value="rating">Highest Rated</option>
+                        </select>
                     </div>
                 </div>
 
@@ -410,7 +407,7 @@ const TestimonialsGrid = () => {
 
                     {/* Load More Button */}
                     {hasMore && (
-                        <div className="mt-8 flex justify-center">
+                        <div className="flex justify-center">
                             <button
                                 onClick={loadMore}
                                 disabled={isLoading}
@@ -430,8 +427,7 @@ const TestimonialsGrid = () => {
 
                     {/* Testimonials Count */}
                     <div className="text-center text-sm text-gray-500">
-                        Showing {displayedTestimonials.length} of {regularTestimonials.length}{" "}
-                        testimonials
+                        Showing {displayedTestimonials.length} of {regularTestimonials.length} testimonials
                     </div>
                 </div>
             </div>

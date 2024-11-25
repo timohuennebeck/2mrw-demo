@@ -25,8 +25,8 @@ const features = [
 const Features = ({ isRight }: { isRight?: boolean }) => {
     return (
         <section className="py-24">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className={`${isRight ? "flex flex-col items-end" : ""}`}>
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col gap-20">
+                <div className={`${isRight ? "flex flex-col items-end" : ""} flex flex-col gap-6`}>
                     <div className="flex items-center gap-2">
                         <div className="rounded-lg bg-purple-50 p-2">
                             <Code className="h-5 w-5 text-purple-600" />
@@ -35,24 +35,22 @@ const Features = ({ isRight }: { isRight?: boolean }) => {
                             E2E TESTS WITH CYPRESS
                         </span>
                     </div>
-                    <h2
-                        className={`${isRight ? "text-right" : ""} mt-6 text-4xl font-medium tracking-tight md:text-5xl`}
-                    >
+                    
+                    <h2 className={`${isRight ? "text-right" : ""} text-4xl font-medium tracking-tight md:text-5xl`}>
                         End-to-End Testing.{" "}
                         <span className="text-gray-400">
                             Built-in test coverage ensuring reliable authentication, billing, and
                             user flows.
                         </span>
                     </h2>
-                    <p
-                        className={`${isRight ? "text-right" : ""} mt-6 max-w-2xl text-lg text-gray-600`}
-                    >
+                    
+                    <p className={`${isRight ? "text-right" : ""} max-w-2xl text-lg text-gray-600`}>
                         Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit
                         perferendis suscipit eaque, iste dolor cupiditate blanditiis.
                     </p>
                 </div>
 
-                <div className={`mt-20 flex w-full ${isRight ? "justify-end" : "justify-start"}`}>
+                <div className={`flex w-full ${isRight ? "justify-end" : "justify-start"}`}>
                     <video
                         src="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
                         width={928}
@@ -64,7 +62,7 @@ const Features = ({ isRight }: { isRight?: boolean }) => {
                     />
                 </div>
 
-                <div className="mt-20 grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
                     {features.map((feature) => (
                         <div key={feature.name} className="flex gap-4">
                             <div className="flex-shrink-0">

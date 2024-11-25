@@ -25,14 +25,14 @@ const stats = [
 export default function StatsSection() {
     return (
         <div className="py-24 sm:py-32">
-            <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col gap-16">
                 {/* Header Section */}
-                <div className="mb-16 max-w-2xl">
+                <div className="max-w-2xl flex flex-col gap-6">
                     <p className="text-sm font-medium text-blue-600">Stats</p>
-                    <h2 className="mt-6 text-4xl font-medium tracking-tight md:text-5xl">
+                    <h2 className="text-4xl font-medium tracking-tight md:text-5xl">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit.
                     </h2>
-                    <p className="mt-6 text-lg text-gray-600">
+                    <p className="text-lg text-gray-600">
                         Diam nunc lacus lacus aliquam turpis enim. Eget hac velit est euismod lacus.
                         Est non placerat nam arcu. Cras purus nibh cursus sit eu in id. Integer vel
                         nibh.
@@ -71,11 +71,11 @@ interface StatCardProps {
 
 function StatCard({ value, label, description, className, heightClass = "" }: StatCardProps) {
     return (
-        <div className={`${className} ${heightClass} flex flex-col justify-between`}>
+        <div className={`${className} ${heightClass} flex flex-col justify-between gap-4`}>
             <p className="text-4xl font-semibold tracking-tight">{value}</p>
-            <div>
+            <div className="flex flex-col gap-2">
                 <p className="text-lg font-semibold">{label}</p>
-                <p className="mt-2 text-base text-gray-300">{description}</p>
+                <p className="text-base text-gray-300">{description}</p>
             </div>
         </div>
     );

@@ -49,24 +49,24 @@ const FAQ = () => {
     return (
         <section className="py-24">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 gap-x-20 md:grid-cols-3">
+                <div className="grid grid-cols-1 gap-20 md:grid-cols-3">
                     {/* Left Column - Title */}
-                    <div>
+                    <div className="flex flex-col gap-4">
                         <p className="text-sm font-medium text-blue-600">FAQ</p>
-                        <h2 className="mt-4 text-4xl font-medium tracking-tight">
+                        <h2 className="text-4xl font-medium tracking-tight">
                             Your questions answered.
                         </h2>
-                        <p className="mt-4 text-lg text-gray-600">
+                        <p className="text-lg text-gray-600">
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Est magni
                             similique, in cum architecto voluptatibus?
                         </p>
                     </div>
 
                     {/* Right Column - Questions */}
-                    <div className="mt-12 md:col-span-2 md:mt-0">
+                    <div className="md:col-span-2">
                         <div className="divide-y divide-gray-200">
                             {faqs.map((faq, index) => (
-                                <div key={index} className="py-6">
+                                <div key={index} className="flex flex-col gap-3 py-6">
                                     <button
                                         onClick={() =>
                                             setOpenIndex(openIndex === index ? null : index)
@@ -85,7 +85,7 @@ const FAQ = () => {
                                         </span>
                                     </button>
                                     {openIndex === index && (
-                                        <div className="mt-3 pr-12">
+                                        <div className="pr-12">
                                             <p className="text-base text-gray-600">{faq.answer}</p>
                                         </div>
                                     )}

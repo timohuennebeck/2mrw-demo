@@ -11,8 +11,8 @@ const PromoBanner = () => {
 
     return (
         <div className="relative bg-black text-white">
-            <div className="mx-auto max-w-7xl px-3 py-3 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-center gap-x-6 text-sm">
+            <div className="flex items-center justify-center px-3 py-3 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <div className="flex items-center gap-x-6 text-sm">
                     <div className="flex items-center gap-x-2">
                         <span className="hidden sm:inline">🚀</span>
                         <p className="font-medium">

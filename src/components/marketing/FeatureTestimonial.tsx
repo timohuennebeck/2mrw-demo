@@ -3,10 +3,10 @@ import QuoteImg from "@/assets/quotes.svg";
 
 const FeaturedTestimonial = () => {
     return (
-        <div className="mx-auto max-w-3xl text-center">
-            <Image src={QuoteImg} alt="Quote" width={48} height={48} className="mx-auto mb-6" />
+        <div className="mx-auto max-w-3xl flex flex-col items-center gap-6 text-center">
+            <Image src={QuoteImg} alt="Quote" width={48} height={48} />
 
-            <blockquote className="mb-8 text-2xl font-medium">
+            <blockquote className="text-2xl font-medium">
                 "Thanks for building such an empowering tool, especially for designers! The site
                 went from Figma to Framer in less than a week!"
             </blockquote>

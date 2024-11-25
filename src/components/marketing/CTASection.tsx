@@ -1,13 +1,13 @@
 const CTASection = () => {
     return (
         <section className="py-24">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col gap-6">
                 <p className="text-sm font-medium text-blue-600">CTA</p>
-                <h2 className="mb-6 mt-4 text-4xl font-medium tracking-tight md:text-5xl">
+                <h2 className="text-4xl font-medium tracking-tight md:text-5xl">
                     Lock in €30 OFF Forever. Use 'Launch30' at checkout
                 </h2>
 
-                <p className="mb-10 text-lg text-gray-600">
+                <p className="text-lg text-gray-600">
                     Incididunt sint fugiat pariatur cupidatat consectetur sit cillum anim id veniam
                     aliqua proident excepteur commodo do ea.
                 </p>

@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 const Header = () => {
     return (
         <header className="bg-white/80 backdrop-blur-md">
-            <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-8 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between px-4 py-8 sm:px-6 lg:px-8 max-w-7xl mx-auto">
                 {/* Logo */}
                 <Link href="/" className="flex items-center">
                     <Image
@@ -18,7 +18,7 @@ const Header = () => {
                 </Link>
 
                 {/* Navigation */}
-                <nav className="hidden items-center space-x-8 md:flex">
+                <nav className="hidden md:flex items-center gap-8">
                     <Link href="/product" className="text-sm text-gray-600 hover:text-gray-900">
                         Product
                     </Link>
