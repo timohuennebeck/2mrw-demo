@@ -22,6 +22,7 @@ import { faqs } from "@/data/marketing/faqs";
 import { testimonials } from "@/data/marketing/testimonials";
 import { defaultPricingFeatures, defaultPricingPlans } from "@/data/marketing/pricing";
 import { exampleStats } from "@/data/marketing/stats";
+import { footerLinks } from "@/data/marketing/footer";
 
 const manrope = Manrope({
     subsets: ["latin"],
@@ -249,7 +250,19 @@ const LandingPage = () => {
                     />
                 </Section>
                 <Section>
-                    <Footer />
+                    <Footer
+                        links={footerLinks}
+                        logo={{
+                            src: "https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg",
+                            alt: "Logo",
+                        }}
+                        description="Your company description here"
+                        companyName="2mrw"
+                        bottomLinks={[
+                            { name: "Terms and Conditions", href: "/privacy" },
+                            { name: "Changelog", href: "/changelog" },
+                        ]}
+                    />
                 </Section>
             </div>
         </div>
