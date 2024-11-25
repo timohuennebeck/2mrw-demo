@@ -26,7 +26,7 @@ export default function StatsSection() {
     return (
         <div className="flex flex-col gap-16">
             {/* Header Section */}
-            <div className="flex max-w-2xl flex-col gap-6">
+            <div className="flex flex-col gap-6">
                 <p className="text-sm font-medium text-blue-600">Stats</p>
                 <h2 className="text-4xl max-w-4xl font-medium tracking-tight md:text-5xl">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
