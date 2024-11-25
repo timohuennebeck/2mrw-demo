@@ -9,6 +9,7 @@ import Footer from "@/components/marketing/Footer";
 import Header from "@/components/marketing/Header";
 import HeroSection from "@/components/marketing/HeroSection";
 import PricingComparison from "@/components/marketing/PricingComparison";
+import StatsSection from "@/components/marketing/StatsSection";
 import TestimonialsGrid from "@/components/marketing/TestimonialsGrid";
 import { Manrope } from "next/font/google";
 
@@ -24,6 +25,7 @@ const LandingPage = () => {
                 <Header />
                 <HeroSection />
             </div>
+            <StatsSection />
             <FeaturedTestimonial />
             <BeforeAfter />
             <FeaturedTestimonial />
