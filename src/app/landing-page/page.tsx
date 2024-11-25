@@ -28,10 +28,10 @@ const LandingPage = () => {
                 <Header />
                 <HeroSection />
             </div>
-            <LogoCloud />
-            <StatsSection />
             <FeaturedTestimonial />
             <BeforeAfter />
+            {/* <LogoCloud /> */}
+            <StatsSection />
             <FeaturedTestimonial />
             <Features />
             <Features isRight />

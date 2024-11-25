@@ -1,23 +1,34 @@
-import { Code } from "lucide-react";
+import { Code, Check, X } from "lucide-react";
 import Image from "next/image";
 
 interface BeforeAfterItem {
     title: string;
-    description: string;
+    bulletPoints: {
+        text: string;
+        isPositive: boolean;
+    }[];
     imagePath: string;
 }
 
 const beforeAfter: { before: BeforeAfterItem; after: BeforeAfterItem } = {
     before: {
         title: "Lorem ipsum dolor sit amet.",
-        description:
-            "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Explicabo alias corrupti natus a cupiditate mollitia?",
+        bulletPoints: [
+            { text: "Lorem ipsum dolor sit amet consectetur adipisicing elit", isPositive: false },
+            { text: "Explicabo alias corrupti natus a cupiditate mollitia", isPositive: false },
+            { text: "Dignissimos asperiores possimus laboriosam", isPositive: false },
+            { text: "Iusto quo ducimus maiores eveniet", isPositive: false },
+        ],
         imagePath: "/before-screenshot.png",
     },
     after: {
         title: "Lorem ipsum dolor sit amet.",
-        description:
-            "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Explicabo alias corrupti natus a cupiditate mollitia?",
+        bulletPoints: [
+            { text: "Lorem ipsum dolor sit amet consectetur adipisicing elit", isPositive: true },
+            { text: "Explicabo alias corrupti natus a cupiditate mollitia", isPositive: true },
+            { text: "Dignissimos asperiores possimus laboriosam", isPositive: true },
+            { text: "Iusto quo ducimus maiores eveniet", isPositive: true },
+        ],
         imagePath: "/after-screenshot.png",
     },
 };
@@ -27,7 +38,7 @@ const BeforeAfter = () => {
         <section className="py-24">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div>
-                    <p className="text-sm font-medium text-blue-600">Before & After</p>
+                    <p className="text-sm font-medium text-blue-600">Lorem, ipsum.</p>
                     <h2 className="mt-6 text-4xl font-medium tracking-tight md:text-5xl">
                         Lorem, ipsum.{" "}
                         <span className="text-gray-400">
@@ -50,7 +61,14 @@ const BeforeAfter = () => {
                             </div>
                             <h3 className="text-xl font-medium">{beforeAfter.before.title}</h3>
                         </div>
-                        <p className="text-gray-600">{beforeAfter.before.description}</p>
+                        <ul className="space-y-3">
+                            {beforeAfter.before.bulletPoints.map((point, index) => (
+                                <li key={index} className="flex items-start gap-2 text-gray-600">
+                                    <X className="mt-1 h-4 w-4 flex-shrink-0 text-red-500" />
+                                    {point.text}
+                                </li>
+                            ))}
+                        </ul>
                         <div className="relative aspect-video w-full overflow-hidden rounded-lg border shadow-lg">
                             <Image
                                 src={beforeAfter.before.imagePath}
@@ -64,12 +82,19 @@ const BeforeAfter = () => {
                     {/* After Section */}
                     <div className="flex flex-col gap-6">
                         <div className="flex items-center gap-3">
-                            <div className="rounded-lg bg-green-100 px-3 py-1 text-sm font-medium text-green-600">
+                            <div className="rounded-lg bg-blue-50 px-3 py-1 text-sm font-medium text-blue-600">
                                 AFTER
                             </div>
                             <h3 className="text-xl font-medium">{beforeAfter.after.title}</h3>
                         </div>
-                        <p className="text-gray-600">{beforeAfter.after.description}</p>
+                        <ul className="space-y-3">
+                            {beforeAfter.after.bulletPoints.map((point, index) => (
+                                <li key={index} className="flex items-start gap-2 text-gray-600">
+                                    <Check className="mt-1 h-4 w-4 flex-shrink-0 text-blue-600" />
+                                    {point.text}
+                                </li>
+                            ))}
+                        </ul>
                         <div className="relative aspect-video w-full overflow-hidden rounded-lg border shadow-lg">
                             <Image
                                 src={beforeAfter.after.imagePath}
