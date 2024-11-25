@@ -44,7 +44,18 @@ const LandingPage = () => {
                     }}
                     className="bg-black text-white"
                 />
-                <Header />
+                <Header
+                    navItems={[
+                        { href: "/pricing", label: "Pricing" },
+                        { href: "/features", label: "Features" },
+                        { href: "/testimonials", label: "Testimonials" },
+                        { href: "/faq", label: "FAQ" },
+                        { href: "/changelog", label: "Changelog" },
+                    ]}
+                    logoSrc="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
+                    logoAlt="My Company"
+                    loginHref="/signin"
+                />
                 <HeroSection
                     promoText="GET €30 OFF - 50 CODES LEFT"
                     title={
