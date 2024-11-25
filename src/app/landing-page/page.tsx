@@ -77,7 +77,7 @@ const LandingPage = () => {
                     demoVideoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
                 />
             </div>
-            <div className="mx-auto mt-28 flex w-full max-w-7xl flex-col gap-36">
+            <div className="mx-auto mt-28 flex w-full max-w-7xl flex-col gap-36 mb-8">
                 <Section>
                     <FeaturedTestimonial
                         quote="Thanks for building such an empowering tool, especially for designers! The site went from Figma to Framer in less than a week!"
