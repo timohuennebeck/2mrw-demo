@@ -21,26 +21,28 @@ const manrope = Manrope({
 
 const LandingPage = () => {
     return (
-        <div className={`${manrope.variable} flex flex-col gap-20 font-manrope`}>
+        <div className={`${manrope.variable} flex flex-col font-manrope`}>
             <div>
                 <PromoBanner />
                 <Header />
                 <HeroSection />
             </div>
-            <FeaturedTestimonial />
-            <BeforeAfter />
-            {/* <LogoCloud /> */}
-            <StatsSection />
-            <FeaturedTestimonial />
-            <Features />
-            <Features isRight />
-            <FeaturedTestimonial />
-            <DemoSection />
-            <FeaturesList />
-            <PricingComparison />
-            <FAQ />
-            <TestimonialsGrid />
-            <CTASection />
+            <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col gap-20">
+                <FeaturedTestimonial />
+                <BeforeAfter />
+                {/* <LogoCloud /> */}
+                <StatsSection />
+                <FeaturedTestimonial />
+                <Features />
+                <Features isRight />
+                <FeaturedTestimonial />
+                <DemoSection />
+                <FeaturesList />
+                <PricingComparison />
+                <FAQ />
+                <TestimonialsGrid />
+                <CTASection />
+            </div>
             <Footer />
         </div>
     );

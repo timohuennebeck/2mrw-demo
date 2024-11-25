@@ -1,7 +1,7 @@
 const CTASection = () => {
     return (
         <section className="py-24">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col gap-6">
+            <div className="flex flex-col gap-6">
                 <p className="text-sm font-medium text-blue-600">CTA</p>
                 <h2 className="text-4xl font-medium tracking-tight md:text-5xl">
                     Lock in €30 OFF Forever. Use 'Launch30' at checkout

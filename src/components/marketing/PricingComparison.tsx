@@ -114,7 +114,7 @@ const features = [
 const PricingComparison = () => {
     return (
         <section className="py-24">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col gap-16">
+            <div className="flex flex-col gap-16">
                 {/* Header Section */}
                 <div className="text-start flex flex-col gap-6">
                     <p className="text-sm font-medium text-blue-600">Pricing</p>

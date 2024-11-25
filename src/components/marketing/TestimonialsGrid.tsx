@@ -321,7 +321,7 @@ const TestimonialsGrid = () => {
 
     return (
         <section className="py-24">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col gap-12">
+            <div className="flex flex-col gap-12">
                 {/* Section Header */}
                 <div className="mx-auto max-w-2xl text-center flex flex-col gap-6">
                     <div className="flex items-center justify-center gap-2">

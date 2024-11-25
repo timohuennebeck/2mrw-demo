@@ -40,38 +40,36 @@ const features = [
 const FeaturesList = () => {
     return (
         <section className="py-24">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 gap-x-20 gap-y-16 lg:grid-cols-3">
-                    {/* Header Column */}
-                    <div className="flex flex-col gap-6">
-                        <p className="text-sm font-medium text-blue-600">Features List</p>
-                        <h2 className="text-4xl font-medium tracking-tight md:text-5xl">
-                            Lorem ipsum dolor sit amet.
-                        </h2>
-                        <p className="text-lg text-gray-600">
-                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores
-                            impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis
-                            ratione.
-                        </p>
-                    </div>
+            <div className="grid grid-cols-1 gap-x-20 gap-y-16 lg:grid-cols-3">
+                {/* Header Column */}
+                <div className="flex flex-col gap-6">
+                    <p className="text-sm font-medium text-blue-600">Features List</p>
+                    <h2 className="text-4xl font-medium tracking-tight md:text-5xl">
+                        Lorem ipsum dolor sit amet.
+                    </h2>
+                    <p className="text-lg text-gray-600">
+                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores
+                        impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis
+                        ratione.
+                    </p>
+                </div>
 
-                    {/* Features Columns */}
-                    <div className="lg:col-span-2">
-                        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2">
-                            {features.map((feature) => (
-                                <div key={feature.title} className="flex gap-3">
-                                    <div className="flex-shrink-0">
-                                        <Check className="h-6 w-6 text-blue-600" />
-                                    </div>
-                                    <div className="flex flex-col gap-2">
-                                        <h3 className="text-lg font-medium">{feature.title}</h3>
-                                        <p className="text-base text-gray-600">
-                                            {feature.description}
-                                        </p>
-                                    </div>
+                {/* Features Columns */}
+                <div className="lg:col-span-2">
+                    <div className="grid grid-cols-1 gap-12 sm:grid-cols-2">
+                        {features.map((feature) => (
+                            <div key={feature.title} className="flex gap-3">
+                                <div className="flex-shrink-0">
+                                    <Check className="h-6 w-6 text-blue-600" />
                                 </div>
-                            ))}
-                        </div>
+                                <div className="flex flex-col gap-2">
+                                    <h3 className="text-lg font-medium">{feature.title}</h3>
+                                    <p className="text-base text-gray-600">
+                                        {feature.description}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>

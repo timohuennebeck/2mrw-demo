@@ -5,7 +5,7 @@ import TestimonialRating from "./TestimonialRating";
 
 const DemoSection = () => {
     return (
-        <section className="px-4 py-20 flex flex-col items-center justify-center text-center gap-10">
+        <section className="flex flex-col items-center justify-center py-20 text-center gap-10">
             {/* Main Title */}
             <h1 className="max-w-4xl text-4xl font-medium leading-tight tracking-tight md:text-5xl">
                 Experience 2mrw <span className="text-gray-400">in 2 minutes</span>
