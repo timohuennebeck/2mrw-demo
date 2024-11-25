@@ -164,7 +164,12 @@ const LandingPage = () => {
                     />
                 </Section>
                 <Section>
-                    <DemoSection />
+                    <DemoSection
+                        title="Experience 2mrw"
+                        highlightedTitle="in 2 minutes"
+                        subtitle="Launch in as little as 48 hours with this lightweight Next.js Supabase boilerplate that handles all the boring stuff such user authentication, stripe, etc."
+                        videoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
+                    />
                 </Section>
                 <Section>
                     <FeaturesList />
