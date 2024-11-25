@@ -28,10 +28,10 @@ export default function StatsSection() {
             {/* Header Section */}
             <div className="flex max-w-2xl flex-col gap-6">
                 <p className="text-sm font-medium text-blue-600">Stats</p>
-                <h2 className="text-4xl font-medium tracking-tight md:text-5xl">
+                <h2 className="text-4xl max-w-4xl font-medium tracking-tight md:text-5xl">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 </h2>
-                <p className="text-lg text-gray-600">
+                <p className="text-lg max-w-3xl text-gray-600">
                     Diam nunc lacus lacus aliquam turpis enim. Eget hac velit est euismod lacus. Est
                     non placerat nam arcu. Cras purus nibh cursus sit eu in id. Integer vel nibh.
                 </p>

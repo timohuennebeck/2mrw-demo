@@ -322,7 +322,7 @@ const TestimonialsGrid = () => {
     return (
         <div className="flex flex-col gap-12">
             {/* Section Header */}
-            <div className="mx-auto max-w-2xl text-center flex flex-col gap-6">
+            <div className="mx-auto text-center flex flex-col gap-6">
                 <div className="flex items-center justify-center gap-2">
                     <div className="rounded-lg bg-purple-50 p-2">
                         <Star className="h-5 w-5 text-purple-600" />

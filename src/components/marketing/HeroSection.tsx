@@ -18,7 +18,7 @@ const HeroSection = () => {
             </h1>
 
             {/* Subtitle */}
-            <p className="max-w-2xl text-lg text-gray-600">
+            <p className="max-w-3xl text-lg text-gray-600">
                 Launch in as little as 48 hours with this lightweight Next.js Supabase boilerplate
                 that handles all the boring stuff such user authentication, stripe, etc.
             </p>

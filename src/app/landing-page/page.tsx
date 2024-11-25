@@ -28,7 +28,7 @@ const LandingPage = () => {
                 <Header />
                 <HeroSection />
             </div>
-            <div className="mx-auto flex w-full max-w-7xl flex-col gap-36 mt-28">
+            <div className="mx-auto mt-28 flex w-full max-w-7xl flex-col gap-36">
                 <Section>
                     <FeaturedTestimonial />
                 </Section>
@@ -45,7 +45,13 @@ const LandingPage = () => {
                     <Features />
                 </Section>
                 <Section>
-                    <Features isRight />
+                    <Features videoOnLeft />
+                </Section>
+                <Section>
+                    <Features />
+                </Section>
+                <Section>
+                    <Features videoOnLeft />
                 </Section>
                 <Section>
                     <FeaturedTestimonial />

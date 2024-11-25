@@ -43,13 +43,12 @@ const FeaturesList = () => {
             {/* Header Column */}
             <div className="flex flex-col gap-6">
                 <p className="text-sm font-medium text-blue-600">Features List</p>
-                <h2 className="text-4xl font-medium tracking-tight md:text-5xl">
+                <h2 className="max-w-4xl text-4xl font-medium tracking-tight md:text-5xl">
                     Lorem ipsum dolor sit amet.
                 </h2>
-                <p className="text-lg text-gray-600">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores
-                    impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis
-                    ratione.
+                <p className="max-w-3xl text-lg text-gray-600">
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit
+                    perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.
                 </p>
             </div>
 
@@ -63,9 +62,7 @@ const FeaturesList = () => {
                             </div>
                             <div className="flex flex-col gap-2">
                                 <h3 className="text-lg font-medium">{feature.title}</h3>
-                                <p className="text-base text-gray-600">
-                                    {feature.description}
-                                </p>
+                                <p className="text-base text-gray-600">{feature.description}</p>
                             </div>
                         </div>
                     ))}

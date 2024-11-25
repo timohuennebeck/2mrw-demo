@@ -4,7 +4,7 @@ interface SectionProps {
 }
 
 const Section = ({ children, className = "" }: SectionProps) => {
-    return <section className={`bg-red-200 ${className}`}>{children}</section>;
+    return <section className={className}>{children}</section>;
 };
 
-export default Section; 
+export default Section;

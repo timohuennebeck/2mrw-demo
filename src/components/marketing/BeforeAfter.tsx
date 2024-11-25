@@ -40,14 +40,14 @@ const BeforeAfter = () => {
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-6">
                     <p className="text-sm font-medium text-blue-600">Lorem, ipsum.</p>
-                    <h2 className="text-4xl font-medium tracking-tight md:text-5xl">
+                    <h2 className="text-4xl max-w-4xl font-medium tracking-tight md:text-5xl">
                         Lorem, ipsum.{" "}
                         <span className="text-gray-400">
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, corporis.
                         </span>
                     </h2>
                 </div>
-                <p className="max-w-4xl text-lg text-gray-600">
+                <p className="max-w-3xl text-lg text-gray-600">
                     Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iusto quo ducimus
                     maiores eveniet. Dignissimos asperiores possimus laboriosam quos temporibus.
                     Iure.
