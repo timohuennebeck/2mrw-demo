@@ -31,7 +31,14 @@ const LandingPage = () => {
             </div>
             <div className="mx-auto mt-28 flex w-full max-w-7xl flex-col gap-36">
                 <Section>
-                    <FeaturedTestimonial />
+                    <FeaturedTestimonial
+                        quote="Thanks for building such an empowering tool, especially for designers! The site went from Figma to Framer in less than a week!"
+                        author={{
+                            name: "Eva Elle",
+                            role: "Marketing Director @BC",
+                            imageUrl: "https://i.imgur.com/E6nCVLy.jpeg",
+                        }}
+                    />
                 </Section>
                 <Section>
                     <BeforeAfter />
@@ -40,7 +47,14 @@ const LandingPage = () => {
                     <StatsSection />
                 </Section>
                 <Section>
-                    <FeaturedTestimonial />
+                    <FeaturedTestimonial
+                        quote="Thanks for building such an empowering tool, especially for designers! The site went from Figma to Framer in less than a week!"
+                        author={{
+                            name: "Eva Elle",
+                            role: "Marketing Director @BC",
+                            imageUrl: "https://i.imgur.com/E6nCVLy.jpeg",
+                        }}
+                    />
                 </Section>
                 <Section>
                     <Features
@@ -83,7 +97,14 @@ const LandingPage = () => {
                     />
                 </Section>
                 <Section>
-                    <FeaturedTestimonial />
+                    <FeaturedTestimonial
+                        quote="Thanks for building such an empowering tool, especially for designers! The site went from Figma to Framer in less than a week!"
+                        author={{
+                            name: "Eva Elle",
+                            role: "Marketing Director @BC",
+                            imageUrl: "https://i.imgur.com/E6nCVLy.jpeg",
+                        }}
+                    />
                 </Section>
                 <Section>
                     <DemoSection />
