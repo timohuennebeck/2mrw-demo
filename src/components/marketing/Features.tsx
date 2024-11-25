@@ -53,12 +53,12 @@ const Features = ({ isRight }: { isRight?: boolean }) => {
                     </p>
                 </div>
 
-                <div className={`relative mt-20 w-full max-w-5xl ${isRight ? "ml-auto" : ""}`}>
+                <div className={`mt-20 flex w-full ${isRight ? "justify-end" : "justify-start"}`}>
                     <Image
                         src="/features/email-auth.png"
                         alt="Product demo screenshot"
-                        width={1200}
-                        height={675}
+                        width={928}
+                        height={522}
                         className="rounded-lg shadow-2xl"
                     />
                 </div>
