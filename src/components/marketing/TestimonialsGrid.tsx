@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Star, Loader, SearchIcon } from "lucide-react";
+import { Star, Loader, SearchIcon, BadgeCheck } from "lucide-react";
+import QuoteImg from "@/assets/quotes-white.svg";
 
 interface Testimonial {
     content: string;
@@ -15,6 +16,7 @@ interface Testimonial {
     rating?: number;
     featured?: boolean;
     date?: string;
+    verified?: boolean;
 }
 
 const testimonials: Testimonial[] = [
@@ -171,20 +173,18 @@ const TESTIMONIALS_PER_PAGE = 6;
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => (
     <div className="flex flex-col justify-between rounded-lg border border-gray-200 p-8 transition-shadow hover:shadow-md">
         <div>
-            {testimonial.rating && (
-                <div className="mb-4 flex gap-1">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star
-                            key={i}
-                            className="h-5 w-5 fill-current text-yellow-400"
-                            fill="currentColor"
-                        />
-                    ))}
-                </div>
-            )}
+            <div className="mb-4 flex items-center justify-between">
+                {testimonial.rating && (
+                    <div className="flex gap-1">
+                        {[...Array(testimonial.rating)].map((_, i) => (
+                            <Star key={i} className="h-5 w-5 fill-current" fill="currentColor" />
+                        ))}
+                    </div>
+                )}
+            </div>
             <blockquote className="mb-8 text-lg text-gray-900">"{testimonial.content}"</blockquote>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-row gap-3">
             <Image
                 src={testimonial.author.image}
                 alt={testimonial.author.name}
@@ -197,6 +197,15 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => (
                 <div className="text-sm text-gray-500">
                     {testimonial.author.role} @{testimonial.author.company}
                 </div>
+                {testimonial.date && (
+                    <span className="text-xs text-gray-400">
+                        {new Date(testimonial.date).toLocaleDateString("en-US", {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                        })}
+                    </span>
+                )}
             </div>
         </div>
     </div>
@@ -206,7 +215,7 @@ const FeaturedTestimonialCard = ({ testimonial }: { testimonial: Testimonial }) 
     <div className="rounded-lg bg-black p-8 text-white">
         <div className="flex h-full flex-col justify-between">
             <div>
-                <Image src="/quotes.svg" alt="Quote" width={48} height={48} className="mb-6" />
+                <Image src={QuoteImg} alt="Quote" width={48} height={48} className="mb-6" />
                 <blockquote className="mb-8 text-xl font-medium">
                     "{testimonial.content}"
                 </blockquote>
@@ -282,12 +291,12 @@ const TestimonialsGrid = () => {
                         </span>
                     </div>
                     <h2 className="mt-6 text-4xl font-medium tracking-tight md:text-5xl">
-                        Loved by Developers{" "}
-                        <span className="text-gray-400">and Founders Alike</span>
+                        Lorem ipsum dolor sit amet.{" "}
+                        <span className="text-gray-400">Lorem, ipsum dolor.</span>
                     </h2>
                     <p className="mt-6 text-lg text-gray-600">
-                        Join hundreds of developers and founders who've accelerated their path to
-                        market using our boilerplate.
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae ducimus
+                        explicabo laboriosam ullam quaerat quae.
                     </p>
                 </div>
 
