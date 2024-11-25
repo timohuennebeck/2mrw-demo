@@ -19,6 +19,7 @@ import { Manrope } from "next/font/google";
 import { authFeatures, databaseFeatures, emailFeatures } from "@/data/marketing/features";
 import { featuresList } from "@/data/marketing/featuresList";
 import { faqs } from "@/data/marketing/faqs";
+import { testimonials } from "@/data/marketing/testimonials";
 
 const manrope = Manrope({
     subsets: ["latin"],
@@ -193,7 +194,18 @@ const LandingPage = () => {
                     />
                 </Section>
                 <Section>
-                    <TestimonialsGrid />
+                    <TestimonialsGrid
+                        title={{
+                            badge: "TRUSTED BY FOUNDERS",
+                            main: "See what others are saying",
+                            highlight: "about our platform",
+                            subtitle:
+                                "Join thousands of satisfied customers who trust our solution",
+                        }}
+                        testimonials={testimonials}
+                        testimonialsPerPage={8}
+                        className="my-12"
+                    />
                 </Section>
                 <Section>
                     <CTASection

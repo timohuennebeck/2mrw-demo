@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Star, Loader, SearchIcon } from "lucide-react";
 import QuoteImg from "@/assets/quotes-white.svg";
 
-interface Testimonial {
+export interface Testimonial {
     content: {
         text: string;
         highlights?: string[];
@@ -22,142 +22,17 @@ interface Testimonial {
     verified?: boolean;
 }
 
-const testimonials: Testimonial[] = [
-    {
-        content: {
-            text: "I was blown away by the ease of use and the speed at which I could launch my MVP. The support team was always there to help.",
-        },
-        author: {
-            name: "Emily Chen",
-            role: "Founder",
-            company: "GreenTech Inc.",
-            image: "https://i.imgur.com/E6nCVLy.jpeg",
-        },
-        rating: 5,
-        featured: true,
-        date: "2024-03-10",
-    },
-    {
-        content: {
-            text: "The platform's flexibility and customization options allowed me to tailor my product to my target audience's needs.",
-        },
-        author: {
-            name: "Ryan Thompson",
-            role: "Product Manager",
-            company: "TechCorp",
-            image: "https://i.imgur.com/E6nCVLy.jpeg",
-        },
-        rating: 5,
-        featured: true,
-        date: "2024-03-12",
-    },
-    {
-        content: {
-            text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem atque incidunt dolor architecto explicabo qui. \n\n Eem veritatis unde laborum eveniet assumenda.",
-        },
-        author: {
-            name: "Samantha Lee",
-            role: "CTO",
-            company: "FinTech Solutions",
-            image: "https://i.imgur.com/E6nCVLy.jpeg",
-        },
-        rating: 5,
-        date: "2024-03-11",
-    },
-    {
-        content: {
-            text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. \n\n Dolorem atque incidunt dolor architecto explicabo qui rem veritatis unde laborum eveniet assumenda, aperiam reprehenderit soluta voluptatem ducimus! Possimus libero harum nihil!",
-        },
-        author: {
-            name: "Michael Brown",
-            role: "DevOps Engineer",
-            company: "HealthTech Innovations",
-            image: "https://i.imgur.com/E6nCVLy.jpeg",
-        },
-        rating: 4,
-        date: "2024-03-13",
-    },
-    {
-        content: {
-            text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. \n\n Optio provident facere ratione reprehenderit accusamus quasi, sit hic. Iusto, consequatur perferendis.",
-        },
-        author: {
-            name: "Jessica Patel",
-            role: "CEO",
-            company: "EduTech Ventures",
-            image: "https://i.imgur.com/E6nCVLy.jpeg",
-        },
-        rating: 5,
-        date: "2024-03-14",
-    },
-    {
-        content: {
-            text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. \n\n Dolorem atque incidunt dolor architecto explicabo qui rem veritatis unde laborum eveniet assumenda, aperiam reprehenderit soluta voluptatem ducimus! Possimus libero harum nihil!",
-        },
-        author: {
-            name: "David Kim",
-            role: "Marketing Director",
-            company: "RetailTech Solutions",
-            image: "https://i.imgur.com/E6nCVLy.jpeg",
-        },
-        rating: 5,
-        date: "2024-03-15",
-    },
-    {
-        content: {
-            text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem atque incidunt dolor architecto explicabo qui rem veritatis. \n\n Unde laborum eveniet assumenda, aperiam reprehenderit soluta voluptatem ducimus! Possimus libero harum nihil!",
-        },
-        author: {
-            name: "David Kim",
-            role: "Marketing Director",
-            company: "RetailTech Solutions",
-            image: "https://i.imgur.com/E6nCVLy.jpeg",
-        },
-        rating: 5,
-        date: "2024-03-15",
-    },
-    {
-        content: {
-            text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio provident facere ratione reprehenderit accusamus quasi, sit hic. Iusto, consequatur perferendis.",
-        },
-        author: {
-            name: "David Kim",
-            role: "Marketing Director",
-            company: "RetailTech Solutions",
-            image: "https://i.imgur.com/E6nCVLy.jpeg",
-        },
-        rating: 5,
-        date: "2024-03-15",
-    },
-    {
-        content: {
-            text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. \n\n Dolorem atque incidunt dolor architecto explicabo qui rem veritatis unde laborum eveniet assumenda, aperiam reprehenderit soluta voluptatem ducimus! Possimus libero harum nihil!",
-        },
-        author: {
-            name: "Michael Brown",
-            role: "DevOps Engineer",
-            company: "HealthTech Innovations",
-            image: "https://i.imgur.com/E6nCVLy.jpeg",
-        },
-        rating: 4,
-        date: "2024-03-13",
-    },
-    {
-        content: {
-            text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. \n\n Optio provident facere ratione reprehenderit accusamus quasi, sit hic. Iusto, consequatur perferendis.",
-        },
-        author: {
-            name: "Jessica Patel",
-            role: "CEO",
-            company: "EduTech Ventures",
-            image: "https://i.imgur.com/E6nCVLy.jpeg",
-        },
-        rating: 5,
-        date: "2024-03-14",
-    },
-];
-
-const TESTIMONIALS_PER_PAGE = 6;
+interface TestimonialsGridProps {
+    title?: {
+        badge?: string;
+        main: string;
+        highlight?: string;
+        subtitle?: string;
+    };
+    testimonials: Testimonial[];
+    testimonialsPerPage?: number;
+    className?: string;
+}
 
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
     const renderContent = (content: Testimonial["content"]) => {
@@ -282,8 +157,13 @@ const FeaturedTestimonialCard = ({ testimonial }: { testimonial: Testimonial }) 
     );
 };
 
-const TestimonialsGrid = () => {
-    const [displayCount, setDisplayCount] = useState(TESTIMONIALS_PER_PAGE);
+const TestimonialsGrid = ({
+    title,
+    testimonials,
+    testimonialsPerPage = 6,
+    className = "",
+}: TestimonialsGridProps) => {
+    const [displayCount, setDisplayCount] = useState(testimonialsPerPage);
     const [filterRating, setFilterRating] = useState<number | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [sortBy, setSortBy] = useState<"recent" | "rating">("recent");
@@ -315,30 +195,36 @@ const TestimonialsGrid = () => {
     const loadMore = async () => {
         setIsLoading(true);
         await new Promise((resolve) => setTimeout(resolve, 800));
-        setDisplayCount((prev) => prev + TESTIMONIALS_PER_PAGE);
+        setDisplayCount((prev) => prev + testimonialsPerPage);
         setIsLoading(false);
     };
 
     return (
-        <div className="flex flex-col gap-12">
-            {/* Section Header */}
-            <div className="mx-auto text-center flex flex-col gap-6">
-                <div className="flex items-center justify-center gap-2">
-                    <div className="rounded-lg bg-purple-50 p-2">
-                        <Star className="h-5 w-5 text-purple-600" />
-                    </div>
-                    <span className="text-sm font-medium uppercase text-purple-600">
-                        TRUSTED BY FOUNDERS
-                    </span>
+        <div className={`flex flex-col gap-12 ${className}`}>
+            {/* Optional Section Header */}
+            {title && (
+                <div className="mx-auto text-center flex flex-col gap-6">
+                    {title.badge && (
+                        <div className="flex items-center justify-center gap-2">
+                            <div className="rounded-lg bg-purple-50 p-2">
+                                <Star className="h-5 w-5 text-purple-600" />
+                            </div>
+                            <span className="text-sm font-medium uppercase text-purple-600">
+                                {title.badge}
+                            </span>
+                        </div>
+                    )}
+                    <h2 className="text-4xl font-medium tracking-tight md:text-5xl">
+                        {title.main}{" "}
+                        {title.highlight && (
+                            <span className="text-gray-400">{title.highlight}</span>
+                        )}
+                    </h2>
+                    {title.subtitle && (
+                        <p className="text-lg text-gray-600">{title.subtitle}</p>
+                    )}
                 </div>
-                <h2 className="text-4xl font-medium tracking-tight md:text-5xl">
-                    Lorem ipsum dolor sit amet.{" "}
-                    <span className="text-gray-400">Lorem, ipsum dolor.</span>
-                </h2>
-                <p className="text-lg text-gray-600">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </p>
-            </div>
+            )}
 
             {/* Filters & Search */}
             <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
