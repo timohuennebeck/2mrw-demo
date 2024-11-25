@@ -1,3 +1,4 @@
+import Section from "@/components/ui/Section";
 import BeforeAfter from "@/components/marketing/BeforeAfter";
 import CTASection from "@/components/marketing/CTASection";
 import DemoSection from "@/components/marketing/DemoSection";
@@ -27,23 +28,50 @@ const LandingPage = () => {
                 <Header />
                 <HeroSection />
             </div>
-            <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col gap-20">
-                <FeaturedTestimonial />
-                <BeforeAfter />
-                {/* <LogoCloud /> */}
-                <StatsSection />
-                <FeaturedTestimonial />
-                <Features />
-                <Features isRight />
-                <FeaturedTestimonial />
-                <DemoSection />
-                <FeaturesList />
-                <PricingComparison />
-                <FAQ />
-                <TestimonialsGrid />
-                <CTASection />
+            <div className="mx-auto flex w-full max-w-7xl flex-col gap-36 mt-28">
+                <Section>
+                    <FeaturedTestimonial />
+                </Section>
+                <Section>
+                    <BeforeAfter />
+                </Section>
+                <Section>
+                    <StatsSection />
+                </Section>
+                <Section>
+                    <FeaturedTestimonial />
+                </Section>
+                <Section>
+                    <Features />
+                </Section>
+                <Section>
+                    <Features isRight />
+                </Section>
+                <Section>
+                    <FeaturedTestimonial />
+                </Section>
+                <Section>
+                    <DemoSection />
+                </Section>
+                <Section>
+                    <FeaturesList />
+                </Section>
+                <Section>
+                    <PricingComparison />
+                </Section>
+                <Section>
+                    <FAQ />
+                </Section>
+                <Section>
+                    <TestimonialsGrid />
+                </Section>
+                <Section>
+                    <CTASection />
+                </Section>
+                <Section>
+                    <Footer />
+                </Section>
             </div>
-            <Footer />
         </div>
     );
 };

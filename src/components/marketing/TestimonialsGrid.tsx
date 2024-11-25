@@ -320,118 +320,116 @@ const TestimonialsGrid = () => {
     };
 
     return (
-        <section className="py-24">
-            <div className="flex flex-col gap-12">
-                {/* Section Header */}
-                <div className="mx-auto max-w-2xl text-center flex flex-col gap-6">
-                    <div className="flex items-center justify-center gap-2">
-                        <div className="rounded-lg bg-purple-50 p-2">
-                            <Star className="h-5 w-5 text-purple-600" />
-                        </div>
-                        <span className="text-sm font-medium uppercase text-purple-600">
-                            TRUSTED BY FOUNDERS
-                        </span>
+        <div className="flex flex-col gap-12">
+            {/* Section Header */}
+            <div className="mx-auto max-w-2xl text-center flex flex-col gap-6">
+                <div className="flex items-center justify-center gap-2">
+                    <div className="rounded-lg bg-purple-50 p-2">
+                        <Star className="h-5 w-5 text-purple-600" />
                     </div>
-                    <h2 className="text-4xl font-medium tracking-tight md:text-5xl">
-                        Lorem ipsum dolor sit amet.{" "}
-                        <span className="text-gray-400">Lorem, ipsum dolor.</span>
-                    </h2>
-                    <p className="text-lg text-gray-600">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    </p>
+                    <span className="text-sm font-medium uppercase text-purple-600">
+                        TRUSTED BY FOUNDERS
+                    </span>
                 </div>
+                <h2 className="text-4xl font-medium tracking-tight md:text-5xl">
+                    Lorem ipsum dolor sit amet.{" "}
+                    <span className="text-gray-400">Lorem, ipsum dolor.</span>
+                </h2>
+                <p className="text-lg text-gray-600">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </p>
+            </div>
 
-                {/* Filters & Search */}
-                <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-                    {/* Rating Filters */}
-                    <div className="flex flex-wrap gap-2">
-                        {[5, 4, 3].map((rating) => (
-                            <button
-                                key={rating}
-                                onClick={() =>
-                                    setFilterRating(filterRating === rating ? null : rating)
-                                }
-                                className={`rounded-lg px-4 py-2 text-sm transition-colors ${
-                                    filterRating === rating
-                                        ? "bg-black text-white"
-                                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                                }`}
-                            >
-                                {rating} Stars
-                            </button>
-                        ))}
-                    </div>
-
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                        {/* Search */}
-                        <div className="relative">
-                            <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                            <input
-                                type="text"
-                                placeholder="Search testimonials..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full rounded-md border border-gray-300 py-2 pl-10 pr-4 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:w-64"
-                            />
-                        </div>
-
-                        {/* Sort */}
-                        <select
-                            value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value as "recent" | "rating")}
-                            className="rounded-md border border-gray-300 px-4 py-2 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+            {/* Filters & Search */}
+            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                {/* Rating Filters */}
+                <div className="flex flex-wrap gap-2">
+                    {[5, 4, 3].map((rating) => (
+                        <button
+                            key={rating}
+                            onClick={() =>
+                                setFilterRating(filterRating === rating ? null : rating)
+                            }
+                            className={`rounded-lg px-4 py-2 text-sm transition-colors ${
+                                filterRating === rating
+                                    ? "bg-black text-white"
+                                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                            }`}
                         >
-                            <option value="recent">Most Recent</option>
-                            <option value="rating">Highest Rated</option>
-                        </select>
-                    </div>
+                            {rating} Stars
+                        </button>
+                    ))}
                 </div>
 
-                {/* Testimonials Content */}
-                <div className="flex flex-col gap-12">
-                    {/* Featured Testimonials */}
-                    {featuredTestimonials.length > 0 && (
-                        <div className="grid gap-8 md:grid-cols-2">
-                            {featuredTestimonials.map((testimonial, index) => (
-                                <FeaturedTestimonialCard key={index} testimonial={testimonial} />
-                            ))}
-                        </div>
-                    )}
-
-                    {/* Regular Testimonials */}
-                    <div className="columns-1 gap-8 sm:columns-2 lg:columns-3">
-                        {displayedTestimonials.map((testimonial, index) => (
-                            <TestimonialCard key={index} testimonial={testimonial} />
-                        ))}
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                    {/* Search */}
+                    <div className="relative">
+                        <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                        <input
+                            type="text"
+                            placeholder="Search testimonials..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full rounded-md border border-gray-300 py-2 pl-10 pr-4 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:w-64"
+                        />
                     </div>
 
-                    {/* Load More Button */}
-                    {hasMore && (
-                        <div className="flex justify-center">
-                            <button
-                                onClick={loadMore}
-                                disabled={isLoading}
-                                className="flex items-center gap-2 rounded-md border border-gray-300 bg-white px-6 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-70"
-                            >
-                                {isLoading ? (
-                                    <>
-                                        <Loader className="h-4 w-4 animate-spin" />
-                                        Loading...
-                                    </>
-                                ) : (
-                                    "Load More Testimonials"
-                                )}
-                            </button>
-                        </div>
-                    )}
-
-                    {/* Testimonials Count */}
-                    <div className="text-center text-sm text-gray-500">
-                        Showing {displayedTestimonials.length} of {regularTestimonials.length} testimonials
-                    </div>
+                    {/* Sort */}
+                    <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value as "recent" | "rating")}
+                        className="rounded-md border border-gray-300 px-4 py-2 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+                    >
+                        <option value="recent">Most Recent</option>
+                        <option value="rating">Highest Rated</option>
+                    </select>
                 </div>
             </div>
-        </section>
+
+            {/* Testimonials Content */}
+            <div className="flex flex-col gap-12">
+                {/* Featured Testimonials */}
+                {featuredTestimonials.length > 0 && (
+                    <div className="grid gap-8 md:grid-cols-2">
+                        {featuredTestimonials.map((testimonial, index) => (
+                            <FeaturedTestimonialCard key={index} testimonial={testimonial} />
+                        ))}
+                    </div>
+                )}
+
+                {/* Regular Testimonials */}
+                <div className="columns-1 gap-8 sm:columns-2 lg:columns-3">
+                    {displayedTestimonials.map((testimonial, index) => (
+                        <TestimonialCard key={index} testimonial={testimonial} />
+                    ))}
+                </div>
+
+                {/* Load More Button */}
+                {hasMore && (
+                    <div className="flex justify-center">
+                        <button
+                            onClick={loadMore}
+                            disabled={isLoading}
+                            className="flex items-center gap-2 rounded-md border border-gray-300 bg-white px-6 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-70"
+                        >
+                            {isLoading ? (
+                                <>
+                                    <Loader className="h-4 w-4 animate-spin" />
+                                    Loading...
+                                </>
+                            ) : (
+                                "Load More Testimonials"
+                            )}
+                        </button>
+                    </div>
+                )}
+
+                {/* Testimonials Count */}
+                <div className="text-center text-sm text-gray-500">
+                    Showing {displayedTestimonials.length} of {regularTestimonials.length} testimonials
+                </div>
+            </div>
+        </div>
     );
 };
 

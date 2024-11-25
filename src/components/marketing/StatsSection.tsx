@@ -24,37 +24,34 @@ const stats = [
 
 export default function StatsSection() {
     return (
-        <div className="py-24 sm:py-32">
-            <div className="flex flex-col gap-16">
-                {/* Header Section */}
-                <div className="flex max-w-2xl flex-col gap-6">
-                    <p className="text-sm font-medium text-blue-600">Stats</p>
-                    <h2 className="text-4xl font-medium tracking-tight md:text-5xl">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    </h2>
-                    <p className="text-lg text-gray-600">
-                        Diam nunc lacus lacus aliquam turpis enim. Eget hac velit est euismod lacus.
-                        Est non placerat nam arcu. Cras purus nibh cursus sit eu in id. Integer vel
-                        nibh.
-                    </p>
+        <div className="flex flex-col gap-16">
+            {/* Header Section */}
+            <div className="flex max-w-2xl flex-col gap-6">
+                <p className="text-sm font-medium text-blue-600">Stats</p>
+                <h2 className="text-4xl font-medium tracking-tight md:text-5xl">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </h2>
+                <p className="text-lg text-gray-600">
+                    Diam nunc lacus lacus aliquam turpis enim. Eget hac velit est euismod lacus. Est
+                    non placerat nam arcu. Cras purus nibh cursus sit eu in id. Integer vel nibh.
+                </p>
+            </div>
+
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-12 sm:grid-rows-4">
+                {/* First column - base size (2 rows tall) */}
+                <div className="sm:col-span-3 sm:row-span-2 sm:row-start-3">
+                    <StatCard {...stats[0]} />
                 </div>
 
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 gap-8 sm:grid-cols-12 sm:grid-rows-4">
-                    {/* First column - base size (2 rows tall) */}
-                    <div className="sm:col-span-3 sm:row-span-2 sm:row-start-3">
-                        <StatCard {...stats[0]} />
-                    </div>
+                {/* Second column - 1.5x width, 2x height (4 rows tall) */}
+                <div className="sm:col-span-4 sm:row-span-4 sm:row-start-1">
+                    <StatCard {...stats[1]} heightClass="h-full" />
+                </div>
 
-                    {/* Second column - 1.5x width, 2x height (4 rows tall) */}
-                    <div className="sm:col-span-4 sm:row-span-4 sm:row-start-1">
-                        <StatCard {...stats[1]} heightClass="h-full" />
-                    </div>
-
-                    {/* Third column - 2x width, 1.5x height (3 rows tall) */}
-                    <div className="sm:col-span-5 sm:row-span-3 sm:row-start-2">
-                        <StatCard {...stats[2]} heightClass="h-full" />
-                    </div>
+                {/* Third column - 2x width, 1.5x height (3 rows tall) */}
+                <div className="sm:col-span-5 sm:row-span-3 sm:row-start-2">
+                    <StatCard {...stats[2]} heightClass="h-full" />
                 </div>
             </div>
         </div>
