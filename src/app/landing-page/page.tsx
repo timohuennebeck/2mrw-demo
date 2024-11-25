@@ -196,7 +196,19 @@ const LandingPage = () => {
                     <TestimonialsGrid />
                 </Section>
                 <Section>
-                    <CTASection />
+                    <CTASection
+                        eyebrow="Special Offer"
+                        title="Lock in €30 OFF Forever. Use 'Launch30' at checkout"
+                        description="Incididunt sint fugiat pariatur cupidatat consectetur sit cillum anim id veniam aliqua proident excepteur commodo do ea."
+                        primaryButton={{
+                            text: "Get started",
+                            onClick: () => console.log("Primary button clicked"),
+                        }}
+                        secondaryButton={{
+                            text: "Learn more",
+                            onClick: () => console.log("Secondary button clicked"),
+                        }}
+                    />
                 </Section>
                 <Section>
                     <Footer />
