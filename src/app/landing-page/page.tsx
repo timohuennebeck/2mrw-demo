@@ -25,7 +25,18 @@ const LandingPage = () => {
     return (
         <div className={`${manrope.variable} flex flex-col font-manrope`}>
             <div>
-                <PromoBanner />
+                <PromoBanner
+                    text={{
+                        desktop: "2mrw has just launched! Get 50% off with code",
+                        mobile: "Get 50% off with code",
+                        code: "LAUNCH50",
+                    }}
+                    link={{
+                        href: "/pricing",
+                        label: "Learn more",
+                    }}
+                    className="bg-black text-white"
+                />
                 <Header />
                 <HeroSection />
             </div>

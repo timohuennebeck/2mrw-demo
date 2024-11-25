@@ -4,31 +4,50 @@ import Link from "next/link";
 import { ArrowRight, X } from "lucide-react";
 import { useState } from "react";
 
-const PromoBanner = () => {
+interface PromoBannerProps {
+    text: {
+        desktop: string;
+        mobile?: string;
+        code?: string;
+    };
+    link?: {
+        href: string;
+        label: string;
+    };
+    emoji?: string;
+    className?: string;
+}
+
+const PromoBanner = ({
+    text,
+    link,
+    emoji = "🚀",
+    className = "bg-black text-white",
+}: PromoBannerProps) => {
     const [isVisible, setIsVisible] = useState(true);
 
     if (!isVisible) return null;
 
     return (
-        <div className="relative bg-black text-white">
-            <div className="flex items-center justify-center px-3 py-3 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className={`relative ${className}`}>
+            <div className="mx-auto flex max-w-7xl items-center justify-center px-3 py-3 sm:px-6 lg:px-8">
                 <div className="flex items-center gap-x-6 text-sm">
                     <div className="flex items-center gap-x-2">
-                        <span className="hidden sm:inline">🚀</span>
+                        {emoji && <span className="hidden sm:inline">{emoji}</span>}
                         <p className="font-medium">
-                            <span className="hidden sm:inline">
-                                2mrw has just launched! Get 50% off with code{" "}
-                            </span>
-                            <span className="sm:hidden">Get 50% off with code </span>
-                            <span className="font-semibold text-white">LAUNCH50</span>
+                            <span className="hidden sm:inline">{text.desktop} </span>
+                            <span className="sm:hidden">{text.mobile || text.desktop} </span>
+                            {text.code && <span className="font-semibold">{text.code}</span>}
                         </p>
-                        <Link
-                            href="/pricing"
-                            className="hidden items-center gap-1 font-semibold text-white underline-offset-4 hover:underline sm:flex"
-                        >
-                            <span>Learn more</span>
-                            <ArrowRight className="h-3 w-3" />
-                        </Link>
+                        {link && (
+                            <Link
+                                href={link.href}
+                                className="hidden items-center gap-1 font-semibold underline-offset-4 hover:underline sm:flex"
+                            >
+                                <span>{link.label}</span>
+                                <ArrowRight className="h-3 w-3" />
+                            </Link>
+                        )}
                     </div>
                 </div>
                 <button
