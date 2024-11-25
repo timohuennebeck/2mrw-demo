@@ -1,128 +1,54 @@
 import { Check } from "lucide-react";
 
-const plans = [
-    {
-        name: "Starter",
-        price: "$19",
-        period: "/month",
-        buttonVariant: "secondary",
-    },
-    {
-        name: "Growth",
-        price: "$49",
-        period: "/month",
-        buttonVariant: "primary",
-    },
-    {
-        name: "Scale",
-        price: "$99",
-        period: "/month",
-        buttonVariant: "secondary",
-    },
-];
+// Define TypeScript interfaces for our props
+interface PricingPlan {
+    name: string;
+    price: string;
+    period: string;
+    buttonVariant: string;
+}
 
-const features = [
-    {
-        category: "Features",
-        items: [
-            {
-                name: "Edge content delivery",
-                starter: true,
-                growth: true,
-                scale: true,
-            },
-            {
-                name: "Custom domains",
-                starter: "1",
-                growth: "3",
-                scale: "Unlimited",
-            },
-            {
-                name: "Team members",
-                starter: "3",
-                growth: "20",
-                scale: "Unlimited",
-            },
-            {
-                name: "Single sign-on (SSO)",
-                starter: false,
-                growth: false,
-                scale: true,
-            },
-        ],
-    },
-    {
-        category: "Reporting",
-        items: [
-            {
-                name: "Advanced analytics",
-                starter: true,
-                growth: true,
-                scale: true,
-            },
-            {
-                name: "Basic reports",
-                starter: false,
-                growth: true,
-                scale: true,
-            },
-            {
-                name: "Professional reports",
-                starter: false,
-                growth: false,
-                scale: true,
-            },
-            {
-                name: "Custom report builder",
-                starter: false,
-                growth: false,
-                scale: true,
-            },
-        ],
-    },
-    {
-        category: "Support",
-        items: [
-            {
-                name: "24/7 online support",
-                starter: true,
-                growth: true,
-                scale: true,
-            },
-            {
-                name: "Quarterly workshops",
-                starter: false,
-                growth: true,
-                scale: true,
-            },
-            {
-                name: "Priority phone support",
-                starter: false,
-                growth: false,
-                scale: true,
-            },
-            {
-                name: "1:1 onboarding tour",
-                starter: false,
-                growth: false,
-                scale: true,
-            },
-        ],
-    },
-];
+interface PricingFeatureItem {
+    name: string;
+    starter: boolean | string;
+    growth: boolean | string;
+    scale: boolean | string;
+}
 
-const PricingComparison = () => {
+interface PricingFeatureSection {
+    category: string;
+    items: PricingFeatureItem[];
+}
+
+interface PricingComparisonProps {
+    title?: string;
+    subtitle?: string;
+    description?: string;
+    plans: PricingPlan[];
+    features: PricingFeatureSection[];
+    buttonText?: string;
+    accentColor?: string;
+}
+
+const PricingComparison = ({
+    title = "Lorem ipsum dolor sit amet.",
+    subtitle = "Pricing",
+    description = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci optio nisi illum animi similique? Minus pariatur tempore aspernatur minima rerum!",
+    plans,
+    features,
+    buttonText = "Buy plan",
+    accentColor = "blue",
+}: PricingComparisonProps) => {
     return (
         <div className="flex flex-col gap-16">
             {/* Header Section */}
             <div className="text-start flex flex-col gap-6">
-                <p className="text-sm font-medium text-blue-600">Pricing</p>
+                <p className={`text-sm font-medium text-${accentColor}-600`}>{subtitle}</p>
                 <h2 className="text-4xl font-medium tracking-tight md:text-5xl">
-                    Lorem ipsum dolor sit amet.
+                    {title}
                 </h2>
                 <p className="max-w-4xl text-lg text-gray-600">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci optio nisi
-                    illum animi similique? Minus pariatur tempore aspernatur minima rerum!
+                    {description}
                 </p>
             </div>
 
@@ -143,7 +69,7 @@ const PricingComparison = () => {
                                     : "bg-gray-100 text-gray-900 hover:bg-gray-200"
                             }`}
                         >
-                            Buy plan
+                            {buttonText}
                         </button>
                     </div>
                 ))}

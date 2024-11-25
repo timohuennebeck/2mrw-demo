@@ -20,6 +20,7 @@ import { authFeatures, databaseFeatures, emailFeatures } from "@/data/marketing/
 import { featuresList } from "@/data/marketing/featuresList";
 import { faqs } from "@/data/marketing/faqs";
 import { testimonials } from "@/data/marketing/testimonials";
+import { defaultPricingFeatures, defaultPricingPlans } from "@/data/marketing/pricing";
 
 const manrope = Manrope({
     subsets: ["latin"],
@@ -183,7 +184,15 @@ const LandingPage = () => {
                     />
                 </Section>
                 <Section>
-                    <PricingComparison />
+                    <PricingComparison
+                        title="Choose Your Perfect Plan"
+                        subtitle="Pricing Options"
+                        description="Select the plan that best fits your needs."
+                        plans={defaultPricingPlans}
+                        features={defaultPricingFeatures}
+                        buttonText="Start Now"
+                        accentColor="indigo"
+                    />
                 </Section>
                 <Section>
                     <FAQ
