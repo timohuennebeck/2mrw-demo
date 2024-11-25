@@ -21,6 +21,7 @@ import { featuresList } from "@/data/marketing/featuresList";
 import { faqs } from "@/data/marketing/faqs";
 import { testimonials } from "@/data/marketing/testimonials";
 import { defaultPricingFeatures, defaultPricingPlans } from "@/data/marketing/pricing";
+import { exampleStats } from "@/data/marketing/stats";
 
 const manrope = Manrope({
     subsets: ["latin"],
@@ -105,7 +106,12 @@ const LandingPage = () => {
                     />
                 </Section>
                 <Section>
-                    <StatsSection />
+                    <StatsSection
+                        title="Your Custom Title"
+                        subtitle="Custom Stats"
+                        description="Your custom description goes here"
+                        stats={exampleStats}
+                    />
                 </Section>
                 <Section>
                     <FeaturedTestimonial
