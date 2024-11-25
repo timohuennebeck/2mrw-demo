@@ -1,6 +1,5 @@
-import { EnvelopeIcon, LockClosedIcon, ServerIcon } from "@heroicons/react/24/solid";
-import { Cog6ToothIcon, ArrowPathIcon, CircleStackIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
+import { EnvelopeIcon, LockClosedIcon } from "@heroicons/react/24/solid";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { Code } from "lucide-react";
 
 const features = [
@@ -54,12 +53,14 @@ const Features = ({ isRight }: { isRight?: boolean }) => {
                 </div>
 
                 <div className={`mt-20 flex w-full ${isRight ? "justify-end" : "justify-start"}`}>
-                    <Image
-                        src="/features/email-auth.png"
-                        alt="Product demo screenshot"
+                    <video
+                        src="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
                         width={928}
                         height={522}
                         className="rounded-lg shadow-2xl"
+                        autoPlay
+                        muted
+                        loop
                     />
                 </div>
 

@@ -13,7 +13,7 @@ const FeaturedTestimonial = () => {
 
             <div className="flex items-center justify-center gap-3">
                 <Image
-                    src="/eva-profile.png"
+                    src="https://i.imgur.com/E6nCVLy.jpeg"
                     alt="Eva Elle"
                     width={40}
                     height={40}

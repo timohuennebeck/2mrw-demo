@@ -19,12 +19,14 @@ const DemoSection = () => {
 
             {/* Demo Image */}
             <div className="relative w-full max-w-5xl">
-                <Image
-                    src="/demo-screenshot.png"
-                    alt="Product demo screenshot"
+                <video
+                    src="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
                     width={1200}
                     height={675}
                     className="rounded-lg shadow-2xl"
+                    autoPlay
+                    muted
+                    loop
                 />
             </div>
         </section>

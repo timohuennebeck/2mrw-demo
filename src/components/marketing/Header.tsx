@@ -9,7 +9,7 @@ const Header = () => {
                 {/* Logo */}
                 <Link href="/" className="flex items-center">
                     <Image
-                        src="/logo.svg" // Make sure to add your logo to the public folder
+                        src="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
                         alt="Logo"
                         width={32}
                         height={32}

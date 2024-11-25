@@ -7,7 +7,7 @@ const TestimonialRating = () => {
                 {[1, 2, 3, 4, 5].map((avatar) => (
                     <Image
                         key={avatar}
-                        src="/avatar-circle.png"
+                        src="https://i.imgur.com/E6nCVLy.jpeg"
                         alt="User avatar"
                         width={32}
                         height={32}

@@ -8,7 +8,6 @@ import FeaturedTestimonial from "@/components/marketing/FeatureTestimonial";
 import Footer from "@/components/marketing/Footer";
 import Header from "@/components/marketing/Header";
 import HeroSection from "@/components/marketing/HeroSection";
-import LogoCloud from "@/components/marketing/LogoClouds";
 import PricingComparison from "@/components/marketing/PricingComparison";
 import PromoBanner from "@/components/marketing/PromoBanner";
 import StatsSection from "@/components/marketing/StatsSection";

@@ -19,7 +19,7 @@ const beforeAfter: { before: BeforeAfterItem; after: BeforeAfterItem } = {
             { text: "Dignissimos asperiores possimus laboriosam", isPositive: false },
             { text: "Iusto quo ducimus maiores eveniet", isPositive: false },
         ],
-        imagePath: "/before-screenshot.png",
+        imagePath: "https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4",
     },
     after: {
         title: "Lorem ipsum dolor sit amet.",
@@ -29,7 +29,7 @@ const beforeAfter: { before: BeforeAfterItem; after: BeforeAfterItem } = {
             { text: "Dignissimos asperiores possimus laboriosam", isPositive: true },
             { text: "Iusto quo ducimus maiores eveniet", isPositive: true },
         ],
-        imagePath: "/after-screenshot.png",
+        imagePath: "https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4",
     },
 };
 
@@ -69,12 +69,15 @@ const BeforeAfter = () => {
                                 </li>
                             ))}
                         </ul>
-                        <div className="relative aspect-video w-full overflow-hidden rounded-lg border shadow-lg">
-                            <Image
+                        <div className="relative mt-12 aspect-video w-full overflow-hidden rounded-lg border shadow-lg">
+                            <video
                                 src={beforeAfter.before.imagePath}
-                                alt="Before using our boilerplate"
-                                fill
-                                className="object-cover"
+                                width={1200}
+                                height={675}
+                                className="rounded-lg shadow-2xl"
+                                autoPlay
+                                muted
+                                loop
                             />
                         </div>
                     </div>
@@ -95,12 +98,15 @@ const BeforeAfter = () => {
                                 </li>
                             ))}
                         </ul>
-                        <div className="relative aspect-video w-full overflow-hidden rounded-lg border shadow-lg">
-                            <Image
+                        <div className="relative mt-12 aspect-video w-full overflow-hidden rounded-lg border shadow-lg">
+                            <video
                                 src={beforeAfter.after.imagePath}
-                                alt="After using our boilerplate"
-                                fill
-                                className="object-cover"
+                                width={1200}
+                                height={675}
+                                className="rounded-lg shadow-2xl"
+                                autoPlay
+                                muted
+                                loop
                             />
                         </div>
                     </div>

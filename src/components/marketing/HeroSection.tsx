@@ -5,7 +5,7 @@ import TestimonialRating from "./TestimonialRating";
 
 const HeroSection = () => {
     return (
-        <section className="flex flex-col items-center justify-center px-4 py-20 text-center">
+        <section className="flex flex-col items-center justify-center px-4 py-10 text-center">
             {/* Promotional Banner */}
             <div className="mb-8 rounded-lg bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600">
                 GET €30 OFF - 50 CODES LEFT
@@ -41,12 +41,14 @@ const HeroSection = () => {
 
             {/* Demo Image */}
             <div className="relative w-full max-w-5xl">
-                <Image
-                    src="/demo-screenshot.png"
-                    alt="Product demo screenshot"
+                <video
+                    src="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
                     width={1200}
                     height={675}
                     className="rounded-lg shadow-2xl"
+                    autoPlay
+                    muted
+                    loop
                 />
             </div>
         </section>

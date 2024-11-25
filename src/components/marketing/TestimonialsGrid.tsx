@@ -25,129 +25,83 @@ interface Testimonial {
 const testimonials: Testimonial[] = [
     {
         content: {
-            text: "Thanks for building such an empowering tool, especially for designers! The site went from Figma to live in less than a week!",
+            text: "I was blown away by the ease of use and the speed at which I could launch my MVP. The support team was always there to help.",
         },
         author: {
-            name: "Eva Elle",
-            role: "Marketing Director",
-            company: "BC",
-            image: "/eva-profile.png",
+            name: "Emily Chen",
+            role: "Founder",
+            company: "GreenTech Inc.",
+            image: "https://i.imgur.com/E6nCVLy.jpeg",
         },
         rating: 5,
         featured: true,
-        date: "2024-03-15",
+        date: "2024-03-10",
     },
     {
         content: {
-            text: "Thanks for building such an empowering tool, especially for designers! The site went from Figma to live in less than a week!",
+            text: "The platform's flexibility and customization options allowed me to tailor my product to my target audience's needs.",
         },
         author: {
-            name: "Eva Elle",
-            role: "Marketing Director",
-            company: "BC",
-            image: "/eva-profile.png",
+            name: "Ryan Thompson",
+            role: "Product Manager",
+            company: "TechCorp",
+            image: "https://i.imgur.com/E6nCVLy.jpeg",
         },
         rating: 5,
         featured: true,
+        date: "2024-03-12",
+    },
+    {
+        content: {
+            text: "The seamless integration with third-party services saved me a ton of time and resources. Highly recommend!",
+        },
+        author: {
+            name: "Samantha Lee",
+            role: "CTO",
+            company: "FinTech Solutions",
+            image: "https://i.imgur.com/E6nCVLy.jpeg",
+        },
+        rating: 5,
+        date: "2024-03-11",
+    },
+    {
+        content: {
+            text: "The user interface is incredibly intuitive, making it easy for my team to onboard and start building right away.",
+        },
+        author: {
+            name: "Michael Brown",
+            role: "DevOps Engineer",
+            company: "HealthTech Innovations",
+            image: "https://i.imgur.com/E6nCVLy.jpeg",
+        },
+        rating: 4,
+        date: "2024-03-13",
+    },
+    {
+        content: {
+            text: "The scalability of the platform has been a game-changer for our business. We've been able to grow rapidly without any hiccups.",
+        },
+        author: {
+            name: "Jessica Patel",
+            role: "CEO",
+            company: "EduTech Ventures",
+            image: "https://i.imgur.com/E6nCVLy.jpeg",
+        },
+        rating: 5,
+        date: "2024-03-14",
+    },
+    {
+        content: {
+            text: "The customer support team has been responsive and helpful throughout our journey. We couldn't be happier with the service.",
+        },
+        author: {
+            name: "David Kim",
+            role: "Marketing Director",
+            company: "RetailTech Solutions",
+            image: "https://i.imgur.com/E6nCVLy.jpeg",
+        },
+        rating: 5,
         date: "2024-03-15",
-    },
-    {
-        content: {
-            text: "Thanks for building such an empowering tool, especially for designers! The site went from Figma to live in less than a week!",
-            highlights: ["especially for designers!"],
-        },
-        author: {
-            name: "Michael Chen",
-            role: "Technical Lead",
-            company: "StartupX",
-            image: "/testimonials/michael.png",
-        },
-        rating: 5,
-        date: "2024-03-14",
-    },
-    {
-        content: {
-            text: "Thanks for building such an empowering tool, especially for designers! The site went from Figma to live in less than a week!",
-            highlights: ["The site went from Figma to live in less than a week!"],
-        },
-        author: {
-            name: "Michael Chen",
-            role: "Technical Lead",
-            company: "StartupX",
-            image: "/testimonials/michael.png",
-        },
-        rating: 4,
-        date: "2024-03-14",
-    },
-    {
-        content: {
-            text: "Thanks for building such an empowering tool, especially for designers! The site went from Figma to live in less than a week!",
-            highlights: ["less than a week"],
-        },
-        author: {
-            name: "Michael Chen",
-            role: "Technical Lead",
-            company: "StartupX",
-            image: "/testimonials/michael.png",
-        },
-        rating: 4,
-        date: "2024-03-14",
-    },
-    {
-        content: {
-            text: "Thanks for building such an empowering tool, especially for designers! The site went from Figma to live in less than a week!",
-            highlights: ["less than a week"],
-        },
-        author: {
-            name: "Michael Chen",
-            role: "Technical Lead",
-            company: "StartupX",
-            image: "/testimonials/michael.png",
-        },
-        rating: 3,
-        date: "2024-03-14",
-    },
-    {
-        content: {
-            text: "Thanks for building such an empowering tool, especially for designers! The site went from Figma to live in less than a week!",
-            highlights: ["less than a week"],
-        },
-        author: {
-            name: "Michael Chen",
-            role: "Technical Lead",
-            company: "StartupX",
-            image: "/testimonials/michael.png",
-        },
-        rating: 3,
-        date: "2024-03-14",
-    },
-    {
-        content: {
-            text: "Thanks for building such an empowering tool, especially for designers! The site went from Figma to live in less than a week!",
-            highlights: ["less than a week"],
-        },
-        author: {
-            name: "Michael Chen",
-            role: "Technical Lead",
-            company: "StartupX",
-            image: "/testimonials/michael.png",
-        },
-        rating: 5,
-        date: "2024-03-14",
-    },
-    {
-        content: {
-            text: "Thanks for building such an empowering tool, especially for designers! The site went from Figma to live in less than a week!",
-            highlights: ["less than a week"],
-        },
-        author: {
-            name: "Michael Chen",
-            role: "Technical Lead",
-            company: "StartupX",
-            image: "/testimonials/michael.png",
-        },
-        rating: 4,
-        date: "2024-03-14",
     },
 ];
 
