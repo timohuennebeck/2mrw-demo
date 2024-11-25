@@ -180,7 +180,7 @@ const LandingPage = () => {
                         heading="Your Custom Heading"
                         description="Your custom description text goes here."
                         features={featuresList}
-                        sectionTitle="Optional Custom Section Title" // optional
+                        sectionTitle="Optional Custom Section Title"
                     />
                 </Section>
                 <Section>
