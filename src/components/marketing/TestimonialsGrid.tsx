@@ -2,11 +2,14 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Star, Loader, SearchIcon, BadgeCheck } from "lucide-react";
+import { Star, Loader, SearchIcon } from "lucide-react";
 import QuoteImg from "@/assets/quotes-white.svg";
 
 interface Testimonial {
-    content: string;
+    content: {
+        text: string;
+        highlights?: string[];
+    };
     author: {
         name: string;
         role: string;
@@ -21,8 +24,9 @@ interface Testimonial {
 
 const testimonials: Testimonial[] = [
     {
-        content:
-            "Thanks for building such an empowering tool, especially for designers! The site went from Figma to live in less than a week!",
+        content: {
+            text: "Thanks for building such an empowering tool, especially for designers! The site went from Figma to live in less than a week!",
+        },
         author: {
             name: "Eva Elle",
             role: "Marketing Director",
@@ -34,8 +38,9 @@ const testimonials: Testimonial[] = [
         date: "2024-03-15",
     },
     {
-        content:
-            "Thanks for building such an empowering tool, especially for designers! The site went from Figma to live in less than a week!",
+        content: {
+            text: "Thanks for building such an empowering tool, especially for designers! The site went from Figma to live in less than a week!",
+        },
         author: {
             name: "Eva Elle",
             role: "Marketing Director",
@@ -47,8 +52,10 @@ const testimonials: Testimonial[] = [
         date: "2024-03-15",
     },
     {
-        content:
-            "This boilerplate saved us weeks of development time. The authentication and Stripe integration worked flawlessly out of the box.",
+        content: {
+            text: "Thanks for building such an empowering tool, especially for designers! The site went from Figma to live in less than a week!",
+            highlights: ["especially for designers!"],
+        },
         author: {
             name: "Michael Chen",
             role: "Technical Lead",
@@ -59,8 +66,10 @@ const testimonials: Testimonial[] = [
         date: "2024-03-14",
     },
     {
-        content:
-            "This boilerplate saved us weeks of development time. The authentication and Stripe integration worked flawlessly out of the box.",
+        content: {
+            text: "Thanks for building such an empowering tool, especially for designers! The site went from Figma to live in less than a week!",
+            highlights: ["The site went from Figma to live in less than a week!"],
+        },
         author: {
             name: "Michael Chen",
             role: "Technical Lead",
@@ -71,8 +80,10 @@ const testimonials: Testimonial[] = [
         date: "2024-03-14",
     },
     {
-        content:
-            "This boilerplate saved us weeks of development time. The authentication and Stripe integration worked flawlessly out of the box.",
+        content: {
+            text: "Thanks for building such an empowering tool, especially for designers! The site went from Figma to live in less than a week!",
+            highlights: ["less than a week"],
+        },
         author: {
             name: "Michael Chen",
             role: "Technical Lead",
@@ -83,8 +94,10 @@ const testimonials: Testimonial[] = [
         date: "2024-03-14",
     },
     {
-        content:
-            "This boilerplate saved us weeks of development time. The authentication and Stripe integration worked flawlessly out of the box.",
+        content: {
+            text: "Thanks for building such an empowering tool, especially for designers! The site went from Figma to live in less than a week!",
+            highlights: ["less than a week"],
+        },
         author: {
             name: "Michael Chen",
             role: "Technical Lead",
@@ -95,8 +108,10 @@ const testimonials: Testimonial[] = [
         date: "2024-03-14",
     },
     {
-        content:
-            "This boilerplate saved us weeks of development time. The authentication and Stripe integration worked flawlessly out of the box.",
+        content: {
+            text: "Thanks for building such an empowering tool, especially for designers! The site went from Figma to live in less than a week!",
+            highlights: ["less than a week"],
+        },
         author: {
             name: "Michael Chen",
             role: "Technical Lead",
@@ -107,8 +122,10 @@ const testimonials: Testimonial[] = [
         date: "2024-03-14",
     },
     {
-        content:
-            "This boilerplate saved us weeks of development time. The authentication and Stripe integration worked flawlessly out of the box.",
+        content: {
+            text: "Thanks for building such an empowering tool, especially for designers! The site went from Figma to live in less than a week!",
+            highlights: ["less than a week"],
+        },
         author: {
             name: "Michael Chen",
             role: "Technical Lead",
@@ -119,8 +136,10 @@ const testimonials: Testimonial[] = [
         date: "2024-03-14",
     },
     {
-        content:
-            "This boilerplate saved us weeks of development time. The authentication and Stripe integration worked flawlessly out of the box.",
+        content: {
+            text: "Thanks for building such an empowering tool, especially for designers! The site went from Figma to live in less than a week!",
+            highlights: ["less than a week"],
+        },
         author: {
             name: "Michael Chen",
             role: "Technical Lead",
@@ -128,116 +147,128 @@ const testimonials: Testimonial[] = [
             image: "/testimonials/michael.png",
         },
         rating: 4,
-        date: "2024-03-14",
-    },
-    {
-        content:
-            "This boilerplate saved us weeks of development time. The authentication and Stripe integration worked flawlessly out of the box.",
-        author: {
-            name: "Michael Chen",
-            role: "Technical Lead",
-            company: "StartupX",
-            image: "/testimonials/michael.png",
-        },
-        rating: 4,
-        date: "2024-03-14",
-    },
-    {
-        content:
-            "This boilerplate saved us weeks of development time. The authentication and Stripe integration worked flawlessly out of the box.",
-        author: {
-            name: "Michael Chen",
-            role: "Technical Lead",
-            company: "StartupX",
-            image: "/testimonials/michael.png",
-        },
-        rating: 5,
-        date: "2024-03-14",
-    },
-    {
-        content:
-            "This boilerplate saved us weeks of development time. The authentication and Stripe integration worked flawlessly out of the box.",
-        author: {
-            name: "Michael Chen",
-            role: "Technical Lead",
-            company: "StartupX",
-            image: "/testimonials/michael.png",
-        },
-        rating: 5,
         date: "2024-03-14",
     },
 ];
 
 const TESTIMONIALS_PER_PAGE = 6;
 
-const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => (
-    <div className="flex flex-col justify-between rounded-lg border border-gray-200 p-8 transition-shadow hover:shadow-md">
-        <div>
-            <div className="mb-4 flex items-center justify-between">
-                {testimonial.rating && (
-                    <div className="flex gap-1">
-                        {[...Array(testimonial.rating)].map((_, i) => (
-                            <Star key={i} className="h-5 w-5 fill-current" fill="currentColor" />
-                        ))}
-                    </div>
-                )}
-            </div>
-            <blockquote className="mb-8 text-lg text-gray-900">"{testimonial.content}"</blockquote>
-        </div>
-        <div className="flex flex-row gap-3">
-            <Image
-                src={testimonial.author.image}
-                alt={testimonial.author.name}
-                width={40}
-                height={40}
-                className="h-10 w-10 rounded-full bg-gray-200"
-            />
-            <div>
-                <div className="font-medium">{testimonial.author.name}</div>
-                <div className="text-sm text-gray-500">
-                    {testimonial.author.role} @{testimonial.author.company}
-                </div>
-                {testimonial.date && (
-                    <span className="text-xs text-gray-400">
-                        {new Date(testimonial.date).toLocaleDateString("en-US", {
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric",
-                        })}
-                    </span>
-                )}
-            </div>
-        </div>
-    </div>
-);
+const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
+    const renderContent = (content: Testimonial["content"]) => {
+        if (typeof content === "string") return `"${content}"`;
 
-const FeaturedTestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => (
-    <div className="rounded-lg bg-black p-8 text-white">
-        <div className="flex h-full flex-col justify-between">
+        let result = content.text;
+        content.highlights?.forEach((highlight) => {
+            result = result.replace(
+                highlight,
+                `<span class="rounded-lg bg-blue-50 px-2 py-0.5 text-blue-600">${highlight}</span>`,
+            );
+        });
+
+        return (
+            <p
+                className="mb-8 text-lg text-gray-900"
+                dangerouslySetInnerHTML={{ __html: `"${result}"` }}
+            />
+        );
+    };
+
+    return (
+        <div className="flex flex-col justify-between rounded-lg border border-gray-200 p-8 transition-shadow hover:shadow-md">
             <div>
-                <Image src={QuoteImg} alt="Quote" width={48} height={48} className="mb-6" />
-                <blockquote className="mb-8 text-xl font-medium">
-                    "{testimonial.content}"
+                <div className="mb-4 flex items-center justify-between">
+                    {testimonial.rating && (
+                        <div className="flex gap-1">
+                            {[...Array(testimonial.rating)].map((_, i) => (
+                                <Star
+                                    key={i}
+                                    className="h-5 w-5 fill-current"
+                                    fill="currentColor"
+                                />
+                            ))}
+                        </div>
+                    )}
+                </div>
+                <blockquote className="mb-8 text-lg text-gray-900">
+                    {renderContent(testimonial.content)}
                 </blockquote>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-row gap-3">
                 <Image
                     src={testimonial.author.image}
                     alt={testimonial.author.name}
-                    width={48}
-                    height={48}
-                    className="h-12 w-12 rounded-full bg-gray-800"
+                    width={40}
+                    height={40}
+                    className="h-10 w-10 rounded-full bg-gray-200"
                 />
                 <div>
                     <div className="font-medium">{testimonial.author.name}</div>
-                    <div className="text-sm text-gray-400">
+                    <div className="text-sm text-gray-500">
                         {testimonial.author.role} @{testimonial.author.company}
+                    </div>
+                    {testimonial.date && (
+                        <span className="text-xs text-gray-400">
+                            {new Date(testimonial.date).toLocaleDateString("en-US", {
+                                month: "long",
+                                day: "numeric",
+                                year: "numeric",
+                            })}
+                        </span>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const FeaturedTestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
+    const renderContent = (content: Testimonial["content"]) => {
+        if (typeof content === "string") return `"${content}"`;
+
+        let result = content.text;
+        content.highlights?.forEach((highlight) => {
+            result = result.replace(
+                highlight,
+                `<span class="rounded-lg bg-white/10 px-2 py-0.5 text-white">${highlight}</span>`,
+            );
+        });
+
+        return (
+            <p
+                className="mb-8 text-xl font-medium"
+                dangerouslySetInnerHTML={{ __html: `"${result}"` }}
+            />
+        );
+    };
+
+    return (
+        <div className="rounded-lg bg-black p-8 text-white">
+            <div className="flex h-full flex-col justify-between">
+                <div>
+                    <Image src={QuoteImg} alt="Quote" width={48} height={48} className="mb-6" />
+                    <blockquote className="mb-8 text-xl font-medium">
+                        {renderContent(testimonial.content)}
+                    </blockquote>
+                </div>
+                <div className="flex items-center gap-3">
+                    <Image
+                        src={testimonial.author.image}
+                        alt={testimonial.author.name}
+                        width={48}
+                        height={48}
+                        className="h-12 w-12 rounded-full bg-gray-800"
+                    />
+                    <div>
+                        <div className="font-medium">{testimonial.author.name}</div>
+                        <div className="text-sm text-gray-400">
+                            {testimonial.author.role} @{testimonial.author.company}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 const TestimonialsGrid = () => {
     const [displayCount, setDisplayCount] = useState(TESTIMONIALS_PER_PAGE);
@@ -250,7 +281,7 @@ const TestimonialsGrid = () => {
     let filteredTestimonials = testimonials.filter((testimonial) => {
         const matchesRating = filterRating ? testimonial.rating === filterRating : true;
         const matchesSearch = searchTerm
-            ? testimonial.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            ? testimonial.content.text.toLowerCase().includes(searchTerm.toLowerCase()) ||
               testimonial.author.name.toLowerCase().includes(searchTerm.toLowerCase())
             : true;
         return matchesRating && matchesSearch;
@@ -261,7 +292,6 @@ const TestimonialsGrid = () => {
         if (sortBy === "rating") {
             return (b.rating || 0) - (a.rating || 0);
         }
-        // For "recent" sort, assuming we have dates
         return new Date(b.date || "").getTime() - new Date(a.date || "").getTime();
     });
 
