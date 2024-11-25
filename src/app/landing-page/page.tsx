@@ -72,7 +72,33 @@ const LandingPage = () => {
                     />
                 </Section>
                 <Section>
-                    <BeforeAfter />
+                    <BeforeAfter
+                        heading={{
+                            eyebrow: "Compare",
+                            title: "See the difference",
+                            titleHighlight: "between before and after using our solution",
+                            description:
+                                "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore.",
+                        }}
+                        before={{
+                            title: "Without Our Solution",
+                            bulletPoints: [
+                                { text: "Manual process", isPositive: false },
+                                { text: "Time consuming", isPositive: false },
+                            ],
+                            imagePath:
+                                "https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4",
+                        }}
+                        after={{
+                            title: "With Our Solution",
+                            bulletPoints: [
+                                { text: "Automated process", isPositive: true },
+                                { text: "Save hours of time", isPositive: true },
+                            ],
+                            imagePath:
+                                "https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4",
+                        }}
+                    />
                 </Section>
                 <Section>
                     <StatsSection />
