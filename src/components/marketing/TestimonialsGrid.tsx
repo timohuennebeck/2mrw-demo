@@ -174,7 +174,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
     };
 
     return (
-        <div className="flex flex-col justify-between rounded-lg border border-gray-200 p-8 transition-shadow hover:shadow-md">
+        <div className="flex flex-col justify-between rounded-lg border border-gray-200 p-8">
             <div>
                 <div className="mb-4 flex items-center justify-between">
                     {testimonial.rating && (
