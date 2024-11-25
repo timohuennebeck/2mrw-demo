@@ -14,6 +14,7 @@ import PromoBanner from "@/components/marketing/PromoBanner";
 import StatsSection from "@/components/marketing/StatsSection";
 import TestimonialsGrid from "@/components/marketing/TestimonialsGrid";
 import { Manrope } from "next/font/google";
+import { authFeatures, databaseFeatures, emailFeatures } from "@/data/marketing/features";
 
 const manrope = Manrope({
     subsets: ["latin"],
@@ -42,16 +43,44 @@ const LandingPage = () => {
                     <FeaturedTestimonial />
                 </Section>
                 <Section>
-                    <Features />
+                    <Features
+                        features={authFeatures}
+                        title="End-to-End Testing."
+                        subtitle="Built-in test coverage ensuring reliable authentication, billing, and user flows."
+                        badge={{
+                            text: "E2E TESTS WITH CYPRESS",
+                            bgColor: "bg-purple-50",
+                            textColor: "text-purple-600",
+                        }}
+                        videoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
+                    />
                 </Section>
                 <Section>
-                    <Features videoOnLeft />
+                    <Features
+                        videoOnLeft
+                        features={emailFeatures}
+                        title="Emails."
+                        subtitle="Built-in test coverage ensuring reliable authentication, billing, and user flows."
+                        badge={{
+                            text: "EMAILS WITH REACT EMAIL",
+                            bgColor: "bg-blue-50",
+                            textColor: "text-blue-600",
+                        }}
+                        videoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
+                    />
                 </Section>
                 <Section>
-                    <Features />
-                </Section>
-                <Section>
-                    <Features videoOnLeft />
+                    <Features
+                        features={databaseFeatures}
+                        title="Database."
+                        subtitle="Built-in test coverage ensuring reliable authentication, billing, and user flows."
+                        badge={{
+                            text: "DATABASE WITH SUPABASE",
+                            bgColor: "bg-orange-50",
+                            textColor: "text-orange-600",
+                        }}
+                        videoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
+                    />
                 </Section>
                 <Section>
                     <FeaturedTestimonial />
