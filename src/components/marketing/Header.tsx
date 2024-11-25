@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 
 const Header = () => {
     return (
-        <header className="fixed left-0 right-0 top-0 z-50 bg-white/80 backdrop-blur-md">
+        <header className="bg-white/80 backdrop-blur-md">
             <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-8 sm:px-6 lg:px-8">
                 {/* Logo */}
                 <Link href="/" className="flex items-center">

@@ -19,9 +19,11 @@ const manrope = Manrope({
 
 const LandingPage = () => {
     return (
-        <div className={`${manrope.variable} font-manrope flex flex-col gap-20`}>
-            <Header />
-            <HeroSection />
+        <div className={`${manrope.variable} flex flex-col gap-20 font-manrope`}>
+            <div>
+                <Header />
+                <HeroSection />
+            </div>
             <FeaturedTestimonial />
             <BeforeAfter />
             <FeaturedTestimonial />

@@ -5,7 +5,7 @@ import TestimonialRating from "./TestimonialRating";
 
 const HeroSection = () => {
     return (
-        <section className="mt-12 flex flex-col items-center justify-center px-4 py-20 text-center">
+        <section className="flex flex-col items-center justify-center px-4 py-20 text-center">
             {/* Promotional Banner */}
             <div className="mb-8 rounded-lg bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600">
                 GET €30 OFF - 50 CODES LEFT
