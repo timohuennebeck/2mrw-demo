@@ -6,37 +6,37 @@ export type FooterLink = {
 export type FooterLinks = {
     solutions: FooterLink[];
     support: FooterLink[];
-    company: FooterLink[];
+    product: FooterLink[];
     legal: FooterLink[];
 };
 
 export const footerLinks: FooterLinks = {
     solutions: [
-        { name: "Marketing", href: "/marketing" },
-        { name: "Analytics", href: "/analytics" },
-        { name: "Automation", href: "/automation" },
-        { name: "Commerce", href: "/commerce" },
-        { name: "Insights", href: "/insights" },
+        { name: "Lorem ipsum", href: "/lorem" },
+        { name: "Dolor sit", href: "/dolor" },
+        { name: "Amet consectetur", href: "/amet" },
+        { name: "Adipiscing elit", href: "/adipiscing" },
+        { name: "Sed do", href: "/sed" },
     ],
     support: [
-        { name: "Submit ticket", href: "/support" },
-        { name: "Documentation", href: "/docs" },
-        { name: "Guides", href: "/guides" },
+        { name: "Eiusmod tempor", href: "/tempor" },
+        { name: "Incididunt ut", href: "/incididunt" },
+        { name: "Labore et", href: "/labore" },
     ],
-    company: [
-        { name: "About", href: "/about" },
-        { name: "Blog", href: "/blog" },
-        { name: "Jobs", href: "/jobs" },
-        { name: "Press", href: "/press" },
+    product: [
+        { name: "Dolore magna", href: "/dolore" },
+        { name: "Aliqua ut", href: "/aliqua" },
+        { name: "Enim ad", href: "/enim" },
+        { name: "Minim veniam", href: "/minim" },
     ],
     legal: [
-        { name: "Terms of service", href: "/terms" },
-        { name: "Privacy policy", href: "/privacy" },
-        { name: "License", href: "/license" },
+        { name: "Quis nostrud", href: "/quis" },
+        { name: "Exercitation ullamco", href: "/exercitation" },
+        { name: "Laboris nisi", href: "/laboris" },
     ],
 };
 
 export const bottomLinks: FooterLink[] = [
-    { name: "Terms and Conditions", href: "/privacy" },
-    { name: "Changelog", href: "/changelog" },
+    { name: "Ut aliquip ex", href: "/aliquip" },
+    { name: "Commodo consequat", href: "/commodo" },
 ];

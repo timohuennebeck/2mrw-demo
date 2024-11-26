@@ -299,7 +299,7 @@ const UserProfilePage = () => {
                                     name="name"
                                     value={firstName}
                                     onChange={(value) => setFirstName(value)}
-                                    placeholder="Elon Musk"
+                                    placeholder="Timo Huennebeck"
                                 />
                             </div>
                         </div>

@@ -9,22 +9,17 @@ interface Stat {
 
 interface StatsProps {
     title: string;
-    subtitle: string;
+    eyebrow: string;
     description: string;
     stats: Stat[];
 }
 
-export default function StatsSection({
-    title,
-    subtitle = "Stats",
-    description,
-    stats,
-}: StatsProps) {
+export default function StatsSection({ title, eyebrow = "Stats", description, stats }: StatsProps) {
     return (
         <div className="flex flex-col gap-16">
             {/* Header Section */}
             <div className="flex flex-col gap-6">
-                <p className="text-sm font-medium text-blue-600">{subtitle}</p>
+                <p className="text-sm font-medium text-blue-600">{eyebrow}</p>
                 <h2 className="max-w-4xl text-4xl font-medium tracking-tight md:text-5xl">
                     {title}
                 </h2>

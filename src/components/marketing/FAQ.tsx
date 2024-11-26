@@ -10,14 +10,14 @@ interface FAQItem {
 
 interface FAQProps {
     title?: string;
-    subtitle?: string;
+    eyebrow?: string;
     tagline?: string;
     items: FAQItem[];
 }
 
 const FAQ = ({
     title = "Your questions answered.",
-    subtitle = "FAQ",
+    eyebrow = "FAQ",
     tagline = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est magni similique, in cum architecto voluptatibus?",
     items = [],
 }: FAQProps) => {
@@ -27,7 +27,7 @@ const FAQ = ({
         <div className="grid grid-cols-1 gap-20 md:grid-cols-3">
             {/* Left Column - Title */}
             <div className="flex flex-col gap-4">
-                <p className="text-sm font-medium text-blue-600">{subtitle}</p>
+                <p className="text-sm font-medium text-blue-600">{eyebrow}</p>
                 <h2 className="text-4xl font-medium tracking-tight">{title}</h2>
                 <p className="text-lg text-gray-600">{tagline}</p>
             </div>
@@ -38,9 +38,7 @@ const FAQ = ({
                     {items.map((faq, index) => (
                         <div key={index} className="flex flex-col gap-3 py-6">
                             <button
-                                onClick={() =>
-                                    setOpenIndex(openIndex === index ? null : index)
-                                }
+                                onClick={() => setOpenIndex(openIndex === index ? null : index)}
                                 className="flex w-full items-start justify-between text-left"
                             >
                                 <span className="text-base font-medium text-gray-900">

@@ -27,7 +27,6 @@ interface PricingComparisonProps {
     plans: PricingPlan[];
     features: PricingFeatureSection[];
     buttonText?: string;
-    accentColor?: string;
 }
 
 const PricingComparison = ({
@@ -37,26 +36,21 @@ const PricingComparison = ({
     plans,
     features,
     buttonText = "Buy plan",
-    accentColor = "blue",
 }: PricingComparisonProps) => {
     return (
         <div className="flex flex-col gap-16">
             {/* Header Section */}
-            <div className="text-start flex flex-col gap-6">
-                <p className={`text-sm font-medium text-${accentColor}-600`}>{subtitle}</p>
-                <h2 className="text-4xl font-medium tracking-tight md:text-5xl">
-                    {title}
-                </h2>
-                <p className="max-w-4xl text-lg text-gray-600">
-                    {description}
-                </p>
+            <div className="flex flex-col gap-6 text-start">
+                <p className="text-sm font-medium text-blue-600">{subtitle}</p>
+                <h2 className="text-4xl font-medium tracking-tight md:text-5xl">{title}</h2>
+                <p className="max-w-4xl text-lg text-gray-600">{description}</p>
             </div>
 
             {/* Plan Headers */}
             <div className="grid grid-cols-4 gap-8">
                 <div className="col-span-1" />
                 {plans.map((plan) => (
-                    <div key={plan.name} className="col-span-1 text-center flex flex-col gap-6">
+                    <div key={plan.name} className="col-span-1 flex flex-col gap-6 text-center">
                         <h3 className="text-lg font-medium">{plan.name}</h3>
                         <div>
                             <span className="text-4xl font-medium">{plan.price}</span>

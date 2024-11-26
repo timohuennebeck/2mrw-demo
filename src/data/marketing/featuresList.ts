@@ -1,34 +1,34 @@
 export const featuresList = [
     {
-        title: "Invite team members",
-        description: "Rerum repellat labore necessitatibus reprehenderit molestiae praesentium.",
+        title: "Lorem ipsum dolor sit.",
+        description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sequi fuga quibusdam amet quo nihil.",
     },
     {
-        title: "Invite team members",
-        description: "Rerum repellat labore necessitatibus reprehenderit molestiae praesentium.",
+        title: "Lorem ipsum dolor sit.",
+        description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sequi fuga quibusdam amet quo nihil.",
     },
     {
-        title: "Invite team members",
-        description: "Rerum repellat labore necessitatibus reprehenderit molestiae praesentium.",
+        title: "Lorem ipsum dolor sit.",
+        description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sequi fuga quibusdam amet quo nihil.",
     },
     {
-        title: "Invite team members",
-        description: "Rerum repellat labore necessitatibus reprehenderit molestiae praesentium.",
+        title: "Lorem ipsum dolor sit.",
+        description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sequi fuga quibusdam amet quo nihil.",
     },
     {
-        title: "Invite team members",
-        description: "Rerum repellat labore necessitatibus reprehenderit molestiae praesentium.",
+        title: "Lorem ipsum dolor sit.",
+        description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sequi fuga quibusdam amet quo nihil.",
     },
     {
-        title: "Invite team members",
-        description: "Rerum repellat labore necessitatibus reprehenderit molestiae praesentium.",
+        title: "Lorem ipsum dolor sit.",
+        description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sequi fuga quibusdam amet quo nihil.",
     },
     {
-        title: "Invite team members",
-        description: "Rerum repellat labore necessitatibus reprehenderit molestiae praesentium.",
+        title: "Lorem ipsum dolor sit.",
+        description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sequi fuga quibusdam amet quo nihil.",
     },
     {
-        title: "Invite team members",
-        description: "Rerum repellat labore necessitatibus reprehenderit molestiae praesentium.",
+        title: "Lorem ipsum dolor sit.",
+        description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sequi fuga quibusdam amet quo nihil.",
     },
 ];

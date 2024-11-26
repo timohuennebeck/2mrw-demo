@@ -10,7 +10,7 @@ type FooterLink = {
 type FooterLinks = {
     solutions: FooterLink[];
     support: FooterLink[];
-    company: FooterLink[];
+    product: FooterLink[];
     legal: FooterLink[];
 };
 

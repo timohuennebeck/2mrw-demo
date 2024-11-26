@@ -13,7 +13,6 @@ interface BeforeAfterProps {
     heading?: {
         eyebrow?: string;
         title: string;
-        titleHighlight?: string;
         description?: string;
     };
     before: BeforeAfterItem;
@@ -31,10 +30,7 @@ const BeforeAfter = ({ heading, before, after }: BeforeAfterProps) => {
                             <p className="text-sm font-medium text-blue-600">{heading.eyebrow}</p>
                         )}
                         <h2 className="max-w-4xl text-4xl font-medium tracking-tight md:text-5xl">
-                            {heading.title}{" "}
-                            {heading.titleHighlight && (
-                                <span className="text-gray-400">{heading.titleHighlight}</span>
-                            )}
+                            {heading.title}
                         </h2>
                     </div>
                     {heading.description && (

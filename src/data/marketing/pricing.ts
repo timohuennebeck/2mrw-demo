@@ -1,18 +1,18 @@
 export const defaultPricingPlans = [
     {
-        name: "Starter",
+        name: "Lorem",
         price: "$19",
         period: "/month",
         buttonVariant: "secondary",
     },
     {
-        name: "Growth",
+        name: "Ipsum",
         price: "$49",
         period: "/month",
         buttonVariant: "primary",
     },
     {
-        name: "Scale",
+        name: "Dolor",
         price: "$99",
         period: "/month",
         buttonVariant: "secondary",
@@ -21,34 +21,34 @@ export const defaultPricingPlans = [
 
 export const defaultPricingFeatures = [
     {
-        category: "Features",
+        category: "Lorem",
         items: [
             {
-                name: "Edge content delivery",
+                name: "Lorem ipsum dolor sit amet",
                 starter: true,
                 growth: true,
                 scale: true,
             },
             {
-                name: "Unlimited projects",
+                name: "Consectetur adipiscing elit",
                 starter: false,
                 growth: true,
                 scale: true,
             },
             {
-                name: "API access",
+                name: "Sed do eiusmod tempor",
                 starter: false,
                 growth: true,
                 scale: true,
             },
             {
-                name: "Custom domain",
+                name: "Ut labore et dolore",
                 starter: false,
                 growth: true,
                 scale: true,
             },
             {
-                name: "Priority support",
+                name: "Magna aliqua ut enim",
                 starter: false,
                 growth: false,
                 scale: true,
@@ -56,22 +56,22 @@ export const defaultPricingFeatures = [
         ],
     },
     {
-        category: "Usage",
+        category: "Ipsum",
         items: [
             {
-                name: "Storage",
+                name: "Minim veniam",
                 starter: "10 GB",
                 growth: "50 GB",
                 scale: "500 GB",
             },
             {
-                name: "Monthly bandwidth",
+                name: "Quis nostrud exercitation",
                 starter: "100 GB",
                 growth: "500 GB",
                 scale: "Unlimited",
             },
             {
-                name: "Team members",
+                name: "Ullamco laboris",
                 starter: "1",
                 growth: "5",
                 scale: "Unlimited",

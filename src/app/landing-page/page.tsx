@@ -1,28 +1,28 @@
 "use client";
 
-import Section from "@/components/ui/Section";
 import BeforeAfter from "@/components/marketing/BeforeAfter";
+import CTA from "@/components/marketing/CTA";
 import FAQ from "@/components/marketing/FAQ";
+import FeaturedTestimonial from "@/components/marketing/FeaturedTestimonial";
 import Features from "@/components/marketing/Features";
 import FeaturesList from "@/components/marketing/FeaturesList";
-import FeaturedTestimonial from "@/components/marketing/FeaturedTestimonial";
 import Footer from "@/components/marketing/Footer";
 import Header from "@/components/marketing/Header";
+import Hero from "@/components/marketing/Hero";
 import PricingComparison from "@/components/marketing/PricingComparison";
+import ProductDemo from "@/components/marketing/ProductDemo";
 import PromoBanner from "@/components/marketing/PromoBanner";
 import Stats from "@/components/marketing/Stats";
 import TestimonialsGrid from "@/components/marketing/TestimonialsGrid";
-import { Manrope } from "next/font/google";
+import Section from "@/components/ui/Section";
+import { faqs } from "@/data/marketing/faqs";
 import { authFeatures, databaseFeatures, emailFeatures } from "@/data/marketing/features";
 import { featuresList } from "@/data/marketing/featuresList";
-import { faqs } from "@/data/marketing/faqs";
-import { testimonials } from "@/data/marketing/testimonials";
+import { footerLinks } from "@/data/marketing/footer";
 import { defaultPricingFeatures, defaultPricingPlans } from "@/data/marketing/pricing";
 import { exampleStats } from "@/data/marketing/stats";
-import { footerLinks } from "@/data/marketing/footer";
-import Hero from "@/components/marketing/Hero";
-import ProductDemo from "@/components/marketing/ProductDemo";
-import CTA from "@/components/marketing/CTA";
+import { testimonials } from "@/data/marketing/testimonials";
+import { Manrope } from "next/font/google";
 
 const manrope = Manrope({
     subsets: ["latin"],
@@ -65,13 +65,13 @@ const LandingPage = () => {
                     promoText="GET €30 OFF - 50 CODES LEFT"
                     title={
                         <>
-                            Build Your MVP in a WEEKEND, not Months, with{" "}
+                            Lorem ipsum dolor, sit amet consectetur adipisicing elit.{" "}
                             <span className="relative mt-4 inline-block rotate-2 whitespace-nowrap bg-blue-600 p-2 text-white">
-                                Next.js and Supabase
+                                Lorem, ipsum.
                             </span>
                         </>
                     }
-                    subtitle="Launch in as little as 48 hours with this lightweight Next.js Supabase boilerplate that handles all the boring stuff such user authentication, stripe, etc."
+                    subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, saepe dicta eligendi praesentium accusamus cupiditate?"
                     primaryCTA={{
                         text: "Get Started Now",
                         href: "/get-started",
@@ -86,10 +86,10 @@ const LandingPage = () => {
                 <div className="mx-auto mb-8 mt-28 flex w-full max-w-7xl flex-col gap-36">
                     <Section>
                         <FeaturedTestimonial
-                            quote="Thanks for building such an empowering tool, especially for designers! The site went from Figma to Framer in less than a week!"
+                            quote="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Asperiores amet possimus praesentium ea deleniti recusandae?"
                             author={{
-                                name: "Eva Elle",
-                                role: "Marketing Director @BC",
+                                name: "Timo Huennebeck",
+                                role: "Founder @2MRW",
                                 imageUrl: "https://i.imgur.com/E6nCVLy.jpeg",
                             }}
                         />
@@ -98,9 +98,8 @@ const LandingPage = () => {
                     <Section>
                         <BeforeAfter
                             heading={{
-                                eyebrow: "Compare",
-                                title: "See the difference",
-                                titleHighlight: "between before and after using our solution",
+                                eyebrow: "Custom Optional Section Title",
+                                title: "Custom Title",
                                 description:
                                     "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore.",
                             }}
@@ -151,19 +150,19 @@ const LandingPage = () => {
 
                     <Section>
                         <Stats
-                            title="Your Custom Title"
-                            subtitle="Custom Stats"
-                            description="Your custom description goes here"
+                            eyebrow="Custom Optional Section Title"
+                            title="Custom Title"
+                            description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
                             stats={exampleStats}
                         />
                     </Section>
 
                     <Section>
                         <FeaturedTestimonial
-                            quote="Thanks for building such an empowering tool, especially for designers! The site went from Figma to Framer in less than a week!"
+                            quote="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Asperiores amet possimus praesentium ea deleniti recusandae?"
                             author={{
-                                name: "Eva Elle",
-                                role: "Marketing Director @BC",
+                                name: "Timo Huennebeck",
+                                role: "Founder @2MRW",
                                 imageUrl: "https://i.imgur.com/E6nCVLy.jpeg",
                             }}
                         />
@@ -172,10 +171,10 @@ const LandingPage = () => {
                     <Section id="features" className="flex flex-col gap-36">
                         <Features
                             features={authFeatures}
-                            title="End-to-End Testing."
-                            subtitle="Built-in test coverage ensuring reliable authentication, billing, and user flows."
+                            title="Lorem, ipsum."
+                            subtitle="Lorem ipsum dolor, sit amet consectetur adipisicing elit."
                             badge={{
-                                text: "E2E TESTS WITH CYPRESS",
+                                text: "CUSTOM BADGE TITLE",
                                 bgColor: "bg-purple-50",
                                 textColor: "text-purple-600",
                             }}
@@ -184,21 +183,22 @@ const LandingPage = () => {
                         <Features
                             videoOnLeft
                             features={emailFeatures}
-                            title="Emails."
-                            subtitle="Built-in test coverage ensuring reliable authentication, billing, and user flows."
+                            title="Lorem, ipsum."
+                            subtitle="Lorem ipsum dolor, sit amet consectetur adipisicing elit."
                             badge={{
-                                text: "EMAILS WITH REACT EMAIL",
+                                text: "CUSTOM BADGE TITLE",
                                 bgColor: "bg-blue-50",
                                 textColor: "text-blue-600",
                             }}
                             videoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
                         />
+
                         <Features
                             features={databaseFeatures}
-                            title="Database."
-                            subtitle="Built-in test coverage ensuring reliable authentication, billing, and user flows."
+                            title="Lorem, ipsum."
+                            subtitle="Lorem ipsum dolor, sit amet consectetur adipisicing elit."
                             badge={{
-                                text: "DATABASE WITH SUPABASE",
+                                text: "CUSTOM BADGE TITLE",
                                 bgColor: "bg-orange-50",
                                 textColor: "text-orange-600",
                             }}
@@ -208,10 +208,10 @@ const LandingPage = () => {
 
                     <Section>
                         <FeaturedTestimonial
-                            quote="Thanks for building such an empowering tool, especially for designers! The site went from Figma to Framer in less than a week!"
+                            quote="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Asperiores amet possimus praesentium ea deleniti recusandae?"
                             author={{
-                                name: "Eva Elle",
-                                role: "Marketing Director @BC",
+                                name: "Timo Huennebeck",
+                                role: "Founder @2MRW",
                                 imageUrl: "https://i.imgur.com/E6nCVLy.jpeg",
                             }}
                         />
@@ -219,17 +219,16 @@ const LandingPage = () => {
 
                     <Section>
                         <ProductDemo
-                            title="Experience 2mrw"
-                            highlightedTitle="in 2 minutes"
-                            subtitle="Launch in as little as 48 hours with this lightweight Next.js Supabase boilerplate that handles all the boring stuff such user authentication, stripe, etc."
+                            title="Custom Title"
+                            subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit."
                             videoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
                         />
                     </Section>
 
                     <Section>
                         <FeaturesList
-                            heading="Your Custom Heading"
-                            description="Your custom description text goes here."
+                            heading="Custom Title"
+                            description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
                             features={featuresList}
                             sectionTitle="Optional Custom Section Title"
                         />
@@ -237,21 +236,20 @@ const LandingPage = () => {
 
                     <Section id="pricing">
                         <PricingComparison
-                            title="Choose Your Perfect Plan"
-                            subtitle="Pricing Options"
-                            description="Select the plan that best fits your needs."
+                            title="Custom Title"
+                            subtitle="Optional Custom Section Title"
+                            description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, similique."
                             plans={defaultPricingPlans}
                             features={defaultPricingFeatures}
                             buttonText="Start Now"
-                            accentColor="indigo"
                         />
                     </Section>
 
                     <Section id="faq">
                         <FAQ
+                            eyebrow="Optional Custom Section Title"
                             title="Custom Title"
-                            subtitle="Support"
-                            tagline="Find answers to common questions."
+                            tagline="Lorem ipsum dolor sit amet, consectetur adipisicing elit."
                             items={faqs}
                         />
                     </Section>
@@ -259,11 +257,10 @@ const LandingPage = () => {
                     <Section id="testimonials">
                         <TestimonialsGrid
                             title={{
-                                badge: "TRUSTED BY FOUNDERS",
-                                main: "See what others are saying",
-                                highlight: "about our platform",
+                                badge: "CUSTOM BADGE TITLE",
+                                main: "Custom Title",
                                 subtitle:
-                                    "Join thousands of satisfied customers who trust our solution",
+                                    "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cupiditate, odio!",
                             }}
                             testimonials={testimonials}
                             testimonialsPerPage={8}
@@ -273,9 +270,9 @@ const LandingPage = () => {
 
                     <Section>
                         <CTA
-                            eyebrow="Special Offer"
-                            title="Lock in €30 OFF Forever. Use 'Launch30' at checkout"
-                            description="Incididunt sint fugiat pariatur cupidatat consectetur sit cillum anim id veniam aliqua proident excepteur commodo do ea."
+                            eyebrow="Optional Custom Section Title"
+                            title="Custom Title"
+                            description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis veniam accusantium reprehenderit exercitationem eum deleniti?"
                             primaryButton={{
                                 text: "Get started",
                                 onClick: () => console.log("Primary button clicked"),
@@ -294,7 +291,7 @@ const LandingPage = () => {
                                 src: "https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg",
                                 alt: "Logo",
                             }}
-                            description="Your company description here"
+                            description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique optio molestiae exercitationem! Porro doloribus molestias rerum error inventore."
                             companyName="2mrw"
                             bottomLinks={[
                                 { name: "Terms and Conditions", href: "/privacy" },

@@ -1,21 +1,21 @@
 interface ProductDemoProps {
     title: string;
-    highlightedTitle?: string;
     subtitle: string;
     videoUrl: string;
 }
 
-const ProductDemo = ({ title, highlightedTitle, subtitle, videoUrl }: ProductDemoProps) => {
+const ProductDemo = ({ title, subtitle, videoUrl }: ProductDemoProps) => {
     return (
         <div className="flex flex-col items-center justify-center gap-10 text-center">
-            {/* Main Title */}
-            <h1 className="max-w-4xl text-4xl font-medium leading-tight tracking-tight md:text-5xl">
-                {title}{" "}
-                {highlightedTitle && <span className="text-gray-400">{highlightedTitle}</span>}
-            </h1>
+            <div className="flex flex-col gap-6">
+                {/* Main Title */}
+                <h1 className="max-w-4xl text-4xl font-medium leading-tight tracking-tight md:text-5xl">
+                    {title}
+                </h1>
 
-            {/* Subtitle */}
-            <p className="max-w-3xl text-lg text-gray-600">{subtitle}</p>
+                {/* Subtitle */}
+                <p className="max-w-3xl text-lg text-gray-600">{subtitle}</p>
+            </div>
 
             {/* Demo Video */}
             <div className="relative w-full max-w-5xl">
