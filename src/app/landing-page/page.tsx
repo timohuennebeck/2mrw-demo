@@ -218,7 +218,7 @@ const LandingPage = () => {
                     />
                 </Section>
 
-                <Section>
+                <Section id="faq">
                     <FAQ
                         title="Custom Title"
                         subtitle="Support"
