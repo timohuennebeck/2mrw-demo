@@ -7,7 +7,7 @@ interface Stat {
     className: string;
 }
 
-interface StatsSectionProps {
+interface StatsProps {
     title: string;
     subtitle: string;
     description: string;
@@ -19,7 +19,7 @@ export default function StatsSection({
     subtitle = "Stats",
     description,
     stats,
-}: StatsSectionProps) {
+}: StatsProps) {
     return (
         <div className="flex flex-col gap-16">
             {/* Header Section */}
@@ -28,7 +28,7 @@ export default function StatsSection({
                 <h2 className="max-w-4xl text-4xl font-medium tracking-tight md:text-5xl">
                     {title}
                 </h2>
-                <p className="max-w-3xl text-lg text-gray-600">{description}</p>
+                <p className="max-w-3xl text-lg">{description}</p>
             </div>
 
             {/* Stats Grid */}
@@ -71,7 +71,7 @@ function StatCard({ value, label, description, className, heightClass = "" }: St
             <p className="text-4xl font-semibold tracking-tight">{value}</p>
             <div className="flex flex-col gap-2">
                 <p className="text-lg font-semibold">{label}</p>
-                <p className="text-base text-gray-300">{description}</p>
+                <p className="text-base text-gray-400">{description}</p>
             </div>
         </div>
     );

@@ -10,7 +10,7 @@ import Footer from "@/components/marketing/Footer";
 import Header from "@/components/marketing/Header";
 import PricingComparison from "@/components/marketing/PricingComparison";
 import PromoBanner from "@/components/marketing/PromoBanner";
-import StatsSection from "@/components/marketing/StatsSection";
+import Stats from "@/components/marketing/Stats";
 import TestimonialsGrid from "@/components/marketing/TestimonialsGrid";
 import { Manrope } from "next/font/google";
 import { authFeatures, databaseFeatures, emailFeatures } from "@/data/marketing/features";
@@ -150,7 +150,7 @@ const LandingPage = () => {
                     </Section>
 
                     <Section>
-                        <StatsSection
+                        <Stats
                             title="Your Custom Title"
                             subtitle="Custom Stats"
                             description="Your custom description goes here"
