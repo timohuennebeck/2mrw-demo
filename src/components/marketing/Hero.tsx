@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Play } from "lucide-react";
 import TestimonialRating from "./TestimonialRating";
 
-interface HeroSectionProps {
+interface HeroProps {
     promoText?: string;
     title: React.ReactNode;
     subtitle: string;
@@ -20,7 +20,7 @@ interface HeroSectionProps {
     showTestimonials?: boolean;
 }
 
-const HeroSection = ({
+const Hero = ({
     promoText,
     title,
     subtitle,
@@ -28,7 +28,7 @@ const HeroSection = ({
     secondaryCTA,
     demoVideoUrl,
     showTestimonials = true,
-}: HeroSectionProps) => {
+}: HeroProps) => {
     return (
         <section className="flex flex-col items-center justify-center gap-8 px-4 py-10 text-center">
             {/* Promotional Banner */}
@@ -85,4 +85,4 @@ const HeroSection = ({
     );
 };
 
-export default HeroSection;
+export default Hero;

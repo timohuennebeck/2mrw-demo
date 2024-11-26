@@ -2,15 +2,12 @@
 
 import Section from "@/components/ui/Section";
 import BeforeAfter from "@/components/marketing/BeforeAfter";
-import CTASection from "@/components/marketing/CTASection";
-import DemoSection from "@/components/marketing/DemoSection";
 import FAQ from "@/components/marketing/FAQ";
 import Features from "@/components/marketing/Features";
 import FeaturesList from "@/components/marketing/FeaturesList";
-import FeaturedTestimonial from "@/components/marketing/FeatureTestimonial";
+import FeaturedTestimonial from "@/components/marketing/FeaturedTestimonial";
 import Footer from "@/components/marketing/Footer";
 import Header from "@/components/marketing/Header";
-import HeroSection from "@/components/marketing/HeroSection";
 import PricingComparison from "@/components/marketing/PricingComparison";
 import PromoBanner from "@/components/marketing/PromoBanner";
 import StatsSection from "@/components/marketing/StatsSection";
@@ -23,6 +20,9 @@ import { testimonials } from "@/data/marketing/testimonials";
 import { defaultPricingFeatures, defaultPricingPlans } from "@/data/marketing/pricing";
 import { exampleStats } from "@/data/marketing/stats";
 import { footerLinks } from "@/data/marketing/footer";
+import Hero from "@/components/marketing/Hero";
+import ProductDemo from "@/components/marketing/ProductDemo";
+import CTA from "@/components/marketing/CTA";
 
 const manrope = Manrope({
     subsets: ["latin"],
@@ -32,7 +32,7 @@ const manrope = Manrope({
 const LandingPage = () => {
     return (
         <div className={`${manrope.variable} flex flex-col font-manrope`}>
-            <div>
+            <>
                 <PromoBanner
                     text={{
                         desktop: "2mrw has just launched! Get 50% off with code",
@@ -47,17 +47,17 @@ const LandingPage = () => {
                 />
                 <Header
                     navItems={[
-                        { href: "/pricing", label: "Pricing" },
-                        { href: "/features", label: "Features" },
-                        { href: "/testimonials", label: "Testimonials" },
-                        { href: "/faq", label: "FAQ" },
-                        { href: "/changelog", label: "Changelog" },
+                        { href: "#features", label: "Features" },
+                        { href: "#pricing", label: "Pricing" },
+                        { href: "#testimonials", label: "Testimonials" },
+                        { href: "#faq", label: "FAQ" },
+                        { href: "https://docs.2mrw.dev", label: "Documentation", isExternal: true },
                     ]}
                     logoSrc="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
                     logoAlt="My Company"
                     loginHref="/signin"
                 />
-                <HeroSection
+                <Hero
                     promoText="GET €30 OFF - 50 CODES LEFT"
                     title={
                         <>
@@ -76,8 +76,9 @@ const LandingPage = () => {
                     }}
                     demoVideoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
                 />
-            </div>
-            <div className="mx-auto mt-28 flex w-full max-w-7xl flex-col gap-36 mb-8">
+            </>
+
+            <div className="mx-auto mb-8 mt-28 flex w-full max-w-7xl flex-col gap-36">
                 <Section>
                     <FeaturedTestimonial
                         quote="Thanks for building such an empowering tool, especially for designers! The site went from Figma to Framer in less than a week!"
@@ -88,6 +89,7 @@ const LandingPage = () => {
                         }}
                     />
                 </Section>
+
                 <Section>
                     <BeforeAfter
                         heading={{
@@ -117,6 +119,7 @@ const LandingPage = () => {
                         }}
                     />
                 </Section>
+
                 <Section>
                     <StatsSection
                         title="Your Custom Title"
@@ -125,6 +128,7 @@ const LandingPage = () => {
                         stats={exampleStats}
                     />
                 </Section>
+
                 <Section>
                     <FeaturedTestimonial
                         quote="Thanks for building such an empowering tool, especially for designers! The site went from Figma to Framer in less than a week!"
@@ -135,7 +139,8 @@ const LandingPage = () => {
                         }}
                     />
                 </Section>
-                <Section>
+
+                <Section id="features" className="flex flex-col gap-36">
                     <Features
                         features={authFeatures}
                         title="End-to-End Testing."
@@ -147,8 +152,6 @@ const LandingPage = () => {
                         }}
                         videoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
                     />
-                </Section>
-                <Section>
                     <Features
                         videoOnLeft
                         features={emailFeatures}
@@ -161,8 +164,6 @@ const LandingPage = () => {
                         }}
                         videoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
                     />
-                </Section>
-                <Section>
                     <Features
                         features={databaseFeatures}
                         title="Database."
@@ -175,6 +176,7 @@ const LandingPage = () => {
                         videoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
                     />
                 </Section>
+
                 <Section>
                     <FeaturedTestimonial
                         quote="Thanks for building such an empowering tool, especially for designers! The site went from Figma to Framer in less than a week!"
@@ -185,14 +187,16 @@ const LandingPage = () => {
                         }}
                     />
                 </Section>
+
                 <Section>
-                    <DemoSection
+                    <ProductDemo
                         title="Experience 2mrw"
                         highlightedTitle="in 2 minutes"
                         subtitle="Launch in as little as 48 hours with this lightweight Next.js Supabase boilerplate that handles all the boring stuff such user authentication, stripe, etc."
                         videoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
                     />
                 </Section>
+
                 <Section>
                     <FeaturesList
                         heading="Your Custom Heading"
@@ -201,7 +205,8 @@ const LandingPage = () => {
                         sectionTitle="Optional Custom Section Title"
                     />
                 </Section>
-                <Section>
+
+                <Section id="pricing">
                     <PricingComparison
                         title="Choose Your Perfect Plan"
                         subtitle="Pricing Options"
@@ -212,6 +217,7 @@ const LandingPage = () => {
                         accentColor="indigo"
                     />
                 </Section>
+
                 <Section>
                     <FAQ
                         title="Custom Title"
@@ -220,7 +226,8 @@ const LandingPage = () => {
                         items={faqs}
                     />
                 </Section>
-                <Section>
+
+                <Section id="testimonials">
                     <TestimonialsGrid
                         title={{
                             badge: "TRUSTED BY FOUNDERS",
@@ -234,8 +241,9 @@ const LandingPage = () => {
                         className="my-12"
                     />
                 </Section>
+
                 <Section>
-                    <CTASection
+                    <CTA
                         eyebrow="Special Offer"
                         title="Lock in €30 OFF Forever. Use 'Launch30' at checkout"
                         description="Incididunt sint fugiat pariatur cupidatat consectetur sit cillum anim id veniam aliqua proident excepteur commodo do ea."
@@ -249,6 +257,7 @@ const LandingPage = () => {
                         }}
                     />
                 </Section>
+
                 <Section>
                     <Footer
                         links={footerLinks}

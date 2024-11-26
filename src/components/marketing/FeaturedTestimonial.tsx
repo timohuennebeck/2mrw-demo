@@ -1,7 +1,7 @@
 import Image from "next/image";
 import QuoteImg from "@/assets/quotes.svg";
 
-interface TestimonialProps {
+interface FeaturedTestimonialProps {
     quote: string;
     author: {
         name: string;
@@ -10,14 +10,12 @@ interface TestimonialProps {
     };
 }
 
-const FeaturedTestimonial = ({ quote, author }: TestimonialProps) => {
+const FeaturedTestimonial = ({ quote, author }: FeaturedTestimonialProps) => {
     return (
-        <div className="mx-auto max-w-3xl flex flex-col items-center gap-6 text-center">
+        <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
             <Image src={QuoteImg} alt="Quote" width={48} height={48} />
 
-            <blockquote className="text-2xl font-medium">
-                "{quote}"
-            </blockquote>
+            <blockquote className="text-2xl font-medium">"{quote}"</blockquote>
 
             <div className="flex items-center justify-center gap-3">
                 <Image

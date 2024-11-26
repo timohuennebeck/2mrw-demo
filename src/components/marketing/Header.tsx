@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
@@ -5,6 +7,7 @@ import { ArrowRight } from "lucide-react";
 interface NavItem {
     href: string;
     label: string;
+    isExternal?: boolean;
 }
 
 interface HeaderProps {
@@ -14,27 +17,28 @@ interface HeaderProps {
     loginHref?: string;
 }
 
-const defaultNavItems: NavItem[] = [
-    { href: '/product', label: 'Product' },
-    { href: '/features', label: 'Features' },
-    { href: '/marketplace', label: 'Marketplace' },
-    { href: '/company', label: 'Company' },
-];
+const Header = ({ navItems = [], logoSrc, logoAlt, loginHref }: HeaderProps) => {
+    const handleClick = (e: React.MouseEvent, href: string) => {
+        if (href.startsWith("#")) {
+            e.preventDefault();
+            const element = document.querySelector(href);
+            if (element) {
+                element.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                });
+            }
+        }
+    };
 
-const Header = ({
-    navItems = defaultNavItems,
-    logoSrc = "https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg",
-    logoAlt = "Logo",
-    loginHref = "/login"
-}: HeaderProps) => {
     return (
-        <header className="bg-white/80 backdrop-blur-md">
-            <div className="flex items-center justify-between px-4 py-8 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md">
+            <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-8 sm:px-6 lg:px-8">
                 {/* Logo */}
                 <Link href="/" className="flex items-center">
                     <Image
-                        src={logoSrc}
-                        alt={logoAlt}
+                        src={logoSrc ?? ""}
+                        alt={logoAlt ?? ""}
                         width={32}
                         height={32}
                         className="h-8 w-auto"
@@ -42,12 +46,17 @@ const Header = ({
                 </Link>
 
                 {/* Navigation */}
-                <nav className="hidden md:flex items-center gap-8">
+                <nav className="hidden items-center gap-8 md:flex">
                     {navItems.map((item) => (
                         <Link
                             key={item.href}
                             href={item.href}
+                            onClick={(e) => handleClick(e, item.href)}
                             className="text-sm text-gray-600 hover:text-gray-900"
+                            {...(item.isExternal && {
+                                target: "_blank",
+                                rel: "noopener noreferrer",
+                            })}
                         >
                             {item.label}
                         </Link>
@@ -56,7 +65,7 @@ const Header = ({
 
                 {/* Login Button */}
                 <Link
-                    href={loginHref}
+                    href={loginHref ?? ""}
                     className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-gray-900"
                 >
                     Log in

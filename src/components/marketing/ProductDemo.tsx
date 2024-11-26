@@ -1,32 +1,21 @@
-import Image from "next/image";
-import Link from "next/link";
-import { Play } from "lucide-react";
-import TestimonialRating from "./TestimonialRating";
-
-interface DemoSectionProps {
+interface ProductDemoProps {
     title: string;
     highlightedTitle?: string;
     subtitle: string;
     videoUrl: string;
 }
 
-const DemoSection = ({ 
-    title, 
-    highlightedTitle, 
-    subtitle, 
-    videoUrl 
-}: DemoSectionProps) => {
+const ProductDemo = ({ title, highlightedTitle, subtitle, videoUrl }: ProductDemoProps) => {
     return (
-        <div className="flex flex-col items-center justify-center text-center gap-10">
+        <div className="flex flex-col items-center justify-center gap-10 text-center">
             {/* Main Title */}
             <h1 className="max-w-4xl text-4xl font-medium leading-tight tracking-tight md:text-5xl">
-                {title} {highlightedTitle && <span className="text-gray-400">{highlightedTitle}</span>}
+                {title}{" "}
+                {highlightedTitle && <span className="text-gray-400">{highlightedTitle}</span>}
             </h1>
 
             {/* Subtitle */}
-            <p className="max-w-3xl text-lg text-gray-600">
-                {subtitle}
-            </p>
+            <p className="max-w-3xl text-lg text-gray-600">{subtitle}</p>
 
             {/* Demo Video */}
             <div className="relative w-full max-w-5xl">
@@ -44,4 +33,4 @@ const DemoSection = ({
     );
 };
 
-export default DemoSection;
+export default ProductDemo;

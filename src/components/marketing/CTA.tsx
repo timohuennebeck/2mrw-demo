@@ -1,4 +1,4 @@
-interface CTASectionProps {
+interface CTAProps {
     eyebrow?: string;
     title: string;
     description: string;
@@ -12,13 +12,13 @@ interface CTASectionProps {
     };
 }
 
-const CTASection = ({
+const CTA = ({
     eyebrow = 'CTA',
     title,
     description,
     primaryButton,
     secondaryButton,
-}: CTASectionProps) => {
+}: CTAProps) => {
     return (
         <div className="flex flex-col items-center gap-6">
             <p className="text-sm font-medium text-blue-600">{eyebrow}</p>
@@ -58,4 +58,4 @@ const CTASection = ({
     );
 };
 
-export default CTASection;
+export default CTA;
