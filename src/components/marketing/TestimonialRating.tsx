@@ -23,7 +23,7 @@ const TestimonialRating = () => {
                         </svg>
                     ))}
                 </div>
-                <span className="font-medium">569 founders sleep better</span>
+                <span className="font-medium">569 founders trust us</span>
             </div>
         </div>
     );
