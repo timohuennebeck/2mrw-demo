@@ -62,7 +62,7 @@ const LandingPage = () => {
                     loginHref="/signin"
                 />
                 <Hero
-                    promoText="GET €30 OFF - 50 CODES LEFT"
+                    promoText="LOREM IPSUM DOLOR SIT AMET"
                     title={
                         <>
                             Lorem ipsum dolor, sit amet consectetur adipisicing elit.{" "}
@@ -98,8 +98,8 @@ const LandingPage = () => {
                     <Section>
                         <BeforeAfter
                             heading={{
-                                eyebrow: "Custom Optional Section Title",
-                                title: "Custom Title",
+                                eyebrow: "Lorem, ipsum dolor.",
+                                title: "Lorem ipsum dolor sit amet",
                                 description:
                                     "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore.",
                             }}
@@ -150,8 +150,8 @@ const LandingPage = () => {
 
                     <Section>
                         <Stats
-                            eyebrow="Custom Optional Section Title"
-                            title="Custom Title"
+                            eyebrow="Lorem, ipsum dolor."
+                            title="Lorem ipsum dolor sit amet"
                             description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
                             stats={exampleStats}
                         />
@@ -219,7 +219,7 @@ const LandingPage = () => {
 
                     <Section>
                         <ProductDemo
-                            title="Custom Title"
+                            title="Lorem ipsum dolor sit amet"
                             subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit."
                             videoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
                         />
@@ -227,17 +227,17 @@ const LandingPage = () => {
 
                     <Section>
                         <FeaturesList
-                            heading="Custom Title"
+                            heading="Lorem ipsum dolor sit amet"
                             description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
                             features={featuresList}
-                            sectionTitle="Optional Custom Section Title"
+                            sectionTitle="Lorem, ipsum dolor."
                         />
                     </Section>
 
                     <Section id="pricing">
                         <PricingComparison
-                            title="Custom Title"
-                            subtitle="Optional Custom Section Title"
+                            title="Lorem ipsum dolor sit amet"
+                            subtitle="Lorem, ipsum dolor."
                             description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, similique."
                             plans={defaultPricingPlans}
                             features={defaultPricingFeatures}
@@ -247,8 +247,8 @@ const LandingPage = () => {
 
                     <Section id="faq">
                         <FAQ
-                            eyebrow="Optional Custom Section Title"
-                            title="Custom Title"
+                            eyebrow="Lorem, ipsum dolor."
+                            title="Lorem ipsum dolor sit amet"
                             tagline="Lorem ipsum dolor sit amet, consectetur adipisicing elit."
                             items={faqs}
                         />
@@ -258,7 +258,7 @@ const LandingPage = () => {
                         <TestimonialsGrid
                             title={{
                                 badge: "CUSTOM BADGE TITLE",
-                                main: "Custom Title",
+                                main: "Lorem ipsum dolor sit amet",
                                 subtitle:
                                     "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cupiditate, odio!",
                             }}
@@ -270,8 +270,8 @@ const LandingPage = () => {
 
                     <Section>
                         <CTA
-                            eyebrow="Optional Custom Section Title"
-                            title="Custom Title"
+                            eyebrow="Lorem, ipsum dolor."
+                            title="Lorem ipsum dolor sit amet"
                             description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis veniam accusantium reprehenderit exercitationem eum deleniti?"
                             primaryButton={{
                                 text: "Get started",
