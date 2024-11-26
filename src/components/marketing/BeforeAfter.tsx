@@ -2,10 +2,9 @@ import { Code, Check, X } from "lucide-react";
 import Image from "next/image";
 
 interface BeforeAfterItem {
-    title: string;
+    title?: string;
     bulletPoints: {
         text: string;
-        isPositive: boolean;
     }[];
     imagePath: string;
 }
@@ -31,7 +30,7 @@ const BeforeAfter = ({ heading, before, after }: BeforeAfterProps) => {
                         {heading.eyebrow && (
                             <p className="text-sm font-medium text-blue-600">{heading.eyebrow}</p>
                         )}
-                        <h2 className="text-4xl max-w-4xl font-medium tracking-tight md:text-5xl">
+                        <h2 className="max-w-4xl text-4xl font-medium tracking-tight md:text-5xl">
                             {heading.title}{" "}
                             {heading.titleHighlight && (
                                 <span className="text-gray-400">{heading.titleHighlight}</span>

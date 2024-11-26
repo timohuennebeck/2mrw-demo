@@ -30,7 +30,8 @@ const Hero = ({
     showTestimonials = true,
 }: HeroProps) => {
     return (
-        <section className="flex flex-col items-center justify-center gap-8 px-4 py-10 text-center">
+        <section className="relative flex flex-col items-center justify-center gap-8 px-4 py-10 text-center">
+
             {/* Promotional Banner */}
             {promoText && (
                 <div className="rounded-lg bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600">
@@ -44,7 +45,7 @@ const Hero = ({
             </h1>
 
             {/* Subtitle */}
-            <p className="max-w-3xl text-lg text-gray-600">{subtitle}</p>
+            <p className="max-w-2xl text-base text-gray-600">{subtitle}</p>
 
             {/* CTA Buttons */}
             <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
