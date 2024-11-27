@@ -1,6 +1,5 @@
-import { Check } from "lucide-react";
+import { Check, X } from "lucide-react";
 
-// Define TypeScript interfaces for our props
 interface PricingPlan {
     name: string;
     price: string;
@@ -86,7 +85,7 @@ const PricingComparison = ({
                                             item.starter ? (
                                                 <Check className="mx-auto h-5 w-5 text-black" />
                                             ) : (
-                                                <span className="text-sm text-gray-400">—</span>
+                                                <X className="mx-auto h-5 w-5 text-gray-400" />
                                             )
                                         ) : (
                                             <span className="text-sm">{item.starter}</span>
@@ -98,7 +97,7 @@ const PricingComparison = ({
                                             item.growth ? (
                                                 <Check className="mx-auto h-5 w-5 text-black" />
                                             ) : (
-                                                <span className="text-sm text-gray-400">—</span>
+                                                <X className="mx-auto h-5 w-5 text-gray-400" />
                                             )
                                         ) : (
                                             <span className="text-sm">{item.growth}</span>
@@ -110,7 +109,7 @@ const PricingComparison = ({
                                             item.scale ? (
                                                 <Check className="mx-auto h-5 w-5 text-black" />
                                             ) : (
-                                                <span className="text-sm text-gray-400">—</span>
+                                                <X className="mx-auto h-5 w-5 text-gray-400" />
                                             )
                                         ) : (
                                             <span className="text-sm">{item.scale}</span>
