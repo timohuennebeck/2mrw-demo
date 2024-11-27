@@ -38,7 +38,6 @@ export default function StatsSection({ title, eyebrow = "Stats", description, st
     );
 }
 
-// Helper function to determine column classes
 function getColumnClassName(index: number): string {
     switch (index) {
         case 0:
@@ -56,7 +55,7 @@ interface StatCardProps {
     value: string;
     label: string;
     description: string;
-    className?: string;
+    className: string;
     heightClass?: string;
 }
 
