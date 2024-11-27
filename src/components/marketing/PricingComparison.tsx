@@ -1,10 +1,12 @@
 import { Check, X } from "lucide-react";
+import React from "react";
 
 interface PricingPlan {
     name: string;
     price: string;
     period: string;
     buttonVariant: string;
+    onClick: () => void;
 }
 
 interface PricingFeatureItem {
@@ -20,7 +22,7 @@ interface PricingFeatureSection {
 }
 
 interface PricingComparisonParams {
-    title: string;
+    title: React.ReactNode;
     subtitle: string;
     description: string;
     plans: PricingPlan[];
@@ -95,7 +97,9 @@ const PricingComparison = ({
             {/* Header Section */}
             <div className="flex flex-col gap-6 text-start">
                 <p className="text-sm font-medium text-blue-600">{subtitle}</p>
-                <h2 className="text-4xl font-medium tracking-tight md:text-5xl">{title}</h2>
+                <h2 className="max-w-4xl text-4xl font-medium leading-tight tracking-tight md:text-5xl">
+                    {title}
+                </h2>
                 <p className="max-w-4xl text-lg text-gray-600">{description}</p>
             </div>
 

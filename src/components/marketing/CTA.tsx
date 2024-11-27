@@ -1,8 +1,9 @@
 import { ChevronRight } from "lucide-react";
+import React from "react";
 
 interface CTAParams {
     eyebrow?: string;
-    title: string;
+    title: React.ReactNode;
     description: string;
     primaryButton: {
         text: string;

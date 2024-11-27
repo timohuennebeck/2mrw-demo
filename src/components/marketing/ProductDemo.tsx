@@ -1,5 +1,7 @@
+import React from "react";
+
 interface ProductDemoParams {
-    title: string;
+    title: React.ReactNode;
     subtitle: string;
     videoUrl: string;
 }
@@ -9,9 +11,9 @@ const ProductDemo = ({ title, subtitle, videoUrl }: ProductDemoParams) => {
         <div className="flex flex-col items-center justify-center gap-10 text-center">
             <div className="flex flex-col gap-6">
                 {/* Main Title */}
-                <h1 className="max-w-4xl text-4xl font-medium leading-tight tracking-tight md:text-5xl">
+                <h2 className="max-w-4xl text-4xl font-medium leading-tight tracking-tight md:text-5xl">
                     {title}
-                </h1>
+                </h2>
 
                 {/* Subtitle */}
                 <p className="max-w-3xl text-lg text-gray-600">{subtitle}</p>

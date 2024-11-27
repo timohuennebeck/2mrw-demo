@@ -18,6 +18,7 @@ export const defaultPricingPlans = [
         price: "$99",
         period: "/month",
         buttonVariant: "secondary",
+        onClick: () => {},
     },
 ];
 

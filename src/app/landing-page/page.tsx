@@ -99,7 +99,15 @@ const LandingPage = () => {
                         <CompetitorComparison
                             heading={{
                                 eyebrow: "Lorem, ipsum dolor.",
-                                title: "Lorem ipsum dolor sit amet",
+                                title: (
+                                    <>
+                                        Lorem ipsum dolor sit{" "}
+                                        <span className="relative mt-4 inline-block whitespace-nowrap bg-blue-600 p-2 text-white">
+                                            amet consectetur,
+                                        </span>
+                                        adipisicing elit.
+                                    </>
+                                ),
                                 description:
                                     "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore.",
                             }}
@@ -145,7 +153,15 @@ const LandingPage = () => {
                     <Section>
                         <Stats
                             eyebrow="Lorem, ipsum dolor."
-                            title="Lorem ipsum dolor sit amet"
+                            title={
+                                <>
+                                    Lorem ipsum dolor sit{" "}
+                                    <span className="relative mt-4 inline-block whitespace-nowrap bg-blue-600 p-2 text-white">
+                                        amet consectetur,
+                                    </span>
+                                    adipisicing elit.
+                                </>
+                            }
                             description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
                             stats={exampleStats}
                         />
@@ -213,7 +229,15 @@ const LandingPage = () => {
 
                     <Section id="product-demo">
                         <ProductDemo
-                            title="Lorem ipsum dolor sit amet"
+                            title={
+                                <>
+                                    Lorem ipsum dolor sit{" "}
+                                    <span className="relative mt-4 inline-block whitespace-nowrap bg-blue-600 p-2 text-white">
+                                        amet consectetur,
+                                    </span>
+                                    adipisicing elit.
+                                </>
+                            }
                             subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit."
                             videoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
                         />
@@ -230,7 +254,15 @@ const LandingPage = () => {
 
                     <Section id="pricing">
                         <PricingComparison
-                            title="Lorem ipsum dolor sit amet"
+                            title={
+                                <>
+                                    Lorem ipsum dolor sit{" "}
+                                    <span className="relative mt-4 inline-block whitespace-nowrap bg-blue-600 p-2 text-white">
+                                        amet consectetur,
+                                    </span>
+                                    adipisicing elit.
+                                </>
+                            }
                             subtitle="Lorem, ipsum dolor."
                             description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, similique."
                             plans={defaultPricingPlans}
@@ -252,7 +284,15 @@ const LandingPage = () => {
                         <TestimonialsGrid
                             title={{
                                 badge: "CUSTOM BADGE TITLE",
-                                main: "Lorem ipsum dolor sit amet",
+                                main: (
+                                    <>
+                                        Lorem ipsum dolor sit{" "}
+                                        <span className="relative mt-4 inline-block whitespace-nowrap bg-blue-600 p-2 text-white">
+                                            amet consectetur,
+                                        </span>
+                                        adipisicing elit.
+                                    </>
+                                ),
                                 subtitle:
                                     "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cupiditate, odio!",
                             }}
@@ -265,7 +305,15 @@ const LandingPage = () => {
                     <Section>
                         <CTA
                             eyebrow="Lorem, ipsum dolor."
-                            title="Lorem ipsum dolor sit amet"
+                            title={
+                                <>
+                                    Lorem ipsum dolor sit{" "}
+                                    <span className="relative mt-4 inline-block whitespace-nowrap bg-blue-600 p-2 text-white">
+                                        amet consectetur,
+                                    </span>
+                                    adipisicing elit.
+                                </>
+                            }
                             description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis veniam accusantium reprehenderit exercitationem eum deleniti?"
                             primaryButton={{
                                 text: "Get started",

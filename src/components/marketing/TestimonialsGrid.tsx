@@ -5,11 +5,10 @@ import { Star, Loader } from "lucide-react";
 import TestimonialCard, { Testimonial } from "./TestimonialCard";
 import FeaturedTestimonialCard from "./FeaturedTestimonialCard";
 
-interface TestimonialsGridParams {
+interface TestimonialsGridProps {
     title?: {
         badge?: string;
-        main: string;
-        highlight?: string;
+        main: React.ReactNode;
         subtitle?: string;
     };
     testimonials: Testimonial[];
@@ -17,7 +16,7 @@ interface TestimonialsGridParams {
     className?: string;
 }
 
-const SectionHeader = ({ title }: { title: TestimonialsGridParams["title"] }) => {
+const SectionHeader = ({ title }: { title: TestimonialsGridProps["title"] }) => {
     if (!title) return null;
 
     return (
@@ -32,11 +31,10 @@ const SectionHeader = ({ title }: { title: TestimonialsGridParams["title"] }) =>
                     </span>
                 </div>
             )}
-            <h2 className="text-4xl font-medium tracking-tight md:text-5xl">
-                {title.main}{" "}
-                {title.highlight && <span className="text-gray-400">{title.highlight}</span>}
+            <h2 className="max-w-4xl text-4xl font-medium leading-tight tracking-tight md:text-5xl">
+                {title.main}
             </h2>
-            {title.subtitle && <p className="text-lg text-gray-600">{title.subtitle}</p>}
+            {title.subtitle && <p className="max-w-4xl text-lg text-gray-600">{title.subtitle}</p>}
         </div>
     );
 };
@@ -94,7 +92,7 @@ const TestimonialsGrid = ({
     testimonials,
     testimonialsPerPage = 6,
     className = "",
-}: TestimonialsGridParams) => {
+}: TestimonialsGridProps) => {
     const [displayCount, setDisplayCount] = useState(testimonialsPerPage);
     const [sortBy, setSortBy] = useState<"recent" | "rating">("recent");
     const [isLoading, setIsLoading] = useState(false);

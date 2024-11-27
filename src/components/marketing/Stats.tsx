@@ -8,7 +8,7 @@ interface Stat {
 }
 
 interface StatsParams {
-    title: string;
+    title: React.ReactNode;
     eyebrow: string;
     description: string;
     stats: Stat[];
@@ -34,7 +34,7 @@ const StatCard = ({ value, label, description, className, heightClass = "" }: St
     );
 };
 
-const Stats = ({ title, eyebrow = "Stats", description, stats }: StatsParams) => {
+const Stats = ({ title, eyebrow, description, stats }: StatsParams) => {
     return (
         <div className="flex flex-col gap-16">
             {/* Header Section */}

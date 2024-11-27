@@ -11,8 +11,8 @@ interface CompetitorComparisonItem {
 interface CompetitorComparisonParams {
     heading?: {
         eyebrow?: string;
-        title: string;
-        description?: string;
+        title: React.ReactNode;
+        description: string;
     };
     before: CompetitorComparisonItem;
     after: CompetitorComparisonItem;
