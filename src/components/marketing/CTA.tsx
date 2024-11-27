@@ -1,6 +1,6 @@
 import { ChevronRight } from "lucide-react";
 
-interface CTAProps {
+interface CTAParams {
     eyebrow?: string;
     title: string;
     description: string;
@@ -14,7 +14,7 @@ interface CTAProps {
     };
 }
 
-const CTA = ({ eyebrow = "CTA", title, description, primaryButton, secondaryButton }: CTAProps) => {
+const CTA = ({ eyebrow, title, description, primaryButton, secondaryButton }: CTAParams) => {
     return (
         <div className="flex flex-col items-center gap-6">
             <p className="text-sm font-medium text-blue-600">{eyebrow}</p>

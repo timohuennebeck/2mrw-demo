@@ -1,28 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
-import { Star, Loader, SearchIcon } from "lucide-react";
-import QuoteImg from "@/assets/quotes-white.svg";
+import { Star, Loader } from "lucide-react";
+import TestimonialCard, { Testimonial } from "./TestimonialCard";
+import FeaturedTestimonialCard from "./FeaturedTestimonialCard";
 
-export interface Testimonial {
-    content: {
-        text: string;
-        highlights?: string[];
-    };
-    author: {
-        name: string;
-        role: string;
-        company: string;
-        image: string;
-    };
-    rating?: number;
-    featured?: boolean;
-    date?: string;
-    verified?: boolean;
-}
-
-interface TestimonialsGridProps {
+interface TestimonialsGridParams {
     title?: {
         badge?: string;
         main: string;
@@ -34,135 +17,84 @@ interface TestimonialsGridProps {
     className?: string;
 }
 
-const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
-    const renderContent = (content: Testimonial["content"]) => {
-        if (typeof content === "string") return `"${content}"`;
-
-        let result = content.text;
-        content.highlights?.forEach((highlight) => {
-            result = result.replace(
-                highlight,
-                `<span class="rounded-lg bg-blue-50 px-2 py-0.5 text-blue-600">${highlight}</span>`,
-            );
-        });
-
-        // Replace newlines with <br /> tags
-        result = result.replace(/\n/g, "<br />");
-
-        return (
-            <p
-                className="text-lg text-gray-900"
-                dangerouslySetInnerHTML={{ __html: `"${result}"` }}
-            />
-        );
-    };
+const SectionHeader = ({ title }: { title: TestimonialsGridParams["title"] }) => {
+    if (!title) return null;
 
     return (
-        <div className="mb-8 flex break-inside-avoid flex-col gap-8 rounded-lg border border-gray-200 p-8">
-            <div className="flex flex-col gap-8">
-                <div className="flex items-center justify-between">
-                    {testimonial.rating && (
-                        <div className="flex gap-1">
-                            {[...Array(testimonial.rating)].map((_, i) => (
-                                <Star
-                                    key={i}
-                                    className="h-5 w-5 fill-current"
-                                    fill="currentColor"
-                                />
-                            ))}
-                        </div>
-                    )}
-                </div>
-                <blockquote className="text-lg text-gray-900">
-                    {renderContent(testimonial.content)}
-                </blockquote>
-            </div>
-            <div className="flex flex-row gap-3">
-                <Image
-                    src={testimonial.author.image}
-                    alt={testimonial.author.name}
-                    width={40}
-                    height={40}
-                    className="h-10 w-10 rounded-full bg-gray-200"
-                />
-                <div className="flex flex-col gap-1">
-                    <div className="font-medium">{testimonial.author.name}</div>
-                    <div className="text-sm text-gray-500">
-                        {testimonial.author.role} @{testimonial.author.company}
+        <div className="mx-auto flex flex-col gap-6 text-center">
+            {title.badge && (
+                <div className="flex items-center justify-center gap-2">
+                    <div className="rounded-lg bg-purple-50 p-2">
+                        <Star className="h-5 w-5 text-purple-600" />
                     </div>
-                    {testimonial.date && (
-                        <span className="text-xs text-gray-400">
-                            {new Date(testimonial.date).toLocaleDateString("en-US", {
-                                month: "long",
-                                day: "numeric",
-                                year: "numeric",
-                            })}
-                        </span>
-                    )}
+                    <span className="text-sm font-medium uppercase text-purple-600">
+                        {title.badge}
+                    </span>
                 </div>
-            </div>
+            )}
+            <h2 className="text-4xl font-medium tracking-tight md:text-5xl">
+                {title.main}{" "}
+                {title.highlight && <span className="text-gray-400">{title.highlight}</span>}
+            </h2>
+            {title.subtitle && <p className="text-lg text-gray-600">{title.subtitle}</p>}
         </div>
     );
 };
 
-const FeaturedTestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
-    const renderContent = (content: Testimonial["content"]) => {
-        if (typeof content === "string") return `"${content}"`;
-
-        let result = content.text;
-        content.highlights?.forEach((highlight) => {
-            result = result.replace(
-                highlight,
-                `<span class="rounded-lg bg-white/80 px-2 py-0.5 text-gray-900">${highlight}</span>`,
-            );
-        });
-
-        // Replace newlines with <br /> tags
-        result = result.replace(/\n/g, "<br />");
-
-        return (
-            <p
-                className="text-xl font-medium"
-                dangerouslySetInnerHTML={{ __html: `"${result}"` }}
-            />
-        );
-    };
-
-    return (
-        <div className="rounded-lg bg-black p-8 text-white">
-            <div className="flex h-full flex-col gap-8">
-                <div className="flex flex-col gap-8">
-                    <Image src={QuoteImg} alt="Quote" width={48} height={48} />
-                    <blockquote className="text-xl font-medium">
-                        {renderContent(testimonial.content)}
-                    </blockquote>
-                </div>
-                <div className="flex items-center gap-3">
-                    <Image
-                        src={testimonial.author.image}
-                        alt={testimonial.author.name}
-                        width={48}
-                        height={48}
-                        className="h-12 w-12 rounded-full bg-gray-800"
-                    />
-                    <div>
-                        <div className="font-medium">{testimonial.author.name}</div>
-                        <div className="text-sm text-gray-400">
-                            {testimonial.author.role} @{testimonial.author.company}
-                        </div>
-                    </div>
-                </div>
-            </div>
+const SortControls = ({
+    sortBy,
+    onSortChange,
+}: {
+    sortBy: "recent" | "rating";
+    onSortChange: (sort: "recent" | "rating") => void;
+}) => (
+    <div className="flex justify-end">
+        <div className="flex gap-2">
+            {[
+                { value: "recent", label: "Most Recent" },
+                { value: "rating", label: "Highest Rated" },
+            ].map(({ value, label }) => (
+                <button
+                    key={value}
+                    onClick={() => onSortChange(value as "recent" | "rating")}
+                    className={`rounded-lg px-4 py-2 text-sm transition-colors ${
+                        sortBy === value
+                            ? "bg-black text-white"
+                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
+                >
+                    {label}
+                </button>
+            ))}
         </div>
-    );
-};
+    </div>
+);
+
+const LoadMoreButton = ({ isLoading, onClick }: { isLoading: boolean; onClick: () => void }) => (
+    <div className="flex justify-center">
+        <button
+            onClick={onClick}
+            disabled={isLoading}
+            className="flex items-center gap-2 rounded-md border border-gray-300 bg-white px-6 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-70"
+        >
+            {isLoading ? (
+                <>
+                    <Loader className="h-4 w-4 animate-spin" />
+                    Loading...
+                </>
+            ) : (
+                "Load More Testimonials"
+            )}
+        </button>
+    </div>
+);
 
 const TestimonialsGrid = ({
     title,
     testimonials,
     testimonialsPerPage = 6,
     className = "",
-}: TestimonialsGridProps) => {
+}: TestimonialsGridParams) => {
     const [displayCount, setDisplayCount] = useState(testimonialsPerPage);
     const [sortBy, setSortBy] = useState<"recent" | "rating">("recent");
     const [isLoading, setIsLoading] = useState(false);
@@ -190,58 +122,10 @@ const TestimonialsGrid = ({
 
     return (
         <div className={`flex flex-col gap-12 ${className}`}>
-            {/* Optional Section Header */}
-            {title && (
-                <div className="mx-auto flex flex-col gap-6 text-center">
-                    {title.badge && (
-                        <div className="flex items-center justify-center gap-2">
-                            <div className="rounded-lg bg-purple-50 p-2">
-                                <Star className="h-5 w-5 text-purple-600" />
-                            </div>
-                            <span className="text-sm font-medium uppercase text-purple-600">
-                                {title.badge}
-                            </span>
-                        </div>
-                    )}
-                    <h2 className="text-4xl font-medium tracking-tight md:text-5xl">
-                        {title.main}{" "}
-                        {title.highlight && (
-                            <span className="text-gray-400">{title.highlight}</span>
-                        )}
-                    </h2>
-                    {title.subtitle && <p className="text-lg text-gray-600">{title.subtitle}</p>}
-                </div>
-            )}
+            <SectionHeader title={title} />
+            <SortControls sortBy={sortBy} onSortChange={setSortBy} />
 
-            {/* Sort Buttons */}
-            <div className="flex justify-end">
-                <div className="flex gap-2">
-                    <button
-                        onClick={() => setSortBy("recent")}
-                        className={`rounded-lg px-4 py-2 text-sm transition-colors ${
-                            sortBy === "recent"
-                                ? "bg-black text-white"
-                                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                        }`}
-                    >
-                        Most Recent
-                    </button>
-                    <button
-                        onClick={() => setSortBy("rating")}
-                        className={`rounded-lg px-4 py-2 text-sm transition-colors ${
-                            sortBy === "rating"
-                                ? "bg-black text-white"
-                                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                        }`}
-                    >
-                        Highest Rated
-                    </button>
-                </div>
-            </div>
-
-            {/* Testimonials Content */}
             <div className="flex flex-col gap-12">
-                {/* Featured Testimonials */}
                 {featuredTestimonials.length > 0 && (
                     <div className="grid gap-8 md:grid-cols-2">
                         {featuredTestimonials.map((testimonial, index) => (
@@ -250,34 +134,14 @@ const TestimonialsGrid = ({
                     </div>
                 )}
 
-                {/* Regular Testimonials */}
                 <div className="columns-1 gap-8 sm:columns-2 lg:columns-3">
                     {displayedTestimonials.map((testimonial, index) => (
                         <TestimonialCard key={index} testimonial={testimonial} />
                     ))}
                 </div>
 
-                {/* Load More Button */}
-                {hasMore && (
-                    <div className="flex justify-center">
-                        <button
-                            onClick={loadMore}
-                            disabled={isLoading}
-                            className="flex items-center gap-2 rounded-md border border-gray-300 bg-white px-6 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-70"
-                        >
-                            {isLoading ? (
-                                <>
-                                    <Loader className="h-4 w-4 animate-spin" />
-                                    Loading...
-                                </>
-                            ) : (
-                                "Load More Testimonials"
-                            )}
-                        </button>
-                    </div>
-                )}
+                {hasMore && <LoadMoreButton isLoading={isLoading} onClick={loadMore} />}
 
-                {/* Testimonials Count */}
                 <div className="text-center text-sm text-gray-500">
                     Showing {displayedTestimonials.length} of {regularTestimonials.length}{" "}
                     testimonials

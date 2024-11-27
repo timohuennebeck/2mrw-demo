@@ -3,7 +3,7 @@
 import { Play } from "lucide-react";
 import TestimonialRating from "./TestimonialRating";
 
-interface HeroProps {
+interface HeroParams {
     promoText?: string;
     title: React.ReactNode;
     subtitle: string;
@@ -26,8 +26,8 @@ const Hero = ({
     primaryCTA,
     secondaryCTA,
     demoVideoUrl,
-    showTestimonials = true,
-}: HeroProps) => {
+    showTestimonials,
+}: HeroParams) => {
     return (
         <section className="relative flex flex-col items-center justify-center gap-8 px-4 py-10 text-center">
             {/* Promotional Banner */}

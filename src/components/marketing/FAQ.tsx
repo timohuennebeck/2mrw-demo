@@ -8,19 +8,44 @@ interface FAQItem {
     answer: string;
 }
 
-interface FAQProps {
+interface FAQParams {
     title?: string;
     eyebrow?: string;
     tagline?: string;
     items: FAQItem[];
 }
 
-const FAQ = ({
-    title = "Your questions answered.",
-    eyebrow = "FAQ",
-    tagline = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est magni similique, in cum architecto voluptatibus?",
-    items = [],
-}: FAQProps) => {
+const FAQItem = ({
+    faq,
+    isOpen,
+    onToggle,
+    index,
+}: {
+    faq: FAQItem;
+    isOpen: boolean;
+    onToggle: () => void;
+    index: number;
+}) => (
+    <div key={index} className="flex flex-col gap-3 py-6">
+        <button onClick={onToggle} className="flex w-full items-start justify-between text-left">
+            <span className="text-base font-medium text-gray-900">{faq.question}</span>
+            <span className="ml-6 flex h-7 items-center">
+                <Plus
+                    className={`h-6 w-6 transform text-gray-400 transition-transform duration-200 ${
+                        isOpen ? "rotate-45" : ""
+                    }`}
+                />
+            </span>
+        </button>
+        {isOpen && (
+            <div className="pr-12">
+                <p className="text-base text-gray-600">{faq.answer}</p>
+            </div>
+        )}
+    </div>
+);
+
+const FAQ = ({ title, eyebrow, tagline, items = [] }: FAQParams) => {
     const [openIndex, setOpenIndex] = useState<number | null>(null);
 
     return (
@@ -36,28 +61,13 @@ const FAQ = ({
             <div className="md:col-span-2">
                 <div className="divide-y divide-gray-200">
                     {items.map((faq, index) => (
-                        <div key={index} className="flex flex-col gap-3 py-6">
-                            <button
-                                onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                                className="flex w-full items-start justify-between text-left"
-                            >
-                                <span className="text-base font-medium text-gray-900">
-                                    {faq.question}
-                                </span>
-                                <span className="ml-6 flex h-7 items-center">
-                                    <Plus
-                                        className={`h-6 w-6 transform text-gray-400 transition-transform duration-200 ${
-                                            openIndex === index ? "rotate-45" : ""
-                                        }`}
-                                    />
-                                </span>
-                            </button>
-                            {openIndex === index && (
-                                <div className="pr-12">
-                                    <p className="text-base text-gray-600">{faq.answer}</p>
-                                </div>
-                            )}
-                        </div>
+                        <FAQItem
+                            key={index}
+                            faq={faq}
+                            index={index}
+                            isOpen={openIndex === index}
+                            onToggle={() => setOpenIndex(openIndex === index ? null : index)}
+                        />
                     ))}
                 </div>
             </div>

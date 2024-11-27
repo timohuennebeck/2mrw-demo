@@ -8,7 +8,7 @@ interface Feature {
     bgColor: string;
 }
 
-interface FeaturesProps {
+interface FeaturesParams {
     videoOnLeft?: boolean;
     features: Feature[];
     title: string;
@@ -22,6 +22,29 @@ interface FeaturesProps {
     videoUrl: string;
 }
 
+const FeatureItem = ({
+    feature,
+    badgeTextColor,
+}: {
+    feature: Feature;
+    badgeTextColor?: string;
+}) => (
+    <div className="flex gap-4">
+        <div className="flex-shrink-0">
+            <div className={`${feature.bgColor} rounded-lg p-2`}>
+                <feature.icon
+                    className={`h-6 w-6 ${badgeTextColor ?? "text-purple-600"}`}
+                    aria-hidden="true"
+                />
+            </div>
+        </div>
+        <div>
+            <span className="font-medium">{feature.name}</span>{" "}
+            <span className="text-gray-600">{feature.description}</span>
+        </div>
+    </div>
+);
+
 const Features = ({
     videoOnLeft = false,
     features,
@@ -29,7 +52,7 @@ const Features = ({
     subtitle,
     badge,
     videoUrl,
-}: FeaturesProps) => {
+}: FeaturesParams) => {
     const BadgeIcon = badge.icon ?? Asterisk;
 
     return (
@@ -85,20 +108,11 @@ const Features = ({
 
             <div className="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
                 {features.map((feature) => (
-                    <div key={feature.name} className="flex gap-4">
-                        <div className="flex-shrink-0">
-                            <div className={`${feature.bgColor} rounded-lg p-2`}>
-                                <feature.icon
-                                    className={`h-6 w-6 ${badge.textColor ?? "text-purple-600"}`}
-                                    aria-hidden="true"
-                                />
-                            </div>
-                        </div>
-                        <div>
-                            <span className="font-medium">{feature.name}</span>{" "}
-                            <span className="text-gray-600">{feature.description}</span>
-                        </div>
-                    </div>
+                    <FeatureItem
+                        key={feature.name}
+                        feature={feature}
+                        badgeTextColor={badge.textColor}
+                    />
                 ))}
             </div>
         </div>

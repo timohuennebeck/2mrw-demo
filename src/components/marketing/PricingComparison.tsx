@@ -19,7 +19,7 @@ interface PricingFeatureSection {
     items: PricingFeatureItem[];
 }
 
-interface PricingComparisonProps {
+interface PricingComparisonParams {
     title?: string;
     subtitle?: string;
     description?: string;
@@ -28,6 +28,51 @@ interface PricingComparisonProps {
     buttonText?: string;
 }
 
+const PricingPlanHeader = ({ plan, buttonText }: { plan: PricingPlan; buttonText: string }) => (
+    <div className="col-span-1 flex flex-col gap-6 text-center">
+        <h3 className="text-lg font-medium">{plan.name}</h3>
+        <div>
+            <span className="text-4xl font-medium">{plan.price}</span>
+            <span className="text-sm text-gray-500">{plan.period}</span>
+        </div>
+        <button
+            className={`w-full rounded-md px-6 py-2.5 text-sm transition-colors ${
+                plan.buttonVariant === "primary"
+                    ? "bg-black text-white hover:bg-gray-800"
+                    : "bg-gray-100 text-gray-900 hover:bg-gray-200"
+            }`}
+        >
+            {buttonText}
+        </button>
+    </div>
+);
+
+const FeatureCell = ({ value }: { value: boolean | string }) => {
+    if (typeof value === "boolean") {
+        return value ? (
+            <Check className="mx-auto h-5 w-5 text-black" />
+        ) : (
+            <X className="mx-auto h-5 w-5 text-gray-400" />
+        );
+    }
+    return <span className="text-sm">{value}</span>;
+};
+
+const FeatureRow = ({ item }: { item: PricingFeatureItem }) => (
+    <div className="grid grid-cols-4 gap-8 py-6">
+        <div className="col-span-1 text-sm text-gray-600">{item.name}</div>
+        <div className="col-span-1 text-center">
+            <FeatureCell value={item.starter} />
+        </div>
+        <div className="col-span-1 text-center">
+            <FeatureCell value={item.growth} />
+        </div>
+        <div className="col-span-1 text-center">
+            <FeatureCell value={item.scale} />
+        </div>
+    </div>
+);
+
 const PricingComparison = ({
     title = "Lorem ipsum dolor sit amet.",
     subtitle = "Pricing",
@@ -35,7 +80,7 @@ const PricingComparison = ({
     plans,
     features,
     buttonText = "Buy plan",
-}: PricingComparisonProps) => {
+}: PricingComparisonParams) => {
     return (
         <div className="flex flex-col gap-16">
             {/* Header Section */}
@@ -49,22 +94,7 @@ const PricingComparison = ({
             <div className="grid grid-cols-4 gap-8">
                 <div className="col-span-1" />
                 {plans.map((plan) => (
-                    <div key={plan.name} className="col-span-1 flex flex-col gap-6 text-center">
-                        <h3 className="text-lg font-medium">{plan.name}</h3>
-                        <div>
-                            <span className="text-4xl font-medium">{plan.price}</span>
-                            <span className="text-sm text-gray-500">{plan.period}</span>
-                        </div>
-                        <button
-                            className={`w-full rounded-md px-6 py-2.5 text-sm transition-colors ${
-                                plan.buttonVariant === "primary"
-                                    ? "bg-black text-white hover:bg-gray-800"
-                                    : "bg-gray-100 text-gray-900 hover:bg-gray-200"
-                            }`}
-                        >
-                            {buttonText}
-                        </button>
-                    </div>
+                    <PricingPlanHeader key={plan.name} plan={plan} buttonText={buttonText} />
                 ))}
             </div>
 
@@ -75,47 +105,7 @@ const PricingComparison = ({
                         <h4 className="text-base font-medium">{section.category}</h4>
                         <div className="divide-y divide-gray-200">
                             {section.items.map((item) => (
-                                <div key={item.name} className="grid grid-cols-4 gap-8 py-6">
-                                    <div className="col-span-1 text-sm text-gray-600">
-                                        {item.name}
-                                    </div>
-                                    {/* Starter */}
-                                    <div className="col-span-1 text-center">
-                                        {typeof item.starter === "boolean" ? (
-                                            item.starter ? (
-                                                <Check className="mx-auto h-5 w-5 text-black" />
-                                            ) : (
-                                                <X className="mx-auto h-5 w-5 text-gray-400" />
-                                            )
-                                        ) : (
-                                            <span className="text-sm">{item.starter}</span>
-                                        )}
-                                    </div>
-                                    {/* Growth */}
-                                    <div className="col-span-1 text-center">
-                                        {typeof item.growth === "boolean" ? (
-                                            item.growth ? (
-                                                <Check className="mx-auto h-5 w-5 text-black" />
-                                            ) : (
-                                                <X className="mx-auto h-5 w-5 text-gray-400" />
-                                            )
-                                        ) : (
-                                            <span className="text-sm">{item.growth}</span>
-                                        )}
-                                    </div>
-                                    {/* Scale */}
-                                    <div className="col-span-1 text-center">
-                                        {typeof item.scale === "boolean" ? (
-                                            item.scale ? (
-                                                <Check className="mx-auto h-5 w-5 text-black" />
-                                            ) : (
-                                                <X className="mx-auto h-5 w-5 text-gray-400" />
-                                            )
-                                        ) : (
-                                            <span className="text-sm">{item.scale}</span>
-                                        )}
-                                    </div>
-                                </div>
+                                <FeatureRow key={item.name} item={item} />
                             ))}
                         </div>
                     </div>

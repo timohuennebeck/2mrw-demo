@@ -1,10 +1,10 @@
-interface ProductDemoProps {
+interface ProductDemoParams {
     title: string;
     subtitle: string;
     videoUrl: string;
 }
 
-const ProductDemo = ({ title, subtitle, videoUrl }: ProductDemoProps) => {
+const ProductDemo = ({ title, subtitle, videoUrl }: ProductDemoParams) => {
     return (
         <div className="flex flex-col items-center justify-center gap-10 text-center">
             <div className="flex flex-col gap-6">

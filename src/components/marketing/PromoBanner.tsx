@@ -1,16 +1,16 @@
 "use client";
 
-import Link from "next/link";
 import { ArrowRight, X } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
-interface PromoBannerProps {
+interface PromoBannerParams {
     text: {
         desktop: string;
         mobile?: string;
         code?: string;
     };
-    link?: {
+    link: {
         href: string;
         label: string;
     };
@@ -18,12 +18,7 @@ interface PromoBannerProps {
     className?: string;
 }
 
-const PromoBanner = ({
-    text,
-    link,
-    emoji = "🚀",
-    className = "bg-black text-white",
-}: PromoBannerProps) => {
+const PromoBanner = ({ text, link, emoji, className }: PromoBannerParams) => {
     const [isVisible, setIsVisible] = useState(true);
 
     if (!isVisible) return null;

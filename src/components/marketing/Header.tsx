@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-import { ArrowRight } from "lucide-react";
 import { handleSmoothScroll } from "@/utils/navigation";
+import { ArrowRight } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 interface NavItem {
     href: string;
@@ -11,26 +11,19 @@ interface NavItem {
     isExternal?: boolean;
 }
 
-interface HeaderProps {
-    navItems?: NavItem[];
-    logoSrc?: string;
-    logoAlt?: string;
-    loginHref?: string;
+interface HeaderParams {
+    navItems: NavItem[];
+    logoSrc: string;
+    loginHref: string;
 }
 
-const Header = ({ navItems = [], logoSrc, logoAlt, loginHref }: HeaderProps) => {
+const Header = ({ navItems, logoSrc, loginHref }: HeaderParams) => {
     return (
         <header>
             <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-8 sm:px-6 lg:px-8">
                 {/* Logo */}
                 <Link href="/" className="flex items-center">
-                    <Image
-                        src={logoSrc ?? ""}
-                        alt={logoAlt ?? ""}
-                        width={32}
-                        height={32}
-                        className="h-8 w-auto"
-                    />
+                    <Image src={logoSrc} alt="logo" width={32} height={32} className="h-8 w-auto" />
                 </Link>
 
                 {/* Navigation */}

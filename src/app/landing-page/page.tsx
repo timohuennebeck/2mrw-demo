@@ -1,6 +1,6 @@
 "use client";
 
-import BeforeAfter from "@/components/marketing/BeforeAfter";
+import CompetitorComparison from "@/components/marketing/CompetitorComparison";
 import CTA from "@/components/marketing/CTA";
 import FAQ from "@/components/marketing/FAQ";
 import FeaturedTestimonial from "@/components/marketing/FeaturedTestimonial";
@@ -59,7 +59,6 @@ const LandingPage = () => {
                         { href: "https://docs.2mrw.dev", label: "Documentation", isExternal: true },
                     ]}
                     logoSrc="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
-                    logoAlt="My Company"
                     loginHref="/signin"
                 />
                 <Hero
@@ -97,7 +96,7 @@ const LandingPage = () => {
                     </Section>
 
                     <Section>
-                        <BeforeAfter
+                        <CompetitorComparison
                             heading={{
                                 eyebrow: "Lorem, ipsum dolor.",
                                 title: "Lorem ipsum dolor sit amet",

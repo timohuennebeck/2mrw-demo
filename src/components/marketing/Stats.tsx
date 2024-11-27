@@ -7,14 +7,34 @@ interface Stat {
     className: string;
 }
 
-interface StatsProps {
+interface StatsParams {
     title: string;
     eyebrow: string;
     description: string;
     stats: Stat[];
 }
 
-export default function StatsSection({ title, eyebrow = "Stats", description, stats }: StatsProps) {
+interface StatCardParams {
+    value: string;
+    label: string;
+    description: string;
+    className: string;
+    heightClass?: string;
+}
+
+const StatCard = ({ value, label, description, className, heightClass = "" }: StatCardParams) => {
+    return (
+        <div className={`${className} ${heightClass} flex flex-col justify-between gap-4`}>
+            <p className="text-4xl font-semibold tracking-tight">{value}</p>
+            <div className="flex flex-col gap-2">
+                <p className="text-lg font-semibold">{label}</p>
+                <p className="text-base text-gray-400">{description}</p>
+            </div>
+        </div>
+    );
+};
+
+const Stats = ({ title, eyebrow = "Stats", description, stats }: StatsParams) => {
     return (
         <div className="flex flex-col gap-16">
             {/* Header Section */}
@@ -36,9 +56,9 @@ export default function StatsSection({ title, eyebrow = "Stats", description, st
             </div>
         </div>
     );
-}
+};
 
-function getColumnClassName(index: number): string {
+const getColumnClassName = (index: number): string => {
     switch (index) {
         case 0:
             return "sm:col-span-3 sm:row-span-2 sm:row-start-3";
@@ -49,24 +69,6 @@ function getColumnClassName(index: number): string {
         default:
             return "";
     }
-}
+};
 
-interface StatCardProps {
-    value: string;
-    label: string;
-    description: string;
-    className: string;
-    heightClass?: string;
-}
-
-function StatCard({ value, label, description, className, heightClass = "" }: StatCardProps) {
-    return (
-        <div className={`${className} ${heightClass} flex flex-col justify-between gap-4`}>
-            <p className="text-4xl font-semibold tracking-tight">{value}</p>
-            <div className="flex flex-col gap-2">
-                <p className="text-lg font-semibold">{label}</p>
-                <p className="text-base text-gray-400">{description}</p>
-            </div>
-        </div>
-    );
-}
+export default Stats;
