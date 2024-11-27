@@ -59,7 +59,7 @@ const LandingPage = () => {
                         { href: "https://docs.2mrw.dev", label: "Documentation", isExternal: true },
                     ]}
                     logoSrc="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
-                    loginHref="/signin"
+                    loginOnClick={() => {}}
                 />
                 <Hero
                     promoText="LOREM IPSUM DOLOR SIT AMET"

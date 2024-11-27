@@ -14,10 +14,10 @@ interface NavItem {
 interface HeaderParams {
     navItems: NavItem[];
     logoSrc: string;
-    loginHref: string;
+    loginOnClick: () => void;
 }
 
-const Header = ({ navItems, logoSrc, loginHref }: HeaderParams) => {
+const Header = ({ navItems, logoSrc, loginOnClick }: HeaderParams) => {
     return (
         <header>
             <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-8 sm:px-6 lg:px-8">
@@ -45,13 +45,13 @@ const Header = ({ navItems, logoSrc, loginHref }: HeaderParams) => {
                 </nav>
 
                 {/* Login Button */}
-                <Link
-                    href={loginHref ?? ""}
+                <button
+                    onClick={loginOnClick}
                     className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-gray-900"
                 >
                     Log in
                     <ArrowRight size={16} className="text-gray-400" />
-                </Link>
+                </button>
             </div>
         </header>
     );
