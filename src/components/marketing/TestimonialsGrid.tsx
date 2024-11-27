@@ -58,7 +58,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
     };
 
     return (
-        <div className="break-inside-avoid rounded-lg border border-gray-200 p-8 flex flex-col gap-8 mb-8">
+        <div className="mb-8 flex break-inside-avoid flex-col gap-8 rounded-lg border border-gray-200 p-8">
             <div className="flex flex-col gap-8">
                 <div className="flex items-center justify-between">
                     {testimonial.rating && (
@@ -164,22 +164,11 @@ const TestimonialsGrid = ({
     className = "",
 }: TestimonialsGridProps) => {
     const [displayCount, setDisplayCount] = useState(testimonialsPerPage);
-    const [filterRating, setFilterRating] = useState<number | null>(null);
-    const [searchTerm, setSearchTerm] = useState("");
     const [sortBy, setSortBy] = useState<"recent" | "rating">("recent");
     const [isLoading, setIsLoading] = useState(false);
 
-    // Filter and sort testimonials
-    let filteredTestimonials = testimonials.filter((testimonial) => {
-        const matchesRating = filterRating ? testimonial.rating === filterRating : true;
-        const matchesSearch = searchTerm
-            ? testimonial.content.text.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              testimonial.author.name.toLowerCase().includes(searchTerm.toLowerCase())
-            : true;
-        return matchesRating && matchesSearch;
-    });
+    let filteredTestimonials = [...testimonials];
 
-    // Sort testimonials
     filteredTestimonials.sort((a, b) => {
         if (sortBy === "rating") {
             return (b.rating || 0) - (a.rating || 0);
@@ -203,7 +192,7 @@ const TestimonialsGrid = ({
         <div className={`flex flex-col gap-12 ${className}`}>
             {/* Optional Section Header */}
             {title && (
-                <div className="mx-auto text-center flex flex-col gap-6">
+                <div className="mx-auto flex flex-col gap-6 text-center">
                     {title.badge && (
                         <div className="flex items-center justify-center gap-2">
                             <div className="rounded-lg bg-purple-50 p-2">
@@ -220,55 +209,33 @@ const TestimonialsGrid = ({
                             <span className="text-gray-400">{title.highlight}</span>
                         )}
                     </h2>
-                    {title.subtitle && (
-                        <p className="text-lg text-gray-600">{title.subtitle}</p>
-                    )}
+                    {title.subtitle && <p className="text-lg text-gray-600">{title.subtitle}</p>}
                 </div>
             )}
 
-            {/* Filters & Search */}
-            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-                {/* Rating Filters */}
-                <div className="flex flex-wrap gap-2">
-                    {[5, 4, 3].map((rating) => (
-                        <button
-                            key={rating}
-                            onClick={() =>
-                                setFilterRating(filterRating === rating ? null : rating)
-                            }
-                            className={`rounded-lg px-4 py-2 text-sm transition-colors ${
-                                filterRating === rating
-                                    ? "bg-black text-white"
-                                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                            }`}
-                        >
-                            {rating} Stars
-                        </button>
-                    ))}
-                </div>
-
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                    {/* Search */}
-                    <div className="relative">
-                        <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                        <input
-                            type="text"
-                            placeholder="Search testimonials..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full rounded-md border border-gray-300 py-2 pl-10 pr-4 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:w-64"
-                        />
-                    </div>
-
-                    {/* Sort */}
-                    <select
-                        value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value as "recent" | "rating")}
-                        className="rounded-md border border-gray-300 px-4 py-2 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+            {/* Sort Buttons */}
+            <div className="flex justify-end">
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => setSortBy("recent")}
+                        className={`rounded-lg px-4 py-2 text-sm transition-colors ${
+                            sortBy === "recent"
+                                ? "bg-black text-white"
+                                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        }`}
                     >
-                        <option value="recent">Most Recent</option>
-                        <option value="rating">Highest Rated</option>
-                    </select>
+                        Most Recent
+                    </button>
+                    <button
+                        onClick={() => setSortBy("rating")}
+                        className={`rounded-lg px-4 py-2 text-sm transition-colors ${
+                            sortBy === "rating"
+                                ? "bg-black text-white"
+                                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        }`}
+                    >
+                        Highest Rated
+                    </button>
                 </div>
             </div>
 
@@ -312,7 +279,8 @@ const TestimonialsGrid = ({
 
                 {/* Testimonials Count */}
                 <div className="text-center text-sm text-gray-500">
-                    Showing {displayedTestimonials.length} of {regularTestimonials.length} testimonials
+                    Showing {displayedTestimonials.length} of {regularTestimonials.length}{" "}
+                    testimonials
                 </div>
             </div>
         </div>

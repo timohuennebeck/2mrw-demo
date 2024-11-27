@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { Play } from "lucide-react";
 import TestimonialRating from "./TestimonialRating";
 
@@ -10,11 +9,11 @@ interface HeroProps {
     subtitle: string;
     primaryCTA: {
         text: string;
-        href: string;
+        onClick?: (e: React.MouseEvent) => void;
     };
     secondaryCTA?: {
         text: string;
-        onClick?: () => void;
+        onClick?: (e: React.MouseEvent) => void;
     };
     demoVideoUrl?: string;
     showTestimonials?: boolean;
@@ -31,7 +30,6 @@ const Hero = ({
 }: HeroProps) => {
     return (
         <section className="relative flex flex-col items-center justify-center gap-8 px-4 py-10 text-center">
-
             {/* Promotional Banner */}
             {promoText && (
                 <div className="rounded-lg bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600">
@@ -49,12 +47,12 @@ const Hero = ({
 
             {/* CTA Buttons */}
             <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
-                <Link
-                    href={primaryCTA.href}
+                <button
                     className="rounded-md bg-black px-6 py-2.5 text-white transition-colors hover:bg-gray-800"
+                    onClick={primaryCTA.onClick}
                 >
                     {primaryCTA.text}
-                </Link>
+                </button>
                 {secondaryCTA && (
                     <button
                         onClick={secondaryCTA.onClick}

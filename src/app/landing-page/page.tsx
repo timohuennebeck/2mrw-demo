@@ -22,6 +22,7 @@ import { footerLinks } from "@/data/marketing/footer";
 import { defaultPricingFeatures, defaultPricingPlans } from "@/data/marketing/pricing";
 import { exampleStats } from "@/data/marketing/stats";
 import { testimonials } from "@/data/marketing/testimonials";
+import { handleSmoothScroll } from "@/utils/navigation";
 import { Manrope } from "next/font/google";
 
 const manrope = Manrope({
@@ -74,11 +75,11 @@ const LandingPage = () => {
                     subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, saepe dicta eligendi praesentium accusamus cupiditate?"
                     primaryCTA={{
                         text: "Get Started Now",
-                        href: "/get-started",
+                        onClick: (e) => handleSmoothScroll(e, "#pricing"),
                     }}
                     secondaryCTA={{
                         text: "Watch Demo",
-                        onClick: () => {},
+                        onClick: (e) => handleSmoothScroll(e, "#product-demo"),
                     }}
                     demoVideoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
                 />
@@ -211,7 +212,7 @@ const LandingPage = () => {
                         />
                     </Section>
 
-                    <Section>
+                    <Section id="product-demo">
                         <ProductDemo
                             title="Lorem ipsum dolor sit amet"
                             subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit."
@@ -269,11 +270,11 @@ const LandingPage = () => {
                             description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis veniam accusantium reprehenderit exercitationem eum deleniti?"
                             primaryButton={{
                                 text: "Get started",
-                                onClick: () => console.log("Primary button clicked"),
+                                onClick: (e) => handleSmoothScroll(e, "#pricing"),
                             }}
                             secondaryButton={{
                                 text: "Learn more",
-                                onClick: () => console.log("Secondary button clicked"),
+                                onClick: (e) => handleSmoothScroll(e, "#features"),
                             }}
                         />
                     </Section>

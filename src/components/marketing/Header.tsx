@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import { handleSmoothScroll } from "@/utils/navigation";
 
 interface NavItem {
     href: string;
@@ -18,19 +19,6 @@ interface HeaderProps {
 }
 
 const Header = ({ navItems = [], logoSrc, logoAlt, loginHref }: HeaderProps) => {
-    const handleClick = (e: React.MouseEvent, href: string) => {
-        if (href.startsWith("#")) {
-            e.preventDefault();
-            const element = document.querySelector(href);
-            if (element) {
-                element.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                });
-            }
-        }
-    };
-
     return (
         <header>
             <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-8 sm:px-6 lg:px-8">
@@ -51,7 +39,7 @@ const Header = ({ navItems = [], logoSrc, logoAlt, loginHref }: HeaderProps) => 
                         <Link
                             key={item.href}
                             href={item.href}
-                            onClick={(e) => handleClick(e, item.href)}
+                            onClick={(e) => handleSmoothScroll(e, item.href)}
                             className="text-sm text-gray-600 hover:text-gray-900"
                             {...(item.isExternal && {
                                 target: "_blank",
