@@ -106,19 +106,16 @@ const LandingPage = () => {
                             before={{
                                 bulletPoints: [
                                     {
-                                        text: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+                                        text: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem.",
                                     },
                                     {
-                                        text: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+                                        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                                     },
                                     {
-                                        text: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+                                        text: "Ut enim ad minima veniam, quis nostrum exercitationem ullam.",
                                     },
                                     {
-                                        text: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-                                    },
-                                    {
-                                        text: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+                                        text: "Quis autem vel eum iure reprehenderit qui in ea voluptate velit.",
                                     },
                                 ],
                                 imagePath:
@@ -127,19 +124,16 @@ const LandingPage = () => {
                             after={{
                                 bulletPoints: [
                                     {
-                                        text: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+                                        text: "Excepteur sint occaecat cupidatat non proident sunt in culpa.",
                                     },
                                     {
-                                        text: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+                                        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                                     },
                                     {
-                                        text: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+                                        text: "Temporibus autem quibusdam et aut officiis debitis aut rerum.",
                                     },
                                     {
-                                        text: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-                                    },
-                                    {
-                                        text: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+                                        text: "Itaque earum rerum hic tenetur a sapiente delectus ut aut.",
                                     },
                                 ],
                                 imagePath:
