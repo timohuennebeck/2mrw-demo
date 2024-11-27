@@ -15,13 +15,13 @@ import PromoBanner from "@/components/marketing/PromoBanner";
 import Stats from "@/components/marketing/Stats";
 import TestimonialsGrid from "@/components/marketing/TestimonialsGrid";
 import Section from "@/components/ui/Section";
-import { faqs } from "@/data/marketing/faqs";
-import { authFeatures, databaseFeatures, emailFeatures } from "@/data/marketing/features";
-import { featuresList } from "@/data/marketing/featuresList";
-import { footerLinks } from "@/data/marketing/footer";
-import { defaultPricingFeatures, defaultPricingPlans } from "@/data/marketing/pricing";
-import { exampleStats } from "@/data/marketing/stats";
-import { testimonials } from "@/data/marketing/testimonials";
+import { faq } from "@/data/marketing/faq-data";
+import { authFeatures, databaseFeatures, emailFeatures } from "@/data/marketing/features-data";
+import { featuresList } from "@/data/marketing/features-list-data";
+import { footerLinks } from "@/data/marketing/footer-data";
+import { defaultPricingFeatures, defaultPricingPlans } from "@/data/marketing/pricing-data";
+import { exampleStats } from "@/data/marketing/stats-data";
+import { testimonials } from "@/data/marketing/testimonials-data";
 import { handleSmoothScroll } from "@/utils/navigation";
 import { Manrope } from "next/font/google";
 
@@ -245,7 +245,7 @@ const LandingPage = () => {
                             eyebrow="Lorem, ipsum dolor."
                             title="Lorem ipsum dolor sit amet"
                             tagline="Lorem ipsum dolor sit amet, consectetur adipisicing elit."
-                            items={faqs}
+                            items={faq}
                         />
                     </Section>
 

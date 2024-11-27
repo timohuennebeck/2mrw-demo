@@ -1,4 +1,4 @@
-export const faqs = [
+export const faq = [
     {
         question: "Lorem ipsum dolor sit amet?",
         answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
