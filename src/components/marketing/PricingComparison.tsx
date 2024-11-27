@@ -20,15 +20,23 @@ interface PricingFeatureSection {
 }
 
 interface PricingComparisonParams {
-    title?: string;
-    subtitle?: string;
-    description?: string;
+    title: string;
+    subtitle: string;
+    description: string;
     plans: PricingPlan[];
     features: PricingFeatureSection[];
-    buttonText?: string;
+    buttonText: string;
 }
 
-const PricingPlanHeader = ({ plan, buttonText }: { plan: PricingPlan; buttonText: string }) => (
+const PricingPlanHeader = ({
+    plan,
+    buttonText,
+    onClick,
+}: {
+    plan: PricingPlan;
+    buttonText: string;
+    onClick: () => void;
+}) => (
     <div className="col-span-1 flex flex-col gap-6 text-center">
         <h3 className="text-lg font-medium">{plan.name}</h3>
         <div>
@@ -41,6 +49,7 @@ const PricingPlanHeader = ({ plan, buttonText }: { plan: PricingPlan; buttonText
                     ? "bg-black text-white hover:bg-gray-800"
                     : "bg-gray-100 text-gray-900 hover:bg-gray-200"
             }`}
+            onClick={onClick}
         >
             {buttonText}
         </button>
@@ -74,12 +83,12 @@ const FeatureRow = ({ item }: { item: PricingFeatureItem }) => (
 );
 
 const PricingComparison = ({
-    title = "Lorem ipsum dolor sit amet.",
-    subtitle = "Pricing",
-    description = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci optio nisi illum animi similique? Minus pariatur tempore aspernatur minima rerum!",
+    title,
+    subtitle,
+    description,
     plans,
     features,
-    buttonText = "Buy plan",
+    buttonText,
 }: PricingComparisonParams) => {
     return (
         <div className="flex flex-col gap-16">
@@ -94,7 +103,12 @@ const PricingComparison = ({
             <div className="grid grid-cols-4 gap-8">
                 <div className="col-span-1" />
                 {plans.map((plan) => (
-                    <PricingPlanHeader key={plan.name} plan={plan} buttonText={buttonText} />
+                    <PricingPlanHeader
+                        key={plan.name}
+                        plan={plan}
+                        buttonText={buttonText}
+                        onClick={plan.onClick}
+                    />
                 ))}
             </div>
 

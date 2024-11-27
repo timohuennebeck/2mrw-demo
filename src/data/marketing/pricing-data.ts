@@ -4,12 +4,14 @@ export const defaultPricingPlans = [
         price: "$19",
         period: "/month",
         buttonVariant: "secondary",
+        onClick: () => {},
     },
     {
         name: "Ipsum",
         price: "$49",
         period: "/month",
         buttonVariant: "primary",
+        onClick: () => {},
     },
     {
         name: "Dolor",
