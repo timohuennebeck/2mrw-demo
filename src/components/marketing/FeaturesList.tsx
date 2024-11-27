@@ -35,9 +35,7 @@ const FeaturesList = ({
             {/* Header Column */}
             <div className="flex flex-col gap-6">
                 <p className="text-sm font-medium text-blue-600">{sectionTitle}</p>
-                <h2 className="max-w-4xl text-4xl font-medium tracking-tight md:text-5xl">
-                    {heading}
-                </h2>
+                <h2 className="max-w-4xl text-4xl font-medium tracking-tight">{heading}</h2>
                 <p className="max-w-3xl text-lg text-gray-600">{description}</p>
             </div>
 

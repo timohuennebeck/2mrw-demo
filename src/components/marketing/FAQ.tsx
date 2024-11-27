@@ -53,7 +53,7 @@ const FAQ = ({ title, eyebrow, tagline, items = [] }: FAQParams) => {
             {/* Left Column - Title */}
             <div className="flex flex-col gap-4">
                 <p className="text-sm font-medium text-blue-600">{eyebrow}</p>
-                <h2 className="text-4xl font-medium tracking-tight">{title}</h2>
+                <h2 className="max-w-4xl text-4xl font-medium tracking-tight">{title}</h2>
                 <p className="text-lg text-gray-600">{tagline}</p>
             </div>
 
