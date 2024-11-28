@@ -1,6 +1,20 @@
 import ReactConfetti from "react-confetti";
-import CustomButton from "@/components/application/CustomButton/CustomButton";
-import { CustomPopupParams } from "./CustomPopup.interface";
+import CustomButton from "@/components/application/CustomButton";
+
+export interface CustomPopupParams {
+    title: string;
+    description: string;
+    icon: React.ReactNode;
+    iconBackgroundColor: string;
+    mainButtonColor?: string;
+    mainButtonText?: string;
+    mainButtonIsLoading?: boolean;
+    hideSecondaryButton?: boolean;
+    showConfetti?: boolean;
+    dataTestId?: string;
+    onConfirm: () => void;
+    onCancel: () => void;
+}
 
 const CustomPopup = ({
     title,

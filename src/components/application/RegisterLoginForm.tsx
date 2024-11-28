@@ -1,17 +1,33 @@
 "use client";
 
-import GoogleButton from "@/components/application/GoogleButton/GoogleButton";
+import GoogleButton from "@/components/application/GoogleButton";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { validateEmailFormat } from "@/utils/validators/formatValidator";
-import { RegisterLoginFormParams } from "./RegisterLoginForm.interface";
 import { TextConstants } from "@/constants/TextConstants";
-import FormStatusMessage from "../FormStatusMessage/FormStatusMessage";
-import InputField from "@/components/application/InputField/InputField";
-import PasswordStrengthChecker from "../PasswordStrengthChecker/PasswordStrengthChecker";
-import CustomButton from "@/components/application/CustomButton/CustomButton";
-import FormDivider from "../FormDivider/FormDivider";
+import FormStatusMessage from "./FormStatusMessage";
+import InputField from "@/components/application/InputField";
+import PasswordStrengthChecker from "./PasswordStrengthChecker";
+import CustomButton from "@/components/application/CustomButton";
+import FormDivider from "@/components/application/FormDivider";
+import { StatusMessage } from "@/interfaces";
+
+export interface RegisterLoginFormParams {
+    mode: string;
+    handleSubmit: ({
+        email,
+        password,
+        firstName,
+    }: {
+        email: string;
+        password: string;
+        firstName: string;
+    }) => void;
+    loginWithMagicLink?: (email: string) => void;
+    isLoading: boolean;
+    statusMessage?: StatusMessage | null;
+}
 
 const RegisterLoginForm = ({
     mode,

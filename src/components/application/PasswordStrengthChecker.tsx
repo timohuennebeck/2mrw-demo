@@ -1,6 +1,9 @@
 import { TextConstants } from "@/constants/TextConstants";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
-import { PasswordStrengthCheckerParams } from "./PasswordStrengthChecker.interface";
+
+export interface PasswordStrengthCheckerParams {
+    password: string;
+}
 
 const PasswordStrengthChecker = ({ password }: PasswordStrengthCheckerParams) => {
     const isLongEnough = password.length >= 6;

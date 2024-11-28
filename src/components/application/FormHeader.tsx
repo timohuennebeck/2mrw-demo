@@ -1,11 +1,11 @@
-import { FormHeaderParams } from "./FormHeader.interface";
+export interface FormHeaderParams {
+    title: string;
+    description: string;
+    isPageHeader?: boolean;
+    color?: string;
+}
 
-const FormHeader = ({
-    title,
-    description,
-    isPageHeader = false,
-    color,
-}: FormHeaderParams) => {
+const FormHeader = ({ title, description, isPageHeader = false, color }: FormHeaderParams) => {
     return (
         <div className={`${isPageHeader ? "mb-12" : "mb-4"}`}>
             <h3

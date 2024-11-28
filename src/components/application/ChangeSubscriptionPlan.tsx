@@ -21,10 +21,9 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { BillingPlan, SubscriptionInterval, SubscriptionStatus } from "@/enums";
-import CustomPopup from "@/components/application/CustomPopup/CustomPopup";
-import { ChangeSubscriptionPlanParams } from "./ChangeSubscriptionPlan.interface";
-import CustomButton from "@/components/application/CustomButton/CustomButton";
-import FormHeader from "@/components/application/FormHeader/FormHeader";
+import CustomButton from "@/components/application/CustomButton";
+import CustomPopup from "@/components/application/CustomPopup";
+import FormHeader from "@/components/application/FormHeader";
 
 const _findButtonTitle = (isFreePlan: boolean, subscriptionStatus: SubscriptionStatus) => {
     if (!subscriptionStatus) return TextConstants.TEXT__UNLOCK_PLAN;
@@ -47,6 +46,10 @@ const _isFreePlan = ({
 
     return products.find((p) => p.id === selectedPlanId)?.billing_plan === BillingPlan.NONE;
 };
+
+export interface ChangeSubscriptionPlanParams {
+    products: ProductWithPrices[];
+}
 
 const ChangeSubscriptionPlan = ({ products }: ChangeSubscriptionPlanParams) => {
     const { authUser } = useSession();

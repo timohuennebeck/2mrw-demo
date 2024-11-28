@@ -1,14 +1,14 @@
 import { CheckBadgeIcon } from "@heroicons/react/24/solid";
-import { PlanFeatures } from "@/components/application/PlanFeatures/PlanFeatures";
 import { getProductDetailsByStripePriceId } from "@/services/domain/pricingService";
 import { getCurrency } from "@/config/paymentConfig";
 import { CalendarClock } from "lucide-react";
 import { getFeaturesWithAvailability } from "@/services/domain/featureService";
 import { formatDateToDayMonthYear } from "@/utils/date/dateHelper";
 import { useSubscription } from "@/context/SubscriptionContext";
-import FormHeader from "@/components/application/FormHeader/FormHeader";
 import { BillingPlan, SubscriptionInterval, SubscriptionStatus } from "@/enums";
-import { CurrentSubscriptionPlanParams } from "./CurrentSubscriptionPlan.interface";
+import { ProductWithPrices } from "@/interfaces";
+import FormHeader from "./FormHeader";
+import { PlanFeatures } from "./PlanFeatures";
 
 const _getProductPricing = (isFreeProduct: boolean, currentPrice: number) => {
     if (isFreeProduct) {
@@ -21,6 +21,10 @@ const _getProductPricing = (isFreeProduct: boolean, currentPrice: number) => {
 
     return "N/A";
 };
+
+export interface CurrentSubscriptionPlanParams {
+    products: ProductWithPrices[];
+}
 
 const CurrentSubscriptionPlan = ({ products }: CurrentSubscriptionPlanParams) => {
     const { subscription } = useSubscription();

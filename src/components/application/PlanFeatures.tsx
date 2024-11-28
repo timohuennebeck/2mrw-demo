@@ -1,6 +1,15 @@
 import React from "react";
 import { CheckBadgeIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { PlanFeaturesParams } from "./PlanFeatures.interface";
+interface Feature {
+    id: string;
+    name: string;
+    description: string;
+    isAvailable: boolean;
+}
+
+export interface PlanFeaturesParams {
+    features: Feature[];
+}
 
 export const PlanFeatures = ({ features }: PlanFeaturesParams) => (
     <ul className="flex flex-col gap-3" aria-label="Plan features">

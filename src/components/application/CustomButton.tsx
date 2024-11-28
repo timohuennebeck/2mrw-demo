@@ -1,6 +1,15 @@
 import React from "react";
 import { Loader } from "lucide-react";
-import { CustomButtonParams } from "./CustomButton.interface";
+
+export interface CustomButtonParams {
+    title: string;
+    className?: string;
+    onClick?: () => void;
+    isSecondary?: boolean;
+    disabled?: boolean;
+    isLoading?: boolean;
+    dataTestId?: string;
+}
 
 const CustomButton = ({
     title,
@@ -23,7 +32,7 @@ const CustomButton = ({
                     ? "cursor-not-allowed border border-transparent bg-gray-300 text-gray-500 opacity-60"
                     : isSecondary
                       ? "border border-gray-300 bg-white text-gray-700 hover:bg-gray-100"
-                      : "border border-transparent bg-gray-800 text-white hover:bg-gray-700nv"
+                      : "hover:bg-gray-700nv border border-transparent bg-gray-800 text-white"
             } `}
             data-testid={dataTestId}
         >
