@@ -3,20 +3,26 @@
 import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useSession } from "@/context/SessionContext";
-import InputField from "@/components/application/InputField";
-import PasswordStrengthChecker from "@/components/application/PasswordStrengthChecker";
-import CustomButton from "@/components/application/CustomButton";
-import Image from "next/image";
-import { AlertTriangle, Loader, UserRound } from "lucide-react";
-import { updateUserProfileImage, updateUserPassword } from "./action";
-import CustomPopup from "@/components/application/CustomPopup";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/services/integration/client";
 import { TextConstants } from "@/constants/TextConstants";
 import { validateEmailFormat } from "@/utils/validators/formatValidator";
-import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { useUser } from "@/context/UserContext";
 import FormHeader from "@/components/application/FormHeader";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 const _updateUserName = async (userId: string, firstName: string) => {
     const supabase = createClient();
@@ -39,13 +45,12 @@ const _updateUserName = async (userId: string, firstName: string) => {
     }
 };
 
-const _checkForEmptyFieldPersonalInformation = (firstName: string, email: string) => {
-    return firstName === "" || email === "";
-};
-
-const _checkForEmptyFieldPassword = (password: string, confirmPassword: string) => {
-    return password === "" || confirmPassword === "";
-};
+const profileFormSchema = z.object({
+    username: z.string().min(2, {
+        message: "Username must be at least 2 characters.",
+    }),
+    email: z.string().email(),
+});
 
 const UserProfilePage = () => {
     const { authUser } = useSession();
@@ -58,16 +63,7 @@ const UserProfilePage = () => {
     const [firstName, setFirstName] = useState("");
     const [email, setEmail] = useState("");
 
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [userProfileImageUrl, setUserProfileImageUrl] = useState<string | null>(null);
-
     const [isUpdatingPersonalInfo, setIsUpdatingPersonalInfo] = useState(false);
-    const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
-    const [isUploadingProfileImage, setIsUploadingProfileImage] = useState(false);
-    const [showDeleteAccountPopup, setShowDeleteAccountPopup] = useState(false);
-    const [deletingInProgress, setDeletingInProgress] = useState(false);
 
     const hasShownToastRef = useRef(false);
 
@@ -88,15 +84,16 @@ const UserProfilePage = () => {
         if (dbUser) {
             setFirstName(dbUser.first_name);
             setEmail(dbUser.email);
-            setUserProfileImageUrl(dbUser.profile_image_url ?? null);
-            setIsLoading(false);
         }
     }, [dbUser]);
 
-    const hasPersonalInfoChanged = () => {
-        if (isLoading || !dbUser) return false;
-        return firstName !== dbUser.first_name || email !== dbUser.email;
-    };
+    const profileForm = useForm({
+        resolver: zodResolver(profileFormSchema),
+        defaultValues: {
+            username: "",
+            email: "",
+        },
+    });
 
     const handlePersonalInfoSubmit = async () => {
         if (!validateEmailFormat(email)) {
@@ -138,290 +135,70 @@ const UserProfilePage = () => {
         }
     };
 
-    const handleProfileImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (!file) return;
-
-        setIsUploadingProfileImage(true);
-
-        try {
-            const formData = new FormData();
-            formData.append("file", file);
-            const result = await updateUserProfileImage({
-                profileImageUrl: userProfileImageUrl ?? "",
-                userId: authUser?.id ?? "",
-                formData,
-            });
-
-            if (result.error) {
-                toast.error(result.error);
-            } else {
-                setUserProfileImageUrl(result.publicUrl ?? null);
-                toast.success("Profile image has been updated.");
-            }
-        } finally {
-            setIsUploadingProfileImage(false);
-        }
-    };
-
-    const handleChangePasswordSubmit = async () => {
-        if (password !== confirmPassword) {
-            toast.error("Passwords do not match");
-            return;
-        }
-
-        try {
-            setIsUpdatingPassword(true);
-            const result = await updateUserPassword(password);
-            if (result.error) {
-                toast.error(result.error);
-            } else {
-                toast.success("Password updated");
-                setPassword("");
-                setConfirmPassword("");
-            }
-        } finally {
-            setIsUpdatingPassword(false);
-        }
-    };
-
-    const handleDeletionConfirmation = async () => {
-        try {
-            const adminSupabase = await createSupabasePowerUserClient();
-            const userId = authUser?.id ?? "";
-
-            setDeletingInProgress(true);
-
-            // delete related records first (order matters due to foreign key constraints)
-            await adminSupabase.from("free_trials").delete().eq("user_id", userId);
-
-            await adminSupabase.from("user_subscriptions").delete().eq("user_id", userId);
-
-            await adminSupabase.from("users").delete().eq("id", userId);
-
-            const { error: authError } = await adminSupabase.auth.admin.deleteUser(userId);
-
-            if (authError) {
-                throw new Error(authError.message);
-            }
-
-            router.push("/auth/sign-in");
-
-            setTimeout(() => {
-                setDeletingInProgress(false);
-                toast.success("Your account has been deleted");
-            }, 1250);
-        } catch (error) {
-            setDeletingInProgress(false);
-            toast.error("Failed to delete account");
-            console.error("Error deleting account:", error);
-        }
-    };
-
     return (
-        <>
-            {showDeleteAccountPopup && (
-                <CustomPopup
-                    title="Lorem Ipsum"
-                    description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
-                    icon={<AlertTriangle size={32} strokeWidth={1.5} className="text-red-500" />}
-                    iconBackgroundColor="bg-red-100"
-                    mainButtonColor="bg-red-600 hover:bg-red-700 text-white"
-                    mainButtonText="Confirm Deletion"
-                    mainButtonIsLoading={deletingInProgress}
-                    onConfirm={handleDeletionConfirmation}
-                    onCancel={() => setShowDeleteAccountPopup(false)}
-                />
-            )}
+        <div className="container h-full max-w-3xl bg-white">
+            <FormHeader
+                title="Personal Profile"
+                isPageHeader
+                description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
+            />
 
-            <div className="container h-full max-w-3xl bg-white">
-                <FormHeader
-                    title="Personal Profile"
-                    isPageHeader
-                    description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
-                />
-
-                <div className="flex items-center">
-                    <div className="mr-6 flex h-24 w-24 items-center justify-center rounded-full bg-gray-200">
-                        {isUploadingProfileImage ? (
-                            <div className="flex h-full w-full items-center justify-center text-gray-400">
-                                <Loader className="h-6 w-6 animate-spin" />
-                            </div>
-                        ) : userProfileImageUrl ? (
-                            <Image
-                                src={userProfileImageUrl}
-                                alt="Profile avatar"
-                                className="h-full w-full rounded-full object-cover"
-                                sizes="100vw"
-                                width={0}
-                                height={0}
-                            />
-                        ) : (
-                            <div className="flex h-full w-full items-center justify-center text-gray-400">
-                                <UserRound size={48} strokeWidth={1.5} />
-                            </div>
-                        )}
-                    </div>
-
-                    <div>
-                        {/* hidden so we can use a styled button instead */}
-                        <input
-                            type="file"
-                            id="avatar"
-                            accept="image/*"
-                            className="hidden"
-                            onChange={handleProfileImageUpload}
-                        />
-                        <CustomButton
-                            title={isUploadingProfileImage ? "Uploading..." : "Change Profile Picture"}
-                            onClick={() => document.getElementById("avatar")?.click()}
-                            disabled={isUploadingProfileImage}
-                        />
-                    </div>
-                </div>
-
-                <form onSubmit={handlePersonalInfoSubmit} className="mt-6">
-                    <FormHeader
-                        title="Personal Information"
-                        description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
-                    />
-                    <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                            <label htmlFor="name" className="text-sm font-medium text-gray-700">
-                                First name
-                            </label>
-                            <div className="w-2/3">
-                                <InputField
-                                    id="name"
-                                    label="First Name"
-                                    hideLabel
-                                    type="text"
-                                    name="name"
-                                    value={firstName}
-                                    onChange={(value) => setFirstName(value)}
-                                    placeholder="Timo Huennebeck"
-                                />
-                            </div>
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <label htmlFor="email" className="text-sm font-medium text-gray-700">
-                                Email address
-                            </label>
-
-                            <div className="w-2/3">
-                                <InputField
-                                    id="email"
-                                    label="Email Address"
-                                    hideLabel
-                                    type="email"
-                                    name="email"
-                                    value={email}
-                                    onChange={(value) => setEmail(value)}
-                                    placeholder="m@example.com"
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="mt-4">
-                        <CustomButton
-                            title="Save Personal Information"
-                            onClick={handlePersonalInfoSubmit}
-                            disabled={
-                                isUpdatingPersonalInfo ||
-                                !hasPersonalInfoChanged() ||
-                                _checkForEmptyFieldPersonalInformation(firstName, email)
-                            }
-                            isLoading={isUpdatingPersonalInfo}
-                        />
-                    </div>
-                </form>
-
-                <form onSubmit={handleChangePasswordSubmit} className="mt-6">
-                    <FormHeader
-                        title="Change Password"
-                        description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
-                    />
-                    <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                            <label
-                                htmlFor="new-password"
-                                className="text-sm font-medium text-gray-700"
-                            >
-                                Password
-                            </label>
-                            <div className="w-2/3">
-                                <InputField
-                                    id="new-password"
-                                    label="New Password"
-                                    hideLabel
-                                    value={password}
-                                    type="password"
-                                    name="new-password"
-                                    onChange={(value) => setPassword(value)}
-                                    placeholder="********"
-                                />
-                            </div>
-                        </div>
-                        <div className="flex w-full items-center justify-between">
-                            <label
-                                htmlFor="confirm-password"
-                                className="text-sm font-medium text-gray-700"
-                            >
-                                Confirm Password
-                            </label>
-
-                            <div className="w-2/3">
-                                <InputField
-                                    id="confirm-password"
-                                    label="Confirm New Password"
-                                    disabled={password === ""}
-                                    value={confirmPassword}
-                                    hideLabel
-                                    type="password"
-                                    name="confirm-password"
-                                    onChange={(value) => setConfirmPassword(value)}
-                                    placeholder="********"
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    {password !== "" && (
-                        <div className="mb-4 mt-4">
-                            <PasswordStrengthChecker password={password} />
-                        </div>
-                    )}
-
-                    <div className="mt-4">
-                        <CustomButton
-                            title="Update Password"
-                            onClick={handleChangePasswordSubmit}
-                            disabled={
-                                isUpdatingPassword ||
-                                _checkForEmptyFieldPassword(password, confirmPassword)
-                            }
-                            isLoading={isUpdatingPassword}
-                        />
-                    </div>
-                </form>
-
-                <div className="mt-6">
-                    <FormHeader
-                        title="Irreversible Operations"
-                        description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
-                        color="text-red-600"
-                    />
-
-                    <button
-                        onClick={() => setShowDeleteAccountPopup(true)}
-                        className="rounded-md border border-red-600 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
+            <div className="space-y-6">
+                <Form {...profileForm}>
+                    <form
+                        onSubmit={profileForm.handleSubmit(handlePersonalInfoSubmit)}
+                        className="space-y-8"
                     >
-                        Delete Profile
-                    </button>
-                </div>
+                        <FormField
+                            control={profileForm.control}
+                            name="username"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Username</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="shadcn" {...field} />
+                                    </FormControl>
+                                    <FormDescription>
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={profileForm.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="email"
+                                            placeholder="m@example.com"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormDescription>
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <Button
+                            type="submit"
+                            variant="default"
+                            size="sm"
+                            disabled={isUpdatingPersonalInfo}
+                        >
+                            {isUpdatingPersonalInfo ? "Updating..." : "Update Profile"}
+                        </Button>
+                    </form>
+                </Form>
             </div>
-        </>
+        </div>
     );
 };
 
