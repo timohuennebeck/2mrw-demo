@@ -29,10 +29,12 @@ import { TextConstants } from "@/constants/TextConstants";
 import { createClient } from "@/services/integration/client";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/context/UserContext";
+
 const items = [
     {
         title: "Dashboard",
-        url: "#",
+        url: "/",
         icon: Building,
     },
     {
@@ -81,6 +83,8 @@ export const _handleSignOut = async (router: AppRouterInstance) => {
 };
 
 export function AppSidebar() {
+    const { dbUser } = useUser();
+
     const router = useRouter();
 
     return (
@@ -128,9 +132,13 @@ export function AppSidebar() {
                                                     {item.subItems.map((subItem) => (
                                                         <SidebarMenuSubItem key={subItem.title}>
                                                             <SidebarMenuSubButton asChild>
-                                                                <a href={subItem.url}>
+                                                                <span
+                                                                    onClick={() =>
+                                                                        router.push(subItem.url)
+                                                                    }
+                                                                >
                                                                     {subItem.title}
-                                                                </a>
+                                                                </span>
                                                             </SidebarMenuSubButton>
                                                         </SidebarMenuSubItem>
                                                     ))}
@@ -139,7 +147,10 @@ export function AppSidebar() {
                                         </Collapsible>
                                     ) : (
                                         <SidebarMenuButton asChild>
-                                            <a href={item.url}>
+                                            <div
+                                                onClick={() => router.push(item.url)}
+                                                className="cursor-pointer"
+                                            >
                                                 <item.icon />
                                                 <span>{item.title}</span>
                                                 {item.badge && (
@@ -147,7 +158,7 @@ export function AppSidebar() {
                                                         {item.badge}
                                                     </SidebarMenuBadge>
                                                 )}
-                                            </a>
+                                            </div>
                                         </SidebarMenuButton>
                                     )}
                                 </SidebarMenuItem>
@@ -163,7 +174,8 @@ export function AppSidebar() {
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <SidebarMenuButton>
-                                    <User2 /> Username
+                                    <User2 />
+                                    <span className="max-w-[150px] truncate">{dbUser?.email}</span>
                                     <ChevronUp className="ml-auto" />
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
