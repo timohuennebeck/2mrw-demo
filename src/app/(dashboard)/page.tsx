@@ -1,7 +1,7 @@
 "use client";
 
-import CustomPopup from "@/components/application/CustomPopup/CustomPopup";
-import FormHeader from "@/components/application/FormHeader/FormHeader";
+import CustomPopup from "@/components/application/CustomPopup";
+import FormHeader from "@/components/application/FormHeader";
 import useSuccessParam from "@/hooks/useSuccessParam";
 import { Check } from "lucide-react";
 import { useState } from "react";
@@ -28,6 +28,7 @@ const Home = () => {
                     onConfirm={() => setShowSuccessPopup(false)}
                     hideSecondaryButton
                     showConfetti
+                    onCancel={() => setShowSuccessPopup(false)}
                 />
             )}
 
