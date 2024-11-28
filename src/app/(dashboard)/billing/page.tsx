@@ -10,12 +10,12 @@ import CurrentSubscriptionPlanSkeleton from "@/components/ui/CurrentSubscription
 import ChangeSubscriptionPlanSkeleton from "@/components/ui/ChangeSubscriptionPlanSkeleton";
 import { TextConstants } from "@/constants/TextConstants";
 import { useSubscription } from "@/context/SubscriptionContext";
-import CustomPopup from "@/components/application/CustomPopup/CustomPopup";
+import CustomPopup from "@/components/application/CustomPopup";
 import { BillingPlan, SubscriptionStatus } from "@/enums";
-import FormHeader from "@/components/application/FormHeader/FormHeader";
-import CurrentSubscriptionPlan from "@/components/application/CurrentSubscriptionPlan/CurrentSubscriptionPlan";
-import ChangeSubscriptionPlan from "@/components/application/ChangeSubscriptionPlan/ChangeSubscriptionPlan";
-import BillingPortal from "@/components/application/BillingPortal/BillingPortal";
+import FormHeader from "@/components/application/FormHeader";
+import CurrentSubscriptionPlan from "@/components/application/CurrentSubscriptionPlan";
+import ChangeSubscriptionPlan from "@/components/application/ChangeSubscriptionPlan";
+import BillingPortal from "@/components/application/BillingPortal";
 
 const BillingPage = () => {
     const { authUser } = useSession();

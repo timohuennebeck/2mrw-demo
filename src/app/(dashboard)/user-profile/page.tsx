@@ -3,20 +3,20 @@
 import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useSession } from "@/context/SessionContext";
-import InputField from "@/components/application/InputField/InputField";
-import PasswordStrengthChecker from "@/components/application/PasswordStrengthChecker/PasswordStrengthChecker";
-import CustomButton from "@/components/application/CustomButton/CustomButton";
+import InputField from "@/components/application/InputField";
+import PasswordStrengthChecker from "@/components/application/PasswordStrengthChecker";
+import CustomButton from "@/components/application/CustomButton";
 import Image from "next/image";
 import { AlertTriangle, Loader, UserRound } from "lucide-react";
 import { updateUserProfileImage, updateUserPassword } from "./action";
-import CustomPopup from "@/components/application/CustomPopup/CustomPopup";
+import CustomPopup from "@/components/application/CustomPopup";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/services/integration/client";
 import { TextConstants } from "@/constants/TextConstants";
 import { validateEmailFormat } from "@/utils/validators/formatValidator";
 import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { useUser } from "@/context/UserContext";
-import FormHeader from "@/components/application/FormHeader/FormHeader";
+import FormHeader from "@/components/application/FormHeader";
 
 const _updateUserName = async (userId: string, firstName: string) => {
     const supabase = createClient();

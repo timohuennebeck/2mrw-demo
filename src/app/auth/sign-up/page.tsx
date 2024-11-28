@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import RegisterLoginForm from "@/components/application/RegisterLoginForm/RegisterLoginForm";
+import RegisterLoginForm from "@/components/application/RegisterLoginForm";
 import { sendConfirmationEmail, signUpUserToSupabase } from "./action";
 import { TextConstants } from "@/constants/TextConstants";
 import { checkUserEmailExists } from "@/services/database/userService";

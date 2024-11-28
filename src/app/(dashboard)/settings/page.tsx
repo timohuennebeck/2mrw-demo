@@ -1,4 +1,4 @@
-import FormHeader from "@/components/application/FormHeader/FormHeader";
+import FormHeader from "@/components/application/FormHeader";
 
 const SettingsPage = () => {
     return (

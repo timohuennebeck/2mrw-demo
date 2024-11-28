@@ -1,12 +1,12 @@
 "use client";
 
-import InputField from "@/components/application/InputField/InputField";
+import InputField from "@/components/application/InputField";
 import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
-import CustomButton from "@/components/application/CustomButton/CustomButton";
+import CustomButton from "@/components/application/CustomButton";
 import { TextConstants } from "@/constants/TextConstants";
-import FormStatusMessage from "@/components/application/FormStatusMessage/FormStatusMessage";
+import FormStatusMessage from "@/components/application/FormStatusMessage";
 import { checkUserEmailExists } from "@/services/database/userService";
 import { createClient } from "@/services/integration/client";
 import { validateEmailFormat } from "@/utils/validators/formatValidator";
