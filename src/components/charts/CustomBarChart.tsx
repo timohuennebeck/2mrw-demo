@@ -38,7 +38,7 @@ const chartConfig = {
 
 export function CustomBarChart() {
     return (
-        <Card className="h-full flex-1 rounded-none shadow-none">
+        <Card className="flex-1 rounded-none shadow-none">
             <CardHeader>
                 <CardTitle>MRR</CardTitle>
                 <CardDescription>Lorem ipsum dolor sit amet.</CardDescription>
