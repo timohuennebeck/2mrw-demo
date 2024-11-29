@@ -18,27 +18,27 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart";
 const chartData = [
-    { month: "January", desktop: 186 },
-    { month: "February", desktop: 305 },
-    { month: "March", desktop: 237 },
-    { month: "April", desktop: 73 },
-    { month: "May", desktop: 209 },
-    { month: "June", desktop: 214 },
+    { month: "January", customers: 186 },
+    { month: "February", customers: 305 },
+    { month: "March", customers: 437 },
+    { month: "April", customers: 573 },
+    { month: "May", customers: 709 },
+    { month: "June", customers: 814 },
 ];
 
 const chartConfig = {
-    desktop: {
-        label: "Desktop",
+    customers: {
+        label: "Total Customers",
         color: "hsl(var(--chart-1))",
     },
 } satisfies ChartConfig;
 
 export function CustomLinearLineChart() {
     return (
-        <Card className="rounded-none shadow-none">
+        <Card className="h-full flex-1 rounded-none shadow-none">
             <CardHeader>
-                <CardTitle>Line Chart - Linear</CardTitle>
-                <CardDescription>January - June 2024</CardDescription>
+                <CardTitle>Customer Growth</CardTitle>
+                <CardDescription>Lorem ipsum dolor sit amet.</CardDescription>
             </CardHeader>
             <CardContent>
                 <ChartContainer config={chartConfig}>
@@ -60,9 +60,9 @@ export function CustomLinearLineChart() {
                         />
                         <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
                         <Line
-                            dataKey="desktop"
+                            dataKey="customers"
                             type="linear"
-                            stroke="var(--color-desktop)"
+                            stroke="var(--color-customers)"
                             strokeWidth={2}
                             dot={false}
                         />
@@ -71,10 +71,10 @@ export function CustomLinearLineChart() {
             </CardContent>
             <CardFooter className="flex-col items-start gap-2 text-sm">
                 <div className="flex gap-2 font-medium leading-none">
-                    Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+                    14.8% Customer Growth This Month
                 </div>
                 <div className="leading-none text-muted-foreground">
-                    Showing total visitors for the last 6 months
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, nisi.
                 </div>
             </CardFooter>
         </Card>

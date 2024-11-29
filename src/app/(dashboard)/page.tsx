@@ -6,7 +6,6 @@ import { CustomBarChart } from "@/components/charts/CustomBarChart";
 import { CustomLinearLineChart } from "@/components/charts/CustomLinearLineChart";
 import { CustomLineChart } from "@/components/charts/CustomlineChart";
 import { CustomPieChart } from "@/components/charts/CustomPieChart";
-import { CustomRadialChart } from "@/components/charts/CustomRadialChart";
 import useSuccessParam from "@/hooks/useSuccessParam";
 import { Check } from "lucide-react";
 import { useState } from "react";
@@ -47,7 +46,6 @@ const Home = () => {
                 <CustomLinearLineChart />
                 <CustomBarChart />
                 <CustomPieChart />
-                <CustomRadialChart />
             </div>
 
             <CustomLineChart />

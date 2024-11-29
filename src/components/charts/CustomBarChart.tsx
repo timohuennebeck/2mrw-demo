@@ -1,6 +1,5 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 import {
@@ -18,31 +17,31 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart";
 const chartData = [
-    { month: "January", desktop: 186, mobile: 80 },
-    { month: "February", desktop: 305, mobile: 200 },
-    { month: "March", desktop: 237, mobile: 120 },
-    { month: "April", desktop: 73, mobile: 190 },
-    { month: "May", desktop: 209, mobile: 130 },
-    { month: "June", desktop: 214, mobile: 140 },
+    { month: "January", premium: 85, basic: 18 },
+    { month: "February", premium: 51, basic: 192 },
+    { month: "March", premium: 51, basic: 151 },
+    { month: "April", premium: 15, basic: 52 },
+    { month: "May", premium: 12, basic: 95 },
+    { month: "June", premium: 95, basic: 51 },
 ];
 
 const chartConfig = {
-    desktop: {
-        label: "Desktop",
+    premium: {
+        label: "Premium Plan",
         color: "hsl(var(--chart-1))",
     },
-    mobile: {
-        label: "Mobile",
+    basic: {
+        label: "Basic Plan",
         color: "hsl(var(--chart-2))",
     },
 } satisfies ChartConfig;
 
 export function CustomBarChart() {
     return (
-        <Card className="rounded-none shadow-none">
+        <Card className="h-full flex-1 rounded-none shadow-none">
             <CardHeader>
-                <CardTitle>Bar Chart - Multiple</CardTitle>
-                <CardDescription>January - June 2024</CardDescription>
+                <CardTitle>MRR</CardTitle>
+                <CardDescription>Lorem ipsum dolor sit amet.</CardDescription>
             </CardHeader>
             <CardContent>
                 <ChartContainer config={chartConfig}>
@@ -59,17 +58,17 @@ export function CustomBarChart() {
                             cursor={false}
                             content={<ChartTooltipContent indicator="dashed" />}
                         />
-                        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-                        <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+                        <Bar dataKey="premium" fill="var(--color-premium)" radius={4} />
+                        <Bar dataKey="basic" fill="var(--color-basic)" radius={4} />
                     </BarChart>
                 </ChartContainer>
             </CardContent>
             <CardFooter className="flex-col items-start gap-2 text-sm">
                 <div className="flex gap-2 font-medium leading-none">
-                    Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+                    MRR Growth of 15.8% This Month
                 </div>
                 <div className="leading-none text-muted-foreground">
-                    Showing total visitors for the last 6 months
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, nisi.
                 </div>
             </CardFooter>
         </Card>
