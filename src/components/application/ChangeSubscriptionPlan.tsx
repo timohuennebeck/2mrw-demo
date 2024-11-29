@@ -24,6 +24,7 @@ import { BillingPlan, SubscriptionInterval, SubscriptionStatus } from "@/enums";
 import CustomButton from "@/components/application/CustomButton";
 import CustomPopup from "@/components/application/CustomPopup";
 import FormHeader from "@/components/application/FormHeader";
+import { Button } from "../ui/button";
 
 const _findButtonTitle = (isFreePlan: boolean, subscriptionStatus: SubscriptionStatus) => {
     if (!subscriptionStatus) return TextConstants.TEXT__UNLOCK_PLAN;
@@ -198,34 +199,46 @@ const ChangeSubscriptionPlan = ({ products }: ChangeSubscriptionPlanParams) => {
                 />
             )}
 
-            <div>
-                <FormHeader
-                    title="Change Your Plan"
-                    description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam et odit autem alias aut praesentium vel nisi repudiandae saepe consectetur!"
-                />
-
+            <div className="mt-8">
                 {!isOneTimePaymentEnabled() && (
                     <div className="mb-6 flex space-x-4">
                         {isFreePlanEnabled() && (
-                            <CustomButton
-                                dataTestId="free-subscription-button"
-                                title={TextConstants.TEXT__FREE.toUpperCase()}
+                            <Button
+                                variant={
+                                    subscriptionInterval !== SubscriptionInterval.NONE
+                                        ? "outline"
+                                        : "default"
+                                }
                                 onClick={() => setSubscriptionInterval(SubscriptionInterval.NONE)}
-                                isSecondary={subscriptionInterval !== SubscriptionInterval.NONE}
-                            />
+                                className="rounded-none shadow-none"
+                            >
+                                {TextConstants.TEXT__FREE.toUpperCase()}
+                            </Button>
                         )}
-                        <CustomButton
-                            dataTestId="monthly-subscription-button"
-                            title={`${TextConstants.TEXT__MONTHLY.toUpperCase()} (PREMIUM)`}
+
+                        <Button
+                            variant={
+                                subscriptionInterval !== SubscriptionInterval.MONTHLY
+                                    ? "outline"
+                                    : "default"
+                            }
                             onClick={() => setSubscriptionInterval(SubscriptionInterval.MONTHLY)}
-                            isSecondary={subscriptionInterval !== SubscriptionInterval.MONTHLY}
-                        />
-                        <CustomButton
-                            dataTestId="yearly-subscription-button"
-                            title={`${TextConstants.TEXT__YEARLY.toUpperCase()} (PREMIUM)`}
+                            className="rounded-none shadow-none"
+                        >
+                            {`${TextConstants.TEXT__MONTHLY.toUpperCase()} (PREMIUM)`}
+                        </Button>
+
+                        <Button
+                            variant={
+                                subscriptionInterval !== SubscriptionInterval.YEARLY
+                                    ? "outline"
+                                    : "default"
+                            }
                             onClick={() => setSubscriptionInterval(SubscriptionInterval.YEARLY)}
-                            isSecondary={subscriptionInterval !== SubscriptionInterval.YEARLY}
-                        />
+                            className="rounded-none shadow-none"
+                        >
+                            {`${TextConstants.TEXT__YEARLY.toUpperCase()} (PREMIUM)`}
+                        </Button>
                     </div>
                 )}
 
@@ -260,7 +273,7 @@ const ChangeSubscriptionPlan = ({ products }: ChangeSubscriptionPlanParams) => {
                                     <div
                                         key={product.id}
                                         data-testid={`subscription-plan-${product.subscription_tier.toLowerCase()}`}
-                                        className={`relative rounded-lg border ${
+                                        className={`relative border ${
                                             selectedPlanId === product.id
                                                 ? "border-blue-500 bg-blue-50"
                                                 : "border-gray-200 bg-white hover:bg-gray-50"
@@ -322,17 +335,16 @@ const ChangeSubscriptionPlan = ({ products }: ChangeSubscriptionPlanParams) => {
                     </div>
 
                     <div className="mt-6 flex items-start justify-start">
-                        <CustomButton
-                            dataTestId="change-subscription-button"
-                            title={_findButtonTitle(
+                        <Button
+                            variant="outline"
+                            disabled={!selectedPlanId}
+                            className="rounded-none shadow-none"
+                        >
+                            {_findButtonTitle(
                                 isFreePlanSelected,
                                 subscription?.status ?? SubscriptionStatus.EXPIRED,
                             )}
-                            disabled={!selectedPlanId}
-                            className={`${
-                                isFreePlanSelected ? "bg-red-600 text-white hover:bg-red-500" : ""
-                            }`}
-                        />
+                        </Button>
                     </div>
                 </form>
             </div>

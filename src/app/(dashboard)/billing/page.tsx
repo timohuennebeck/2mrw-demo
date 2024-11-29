@@ -12,7 +12,6 @@ import { TextConstants } from "@/constants/TextConstants";
 import { useSubscription } from "@/context/SubscriptionContext";
 import CustomPopup from "@/components/application/CustomPopup";
 import { BillingPlan, SubscriptionStatus } from "@/enums";
-import FormHeader from "@/components/application/FormHeader";
 import CurrentSubscriptionPlan from "@/components/application/CurrentSubscriptionPlan";
 import ChangeSubscriptionPlan from "@/components/application/ChangeSubscriptionPlan";
 import BillingPortal from "@/components/application/BillingPortal";
@@ -64,12 +63,6 @@ const BillingPage = () => {
             )}
 
             <div className="container max-w-3xl bg-white">
-                <FormHeader
-                    title="Billing"
-                    description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
-                    isPageHeader
-                />
-
                 <div className="flex flex-col gap-6">
                     {subscription?.billing_plan === BillingPlan.RECURRING && <BillingPortal />}
 

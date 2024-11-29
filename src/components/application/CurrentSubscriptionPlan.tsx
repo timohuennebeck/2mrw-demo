@@ -7,7 +7,6 @@ import { formatDateToDayMonthYear } from "@/utils/date/dateHelper";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { BillingPlan, SubscriptionInterval, SubscriptionStatus } from "@/enums";
 import { ProductWithPrices } from "@/interfaces";
-import FormHeader from "./FormHeader";
 import { PlanFeatures } from "./PlanFeatures";
 
 const _getProductPricing = (isFreeProduct: boolean, currentPrice: number) => {
@@ -89,58 +88,50 @@ const CurrentSubscriptionPlan = ({ products }: CurrentSubscriptionPlanParams) =>
     };
 
     return (
-        <div>
-            <FormHeader
-                title="Your Plan"
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam et odit autem alias aut praesentium vel nisi repudiandae saepe consectetur!"
-            />
-
-            <div className="rounded-lg border border-gray-200 p-4">
-                <div className="mb-2 flex items-center justify-between">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            <CheckBadgeIcon className="h-5 w-5 text-black" aria-hidden="true" />
-                            <h4 className="text-xl font-medium text-gray-700">
-                                {productDetails?.name}
-                            </h4>
-                        </div>
-
-                        {renderSubscriptionStatus()}
+        <div className="border border-gray-200 p-4">
+            <div className="mb-2 flex items-center justify-between">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <CheckBadgeIcon className="h-5 w-5 text-black" aria-hidden="true" />
+                        <h4 className="text-xl font-medium text-gray-700">
+                            {productDetails?.name}
+                        </h4>
                     </div>
 
-                    <div className="text-right">
-                        <div className="whitespace-nowrap text-xl font-medium text-gray-700">
-                            {_getProductPricing(
-                                isFreeProduct,
-                                productDetails?.price?.current_amount ?? 0,
-                            )}
-                        </div>
-                        <div className="whitespace-nowrap text-sm font-medium text-gray-500">
-                            {isOneTimePaymentProduct
-                                ? "ONE-TIME PAYMENT"
-                                : isFreeProduct
-                                  ? "FOREVER"
-                                  : productDetails?.price?.interval === SubscriptionInterval.MONTHLY
-                                    ? "PER MONTH"
-                                    : "PER YEAR"}
-                        </div>
+                    {renderSubscriptionStatus()}
+                </div>
+
+                <div className="text-right">
+                    <div className="whitespace-nowrap text-xl font-medium text-gray-700">
+                        {_getProductPricing(
+                            isFreeProduct,
+                            productDetails?.price?.current_amount ?? 0,
+                        )}
+                    </div>
+                    <div className="whitespace-nowrap text-sm font-medium text-gray-500">
+                        {isOneTimePaymentProduct
+                            ? "ONE-TIME PAYMENT"
+                            : isFreeProduct
+                              ? "FOREVER"
+                              : productDetails?.price?.interval === SubscriptionInterval.MONTHLY
+                                ? "PER MONTH"
+                                : "PER YEAR"}
                     </div>
                 </div>
-                <p className="mb-4 text-sm text-gray-500">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Et odit autem alias
-                    aut.
-                </p>
+            </div>
+            <p className="mb-4 text-sm text-gray-500">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Et odit autem alias aut.
+            </p>
 
-                <div className="border-t border-gray-200 pb-4" />
+            <div className="border-t border-gray-200 pb-4" />
 
-                <div className="flex items-center gap-2">
-                    <CalendarClock size={16} strokeWidth={1.5} className="text-gray-500" />
-                    <p className="text-xs text-gray-500">{getSubscriptionStatusMessage()}</p>
-                </div>
+            <div className="flex items-center gap-2">
+                <CalendarClock size={16} strokeWidth={1.5} className="text-gray-500" />
+                <p className="text-xs text-gray-500">{getSubscriptionStatusMessage()}</p>
+            </div>
 
-                <div className="mt-4">
-                    <PlanFeatures features={features ?? []} />
-                </div>
+            <div className="mt-4">
+                <PlanFeatures features={features ?? []} />
             </div>
         </div>
     );

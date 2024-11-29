@@ -1,6 +1,6 @@
 "use client";
 
-import { BadgeAlert, ChevronDown, ChevronUp, Building, Inbox, Settings, User2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Building, Settings, User2, Users } from "lucide-react";
 import {
     Sidebar,
     SidebarContent,
@@ -13,7 +13,6 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
     SidebarMenuSub,
-    SidebarMenuBadge,
     SidebarHeader,
 } from "@/components/ui/sidebar";
 import {
@@ -38,29 +37,23 @@ const items = [
         icon: Building,
     },
     {
-        title: "Campaigns",
-        icon: BadgeAlert,
+        title: "Team",
+        url: "/team",
+        icon: Users,
         subItems: [
-            { title: "Campaign One", url: "#" },
-            { title: "Campaign Two", url: "#" },
-            { title: "Campaign Three", url: "#" },
+            { title: "Members", url: "/team/members" },
+            { title: "Roles", url: "/team/roles" },
+            { title: "Invites", url: "/team/invites" },
         ],
     },
     {
-        title: "Tasks",
-        url: "#",
-        icon: Inbox,
-    },
-    {
-        title: "Leads",
-        url: "#",
-        icon: User2,
-        badge: 10,
-    },
-    {
-        title: "Templates",
-        url: "#",
+        title: "Settings",
         icon: Settings,
+        subItems: [
+            { title: "General", url: "/settings/general" },
+            { title: "Notifications", url: "/settings/notifications" },
+            { title: "Integrations", url: "/settings/integrations" },
+        ],
     },
 ];
 
@@ -95,22 +88,22 @@ export function AppSidebar() {
     };
 
     return (
-        <Sidebar>
+        <Sidebar collapsible="icon">
             <SidebarHeader className="bg-white">
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <SidebarMenuButton>
+                                <SidebarMenuButton className="rounded-none">
                                     Select Workspace
                                     <ChevronDown className="ml-auto" />
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-[--radix-popper-anchor-width]">
-                                <DropdownMenuItem>
+                            <DropdownMenuContent className="w-[--radix-popper-anchor-width] rounded-none">
+                                <DropdownMenuItem className="rounded-none">
                                     <span>Acme Inc</span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem className="rounded-none">
                                     <span>Acme Corp.</span>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
@@ -128,7 +121,10 @@ export function AppSidebar() {
                                     {item.subItems ? (
                                         <Collapsible defaultOpen className="w-full">
                                             <CollapsibleTrigger asChild>
-                                                <SidebarMenuButton tooltip={item.title}>
+                                                <SidebarMenuButton
+                                                    tooltip={item.title}
+                                                    className="rounded-none"
+                                                >
                                                     <item.icon />
                                                     <span>{item.title}</span>
                                                     <ChevronDown className="ml-auto h-4 w-4" />
@@ -137,13 +133,16 @@ export function AppSidebar() {
                                             <CollapsibleContent>
                                                 <SidebarMenuSub>
                                                     {item.subItems.map((subItem) => (
-                                                        <SidebarMenuSubItem key={subItem.title}>
+                                                        <SidebarMenuSubItem
+                                                            key={subItem.title}
+                                                            className="cursor-pointer"
+                                                        >
                                                             <SidebarMenuSubButton
                                                                 asChild
                                                                 className={
                                                                     isSelected(subItem.url)
-                                                                        ? "bg-gray-100"
-                                                                        : ""
+                                                                        ? "rounded-none bg-gray-100"
+                                                                        : "rounded-none"
                                                                 }
                                                             >
                                                                 <span
@@ -163,7 +162,11 @@ export function AppSidebar() {
                                         <SidebarMenuButton
                                             asChild
                                             tooltip={item.title}
-                                            className={isSelected(item.url) ? "bg-gray-100" : ""}
+                                            className={
+                                                isSelected(item.url)
+                                                    ? "rounded-none bg-gray-100"
+                                                    : "rounded-none"
+                                            }
                                         >
                                             <div
                                                 onClick={() => router.push(item.url)}
@@ -171,11 +174,6 @@ export function AppSidebar() {
                                             >
                                                 <item.icon />
                                                 <span>{item.title}</span>
-                                                {item.badge && (
-                                                    <SidebarMenuBadge>
-                                                        {item.badge}
-                                                    </SidebarMenuBadge>
-                                                )}
                                             </div>
                                         </SidebarMenuButton>
                                     )}
@@ -191,7 +189,7 @@ export function AppSidebar() {
                     <SidebarMenuItem>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <SidebarMenuButton>
+                                <SidebarMenuButton className="rounded-none">
                                     <User2 />
                                     <span className="max-w-[150px] truncate">{dbUser?.email}</span>
                                     <ChevronUp className="ml-auto" />
@@ -199,17 +197,17 @@ export function AppSidebar() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
                                 side="top"
-                                className="w-[--radix-popper-anchor-width]"
+                                className="w-[--radix-popper-anchor-width] rounded-none"
                             >
-                                <DropdownMenuItem>
+                                <DropdownMenuItem className="cursor-pointer rounded-none">
                                     <span onClick={() => router.push("/user-profile")}>
                                         Personal Information
                                     </span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem className="cursor-pointer rounded-none">
                                     <span onClick={() => router.push("/billing")}>Billing</span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem className="cursor-pointer rounded-none">
                                     <span onClick={() => _handleSignOut(router)}>Sign out</span>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>

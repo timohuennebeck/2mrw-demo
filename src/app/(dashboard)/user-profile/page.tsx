@@ -156,7 +156,11 @@ const UserProfilePage = () => {
                                 <FormItem>
                                     <FormLabel>Username</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="shadcn" {...field} />
+                                        <Input
+                                            className="rounded-none"
+                                            placeholder="shadcn"
+                                            {...field}
+                                        />
                                     </FormControl>
                                     <FormDescription>
                                         Lorem ipsum dolor sit amet, consectetur adipisicing elit.
@@ -174,6 +178,7 @@ const UserProfilePage = () => {
                                     <FormLabel>Email</FormLabel>
                                     <FormControl>
                                         <Input
+                                            className="rounded-none"
                                             type="email"
                                             placeholder="m@example.com"
                                             {...field}
@@ -192,6 +197,7 @@ const UserProfilePage = () => {
                             variant="default"
                             size="sm"
                             disabled={isUpdatingPersonalInfo}
+                            className="rounded-none"
                         >
                             {isUpdatingPersonalInfo ? "Updating..." : "Update Profile"}
                         </Button>
