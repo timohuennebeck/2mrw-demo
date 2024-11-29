@@ -67,7 +67,7 @@ const TopBar = () => {
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     return (
-        <SidebarProvider defaultOpen={true}>
+        <SidebarProvider defaultOpen={false}>
             <div className="flex h-screen w-full overflow-hidden">
                 <AppSidebar />
 

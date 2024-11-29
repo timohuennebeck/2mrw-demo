@@ -2,6 +2,11 @@
 
 import CustomPopup from "@/components/application/CustomPopup";
 import FormHeader from "@/components/application/FormHeader";
+import { CustomBarChart } from "@/components/charts/CustomBarChart";
+import { CustomLinearLineChart } from "@/components/charts/CustomLinearLineChart";
+import { CustomLineChart } from "@/components/charts/CustomlineChart";
+import { CustomPieChart } from "@/components/charts/CustomPieChart";
+import { CustomRadialChart } from "@/components/charts/CustomRadialChart";
 import useSuccessParam from "@/hooks/useSuccessParam";
 import { Check } from "lucide-react";
 import { useState } from "react";
@@ -34,14 +39,18 @@ const Home = () => {
 
             <FormHeader
                 title="Home"
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
+                description="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatem ratione, fugit quos accusantium exercitationem perspiciatis!"
                 isPageHeader
             />
-            <div className="flex h-full w-full items-center justify-center">
-                <code className="rounded bg-black/[.05] px-1 py-0.5 font-semibold">
-                    src/app/page.tsx
-                </code>
+
+            <div className="mb-4 flex gap-4">
+                <CustomLinearLineChart />
+                <CustomBarChart />
+                <CustomPieChart />
+                <CustomRadialChart />
             </div>
+
+            <CustomLineChart />
         </>
     );
 };
