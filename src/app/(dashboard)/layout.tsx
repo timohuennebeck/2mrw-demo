@@ -1,11 +1,5 @@
 import React from "react";
-import {
-    SidebarProvider,
-    Sidebar,
-    SidebarContent,
-    SidebarInset,
-    SidebarTrigger,
-} from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/ui/app-sidebar";
 import { cookies } from "next/headers";
 import {
@@ -48,17 +42,13 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
     return (
         <SidebarProvider defaultOpen={defaultOpen}>
             <div className="flex h-screen w-full overflow-hidden">
-                <Sidebar>
-                    <SidebarContent>
-                        <AppSidebar />
-                    </SidebarContent>
-                </Sidebar>
+                <AppSidebar />
 
                 <SidebarInset>
-                    <main className="h-full overflow-scroll scrollbar-hide">
+                    <main>
                         <TopBar />
 
-                        <div className="h-full bg-gray-50 px-8 py-8">{children}</div>
+                        <div className="overflow-y-auto px-8 py-8">{children}</div>
                     </main>
                 </SidebarInset>
             </div>
