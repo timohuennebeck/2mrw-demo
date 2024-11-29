@@ -209,6 +209,7 @@ const ChangeSubscriptionPlan = ({ products }: ChangeSubscriptionPlanParams) => {
                                         ? "outline"
                                         : "default"
                                 }
+                                size="sm"
                                 onClick={() => setSubscriptionInterval(SubscriptionInterval.NONE)}
                                 className="rounded-none shadow-none"
                             >
@@ -222,6 +223,7 @@ const ChangeSubscriptionPlan = ({ products }: ChangeSubscriptionPlanParams) => {
                                     ? "outline"
                                     : "default"
                             }
+                            size="sm"
                             onClick={() => setSubscriptionInterval(SubscriptionInterval.MONTHLY)}
                             className="rounded-none shadow-none"
                         >
@@ -234,6 +236,7 @@ const ChangeSubscriptionPlan = ({ products }: ChangeSubscriptionPlanParams) => {
                                     ? "outline"
                                     : "default"
                             }
+                            size="sm"
                             onClick={() => setSubscriptionInterval(SubscriptionInterval.YEARLY)}
                             className="rounded-none shadow-none"
                         >
@@ -339,6 +342,7 @@ const ChangeSubscriptionPlan = ({ products }: ChangeSubscriptionPlanParams) => {
                             variant="outline"
                             disabled={!selectedPlanId}
                             className="rounded-none shadow-none"
+                            size="sm"
                         >
                             {_findButtonTitle(
                                 isFreePlanSelected,
