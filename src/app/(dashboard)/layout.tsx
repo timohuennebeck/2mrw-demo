@@ -19,7 +19,7 @@ import {
 
 const TopBar = () => {
     return (
-        <div className="flex items-center gap-4 px-4 py-4">
+        <div className="flex items-center gap-4 border-b border-gray-200 px-4 py-4">
             <SidebarTrigger />
 
             <Breadcrumb>
@@ -48,7 +48,7 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
     return (
         <SidebarProvider defaultOpen={defaultOpen}>
             <div className="flex h-screen w-full overflow-hidden">
-                <Sidebar className="border-r">
+                <Sidebar>
                     <SidebarContent>
                         <AppSidebar />
                     </SidebarContent>
@@ -58,7 +58,7 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
                     <main className="h-full overflow-scroll scrollbar-hide">
                         <TopBar />
 
-                        <div className="px-8 py-8">{children}</div>
+                        <div className="h-full bg-gray-50 px-8 py-8">{children}</div>
                     </main>
                 </SidebarInset>
             </div>

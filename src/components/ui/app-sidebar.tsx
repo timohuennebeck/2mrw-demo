@@ -28,7 +28,7 @@ import { toast } from "sonner";
 import { TextConstants } from "@/constants/TextConstants";
 import { createClient } from "@/services/integration/client";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useUser } from "@/context/UserContext";
 
 const items = [
@@ -84,8 +84,15 @@ export const _handleSignOut = async (router: AppRouterInstance) => {
 
 export function AppSidebar() {
     const { dbUser } = useUser();
-
     const router = useRouter();
+    const pathname = usePathname();
+
+    const isSelected = (url: string) => {
+        if (url === "/") {
+            return pathname === url;
+        }
+        return pathname.startsWith(url);
+    };
 
     return (
         <Sidebar>
@@ -121,7 +128,7 @@ export function AppSidebar() {
                                     {item.subItems ? (
                                         <Collapsible defaultOpen className="w-full">
                                             <CollapsibleTrigger asChild>
-                                                <SidebarMenuButton>
+                                                <SidebarMenuButton tooltip={item.title}>
                                                     <item.icon />
                                                     <span>{item.title}</span>
                                                     <ChevronDown className="ml-auto h-4 w-4" />
@@ -131,7 +138,14 @@ export function AppSidebar() {
                                                 <SidebarMenuSub>
                                                     {item.subItems.map((subItem) => (
                                                         <SidebarMenuSubItem key={subItem.title}>
-                                                            <SidebarMenuSubButton asChild>
+                                                            <SidebarMenuSubButton
+                                                                asChild
+                                                                className={
+                                                                    isSelected(subItem.url)
+                                                                        ? "bg-gray-100"
+                                                                        : ""
+                                                                }
+                                                            >
                                                                 <span
                                                                     onClick={() =>
                                                                         router.push(subItem.url)
@@ -146,7 +160,11 @@ export function AppSidebar() {
                                             </CollapsibleContent>
                                         </Collapsible>
                                     ) : (
-                                        <SidebarMenuButton asChild>
+                                        <SidebarMenuButton
+                                            asChild
+                                            tooltip={item.title}
+                                            className={isSelected(item.url) ? "bg-gray-100" : ""}
+                                        >
                                             <div
                                                 onClick={() => router.push(item.url)}
                                                 className="cursor-pointer"
