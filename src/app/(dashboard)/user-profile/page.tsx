@@ -34,6 +34,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { v4 as uuidv4 } from "uuid";
 
 const _updateUserName = async (userId: string, firstName: string) => {
     const supabase = createClient();
@@ -59,25 +60,22 @@ const _updateUserName = async (userId: string, firstName: string) => {
 const _updateProfilePicture = async (userId: string, file: File) => {
     const supabase = createClient();
 
-    // Upload image to storage
     const fileExt = file.name.split(".").pop();
-    const fileName = `${userId}-${Math.random()}.${fileExt}`;
+    const fileName = `${userId}/${uuidv4()}.${fileExt}`;
 
-    const { error: uploadError, data } = await supabase.storage
-        .from("avatars")
+    const { error: uploadError } = await supabase.storage
+        .from("profile_images")
         .upload(fileName, file);
 
     if (uploadError) return { error: "Error uploading image" };
 
-    // Get public URL
     const {
         data: { publicUrl },
-    } = supabase.storage.from("avatars").getPublicUrl(fileName);
+    } = supabase.storage.from("profile_images").getPublicUrl(fileName);
 
-    // Update user profile
     const { error: updateError } = await supabase
         .from("users")
-        .update({ avatar_url: publicUrl })
+        .update({ profile_image_url: publicUrl })
         .eq("id", userId);
 
     if (updateError) return { error: "Error updating profile picture" };
@@ -102,7 +100,7 @@ const UserProfilePage = () => {
 
     const [firstName, setFirstName] = useState("");
     const [email, setEmail] = useState("");
-    const [avatarUrl, setAvatarUrl] = useState("");
+    const [profileImageUrl, setProfileImageUrl] = useState("");
 
     const [isUpdatingPersonalInfo, setIsUpdatingPersonalInfo] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -126,6 +124,7 @@ const UserProfilePage = () => {
         if (dbUser) {
             setFirstName(dbUser.first_name);
             setEmail(dbUser.email);
+            setProfileImageUrl(dbUser.profile_image_url);
         }
     }, [dbUser]);
 
@@ -203,17 +202,18 @@ const UserProfilePage = () => {
         if (!file) return;
 
         if (file.size > 2 * 1024 * 1024) {
-            // 2MB limit
             toast.error("Image size should be less than 2MB");
             return;
         }
 
         const result = await _updateProfilePicture(authUser?.id ?? "", file);
 
+        console.log("→ [LOG] result", result);
+
         if (result.error) {
             toast.error(result.error);
         } else {
-            setAvatarUrl(result.publicUrl);
+            setProfileImageUrl(result.publicUrl ?? "");
             toast.success("Profile picture updated successfully!");
         }
     };
@@ -221,26 +221,35 @@ const UserProfilePage = () => {
     return (
         <div className="container h-full max-w-3xl bg-white">
             <div className="mb-8">
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-row items-center gap-4">
                     <Avatar className="h-24 w-24 rounded-none">
-                        <AvatarImage src={avatarUrl} className="rounded-none" />
+                        <AvatarImage src={profileImageUrl} className="rounded-none" />
                         <AvatarFallback className="rounded-none">
                             {firstName?.[0]?.toUpperCase()}
                         </AvatarFallback>
                     </Avatar>
-                    <Input
+                    <input
                         type="file"
                         accept="image/*"
                         onChange={handleProfilePictureChange}
-                        className="rounded-none"
+                        className="hidden"
+                        id="profile-picture-input"
                     />
+                    <Button
+                        type="button"
+                        onClick={() => document.getElementById("profile-picture-input")?.click()}
+                        className="w-fit rounded-none"
+                        size="sm"
+                    >
+                        Upload Profile Picture
+                    </Button>
                 </div>
             </div>
 
             <Form {...profileForm}>
                 <form
                     onSubmit={profileForm.handleSubmit(handlePersonalInfoSubmit)}
-                    className="flex flex-col gap-4 border-t pt-8"
+                    className="flex flex-col gap-4"
                 >
                     <FormField
                         control={profileForm.control}
