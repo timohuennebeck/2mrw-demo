@@ -3,7 +3,7 @@
 import { useSession } from "@/context/SessionContext";
 import { useSupabaseRealtime } from "@/hooks/useSupabaseRealtime";
 import { Check } from "lucide-react";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import useSuccessParam from "@/hooks/useSuccessParam";
 import { useProducts } from "@/context/ProductsContext";
 import CurrentSubscriptionPlanSkeleton from "@/components/ui/CurrentSubscriptionPlanSkeleton";
@@ -16,6 +16,14 @@ import CurrentSubscriptionPlan from "@/components/application/CurrentSubscriptio
 import ChangeSubscriptionPlan from "@/components/application/ChangeSubscriptionPlan";
 import BillingPortal from "@/components/application/BillingPortal";
 
+const SuccessHandler = ({ onSuccess }: { onSuccess: () => void }) => {
+    useSuccessParam({
+        onSuccess,
+        redirectPath: "/billing",
+    });
+    return null;
+};
+
 const BillingPage = () => {
     const { authUser } = useSession();
     const { products } = useProducts();
@@ -27,11 +35,6 @@ const BillingPage = () => {
         table: "user_subscriptions",
         filter: `user_id=eq.${authUser?.id}`,
         onChange: invalidateSubscription,
-    });
-
-    useSuccessParam({
-        onSuccess: () => setShowSuccessPopup(true),
-        redirectPath: "/billing",
     });
 
     /**
@@ -47,6 +50,10 @@ const BillingPage = () => {
 
     return (
         <>
+            <Suspense fallback={null}>
+                <SuccessHandler onSuccess={() => setShowSuccessPopup(true)} />
+            </Suspense>
+
             {showSuccessPopup && (
                 <CustomPopup
                     dataTestId="subscription-success-popup"

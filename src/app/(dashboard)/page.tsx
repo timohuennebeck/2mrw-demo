@@ -8,20 +8,25 @@ import { CustomLineChart } from "@/components/charts/CustomLineChart";
 import { CustomPieChart } from "@/components/charts/CustomPieChart";
 import useSuccessParam from "@/hooks/useSuccessParam";
 import { Check } from "lucide-react";
-import { useState } from "react";
+import { Suspense, useState } from "react";
+
+const SuccessHandler = ({ onSuccess }: { onSuccess: () => void }) => {
+    useSuccessParam({
+        onSuccess,
+        redirectPath: "/",
+    });
+    return null;
+};
 
 const Home = () => {
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
-    useSuccessParam({
-        onSuccess: () => {
-            setShowSuccessPopup(true);
-        },
-        redirectPath: "/",
-    });
-
     return (
         <>
+            <Suspense fallback={null}>
+                <SuccessHandler onSuccess={() => setShowSuccessPopup(true)} />
+            </Suspense>
+
             {showSuccessPopup && (
                 <CustomPopup
                     title="Subscription Confirmed!"
