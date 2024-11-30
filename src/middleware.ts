@@ -1,52 +1,55 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest as nextRequest, NextResponse as nextResponse } from "next/server";
 import { User } from "@supabase/supabase-js";
-import { hasUserPremiumPlan } from "./services/domain/subscriptionService";
 
-const HIDE_ON_PREMIUM_PLAN = ["/choose-pricing-plan"];
+const PUBLIC_ROUTES = ["/", "/auth/sign-in", "/auth/sign-up", "/auth/forgot-password"];
+const AUTH_ROUTES = ["/auth/confirm", "/auth/callback", "/auth/email-change"];
 
 const _handleRedirection = async (request: nextRequest, user: User | null) => {
-    /**
-     * allow all api routes to pass through without additional checks
-     * otherwise, the api calls would be blocked
-     */
+    const { pathname } = request.nextUrl;
 
-    if (request.nextUrl.pathname.startsWith("/api")) {
+    // allow all api routes to pass through without additional checks, otherwise the api calls would be blocked
+    if (pathname.startsWith("/api")) {
         return nextResponse.next({ request });
     }
 
-    /**
-     * if a user is accessing an auth page and is authenticated, redirect them to the dashboard
-     * otherwise, allow non-authenticated users to access auth pages (e.g. sign-in, sign-up, forgot-password, etc.)
-     */
+    // allow special auth routes needed for email confirmation etc.
+    if (AUTH_ROUTES.includes(pathname)) {
+        return nextResponse.next({ request });
+    }
 
-    if (request.nextUrl.pathname.startsWith("/auth")) {
-        /**
-         * IMPORTANT: do NOT remove this logic
-         * these routes are used for when a user clicks on the confirmation link in their signup confirmation email
-         * and when clicking on the confirmation link in their email change confirmation email
-         * if these routes are removed, users would not be able to authenticate via email
-         */
-
-        const isConfirmRoute = request.nextUrl.pathname === "/auth/confirm";
-        const isEmailChangeRoute = request.nextUrl.pathname === "/auth/email-change";
-
-        if (isConfirmRoute || isEmailChangeRoute) {
+    // if user is not logged in
+    if (!user) {
+        // allow access to public routes
+        if (PUBLIC_ROUTES.includes(pathname)) {
             return nextResponse.next({ request });
         }
 
-        return user
-            ? nextResponse.redirect(new URL("/", request.url))
-            : nextResponse.next({ request });
+        // if trying to access dashboard routes, redirect to landing page
+        if (pathname.startsWith("/dashboard")) {
+            return nextResponse.redirect(new URL("/", request.url));
+        }
+
+        // allow access to auth routes
+        if (pathname.startsWith("/auth")) {
+            return nextResponse.next({ request });
+        }
+
+        // for any other routes, redirect to landing page
+        return nextResponse.redirect(new URL("/", request.url));
     }
 
-    // if user is not authenticated, force them to be redirected to the sign-in page regardless of route
-    if (!user) {
-        return nextResponse.redirect(new URL("/auth/sign-in", request.url));
+    if (user) {
+        // redirect from auth pages to dashboard
+        if (pathname.startsWith("/auth")) {
+            return nextResponse.redirect(new URL("/dashboard", request.url));
+        }
+
+        // allow access to dashboard and other authenticated routes
+        return nextResponse.next();
     }
 
-    // user is authenticated and accessing a non-auth route
-    return nextResponse.next({ request });
+    return nextResponse.next();
 };
 
 export const middleware = async (request: nextRequest) => {
@@ -84,29 +87,8 @@ export const middleware = async (request: nextRequest) => {
         data: { user },
     } = await supabaseClient.auth.getUser();
 
-    const routingResponse = await _handleRedirection(request, user);
-    if (routingResponse) return routingResponse;
-
-    const hasPremiumPlan = hasUserPremiumPlan(user);
-    const currentPath = request.nextUrl.pathname;
-    const isPricingPlanPage = currentPath === "/choose-pricing-plan";
-
-    /**
-     * if user is not on a premium plan, redirect them to the pricing plan page
-     * if user is on a premium plan, allow them to access the page if it's not in the HIDE_ON_PREMIUM_PLAN const
-     */
-
-    let response;
-    if (hasPremiumPlan) {
-        response = isPricingPlanPage
-            ? nextResponse.next({ request })
-            : nextResponse.redirect(new URL("/choose-pricing-plan", request.url));
-    } else {
-        const shouldHideCurrentPage = HIDE_ON_PREMIUM_PLAN.includes(currentPath);
-        response = shouldHideCurrentPage
-            ? nextResponse.redirect(new URL("/", request.url))
-            : nextResponse.next({ request });
-    }
+    const redirectResponse = await _handleRedirection(request, user);
+    if (redirectResponse) return redirectResponse;
 
     /**
      * IMPORTANT: When creating a new response, always:
@@ -115,7 +97,7 @@ export const middleware = async (request: nextRequest) => {
      * 3. Return the supabaseResponse object with unchanged cookies to maintain session sync between browser and server
      */
 
-    return response;
+    return supabaseResponse;
 };
 
 export const config = {

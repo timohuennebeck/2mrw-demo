@@ -84,17 +84,17 @@ export const GET = async (request: NextRequest) => {
                 const supabaseUser = await fetchUser(authUser?.id ?? "");
 
                 if (supabaseUser.user) {
-                    return redirect("/"); // user already exists in Supabase, redirect and don't create a new user
+                    return redirect("/dashboard"); // user already exists in Supabase, redirect and don't create a new user
                 }
 
                 if (authUser) {
                     await _handleCreateUser(authUser);
-                    return redirect("/");
+                    return redirect("/dashboard");
                 }
             }
 
             case "magiclink": {
-                return redirect("/"); // no additional action needed and just redirect the user after verifying the magic link
+                return redirect("/dashboard"); // no additional action needed and just redirect the user after verifying the magic link
             }
 
             case "email_change": {

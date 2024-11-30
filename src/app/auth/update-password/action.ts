@@ -34,8 +34,8 @@ export const updatePassword = async ({
 
         if (updateError) throw updateError;
 
-        revalidatePath("/", "layout");
-        return { success: true, redirect: "/" };
+        revalidatePath("/dashboard", "layout");
+        return { success: true, redirect: "/dashboard" };
     } catch (err) {
         if (err instanceof Error) {
             return { error: err.message };

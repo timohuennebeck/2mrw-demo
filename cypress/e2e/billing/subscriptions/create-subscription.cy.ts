@@ -15,7 +15,7 @@ describe("subscription flow", () => {
 
         // check that the user has been logged in
         cy.contains(TextConstants.TEXT__SIGN_IN_SUCCESSFUL).should("be.visible");
-        cy.url().should("include", "/");
+        cy.url().should("include", "/dashboard");
 
         cy.visit("http://localhost:3000/billing");
         cy.url().should("include", "/billing");

@@ -13,7 +13,6 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
     SidebarMenuSub,
-    SidebarHeader,
 } from "@/components/ui/sidebar";
 import {
     DropdownMenu,
@@ -29,12 +28,11 @@ import { createClient } from "@/services/integration/client";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter, usePathname } from "next/navigation";
 import { useUser } from "@/context/UserContext";
-import Image from "next/image";
 
 const items = [
     {
         title: "Dashboard",
-        url: "/",
+        url: "/dashboard",
         icon: Building,
     },
     {
@@ -58,7 +56,11 @@ export const _handleSignOut = async (router: AppRouterInstance) => {
         if (error) {
             toast.error(`${TextConstants.ERROR_SIGNING_OUT}: ${error.message}`);
         } else {
-            router.replace("/auth/sign-in");
+            // wait for a brief moment to ensure cookies are cleared
+            await new Promise((resolve) => setTimeout(resolve, 100));
+
+            // uses window.location.href to force a page reload to ensure cookies are cleared
+            window.location.href = "/auth/sign-in";
 
             toast.success(TextConstants.TEXT__LOGOUT_SUCCESSFUL);
         }
@@ -73,7 +75,7 @@ export function AppSidebar() {
     const pathname = usePathname();
 
     const isSelected = (url: string) => {
-        if (url === "/") {
+        if (url === "/dashboard") {
             return pathname === url;
         }
         return pathname.startsWith(url);
@@ -81,18 +83,6 @@ export function AppSidebar() {
 
     return (
         <Sidebar collapsible="icon">
-            <SidebarHeader className="flex flex-row items-center gap-2 bg-white">
-                <Image
-                    src="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
-                    width={100}
-                    height={100}
-                    alt="Company Logo"
-                    className="h-8 w-auto cursor-pointer"
-                    onClick={() => router.push("/")}
-                />
-                <span className="text-lg font-semibold">2mrw</span>
-            </SidebarHeader>
-
             <SidebarContent className="bg-white">
                 <SidebarGroup>
                     <SidebarGroupContent>

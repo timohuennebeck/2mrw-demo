@@ -13,7 +13,7 @@ import { Suspense, useState } from "react";
 const SuccessHandler = ({ onSuccess }: { onSuccess: () => void }) => {
     useSuccessParam({
         onSuccess,
-        redirectPath: "/",
+        redirectPath: "/dashboard",
     });
     return null;
 };

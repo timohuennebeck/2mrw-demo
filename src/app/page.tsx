@@ -24,6 +24,7 @@ import { exampleStats } from "@/data/marketing/stats-data";
 import { testimonials } from "@/data/marketing/testimonials-data";
 import { handleSmoothScroll } from "@/utils/navigation";
 import { Manrope } from "next/font/google";
+import { useRouter } from "next/navigation";
 
 const manrope = Manrope({
     subsets: ["latin"],
@@ -31,6 +32,8 @@ const manrope = Manrope({
 });
 
 const LandingPage = () => {
+    const router = useRouter();
+
     return (
         <>
             <div className="fixed inset-0 -z-10 h-full w-full">
@@ -59,7 +62,7 @@ const LandingPage = () => {
                         { href: "https://docs.2mrw.dev", label: "Documentation", isExternal: true },
                     ]}
                     logoSrc="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
-                    loginOnClick={() => {}}
+                    loginOnClick={() => router.push("/auth/sign-in")}
                 />
                 <Hero
                     promoText="LOREM IPSUM DOLOR SIT AMET"
