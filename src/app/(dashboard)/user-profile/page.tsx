@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { toast } from "sonner";
 import { useSession } from "@/context/SessionContext";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -90,12 +90,30 @@ const profileFormSchema = z.object({
     email: z.string().email(),
 });
 
+const SearchParamsHandler = () => {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const hasShownToastRef = useRef(false);
+
+    useEffect(() => {
+        const message = searchParams.get("message");
+        if (message === "email-updated" && !hasShownToastRef.current) {
+            hasShownToastRef.current = true;
+            setTimeout(() => {
+                toast.success("Your email has been updated");
+            }, 100);
+            router.replace("/user-profile", { scroll: false });
+        }
+    }, [searchParams, router]);
+
+    return null;
+};
+
 const UserProfilePage = () => {
     const { authUser } = useSession();
     const { dbUser } = useUser();
 
     const router = useRouter();
-    const searchParams = useSearchParams();
     const supabase = createClient();
 
     const [firstName, setFirstName] = useState("");
@@ -104,21 +122,6 @@ const UserProfilePage = () => {
 
     const [isUpdatingPersonalInfo, setIsUpdatingPersonalInfo] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
-
-    const hasShownToastRef = useRef(false);
-
-    useEffect(() => {
-        const message = searchParams.get("message");
-        if (message === "email-updated" && !hasShownToastRef.current) {
-            // prevent the toast from being shown multiple times due to useEffect being triggered multiple times
-            hasShownToastRef.current = true;
-            // requires a timeout to ensure the toast doesn't get lost in the render cycle
-            setTimeout(() => {
-                toast.success("Your email has been updated");
-            }, 100);
-            router.replace("/user-profile", { scroll: false });
-        }
-    }, [searchParams, router]);
 
     useEffect(() => {
         if (dbUser) {
@@ -220,6 +223,9 @@ const UserProfilePage = () => {
 
     return (
         <div className="container h-full max-w-3xl bg-white">
+            <Suspense fallback={null}>
+                <SearchParamsHandler />
+            </Suspense>
             <div className="mb-8">
                 <div className="flex flex-row items-center gap-4">
                     <Avatar className="h-24 w-24 rounded-none">

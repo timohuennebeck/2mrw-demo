@@ -6,11 +6,11 @@ import { useState } from "react";
 import Image from "next/image";
 import CustomButton from "@/components/application/CustomButton";
 import { TextConstants } from "@/constants/TextConstants";
-import FormStatusMessage from "@/components/application/FormStatusMessage";
 import { checkUserEmailExists } from "@/services/database/userService";
 import { createClient } from "@/services/integration/client";
 import { validateEmailFormat } from "@/utils/validators/formatValidator";
 import { StatusMessage } from "@/interfaces";
+import FormStatusMessage from "@/components/application/FormStatusMessage";
 
 const _sendPasswordResetEmail = async (email: string) => {
     const supabase = createClient();
@@ -107,7 +107,7 @@ const ForgotPasswordPage = () => {
 
                 <FormStatusMessage
                     message={statusMessage?.message ?? ""}
-                    type={statusMessage?.type}
+                    type={statusMessage?.type ?? "info"}
                     action={statusMessage?.action}
                 />
 

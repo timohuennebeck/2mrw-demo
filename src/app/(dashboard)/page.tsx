@@ -4,7 +4,7 @@ import CustomPopup from "@/components/application/CustomPopup";
 import FormHeader from "@/components/application/FormHeader";
 import { CustomBarChart } from "@/components/charts/CustomBarChart";
 import { CustomLinearLineChart } from "@/components/charts/CustomLinearLineChart";
-import { CustomLineChart } from "@/components/charts/CustomlineChart";
+import { CustomLineChart } from "@/components/charts/CustomLineChart";
 import { CustomPieChart } from "@/components/charts/CustomPieChart";
 import useSuccessParam from "@/hooks/useSuccessParam";
 import { Check } from "lucide-react";

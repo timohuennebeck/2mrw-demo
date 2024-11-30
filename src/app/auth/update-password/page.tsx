@@ -7,11 +7,19 @@ import { Suspense, useState } from "react";
 import { toast } from "sonner";
 import { updatePassword } from "./action";
 import CustomButton from "@/components/application/CustomButton";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { TextConstants } from "@/constants/TextConstants";
 import PasswordStrengthChecker from "@/components/application/PasswordStrengthChecker";
 import FormStatusMessage from "@/components/application/FormStatusMessage";
 import { StatusMessage } from "@/interfaces";
+
+const SearchParamsHandler = () => {
+    const searchParams = useSearchParams();
+    return {
+        accessToken: searchParams.get("access_token") ?? "",
+        refreshToken: searchParams.get("refresh_token") ?? "",
+    };
+};
 
 const UpdatePassword = () => {
     const [isUpdating, setIsUpdating] = useState(false);
@@ -19,10 +27,7 @@ const UpdatePassword = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(null);
 
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const accessToken = searchParams.get("access_token");
-    const refreshToken = searchParams.get("refresh_token");
+    let tokens = { accessToken: "", refreshToken: "" };
 
     const handleSubmit = async () => {
         if (password === "") {
@@ -43,8 +48,8 @@ const UpdatePassword = () => {
         setIsUpdating(true);
         const result = await updatePassword({
             password,
-            accessToken: accessToken ?? "",
-            refreshToken: refreshToken ?? "",
+            accessToken: tokens.accessToken ?? "",
+            refreshToken: tokens.refreshToken ?? "",
         });
         setIsUpdating(false);
 
@@ -65,6 +70,13 @@ const UpdatePassword = () => {
 
     return (
         <div className="flex h-full items-center justify-center">
+            <Suspense>
+                {(() => {
+                    tokens = SearchParamsHandler();
+                    return null;
+                })()}
+            </Suspense>
+
             <div className="mx-auto flex w-[448px] flex-col gap-4 rounded-md border p-8 lg:mx-0">
                 <div className="mb-4 flex items-center gap-2">
                     <Image
@@ -83,10 +95,7 @@ const UpdatePassword = () => {
                 </div>
 
                 {statusMessage && (
-                    <FormStatusMessage
-                        message={statusMessage.message}
-                        type={statusMessage.type}
-                    />
+                    <FormStatusMessage message={statusMessage.message} type={statusMessage.type} />
                 )}
 
                 <form

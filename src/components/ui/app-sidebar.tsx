@@ -37,16 +37,16 @@ const items = [
         url: "/",
         icon: Building,
     },
-    // {
-    //     title: "Team",
-    //     url: "/team",
-    //     icon: Users,
-    //     subItems: [
-    //         { title: "Members", url: "/team/members" },
-    //         { title: "Roles", url: "/team/roles" },
-    //         { title: "Invites", url: "/team/invites" },
-    //     ],
-    // },
+    {
+        title: "Team",
+        url: "/team",
+        icon: Users,
+        subItems: [
+            { title: "Members", url: "/team/members" },
+            { title: "Roles", url: "/team/roles" },
+            { title: "Invites", url: "/team/invites" },
+        ],
+    },
 ];
 
 export const _handleSignOut = async (router: AppRouterInstance) => {

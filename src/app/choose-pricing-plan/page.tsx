@@ -1,6 +1,5 @@
 "use client";
 
-import { PricingPlanCard } from "@/components/application/PricingPlanCard/PricingPlanCard";
 import { PricingPlanCardSkeleton } from "@/components/ui/PricingPlanCardSkeleton";
 import { useState } from "react";
 import { isFreePlanEnabled, isOneTimePaymentEnabled } from "@/config/paymentConfig";
@@ -10,6 +9,7 @@ import { useSession } from "@/context/SessionContext";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { ProductWithPrices } from "@/interfaces";
 import { SubscriptionInterval, SubscriptionTier } from "@/enums";
+import { PricingPlanCard } from "@/components/application/PricingPlanCard";
 
 const ChoosePricingPlanPage = () => {
     const [billingCycle, setBillingCycle] = useState<SubscriptionInterval>(

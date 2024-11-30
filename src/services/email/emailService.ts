@@ -9,12 +9,12 @@ const getEmailConfig = (template: EmailTemplate, props: EmailTemplateProps) => {
 
     switch (template) {
         case EmailTemplate.SUBSCRIPTION_CONFIRMATION:
-            if (!settings.subscriptionConfirmationEmail.isEnabled) {
+            if (!settings.paidPlanEmailConfirmation.isEnabled) {
                 throw new Error("Subscription confirmation email is disabled");
             }
 
             return {
-                subject: `${settings.subscriptionConfirmationEmail.subject} - ${props.purchasedPackage}`,
+                subject: `${settings.paidPlanEmailConfirmation.subject} - ${props.purchasedPackage}`,
                 react: PaidPlanEmailConfirmation({
                     userFirstName: props.userFirstName,
                     purchasedPackage: props.purchasedPackage!,

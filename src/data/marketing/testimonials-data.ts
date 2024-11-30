@@ -1,4 +1,5 @@
-import { Testimonial } from "@/components/marketing/TestimonialsGrid";
+import { Testimonial } from "@/components/marketing/TestimonialCard";
+
 
 export const testimonials: Testimonial[] = [
     {
