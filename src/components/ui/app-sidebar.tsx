@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, ChevronUp, Building, Settings, User2, Users } from "lucide-react";
+import { ChevronDown, ChevronUp, Building, User2, Users } from "lucide-react";
 import {
     Sidebar,
     SidebarContent,
@@ -36,25 +36,16 @@ const items = [
         url: "/",
         icon: Building,
     },
-    {
-        title: "Team",
-        url: "/team",
-        icon: Users,
-        subItems: [
-            { title: "Members", url: "/team/members" },
-            { title: "Roles", url: "/team/roles" },
-            { title: "Invites", url: "/team/invites" },
-        ],
-    },
-    {
-        title: "Settings",
-        icon: Settings,
-        subItems: [
-            { title: "General", url: "/settings/general" },
-            { title: "Notifications", url: "/settings/notifications" },
-            { title: "Integrations", url: "/settings/integrations" },
-        ],
-    },
+    // {
+    //     title: "Team",
+    //     url: "/team",
+    //     icon: Users,
+    //     subItems: [
+    //         { title: "Members", url: "/team/members" },
+    //         { title: "Roles", url: "/team/roles" },
+    //         { title: "Invites", url: "/team/invites" },
+    //     ],
+    // },
 ];
 
 export const _handleSignOut = async (router: AppRouterInstance) => {

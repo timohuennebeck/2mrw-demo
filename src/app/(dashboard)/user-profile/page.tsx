@@ -126,7 +126,6 @@ const UserProfilePage = () => {
         if (dbUser) {
             setFirstName(dbUser.first_name);
             setEmail(dbUser.email);
-            setAvatarUrl(dbUser.avatar_url || "");
         }
     }, [dbUser]);
 
@@ -178,25 +177,23 @@ const UserProfilePage = () => {
         }
     };
 
-    const handleDeleteAccount = async () => {
+    const handleDeleteProfile = async () => {
         setIsDeleting(true);
-        const supabase = createClient();
 
         try {
-            // Delete user data from the users table
             const { error: dbError } = await supabase.from("users").delete().eq("id", authUser?.id);
 
             if (dbError) throw dbError;
 
-            // Delete the auth user
             const { error: authError } = await supabase.auth.admin.deleteUser(authUser?.id ?? "");
 
             if (authError) throw authError;
 
-            toast.success("Your account has been deleted");
+            toast.success("Your profile has been deleted");
             router.push("/auth/signin");
+            setIsDeleting(false);
         } catch (error) {
-            toast.error("Failed to delete account");
+            toast.error("Failed to delete profile");
             setIsDeleting(false);
         }
     };
@@ -301,7 +298,7 @@ const UserProfilePage = () => {
             </Form>
 
             <div className="mt-8 border-t pt-8">
-                <h2 className="mb-2 text-sm font-semibold">Email</h2>
+                <h2 className="mb-2 text-sm font-semibold">Delete Profile</h2>
                 <p className="mb-4 text-sm text-muted-foreground">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut voluptas rem quam,
                     facere sequi error?
@@ -328,7 +325,7 @@ const UserProfilePage = () => {
                         <AlertDialogFooter>
                             <AlertDialogCancel className="rounded-none">Cancel</AlertDialogCancel>
                             <AlertDialogAction
-                                onClick={handleDeleteAccount}
+                                onClick={handleDeleteProfile}
                                 className="rounded-none bg-red-600 hover:bg-red-700"
                             >
                                 Delete Account
