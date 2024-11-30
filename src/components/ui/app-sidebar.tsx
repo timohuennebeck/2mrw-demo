@@ -29,6 +29,7 @@ import { createClient } from "@/services/integration/client";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter, usePathname } from "next/navigation";
 import { useUser } from "@/context/UserContext";
+import Image from "next/image";
 
 const items = [
     {
@@ -80,27 +81,16 @@ export function AppSidebar() {
 
     return (
         <Sidebar collapsible="icon">
-            <SidebarHeader className="bg-white">
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <SidebarMenuButton className="rounded-none">
-                                    Select Workspace
-                                    <ChevronDown className="ml-auto" />
-                                </SidebarMenuButton>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-[--radix-popper-anchor-width] rounded-none">
-                                <DropdownMenuItem className="rounded-none">
-                                    <span>Acme Inc</span>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem className="rounded-none">
-                                    <span>Acme Corp.</span>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </SidebarMenuItem>
-                </SidebarMenu>
+            <SidebarHeader className="flex flex-row items-center gap-2 bg-white">
+                <Image
+                    src="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
+                    width={100}
+                    height={100}
+                    alt="Company Logo"
+                    className="h-8 w-auto cursor-pointer"
+                    onClick={() => router.push("/")}
+                />
+                <span className="text-lg font-semibold">2mrw</span>
             </SidebarHeader>
 
             <SidebarContent className="bg-white">
