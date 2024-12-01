@@ -127,25 +127,25 @@ const LandingPage = () => {
                                     title: "Lorem ipsum dolor sit amet.",
                                     description:
                                         "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore.",
-                                    icon: <Settings className="h-5 w-5 text-blue-600" />,
+                                    icon: Settings,
                                 },
                                 {
                                     number: 2,
                                     title: "Lorem ipsum dolor sit amet.",
                                     description:
                                         "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore.",
-                                    icon: <Settings className="h-5 w-5 text-blue-600" />,
+                                    icon: Settings,
                                 },
                                 {
                                     number: 3,
                                     title: "Lorem ipsum dolor sit amet.",
                                     description:
                                         "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore.",
-                                    icon: <Settings className="h-5 w-5 text-blue-600" />,
+                                    icon: Settings,
                                 },
                             ]}
                             videoPaths={[
-                                "https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4",
+                                "https://framerusercontent.com/assets/NmYVFvasmFfIhZND3qZbQkMNE.mp4",
                                 "https://framerusercontent.com/assets/impzjczRdzEPQh2ezMYGWzGe3Y.mp4",
                                 "https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4",
                             ]}

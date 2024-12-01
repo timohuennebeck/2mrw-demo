@@ -1,12 +1,12 @@
-import Image from "next/image";
 import { useEffect } from "react";
 import { useState } from "react";
+import { type LucideIcon } from "lucide-react";
 
 interface Step {
     number: number;
     title: string;
     description: string;
-    icon: React.ReactNode;
+    icon: LucideIcon;
 }
 
 interface HowItWorksParams {
@@ -18,13 +18,13 @@ interface HowItWorksParams {
 }
 
 const HowItWorks = ({ eyebrow, title, description, steps, videoPaths }: HowItWorksParams) => {
-    const [activeStep, setActiveStep] = useState(0);
+    const [currentStep, setCurrentStep] = useState(0);
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setActiveStep((current) => (current + 1) % steps.length);
-            setProgress(0); // Reset progress when step changes
+            setCurrentStep((current) => (current + 1) % steps.length);
+            setProgress(0); // reset progress when step changes
         }, 4000);
 
         return () => clearInterval(interval);
@@ -33,10 +33,10 @@ const HowItWorks = ({ eyebrow, title, description, steps, videoPaths }: HowItWor
     useEffect(() => {
         const progressInterval = setInterval(() => {
             setProgress((current) => Math.min(current + 2, 100));
-        }, 80); // Update every 80ms to complete in ~4 seconds
+        }, 80); // update every 80ms to complete in about four seconds
 
         return () => clearInterval(progressInterval);
-    }, [activeStep]);
+    }, [currentStep]);
 
     return (
         <div className="flex flex-col gap-16">
@@ -57,22 +57,22 @@ const HowItWorks = ({ eyebrow, title, description, steps, videoPaths }: HowItWor
                         <div key={index} className="flex items-start gap-4">
                             <div className="relative flex h-full flex-col items-center self-stretch">
                                 <div className="absolute left-0 top-0 h-full w-0.5 -translate-x-4 bg-gray-200">
-                                    {index === activeStep && (
+                                    {index === currentStep && (
                                         <div
                                             className="absolute w-full bg-blue-500 transition-all duration-100"
                                             style={{ height: `${progress}%` }}
                                         />
                                     )}
-                                    {index < activeStep && (
+                                    {index < currentStep && (
                                         <div className="absolute h-full w-full bg-blue-500" />
                                     )}
                                 </div>
                                 <div
                                     className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
-                                        index === activeStep ? "bg-blue-50" : "bg-gray-50"
+                                        index === currentStep ? "bg-blue-50" : "bg-gray-50"
                                     }`}
                                 >
-                                    {step.icon}
+                                    <step.icon className="h-5 w-5 text-blue-600" />
                                 </div>
                             </div>
                             <div className="flex flex-col gap-2">
@@ -89,7 +89,7 @@ const HowItWorks = ({ eyebrow, title, description, steps, videoPaths }: HowItWor
                 <div className="flex items-center">
                     <div className="relative aspect-video w-full overflow-hidden rounded-lg shadow-2xl">
                         <video
-                            src={videoPaths[activeStep]}
+                            src={videoPaths[currentStep]}
                             width={1200}
                             height={675}
                             className="rounded-lg shadow-2xl"
