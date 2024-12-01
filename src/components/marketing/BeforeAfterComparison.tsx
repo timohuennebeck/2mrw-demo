@@ -1,6 +1,6 @@
 import ComparisonItem from "./ComparisonItem";
 
-interface CompetitorComparisonItem {
+interface BeforeAfterComparisonItem {
     title?: string;
     bulletPoints: {
         text: string;
@@ -8,17 +8,17 @@ interface CompetitorComparisonItem {
     imagePath: string;
 }
 
-interface CompetitorComparisonParams {
+interface BeforeAfterComparisonParams {
     heading?: {
         eyebrow?: string;
         title: React.ReactNode;
         description: string;
     };
-    before: CompetitorComparisonItem;
-    after: CompetitorComparisonItem;
+    before: BeforeAfterComparisonItem;
+    after: BeforeAfterComparisonItem;
 }
 
-const CompetitorComparison = ({ heading, before, after }: CompetitorComparisonParams) => {
+const BeforeAfterComparison = ({ heading, before, after }: BeforeAfterComparisonParams) => {
     return (
         <div className="flex flex-col gap-20">
             {/* Header Section */}
@@ -56,4 +56,4 @@ const CompetitorComparison = ({ heading, before, after }: CompetitorComparisonPa
     );
 };
 
-export default CompetitorComparison;
+export default BeforeAfterComparison;

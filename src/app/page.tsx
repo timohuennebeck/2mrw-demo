@@ -1,6 +1,6 @@
 "use client";
 
-import CompetitorComparison from "@/components/marketing/CompetitorComparison";
+import BeforeAfterComparison from "@/components/marketing/BeforeAfterComparison";
 import CTA from "@/components/marketing/CTA";
 import FAQ from "@/components/marketing/FAQ";
 import FeaturedTestimonial from "@/components/marketing/FeaturedTestimonial";
@@ -155,7 +155,7 @@ const LandingPage = () => {
                     {/* COPY TIP: When comparing with competitors, focus on your unique advantages.
                         Use concrete examples and avoid generic claims. */}
                     <Section>
-                        <CompetitorComparison
+                        <BeforeAfterComparison
                             heading={{
                                 eyebrow: "Lorem, ipsum dolor.",
                                 title: (
