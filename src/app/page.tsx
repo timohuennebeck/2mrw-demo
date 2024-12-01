@@ -9,6 +9,7 @@ import FeaturesList from "@/components/marketing/FeaturesList";
 import Footer from "@/components/marketing/Footer";
 import Header from "@/components/marketing/Header";
 import Hero from "@/components/marketing/Hero";
+import HowItWorks from "@/components/marketing/HowItWorks";
 import PricingComparison from "@/components/marketing/PricingComparison";
 import ProductDemo from "@/components/marketing/ProductDemo";
 import PromoBanner from "@/components/marketing/PromoBanner";
@@ -23,6 +24,8 @@ import { defaultPricingFeatures, defaultPricingPlans } from "@/data/marketing/pr
 import { exampleStats } from "@/data/marketing/stats-data";
 import { testimonials } from "@/data/marketing/testimonials-data";
 import { handleSmoothScroll } from "@/utils/navigation";
+import { Edit } from "lucide-react";
+import { Settings, Upload } from "lucide-react";
 import { Manrope } from "next/font/google";
 import { useRouter } from "next/navigation";
 
@@ -41,6 +44,8 @@ const LandingPage = () => {
             </div>
 
             <div className={`${manrope.variable} flex flex-col font-manrope`}>
+                {/* COPY TIP: Promo banners should create urgency and highlight clear value.
+                    Use specific numbers, time limits, or exclusive offers. */}
                 <PromoBanner
                     text={{
                         desktop: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
@@ -64,6 +69,9 @@ const LandingPage = () => {
                     logoSrc="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
                     loginOnClick={() => router.push("/auth/sign-in")}
                 />
+                {/* COPY TIP: Hero sections need a clear, compelling value proposition.
+                    Focus on the customer's main pain point and how you solve it.
+                    Keep it concise - aim for 6-12 words. */}
                 <Hero
                     promoText="LOREM IPSUM DOLOR SIT AMET"
                     title={
@@ -87,6 +95,8 @@ const LandingPage = () => {
                 />
 
                 <div className="mx-auto mb-8 mt-28 flex w-full max-w-7xl flex-col gap-36">
+                    {/* COPY TIP: Social proof should be specific and results-focused.
+                        Include numbers, achievements, or concrete benefits the customer experienced. */}
                     <Section>
                         <FeaturedTestimonial
                             quote="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Asperiores amet possimus praesentium ea deleniti recusandae?"
@@ -98,6 +108,52 @@ const LandingPage = () => {
                         />
                     </Section>
 
+                    <Section>
+                        <HowItWorks
+                            eyebrow="Lorem, ipsum dolor."
+                            title={
+                                <>
+                                    Lorem ipsum dolor sit{" "}
+                                    <span className="relative mt-4 inline-block whitespace-nowrap bg-blue-600 p-2 text-white">
+                                        amet consectetur,
+                                    </span>
+                                    adipisicing elit.
+                                </>
+                            }
+                            description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore."
+                            steps={[
+                                {
+                                    number: 1,
+                                    title: "Lorem ipsum dolor sit amet.",
+                                    description:
+                                        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore.",
+                                    icon: <Settings className="h-5 w-5 text-blue-600" />,
+                                },
+                                {
+                                    number: 2,
+                                    title: "Lorem ipsum dolor sit amet.",
+                                    description:
+                                        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore.",
+                                    icon: <Settings className="h-5 w-5 text-blue-600" />,
+                                },
+                                {
+                                    number: 3,
+                                    title: "Lorem ipsum dolor sit amet.",
+                                    description:
+                                        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore.",
+                                    icon: <Settings className="h-5 w-5 text-blue-600" />,
+                                },
+                            ]}
+                            videoPaths={[
+                                "https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4",
+                                "https://framerusercontent.com/assets/impzjczRdzEPQh2ezMYGWzGe3Y.mp4",
+                                "https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4",
+                            ]}
+                        />
+                    </Section>
+
+                    {/* COPY TIP: When comparing with competitors, focus on your unique advantages.
+                        Use concrete examples and avoid generic claims. */}
                     <Section>
                         <CompetitorComparison
                             heading={{
@@ -181,6 +237,8 @@ const LandingPage = () => {
                         />
                     </Section>
 
+                    {/* COPY TIP: Features should focus on benefits, not just functionality.
+                        Format: "Feature Name: What it does + Why it matters to the customer" */}
                     <Section id="features" className="flex flex-col gap-36">
                         <Features
                             features={authFeatures}
@@ -255,6 +313,8 @@ const LandingPage = () => {
                         />
                     </Section>
 
+                    {/* COPY TIP: Pricing sections should emphasize value over cost.
+                        Highlight what makes each tier unique and who it's best for. */}
                     <Section id="pricing">
                         <PricingComparison
                             title={
@@ -274,6 +334,8 @@ const LandingPage = () => {
                         />
                     </Section>
 
+                    {/* COPY TIP: FAQs should address real customer objections.
+                        Use actual customer questions and mirror their language. */}
                     <Section id="faq">
                         <FAQ
                             eyebrow="Lorem, ipsum dolor."
@@ -305,6 +367,8 @@ const LandingPage = () => {
                         />
                     </Section>
 
+                    {/* COPY TIP: CTAs should be action-oriented and create urgency.
+                        Focus on what the customer gets, not what they have to do. */}
                     <Section>
                         <CTA
                             eyebrow="Lorem, ipsum dolor."
@@ -329,6 +393,8 @@ const LandingPage = () => {
                         />
                     </Section>
 
+                    {/* COPY TIP: Footer copy should build trust.
+                        Include social proof, guarantees, or security certifications. */}
                     <Section>
                         <Footer
                             links={footerLinks}

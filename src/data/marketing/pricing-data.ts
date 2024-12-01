@@ -4,7 +4,11 @@ export const defaultPricingPlans = [
         price: "$19",
         period: "/month",
         buttonVariant: "secondary",
-        onClick: () => {},
+        onClick: () =>
+            window.open(
+                "https://buy.stripe.com/6oEcQjcpE6ZBanC9AA?prefilled_promo_code=LAUNCH30",
+                "_blank",
+            ),
     },
     {
         name: "Ipsum",
