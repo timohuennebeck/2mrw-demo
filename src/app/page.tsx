@@ -24,8 +24,7 @@ import { defaultPricingFeatures, defaultPricingPlans } from "@/data/marketing/pr
 import { exampleStats } from "@/data/marketing/stats-data";
 import { testimonials } from "@/data/marketing/testimonials-data";
 import { handleSmoothScroll } from "@/utils/navigation";
-import { Edit } from "lucide-react";
-import { Settings, Upload } from "lucide-react";
+import { Settings } from "lucide-react";
 import { Manrope } from "next/font/google";
 import { useRouter } from "next/navigation";
 
