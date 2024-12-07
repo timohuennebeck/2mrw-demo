@@ -3,7 +3,6 @@
 import React from "react";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/ui/app-sidebar";
-import { cookies } from "next/headers";
 import {
     Breadcrumb,
     BreadcrumbItem,
