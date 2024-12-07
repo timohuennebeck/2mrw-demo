@@ -12,7 +12,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
     return (
         <div className={`flex h-screen ${manrope.variable} font-manrope`}>
             {/* Left Side - Sign Up Form */}
-            <div className="w-5/12 px-12">{children}</div>
+            <div className="w-[528px] px-12">{children}</div>
 
             {/* Right Side - Testimonial */}
             <div className="flex-1 p-4">

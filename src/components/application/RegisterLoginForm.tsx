@@ -7,11 +7,32 @@ import { useState } from "react";
 import { validateEmailFormat } from "@/utils/validators/formatValidator";
 import { TextConstants } from "@/constants/TextConstants";
 import FormStatusMessage from "./FormStatusMessage";
-import InputField from "@/components/application/InputField";
 import PasswordStrengthChecker from "./PasswordStrengthChecker";
-import CustomButton from "@/components/application/CustomButton";
 import FormDivider from "@/components/application/FormDivider";
 import { StatusMessage } from "@/interfaces";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
+
+const _registerLoginFormSchema = z.object({
+    firstName: z.string().optional(),
+    email: z.string().email({
+        message: TextConstants.ERROR__INVALID_EMAIL,
+    }),
+    password: z.string().min(1, {
+        message: TextConstants.ERROR__PASSWORD_IS_MISSING,
+    }),
+});
 
 export interface RegisterLoginFormParams {
     mode: string;
@@ -36,46 +57,21 @@ const RegisterLoginForm = ({
     isLoading,
     statusMessage,
 }: RegisterLoginFormParams) => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [firstName, setFirstName] = useState("");
     const [isPasswordFocused, setIsPasswordFocused] = useState(false);
     const [showStrengthChecker, setShowStrengthChecker] = useState(false);
     const [authType, setAuthType] = useState("magicLink");
-    const [errors, setErrors] = useState({
-        email: "",
-        password: "",
-        firstName: "",
-    });
 
-    const checkFormInput = () => {
-        const newErrors = {
+    const registerLoginForm = useForm({
+        resolver: zodResolver(_registerLoginFormSchema),
+        defaultValues: {
+            firstName: "",
             email: "",
             password: "",
-            firstName: "",
-        };
+        },
+    });
 
-        if (email === "") {
-            newErrors.email = TextConstants.ERROR__EMAIL_IS_MISSING;
-        } else if (!validateEmailFormat(email)) {
-            newErrors.email = TextConstants.ERROR__INVALID_EMAIL;
-        }
-
-        if ((authType === "password" || mode === "signup") && password === "") {
-            console.log("→ [LOG] Triggered section");
-            newErrors.password = TextConstants.ERROR__PASSWORD_IS_MISSING;
-        }
-
-        if (mode === "signup" && firstName === "") {
-            newErrors.firstName = TextConstants.ERROR__FIRST_NAME_IS_MISSING;
-        }
-
-        setErrors(newErrors);
-        return !Object.values(newErrors).some((error) => error !== "");
-    };
-
-    const handleFormSubmit = () => {
-        if (!checkFormInput()) return;
+    const handleFormSubmit = (values: { firstName: string; email: string; password: string }) => {
+        const { firstName, email, password } = values;
 
         if (authType === "magicLink" && mode === "signin") {
             loginWithMagicLink?.(email);
@@ -103,7 +99,7 @@ const RegisterLoginForm = ({
 
     return (
         <div className="flex h-full items-center justify-center">
-            <div className="mx-auto flex w-[448px] flex-col gap-4 rounded-md border p-8 shadow-sm lg:mx-0">
+            <div className="flex w-full flex-col gap-4">
                 <div className="mb-4 flex items-center gap-2">
                     <Image
                         src="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
@@ -115,16 +111,15 @@ const RegisterLoginForm = ({
 
                 <div className="grid w-full gap-6">
                     <div className="grid gap-2">
-                        <h1 className="text-2xl font-medium">
+                        <h1 className="text-2xl font-semibold">
                             {mode === "signup"
                                 ? TextConstants.TEXT__SIGN_UP
                                 : TextConstants.TEXT__SIGN_IN}{" "}
-                            to {TextConstants.TEXT__COMPANY_TITLE}
+                            to {TextConstants.TEXT__COMPANY_TITLE} to continue! 🙌
                         </h1>
                         <p className="text-sm text-gray-400">
-                            {mode === "signup"
-                                ? TextConstants.TEXT__SIGN_UP_EMAIIL_OR_ANOTHER_SERVICE
-                                : TextConstants.TEXT__SIGN_IN_EMAIL_OR_ANOTHER_SERVICE}
+                            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Obcaecati
+                            ullam eveniet laborum numquam quae quasi!
                         </p>
                     </div>
 
@@ -135,109 +130,140 @@ const RegisterLoginForm = ({
                             action={statusMessage.action}
                         />
                     )}
-                    <form className="grid gap-4" onSubmit={(e) => e.preventDefault()} noValidate>
-                        {mode === "signup" && (
-                            <div className="grid gap-2">
-                                <InputField
-                                    id="firstName"
-                                    dataTestId="first-name-input"
-                                    label="First name"
-                                    name="firstName"
-                                    type="text"
-                                    value={firstName}
-                                    placeholder={TextConstants.TEXT__FIRST_NAME_PLACEHOLDER}
-                                    onChange={(value) => {
-                                        setFirstName(value);
-                                        setErrors((prev) => ({ ...prev, firstName: "" }));
-                                    }}
-                                    error={errors.firstName}
-                                    hasError={!!errors.firstName}
-                                />
-                            </div>
-                        )}
-                        <InputField
-                            id="email"
-                            dataTestId="email-input"
-                            label="Email"
-                            name="email"
-                            type="email"
-                            placeholder={TextConstants.TEXT__EMAIL_PLACEHOLDER}
-                            value={email}
-                            onChange={(value) => {
-                                setEmail(value);
-                                setErrors((prev) => ({ ...prev, email: "" }));
+                    <Form {...registerLoginForm}>
+                        <form
+                            className="grid gap-4"
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                registerLoginForm.handleSubmit(handleFormSubmit)();
                             }}
-                            error={errors.email}
-                            hasError={!!errors.email}
-                        />
-                        {(authType === "password" || mode === "signup") && (
-                            <InputField
-                                id="password"
-                                dataTestId="password-input"
-                                label="Password"
-                                name="password"
-                                type="password"
-                                value={password}
-                                onChange={(value) => {
-                                    setPassword(value);
-                                    setErrors((prev) => ({ ...prev, password: "" }));
-                                }}
-                                error={errors.password}
-                                hasError={!!errors.password}
-                                onFocus={() => mode === "signup" && handlePasswordFocus()}
-                                onBlur={() => mode === "signup" && handlePasswordBlur()}
+                            noValidate
+                        >
+                            {mode === "signup" && (
+                                <FormField
+                                    control={registerLoginForm.control}
+                                    name="firstName"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>First name</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    id="firstName"
+                                                    data-test-id="first-name-input"
+                                                    name="firstName"
+                                                    type="text"
+                                                    placeholder={
+                                                        TextConstants.TEXT__FIRST_NAME_PLACEHOLDER
+                                                    }
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            )}
+
+                            <FormField
+                                control={registerLoginForm.control}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Email</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                id="email"
+                                                data-test-id="email-input"
+                                                name="email"
+                                                type="email"
+                                                placeholder={TextConstants.TEXT__EMAIL_PLACEHOLDER}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
                             />
-                        )}
 
-                        {mode === "signup" && (isPasswordFocused || showStrengthChecker) && (
-                            <PasswordStrengthChecker password={password} />
-                        )}
+                            {(authType === "password" || mode === "signup") && (
+                                <FormField
+                                    control={registerLoginForm.control}
+                                    name="password"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Password</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    id="password"
+                                                    data-test-id="password-input"
+                                                    name="password"
+                                                    type="password"
+                                                    placeholder="******"
+                                                    onFocus={() =>
+                                                        mode === "signup" && handlePasswordFocus()
+                                                    }
+                                                    onBlur={() =>
+                                                        mode === "signup" && handlePasswordBlur()
+                                                    }
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            )}
 
-                        {mode === "signin" && authType === "password" && (
-                            <div className="flex items-center">
-                                <Link
-                                    href="/auth/forgot-password"
-                                    className="ml-auto inline-block text-sm underline"
-                                >
-                                    Forgot password?
-                                </Link>
-                            </div>
-                        )}
+                            {mode === "signup" && (isPasswordFocused || showStrengthChecker) && (
+                                <PasswordStrengthChecker password={password} />
+                            )}
 
-                        <CustomButton
-                            dataTestId={`${mode === "signup" ? "sign-up" : "sign-in"}-button`}
-                            title={
-                                authType === "magicLink" && mode === "signin"
+                            {mode === "signin" && authType === "password" && (
+                                <div className="flex items-center">
+                                    <Link
+                                        href="/auth/forgot-password"
+                                        className="ml-auto inline-block text-sm underline"
+                                    >
+                                        Forgot password?
+                                    </Link>
+                                </div>
+                            )}
+
+                            <Button
+                                variant="default"
+                                type="submit"
+                                data-test-id={`${mode === "signup" ? "sign-up" : "sign-in"}-button`}
+                                disabled={isLoading}
+                                isLoading={isLoading}
+                            >
+                                {authType === "magicLink" && mode === "signin"
                                     ? TextConstants.TEXT__LOGIN_WITH_MAGIC_LINK
                                     : mode === "signup"
                                       ? TextConstants.TEXT__SIGN_UP
-                                      : TextConstants.TEXT__SIGN_IN
-                            }
-                            onClick={handleFormSubmit}
-                            disabled={isLoading}
-                            isLoading={isLoading}
-                        />
+                                      : TextConstants.TEXT__SIGN_IN}
+                            </Button>
 
-                        {mode === "signin" && authType === "magicLink" && (
-                            <p className="text-center text-sm text-gray-500">
-                                You'll be emailed a magic code for a password-free sign in or{" "}
-                                <button
-                                    data-testid="password-sign-in-toggle"
-                                    onClick={() => setAuthType("password")}
-                                    className="underline"
-                                >
-                                    sign in with password instead
-                                </button>
-                            </p>
-                        )}
+                            {mode === "signin" && authType === "magicLink" && (
+                                <p className="text-center text-sm text-gray-500">
+                                    You'll be emailed a magic code for a password-free sign in or{" "}
+                                    <button
+                                        data-testid="password-sign-in-toggle"
+                                        onClick={() => setAuthType("password")}
+                                        className="underline"
+                                    >
+                                        sign in with password instead
+                                    </button>
+                                </p>
+                            )}
 
-                        {!isPasswordFocused && (
-                            <>
-                                <FormDivider />
-                                <GoogleButton />
-                            </>
-                        )}
-                    </form>
+                            {!isPasswordFocused && (
+                                <>
+                                    <FormDivider />
+                                    <GoogleButton />
+                                </>
+                            )}
+                        </form>
+                    </Form>
 
                     <div className="text-center text-sm">
                         {mode === "signup"
