@@ -26,39 +26,54 @@ interface PricingComparisonParams {
     title: React.ReactNode;
     subtitle: string;
     description: string;
-    plans: PricingPlan[];
+    plans: {
+        monthly: PricingPlan[];
+        annual: PricingPlan[];
+    };
     features: PricingFeatureSection[];
     buttonText: string;
 }
 
 const PricingPlanHeader = ({
     plan,
+    annualPlans,
     buttonText,
     onClick,
 }: {
     plan: PricingPlan;
+    annualPlans: PricingPlan[];
     buttonText: string;
     onClick: () => void;
-}) => (
-    <div className="col-span-1 flex flex-col gap-6 text-center">
-        <h3 className="text-lg font-medium">{plan.name}</h3>
-        <div>
-            <span className="text-4xl font-medium">{plan.price}</span>
-            <span className="text-sm text-gray-500">{plan.period}</span>
+}) => {
+    const annualPlan = annualPlans.find((p) => p.name === plan.name)?.price;
+    const pricePerMonthForYearlyPlan = annualPlan
+        ? `$${(Number(annualPlan.replace("$", "")) / 12).toFixed(2)}`
+        : null;
+
+    return (
+        <div className="col-span-1 flex flex-col gap-6 text-center">
+            <h3 className="text-lg font-medium">{plan.name}</h3>
+            <div>
+                <span className="text-4xl font-medium">{plan.price}</span>
+                <span className="text-sm text-gray-500">{plan.period}</span>
+            </div>
+            <span className="text-sm text-gray-500">
+                {pricePerMonthForYearlyPlan} / month when billed per annum
+            </span>
+            <Button
+                size="lg"
+                className={`w-full rounded-md px-6 py-2.5 text-sm transition-colors ${
+                    plan.buttonVariant === "primary"
+                        ? "bg-black text-white hover:bg-gray-800"
+                        : "bg-gray-100 text-gray-900 hover:bg-gray-200"
+                }`}
+                onClick={onClick}
+            >
+                {buttonText}
+            </Button>
         </div>
-        <Button
-            size="lg"
-            className={`w-full rounded-md px-6 py-2.5 text-sm transition-colors ${
-                plan.buttonVariant === "primary"
-                    ? "bg-black text-white hover:bg-gray-800"
-                    : "bg-gray-100 text-gray-900 hover:bg-gray-200"
-            }`}
-            onClick={onClick}
-        >
-            {buttonText}
-        </Button>
-    </div>
-);
+    );
+};
 
 const FeatureCell = ({ value }: { value: boolean | string }) => {
     if (typeof value === "boolean") {
@@ -108,10 +123,11 @@ const PricingComparison = ({
             {/* Plan Headers */}
             <div className="grid grid-cols-4 gap-8">
                 <div className="col-span-1" />
-                {plans.map((plan) => (
+                {plans.monthly.map((plan) => (
                     <PricingPlanHeader
                         key={plan.name}
                         plan={plan}
+                        annualPlans={plans.annual}
                         buttonText={buttonText}
                         onClick={plan.onClick}
                     />

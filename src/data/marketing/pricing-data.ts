@@ -1,30 +1,59 @@
-export const defaultPricingPlans = [
-    {
-        name: "Lorem",
-        price: "$19",
-        period: "/month",
-        buttonVariant: "secondary",
-        onClick: () =>
-            window.open(
-                "https://buy.stripe.com/6oEcQjcpE6ZBanC9AA?prefilled_promo_code=LAUNCH30",
-                "_blank",
-            ),
-    },
-    {
-        name: "Ipsum",
-        price: "$49",
-        period: "/month",
-        buttonVariant: "primary",
-        onClick: () => {},
-    },
-    {
-        name: "Dolor",
-        price: "$99",
-        period: "/month",
-        buttonVariant: "secondary",
-        onClick: () => {},
-    },
-];
+export const defaultPricingPlans = {
+    monthly: [
+        {
+            name: "Lorem",
+            price: "$19",
+            period: "/month",
+            buttonVariant: "secondary",
+            onClick: () =>
+                window.open(
+                    "https://buy.stripe.com/6oEcQjcpE6ZBanC9AA?prefilled_promo_code=LAUNCH30",
+                    "_blank",
+                ),
+        },
+        {
+            name: "Ipsum",
+            price: "$49",
+            period: "/month",
+            buttonVariant: "primary",
+            onClick: () => {},
+        },
+        {
+            name: "Dolor",
+            price: "$99",
+            period: "/month",
+            buttonVariant: "secondary",
+            onClick: () => {},
+        },
+    ],
+    annual: [
+        {
+            name: "Lorem",
+            price: "$190",
+            period: "/year",
+            buttonVariant: "secondary",
+            onClick: () =>
+                window.open(
+                    "https://buy.stripe.com/annual-link",
+                    "_blank",
+                ),
+        },
+        {
+            name: "Ipsum",
+            price: "$490",
+            period: "/year",
+            buttonVariant: "primary",
+            onClick: () => {},
+        },
+        {
+            name: "Dolor",
+            price: "$990",
+            period: "/year",
+            buttonVariant: "secondary",
+            onClick: () => {},
+        },
+    ],
+};
 
 export const defaultPricingFeatures = [
     {
