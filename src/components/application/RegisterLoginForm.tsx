@@ -215,7 +215,9 @@ const RegisterLoginForm = ({
                             )}
 
                             {mode === "signup" && (isPasswordFocused || showStrengthChecker) && (
-                                <PasswordStrengthChecker password={password} />
+                                <PasswordStrengthChecker
+                                    password={registerLoginForm.watch("password")}
+                                />
                             )}
 
                             {mode === "signin" && authType === "password" && (
