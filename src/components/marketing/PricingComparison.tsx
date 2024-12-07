@@ -1,5 +1,6 @@
 import { Check, X } from "lucide-react";
 import React from "react";
+import { Button } from "../ui/button";
 
 interface PricingPlan {
     name: string;
@@ -45,7 +46,8 @@ const PricingPlanHeader = ({
             <span className="text-4xl font-medium">{plan.price}</span>
             <span className="text-sm text-gray-500">{plan.period}</span>
         </div>
-        <button
+        <Button
+            size="lg"
             className={`w-full rounded-md px-6 py-2.5 text-sm transition-colors ${
                 plan.buttonVariant === "primary"
                     ? "bg-black text-white hover:bg-gray-800"
@@ -54,7 +56,7 @@ const PricingPlanHeader = ({
             onClick={onClick}
         >
             {buttonText}
-        </button>
+        </Button>
     </div>
 );
 

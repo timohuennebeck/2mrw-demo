@@ -1,5 +1,6 @@
 import { ChevronRight } from "lucide-react";
 import React from "react";
+import { Button } from "../ui/button";
 
 interface CTAParams {
     eyebrow?: string;
@@ -26,20 +27,14 @@ const CTA = ({ eyebrow, title, description, primaryButton, secondaryButton }: CT
             <p className="max-w-3xl text-center text-lg text-gray-600">{description}</p>
 
             <div className="flex items-center justify-center gap-4">
-                <button
-                    onClick={primaryButton.onClick}
-                    className="rounded-md bg-black px-6 py-2.5 text-white transition-colors hover:bg-gray-800"
-                >
+                <Button size="lg" onClick={primaryButton.onClick}>
                     {primaryButton.text}
-                </button>
+                </Button>
                 {secondaryButton && (
-                    <button
-                        onClick={secondaryButton.onClick}
-                        className="flex items-center gap-2 rounded-md bg-gray-100 px-6 py-2.5 transition-colors hover:bg-gray-200"
-                    >
+                    <Button size="lg" variant="secondary" onClick={secondaryButton.onClick}>
                         {secondaryButton.text}
                         <ChevronRight className="h-4 w-4" />
-                    </button>
+                    </Button>
                 )}
             </div>
         </div>

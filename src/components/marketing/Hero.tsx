@@ -2,6 +2,7 @@
 
 import { Play } from "lucide-react";
 import TestimonialRating from "./TestimonialRating";
+import { Button } from "../ui/button";
 
 interface HeroParams {
     promoText?: string;
@@ -47,20 +48,14 @@ const Hero = ({
 
             {/* CTA Buttons */}
             <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
-                <button
-                    className="rounded-md bg-black px-6 py-2.5 text-white transition-colors hover:bg-gray-800"
-                    onClick={primaryCTA.onClick}
-                >
+                <Button size="lg" onClick={primaryCTA.onClick}>
                     {primaryCTA.text}
-                </button>
+                </Button>
                 {secondaryCTA && (
-                    <button
-                        onClick={secondaryCTA.onClick}
-                        className="flex items-center justify-center gap-2 rounded-md bg-gray-100 px-6 py-2.5 transition-colors hover:bg-gray-200"
-                    >
+                    <Button size="lg" variant="secondary" onClick={secondaryCTA.onClick}>
                         <Play size={16} className="fill-current" />
                         {secondaryCTA.text}
-                    </button>
+                    </Button>
                 )}
             </div>
 

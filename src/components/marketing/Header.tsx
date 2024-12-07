@@ -4,6 +4,7 @@ import { handleSmoothScroll } from "@/utils/navigation";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "../ui/button";
 
 interface NavItem {
     href: string;
@@ -45,13 +46,10 @@ const Header = ({ navItems, logoSrc, loginOnClick }: HeaderParams) => {
                 </nav>
 
                 {/* Login Button */}
-                <button
-                    onClick={loginOnClick}
-                    className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-gray-900"
-                >
+                <Button variant="ghost" onClick={loginOnClick}>
                     Log in
                     <ArrowRight size={16} className="text-gray-400" />
-                </button>
+                </Button>
             </div>
         </header>
     );

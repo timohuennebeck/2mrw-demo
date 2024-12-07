@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Star, Loader } from "lucide-react";
 import TestimonialCard, { Testimonial } from "./TestimonialCard";
 import FeaturedTestimonialCard from "./FeaturedTestimonialCard";
+import { Button } from "../ui/button";
 
 interface TestimonialsGridProps {
     title?: {
@@ -70,20 +71,15 @@ const SortControls = ({
 
 const LoadMoreButton = ({ isLoading, onClick }: { isLoading: boolean; onClick: () => void }) => (
     <div className="flex justify-center">
-        <button
+        <Button
+            size="lg"
+            variant="outline"
             onClick={onClick}
             disabled={isLoading}
-            className="flex items-center gap-2 rounded-md border border-gray-300 bg-white px-6 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-70"
+            isLoading={isLoading}
         >
-            {isLoading ? (
-                <>
-                    <Loader className="h-4 w-4 animate-spin" />
-                    Loading...
-                </>
-            ) : (
-                "Load More Testimonials"
-            )}
-        </button>
+            Load More Testimonials
+        </Button>
     </div>
 );
 
