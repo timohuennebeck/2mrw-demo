@@ -10,12 +10,14 @@ const manrope = Manrope({
 
 const Layout = ({ children }: { children: ReactNode }) => {
     return (
-        <div className={`flex h-screen ${manrope.variable} font-manrope`}>
+        <div
+            className={`flex justify-center py-8 lg:h-screen lg:py-0 ${manrope.variable} font-manrope`}
+        >
             {/* Left Side - Sign Up Form */}
             <div className="w-[528px] px-12">{children}</div>
 
             {/* Right Side - Testimonial */}
-            <div className="flex-1 p-4">
+            <div className="hidden flex-1 p-4 lg:block">
                 <div className="flex h-full flex-1 flex-col justify-end rounded-xl bg-gray-100 p-12">
                     <div className="flex flex-col gap-4">
                         <Image src={QuoteImg} alt="Quote" width={48} height={48} />
