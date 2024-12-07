@@ -17,7 +17,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
             className={`flex justify-center py-8 lg:h-screen lg:py-0 ${manrope.variable} font-manrope`}
         >
             {/* Left Side - Sign Up Form */}
-            <div className="w-[528px] px-12">{children}</div>
+            <div className="w-[596px] px-16">{children}</div>
 
             {/* Right Side - Testimonial */}
             <div className="hidden flex-1 p-4 lg:block">
