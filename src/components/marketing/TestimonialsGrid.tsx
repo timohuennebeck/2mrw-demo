@@ -53,17 +53,13 @@ const SortControls = ({
                 { value: "recent", label: "Most Recent" },
                 { value: "rating", label: "Highest Rated" },
             ].map(({ value, label }) => (
-                <button
+                <Button
                     key={value}
                     onClick={() => onSortChange(value as "recent" | "rating")}
-                    className={`rounded-lg px-4 py-2 text-sm transition-colors ${
-                        sortBy === value
-                            ? "bg-black text-white"
-                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
+                    variant={sortBy === value ? "default" : "secondary"}
                 >
                     {label}
-                </button>
+                </Button>
             ))}
         </div>
     </div>
