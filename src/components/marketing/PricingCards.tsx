@@ -1,6 +1,7 @@
 import { Check, X } from "lucide-react";
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface PricingPlan {
     name: string;
@@ -49,10 +50,10 @@ const PricingCard = ({
         : null;
 
     return (
-        <div className="flex flex-col rounded-lg border bg-white p-8 shadow-sm">
-            <div className="mb-6">
-                <h3 className="text-lg font-medium">{plan.name}</h3>
-                <div className="mt-4">
+        <Card>
+            <CardHeader>
+                <CardTitle className="mb-4">{plan.name}</CardTitle>
+                <div>
                     <span className="text-4xl font-medium">{plan.price}</span>
                     <span className="text-sm text-gray-500">{plan.period}</span>
                 </div>
@@ -61,9 +62,9 @@ const PricingCard = ({
                         ? "Free Forever"
                         : `${pricePerMonthForYearlyPlan} / month when billed per annum`}
                 </span>
-            </div>
+            </CardHeader>
 
-            <div className="flex flex-1 flex-col gap-4">
+            <CardContent className="flex flex-1 flex-col gap-4">
                 {features.map((section) => (
                     <div key={section.category}>
                         <h4 className="mb-2 text-sm font-medium">{section.category}</h4>
@@ -88,20 +89,22 @@ const PricingCard = ({
                         </ul>
                     </div>
                 ))}
-            </div>
+            </CardContent>
 
-            <Button
-                size="lg"
-                className={`mt-8 w-full rounded-md px-6 py-2.5 text-sm transition-colors ${
-                    plan.buttonVariant === "primary"
-                        ? "bg-black text-white hover:bg-gray-800"
-                        : "bg-gray-100 text-gray-900 hover:bg-gray-200"
-                }`}
-                onClick={plan.onClick}
-            >
-                {buttonText}
-            </Button>
-        </div>
+            <CardFooter>
+                <Button
+                    size="lg"
+                    className={`w-full ${
+                        plan.buttonVariant === "primary"
+                            ? "bg-black text-white hover:bg-gray-800"
+                            : "bg-gray-100 text-gray-900 hover:bg-gray-200"
+                    }`}
+                    onClick={plan.onClick}
+                >
+                    {buttonText}
+                </Button>
+            </CardFooter>
+        </Card>
     );
 };
 
