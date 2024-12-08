@@ -211,7 +211,7 @@ const ChangeSubscriptionPlan = ({ products }: ChangeSubscriptionPlanParams) => {
                                 }
                                 size="sm"
                                 onClick={() => setSubscriptionInterval(SubscriptionInterval.NONE)}
-                                className="rounded-none shadow-none"
+                                className="shadow-none"
                             >
                                 {TextConstants.TEXT__FREE.toUpperCase()}
                             </Button>
@@ -225,7 +225,7 @@ const ChangeSubscriptionPlan = ({ products }: ChangeSubscriptionPlanParams) => {
                             }
                             size="sm"
                             onClick={() => setSubscriptionInterval(SubscriptionInterval.MONTHLY)}
-                            className="rounded-none shadow-none"
+                            className="shadow-none"
                         >
                             {`${TextConstants.TEXT__MONTHLY.toUpperCase()} (PREMIUM)`}
                         </Button>
@@ -238,7 +238,7 @@ const ChangeSubscriptionPlan = ({ products }: ChangeSubscriptionPlanParams) => {
                             }
                             size="sm"
                             onClick={() => setSubscriptionInterval(SubscriptionInterval.YEARLY)}
-                            className="rounded-none shadow-none"
+                            className="shadow-none"
                         >
                             {`${TextConstants.TEXT__YEARLY.toUpperCase()} (PREMIUM)`}
                         </Button>
@@ -341,7 +341,6 @@ const ChangeSubscriptionPlan = ({ products }: ChangeSubscriptionPlanParams) => {
                         <Button
                             variant="outline"
                             disabled={!selectedPlanId}
-                            className="rounded-none shadow-none"
                             size="sm"
                         >
                             {_findButtonTitle(

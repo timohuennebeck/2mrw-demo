@@ -400,7 +400,7 @@ const UserProfilePage = () => {
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction
                                 onClick={handleDeleteProfile}
-                                className="rounded-none bg-red-600 hover:bg-red-700"
+                                className="bg-red-600 hover:bg-red-700"
                             >
                                 Delete Account
                             </AlertDialogAction>

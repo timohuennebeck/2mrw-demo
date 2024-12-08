@@ -94,7 +94,6 @@ export function AppSidebar() {
                                             <CollapsibleTrigger asChild>
                                                 <SidebarMenuButton
                                                     tooltip={item.title}
-                                                    className="rounded-none"
                                                 >
                                                     <item.icon />
                                                     <span>{item.title}</span>
@@ -112,8 +111,8 @@ export function AppSidebar() {
                                                                 asChild
                                                                 className={
                                                                     isSelected(subItem.url)
-                                                                        ? "rounded-none bg-gray-100"
-                                                                        : "rounded-none"
+                                                                        ? "bg-gray-100"
+                                                                        : ""
                                                                 }
                                                             >
                                                                 <span
@@ -135,8 +134,8 @@ export function AppSidebar() {
                                             tooltip={item.title}
                                             className={
                                                 isSelected(item.url)
-                                                    ? "rounded-none bg-gray-100"
-                                                    : "rounded-none"
+                                                    ? "bg-gray-100"
+                                                    : ""
                                             }
                                         >
                                             <div
@@ -160,7 +159,7 @@ export function AppSidebar() {
                     <SidebarMenuItem>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <SidebarMenuButton className="rounded-none">
+                                <SidebarMenuButton>
                                     <User2 />
                                     <span className="max-w-[150px] truncate">{dbUser?.email}</span>
                                     <ChevronUp className="ml-auto" />
@@ -168,17 +167,17 @@ export function AppSidebar() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
                                 side="top"
-                                className="w-[--radix-popper-anchor-width] rounded-none"
+                                className="w-[--radix-popper-anchor-width]"
                             >
-                                <DropdownMenuItem className="cursor-pointer rounded-none">
+                                <DropdownMenuItem className="cursor-pointer">
                                     <span onClick={() => router.push("/user-profile")}>
                                         Personal Information
                                     </span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className="cursor-pointer rounded-none">
+                                <DropdownMenuItem className="cursor-pointer">
                                     <span onClick={() => router.push("/billing")}>Billing</span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className="cursor-pointer rounded-none">
+                                <DropdownMenuItem className="cursor-pointer">
                                     <span onClick={() => _handleSignOut(router)}>Sign out</span>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>

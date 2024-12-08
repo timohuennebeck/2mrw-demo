@@ -35,7 +35,7 @@ const chartConfig = {
 
 export function CustomLinearLineChart() {
     return (
-        <Card className="flex-1 rounded-none shadow-none">
+        <Card className="flex-1 shadow-none">
             <CardHeader>
                 <CardTitle>Customer Growth</CardTitle>
                 <CardDescription>Lorem ipsum dolor sit amet.</CardDescription>

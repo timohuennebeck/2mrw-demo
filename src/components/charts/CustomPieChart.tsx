@@ -58,7 +58,7 @@ export function CustomPieChart() {
     }, []);
 
     return (
-        <Card className="flex flex-1 flex-col rounded-none shadow-none">
+        <Card className="flex flex-1 flex-col shadow-none">
             <CardHeader className="items-center pb-0">
                 <CardTitle>Subscription Distribution</CardTitle>
                 <CardDescription>Lorem ipsum dolor sit amet.</CardDescription>
