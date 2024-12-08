@@ -32,8 +32,8 @@ const createFormSchema = (mode: string, authMethod: string) => {
         }),
     };
 
-    // for magic link signin, we only need email
-    if (mode === "signin" && authMethod === "magic-link") {
+    // for magic link (both signin and signup), we only need email
+    if (authMethod === "magic-link") {
         return z.object(baseSchema);
     }
 
@@ -47,7 +47,7 @@ const createFormSchema = (mode: string, authMethod: string) => {
         });
     }
 
-    // for signup, we need all fields
+    // for password signup, we need all fields
     return z.object({
         ...baseSchema,
         firstName: z.string().min(1, {
@@ -101,7 +101,7 @@ const RegisterLoginForm = ({
     const handleFormSubmit = (values: { firstName: string; email: string; password: string }) => {
         const { firstName, email, password } = values;
 
-        if (authMethod === "magic-link" && mode === "signin") {
+        if (authMethod === "magic-link") {
             loginWithMagicLink?.(email);
         } else {
             handleSubmit({ email, password, firstName });
@@ -167,7 +167,7 @@ const RegisterLoginForm = ({
                             }}
                             noValidate
                         >
-                            {mode === "signup" && (
+                            {mode === "signup" && authMethod === "password" && (
                                 <FormField
                                     control={registerLoginForm.control}
                                     name="firstName"
@@ -213,7 +213,7 @@ const RegisterLoginForm = ({
                                 )}
                             />
 
-                            {(authMethod === "password" || mode === "signup") && (
+                            {authMethod === "password" && (
                                 <FormField
                                     control={registerLoginForm.control}
                                     name="password"
@@ -286,6 +286,19 @@ const RegisterLoginForm = ({
                                 </p>
                             )}
 
+                            {mode === "signup" && authMethod === "magic-link" && (
+                                <p className="text-center text-sm text-gray-500">
+                                    You'll be emailed a magic code for a password-free sign up or{" "}
+                                    <Link
+                                        href="/auth/sign-up?method=password"
+                                        className="underline"
+                                        data-testid="password-sign-up-toggle"
+                                    >
+                                        sign up with password instead
+                                    </Link>
+                                </p>
+                            )}
+
                             {!isPasswordFocused && (
                                 <>
                                     <FormDivider />
@@ -303,7 +316,7 @@ const RegisterLoginForm = ({
                             href={
                                 mode === "signup"
                                     ? "/auth/sign-in?method=magic-link"
-                                    : "/auth/sign-up?method=password"
+                                    : "/auth/sign-up?method=magic-link"
                             }
                             className="underline"
                             data-testid={`${mode === "signup" ? "signup" : "signin"}-toggle`}
