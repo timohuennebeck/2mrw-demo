@@ -2,7 +2,13 @@ import { createServerClient } from "@supabase/ssr";
 import { NextRequest as nextRequest, NextResponse as nextResponse } from "next/server";
 import { User } from "@supabase/supabase-js";
 
-const PUBLIC_ROUTES = ["/", "/auth/sign-in", "/auth/sign-up", "/auth/forgot-password"];
+const PUBLIC_ROUTES = [
+    "/",
+    "/auth/sign-in",
+    "/auth/sign-up",
+    "/auth/forgot-password",
+    "/auth/email-confirmation",
+];
 const AUTH_ROUTES = ["/auth/confirm", "/auth/callback", "/auth/email-change"];
 
 const _handleRedirection = async (request: nextRequest, user: User | null) => {
