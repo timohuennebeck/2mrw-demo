@@ -50,7 +50,7 @@ const Header = ({ navItems, logoSrc, loginOnClick, userIsLoggedIn }: HeaderParam
                 </nav>
 
                 {/* Login Button */}
-                {!isLoggedIn ? (
+                {!userIsLoggedIn ? (
                     <Button variant="ghost" onClick={loginOnClick}>
                         Log in
                         <ArrowRight size={16} className="text-gray-400" />
