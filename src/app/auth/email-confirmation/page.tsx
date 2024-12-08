@@ -29,7 +29,7 @@ const EmailConfirmedPage = () => {
 
     return (
         <div className="flex h-screen items-center justify-center">
-            <div className="mx-auto flex w-[448px] flex-col items-center gap-6 p-8">
+            <div className="mx-auto flex flex-col gap-6">
                 <div className="flex items-center gap-2">
                     <Image
                         src="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
@@ -39,8 +39,8 @@ const EmailConfirmedPage = () => {
                     />
                 </div>
 
-                <div className="text-center">
-                    <h1 className="mb-2 text-2xl font-medium">Email Confirmed!</h1>
+                <div>
+                    <h1 className="mb-2 text-2xl font-semibold">Email Confirmed!</h1>
                     <p className="text-sm text-gray-500">
                         Your email has been confirmed. You can now continue using{" "}
                         {TextConstants.TEXT__COMPANY_TITLE}.
@@ -51,7 +51,7 @@ const EmailConfirmedPage = () => {
                     Choose Your Plan
                 </Button>
 
-                <p className="text-sm text-gray-400">
+                <p className="text-center text-sm text-gray-400">
                     You will be redirected in {timer} seconds...
                 </p>
             </div>

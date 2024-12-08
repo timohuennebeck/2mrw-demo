@@ -8,6 +8,7 @@ const PUBLIC_ROUTES = [
     "/auth/sign-up",
     "/auth/forgot-password",
     "/auth/email-confirmation",
+    "/choose-pricing-plan",
 ];
 const AUTH_ROUTES = ["/auth/confirm", "/auth/callback", "/auth/email-change"];
 

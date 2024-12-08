@@ -1,52 +1,54 @@
 "use client";
 
-import InputField from "@/components/application/InputField";
 import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
-import CustomButton from "@/components/application/CustomButton";
 import { TextConstants } from "@/constants/TextConstants";
 import { checkUserEmailExists } from "@/services/database/userService";
 import { createClient } from "@/services/integration/client";
-import { validateEmailFormat } from "@/utils/validators/formatValidator";
 import { StatusMessage } from "@/interfaces";
 import FormStatusMessage from "@/components/application/FormStatusMessage";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
+const forgotPasswordFormSchema = z.object({
+    email: z.string().email({
+        message: TextConstants.ERROR__INVALID_EMAIL,
+    }),
+});
 
 const _sendPasswordResetEmail = async (email: string) => {
     const supabase = createClient();
-
     const result = await supabase.auth.resetPasswordForEmail(email);
     return result;
 };
 
 const ForgotPasswordPage = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const [email, setEmail] = useState("");
-    const [errors, setErrors] = useState({
-        email: "",
-    });
     const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(null);
 
-    const checkFormInput = () => {
-        const newErrors = {
+    const forgotPasswordForm = useForm({
+        resolver: zodResolver(forgotPasswordFormSchema),
+        defaultValues: {
             email: "",
-        };
+        },
+    });
 
-        if (email === "") {
-            newErrors.email = TextConstants.ERROR__EMAIL_IS_MISSING;
-        } else if (!validateEmailFormat(email)) {
-            newErrors.email = TextConstants.ERROR__INVALID_EMAIL;
-        }
-
-        setErrors(newErrors);
-        return !Object.values(newErrors).some((error) => error !== "");
-    };
-
-    const handleFormSubmit = async () => {
-        if (!checkFormInput()) return;
-
+    const handleFormSubmit = async (values: { email: string }) => {
         setIsLoading(true);
-        const { emailExists } = await checkUserEmailExists(email);
+        const { emailExists } = await checkUserEmailExists(values.email);
+
         if (!emailExists) {
             setIsLoading(false);
             setStatusMessage({
@@ -57,7 +59,7 @@ const ForgotPasswordPage = () => {
             return;
         }
 
-        const result = await _sendPasswordResetEmail(email);
+        const result = await _sendPasswordResetEmail(values.email);
         if (result.error) {
             setIsLoading(false);
             setStatusMessage({
@@ -80,7 +82,7 @@ const ForgotPasswordPage = () => {
                 message: TextConstants.TEXT__DIDNT_RECEIVE_EMAIL,
                 action: {
                     label: TextConstants.TEXT__RESEND_EMAIL,
-                    onClick: async () => await _sendPasswordResetEmail(email),
+                    onClick: async () => await _sendPasswordResetEmail(values.email),
                 },
             });
         }, 4000);
@@ -88,7 +90,7 @@ const ForgotPasswordPage = () => {
 
     return (
         <div className="flex h-full items-center justify-center">
-            <div className="mx-auto flex w-[448px] flex-col gap-4 rounded-md border p-8 lg:mx-0">
+            <div className="mx-auto flex flex-col gap-4">
                 <div className="mb-4 flex items-center gap-2">
                     <Image
                         src="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
@@ -99,10 +101,8 @@ const ForgotPasswordPage = () => {
                 </div>
 
                 <div className="grid gap-2">
-                    <h1 className="text-2xl font-medium">Forgot Password</h1>
-                    <p className="text-sm text-gray-400">
-                        {TextConstants.TEXT__ENTER_EMAIL_BELOW}
-                    </p>
+                    <h1 className="text-2xl font-semibold">Forgot Password</h1>
+                    <p className="text-sm text-gray-400">{TextConstants.TEXT__ENTER_EMAIL_BELOW}</p>
                 </div>
 
                 <FormStatusMessage
@@ -111,29 +111,30 @@ const ForgotPasswordPage = () => {
                     action={statusMessage?.action}
                 />
 
-                <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
-                    <InputField
-                        label="Email"
-                        id="email"
-                        type="email"
-                        name="email"
-                        placeholder={TextConstants.TEXT__EMAIL_PLACEHOLDER}
-                        value={email}
-                        onChange={(value) => {
-                            setEmail(value);
-                            setErrors((prev) => ({ ...prev, email: "" }));
-                        }}
-                        error={errors.email}
-                        hasError={!!errors.email}
-                    />
+                <Form {...forgotPasswordForm}>
+                    <form
+                        onSubmit={forgotPasswordForm.handleSubmit(handleFormSubmit)}
+                        className="flex flex-col gap-4"
+                    >
+                        <FormField
+                            control={forgotPasswordForm.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} placeholder="m@example.com" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                    <CustomButton
-                        title={TextConstants.TEXT__SEND_RESET_LINK}
-                        disabled={isLoading}
-                        onClick={handleFormSubmit}
-                        isLoading={isLoading}
-                    />
-                </form>
+                        <Button type="submit" disabled={isLoading}>
+                            {TextConstants.TEXT__SEND_RESET_LINK}
+                        </Button>
+                    </form>
+                </Form>
 
                 <p className="mt-4 text-center text-sm">
                     {TextConstants.TEXT__REMEMBER_PASSWORD}{" "}
