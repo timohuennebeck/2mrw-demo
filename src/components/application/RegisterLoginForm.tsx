@@ -4,7 +4,6 @@ import GoogleButton from "@/components/application/GoogleButton";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { validateEmailFormat } from "@/utils/validators/formatValidator";
 import { TextConstants } from "@/constants/TextConstants";
 import FormStatusMessage from "./FormStatusMessage";
 import PasswordStrengthChecker from "./PasswordStrengthChecker";
@@ -23,16 +22,42 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
+import { useSearchParams } from "next/navigation";
 
-const _registerLoginFormSchema = z.object({
-    firstName: z.string().optional(),
-    email: z.string().email({
-        message: TextConstants.ERROR__INVALID_EMAIL,
-    }),
-    password: z.string().min(1, {
-        message: TextConstants.ERROR__PASSWORD_IS_MISSING,
-    }),
-});
+const createFormSchema = (mode: string, authMethod: string) => {
+    // base schema with email validation
+    const baseSchema = {
+        email: z.string().email({
+            message: TextConstants.ERROR__INVALID_EMAIL,
+        }),
+    };
+
+    // for magic link signin, we only need email
+    if (mode === "signin" && authMethod === "magic-link") {
+        return z.object(baseSchema);
+    }
+
+    // for password signin, we need email and password
+    if (mode === "signin" && authMethod === "password") {
+        return z.object({
+            ...baseSchema,
+            password: z.string().min(1, {
+                message: TextConstants.ERROR__PASSWORD_IS_MISSING,
+            }),
+        });
+    }
+
+    // for signup, we need all fields
+    return z.object({
+        ...baseSchema,
+        firstName: z.string().min(1, {
+            message: TextConstants.ERROR__FIRST_NAME_IS_MISSING,
+        }),
+        password: z.string().min(1, {
+            message: TextConstants.ERROR__PASSWORD_IS_MISSING,
+        }),
+    });
+};
 
 export interface RegisterLoginFormParams {
     mode: string;
@@ -57,12 +82,15 @@ const RegisterLoginForm = ({
     isLoading,
     statusMessage,
 }: RegisterLoginFormParams) => {
+    const searchParams = useSearchParams();
+
     const [isPasswordFocused, setIsPasswordFocused] = useState(false);
     const [showStrengthChecker, setShowStrengthChecker] = useState(false);
-    const [authType, setAuthType] = useState("magicLink");
+
+    const authMethod = searchParams.get("method") || "magic-link";
 
     const registerLoginForm = useForm({
-        resolver: zodResolver(_registerLoginFormSchema),
+        resolver: zodResolver(createFormSchema(mode, authMethod)),
         defaultValues: {
             firstName: "",
             email: "",
@@ -73,7 +101,7 @@ const RegisterLoginForm = ({
     const handleFormSubmit = (values: { firstName: string; email: string; password: string }) => {
         const { firstName, email, password } = values;
 
-        if (authType === "magicLink" && mode === "signin") {
+        if (authMethod === "magic-link" && mode === "signin") {
             loginWithMagicLink?.(email);
         } else {
             handleSubmit({ email, password, firstName });
@@ -185,7 +213,7 @@ const RegisterLoginForm = ({
                                 )}
                             />
 
-                            {(authType === "password" || mode === "signup") && (
+                            {(authMethod === "password" || mode === "signup") && (
                                 <FormField
                                     control={registerLoginForm.control}
                                     name="password"
@@ -220,7 +248,7 @@ const RegisterLoginForm = ({
                                 />
                             )}
 
-                            {mode === "signin" && authType === "password" && (
+                            {mode === "signin" && authMethod === "password" && (
                                 <div className="flex items-center">
                                     <Link
                                         href="/auth/forgot-password"
@@ -238,23 +266,23 @@ const RegisterLoginForm = ({
                                 disabled={isLoading}
                                 isLoading={isLoading}
                             >
-                                {authType === "magicLink" && mode === "signin"
+                                {authMethod === "magic-link" && mode === "signin"
                                     ? TextConstants.TEXT__LOGIN_WITH_MAGIC_LINK
                                     : mode === "signup"
                                       ? TextConstants.TEXT__SIGN_UP
                                       : TextConstants.TEXT__SIGN_IN}
                             </Button>
 
-                            {mode === "signin" && authType === "magicLink" && (
+                            {mode === "signin" && authMethod === "magic-link" && (
                                 <p className="text-center text-sm text-gray-500">
                                     You'll be emailed a magic code for a password-free sign in or{" "}
-                                    <button
-                                        data-testid="password-sign-in-toggle"
-                                        onClick={() => setAuthType("password")}
+                                    <Link
+                                        href="/auth/sign-in?method=password"
                                         className="underline"
+                                        data-testid="password-sign-in-toggle"
                                     >
                                         sign in with password instead
-                                    </button>
+                                    </Link>
                                 </p>
                             )}
 
@@ -272,7 +300,11 @@ const RegisterLoginForm = ({
                             ? TextConstants.TEXT__HAVE_AN_ACCOUNT
                             : TextConstants.TEXT__DO_NOT_HAVE_AN_ACCOUNT}{" "}
                         <Link
-                            href={mode === "signup" ? "/auth/sign-in" : "/auth/sign-up"}
+                            href={
+                                mode === "signup"
+                                    ? "/auth/sign-in?method=magic-link"
+                                    : "/auth/sign-up?method=password"
+                            }
                             className="underline"
                             data-testid={`${mode === "signup" ? "signup" : "signin"}-toggle`}
                         >
