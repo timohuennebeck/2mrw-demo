@@ -8,9 +8,11 @@ const PUBLIC_ROUTES = [
     "/auth/sign-up",
     "/auth/forgot-password",
     "/auth/email-confirmation",
-    "/choose-pricing-plan",
 ];
+
 const AUTH_ROUTES = ["/auth/confirm", "/auth/callback", "/auth/email-change"];
+
+const PROTECTED_ROUTES = ["/dashboard", "/choose-pricing-plan"];
 
 const _handleRedirection = async (request: nextRequest, user: User | null) => {
     const { pathname } = request.nextUrl;
@@ -32,13 +34,13 @@ const _handleRedirection = async (request: nextRequest, user: User | null) => {
             return nextResponse.next({ request });
         }
 
-        // if trying to access dashboard routes, redirect to landing page
-        if (pathname.startsWith("/dashboard")) {
+        // if trying to access protected routes, redirect to landing page
+        if (PROTECTED_ROUTES.includes(pathname)) {
             return nextResponse.redirect(new URL("/", request.url));
         }
 
         // allow access to auth routes
-        if (pathname.startsWith("/auth")) {
+        if (AUTH_ROUTES.includes(pathname)) {
             return nextResponse.next({ request });
         }
 
@@ -48,7 +50,7 @@ const _handleRedirection = async (request: nextRequest, user: User | null) => {
 
     if (user) {
         // redirect from auth pages to dashboard
-        if (pathname.startsWith("/auth")) {
+        if (AUTH_ROUTES.includes(pathname)) {
             return nextResponse.redirect(new URL("/dashboard", request.url));
         }
 
