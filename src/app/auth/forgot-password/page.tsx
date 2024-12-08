@@ -102,7 +102,10 @@ const ForgotPasswordPage = () => {
 
                 <div className="grid gap-2">
                     <h1 className="text-2xl font-semibold">Forgot Password</h1>
-                    <p className="text-sm text-gray-400">{TextConstants.TEXT__ENTER_EMAIL_BELOW}</p>
+                    <p className="text-sm text-gray-400">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi ipsam
+                        molestiae tenetur iure enim tempore!
+                    </p>
                 </div>
 
                 <FormStatusMessage
