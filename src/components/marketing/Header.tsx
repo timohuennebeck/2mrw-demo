@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 interface NavItem {
     href: string;
@@ -16,9 +17,12 @@ interface HeaderParams {
     navItems: NavItem[];
     logoSrc: string;
     loginOnClick: () => void;
+    userIsLoggedIn: boolean;
 }
 
-const Header = ({ navItems, logoSrc, loginOnClick }: HeaderParams) => {
+const Header = ({ navItems, logoSrc, loginOnClick, userIsLoggedIn }: HeaderParams) => {
+    const router = useRouter();
+
     return (
         <header>
             <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-8 sm:px-6 lg:px-8">
@@ -46,10 +50,17 @@ const Header = ({ navItems, logoSrc, loginOnClick }: HeaderParams) => {
                 </nav>
 
                 {/* Login Button */}
-                <Button variant="ghost" onClick={loginOnClick}>
-                    Log in
-                    <ArrowRight size={16} className="text-gray-400" />
-                </Button>
+                {!isLoggedIn ? (
+                    <Button variant="ghost" onClick={loginOnClick}>
+                        Log in
+                        <ArrowRight size={16} className="text-gray-400" />
+                    </Button>
+                ) : (
+                    <Button variant="secondary" onClick={() => router.push("/dashboard")}>
+                        Dashboard
+                        <ArrowRight size={16} className="text-gray-400" />
+                    </Button>
+                )}
             </div>
         </header>
     );

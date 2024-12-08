@@ -16,6 +16,7 @@ import PromoBanner from "@/components/marketing/PromoBanner";
 import Stats from "@/components/marketing/Stats";
 import TestimonialsGrid from "@/components/marketing/TestimonialsGrid";
 import Section from "@/components/ui/Section";
+import { useSession } from "@/context/SessionContext";
 import { faq } from "@/data/marketing/faq-data";
 import { authFeatures, databaseFeatures, emailFeatures } from "@/data/marketing/features-data";
 import { featuresList } from "@/data/marketing/features-list-data";
@@ -34,6 +35,8 @@ const manrope = Manrope({
 });
 
 const LandingPage = () => {
+    const { authUser } = useSession();
+
     const router = useRouter();
 
     return (
@@ -67,6 +70,7 @@ const LandingPage = () => {
                     ]}
                     logoSrc="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
                     loginOnClick={() => router.push("/auth/sign-in")}
+                    userIsLoggedIn={!!authUser}
                 />
                 {/* COPY TIP: Hero sections need a clear, compelling value proposition.
                     Focus on the customer's main pain point and how you solve it.
