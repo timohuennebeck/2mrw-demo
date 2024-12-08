@@ -1,59 +1,117 @@
+const _handlePlanSelection = (stripePriceId: string) => {
+    const signUpUrl = `/auth/sign-up?stripe_price_id=${stripePriceId}`;
+    window.location.href = signUpUrl;
+};
+
 export const defaultPricingPlans = {
     monthly: [
         {
-            name: "Lorem",
-            price: "$19",
+            name: "Free",
+            price: "$0",
             period: "/month",
             buttonVariant: "secondary",
-            onClick: () =>
-                window.open(
-                    "https://buy.stripe.com/6oEcQjcpE6ZBanC9AA?prefilled_promo_code=LAUNCH30",
-                    "_blank",
-                ),
+            onClick: () => _handlePlanSelection("price_free"),
+            stripePriceId: "price_free",
         },
         {
-            name: "Ipsum",
+            name: "Pro",
             price: "$49",
             period: "/month",
             buttonVariant: "primary",
-            onClick: () => {},
+            onClick: () => _handlePlanSelection("price_def456"),
+            stripePriceId: "price_def456",
         },
         {
-            name: "Dolor",
+            name: "Enterprise",
             price: "$99",
             period: "/month",
             buttonVariant: "secondary",
-            onClick: () => {},
+            onClick: () => _handlePlanSelection("price_ghi789"),
+            stripePriceId: "price_ghi789",
         },
     ],
     annual: [
         {
-            name: "Lorem",
-            price: "$190",
+            name: "Free",
+            price: "$0",
             period: "/year",
             buttonVariant: "secondary",
-            onClick: () =>
-                window.open(
-                    "https://buy.stripe.com/annual-link",
-                    "_blank",
-                ),
+            onClick: () => _handlePlanSelection("price_free"),
+            stripePriceId: "price_free",
         },
         {
-            name: "Ipsum",
+            name: "Pro",
             price: "$490",
             period: "/year",
             buttonVariant: "primary",
-            onClick: () => {},
+            onClick: () => _handlePlanSelection("price_mno345"),
+            stripePriceId: "price_mno345",
         },
         {
-            name: "Dolor",
+            name: "Enterprise",
             price: "$990",
             period: "/year",
             buttonVariant: "secondary",
-            onClick: () => {},
+            onClick: () => _handlePlanSelection("price_pqr678"),
+            stripePriceId: "price_pqr678",
         },
     ],
 };
+
+export const pricingCardFeatures = [
+    {
+        category: "Lorem Features",
+        items: [
+            {
+                name: "Duis aute irure dolor",
+                free: true,
+                pro: true,
+                enterprise: true,
+            },
+            {
+                name: "Excepteur sint occaecat",
+                free: false,
+                pro: true,
+                enterprise: true,
+            },
+            {
+                name: "Cupidatat non proident",
+                free: false,
+                pro: true,
+                enterprise: true,
+            },
+            {
+                name: "Sunt in culpa qui",
+                free: false,
+                pro: false,
+                enterprise: true,
+            },
+            {
+                name: "Deserunt mollit anim",
+                free: false,
+                pro: false,
+                enterprise: true,
+            },
+        ],
+    },
+    {
+        category: "Ipsum Limits",
+        items: [
+            {
+                name: "Consectetur Quota",
+                free: "5",
+                pro: "50",
+                enterprise: "Unlimited",
+            },
+            {
+                name: "Adipiscing Slots",
+                free: "2",
+                pro: "10",
+                enterprise: "25",
+            },
+        ],
+    },
+];
 
 export const defaultPricingFeatures = [
     {
@@ -61,33 +119,33 @@ export const defaultPricingFeatures = [
         items: [
             {
                 name: "Lorem ipsum dolor sit amet",
-                starter: true,
-                growth: true,
-                scale: true,
+                free: true,
+                pro: true,
+                enterprise: true,
             },
             {
                 name: "Consectetur adipiscing elit",
-                starter: false,
-                growth: true,
-                scale: true,
+                free: false,
+                pro: true,
+                enterprise: true,
             },
             {
                 name: "Sed do eiusmod tempor",
-                starter: false,
-                growth: true,
-                scale: true,
+                free: false,
+                pro: true,
+                enterprise: true,
             },
             {
                 name: "Ut labore et dolore",
-                starter: false,
-                growth: true,
-                scale: true,
+                free: false,
+                pro: true,
+                enterprise: true,
             },
             {
                 name: "Magna aliqua ut enim",
-                starter: false,
-                growth: false,
-                scale: true,
+                free: false,
+                pro: false,
+                enterprise: true,
             },
         ],
     },
@@ -96,21 +154,21 @@ export const defaultPricingFeatures = [
         items: [
             {
                 name: "Minim veniam",
-                starter: "10 GB",
-                growth: "50 GB",
-                scale: "500 GB",
+                free: "1 GB",
+                pro: "50 GB",
+                enterprise: "500 GB",
             },
             {
                 name: "Quis nostrud exercitation",
-                starter: "100 GB",
-                growth: "500 GB",
-                scale: "Unlimited",
+                free: "10 GB",
+                pro: "500 GB",
+                enterprise: "Unlimited",
             },
             {
                 name: "Ullamco laboris",
-                starter: "1",
-                growth: "5",
-                scale: "Unlimited",
+                free: "1",
+                pro: "5",
+                enterprise: "Unlimited",
             },
         ],
     },

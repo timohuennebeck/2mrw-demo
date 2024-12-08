@@ -8,13 +8,14 @@ interface PricingPlan {
     period: string;
     buttonVariant: string;
     onClick: () => void;
+    stripePriceId: string;
 }
 
 interface PricingFeatureItem {
     name: string;
-    starter: boolean | string;
-    growth: boolean | string;
-    scale: boolean | string;
+    free: boolean | string;
+    pro: boolean | string;
+    enterprise: boolean | string;
 }
 
 interface PricingFeatureSection {
@@ -51,14 +52,16 @@ const PricingPlanHeader = ({
         : null;
 
     return (
-        <div className="col-span-1 flex flex-col gap-6 text-center">
+        <div className="col-span-1 flex flex-col gap-6">
             <h3 className="text-lg font-medium">{plan.name}</h3>
             <div>
                 <span className="text-4xl font-medium">{plan.price}</span>
                 <span className="text-sm text-gray-500">{plan.period}</span>
             </div>
             <span className="text-sm text-gray-500">
-                {pricePerMonthForYearlyPlan} / month when billed per annum
+                {plan.stripePriceId === "price_free"
+                    ? "Free Forever"
+                    : `${pricePerMonthForYearlyPlan} / month when billed per annum`}
             </span>
             <Button
                 size="lg"

@@ -1,96 +1,47 @@
 "use client";
 
-import { PricingPlanCardSkeleton } from "@/components/ui/PricingPlanCardSkeleton";
-import { useState } from "react";
-import { isFreePlanEnabled, isOneTimePaymentEnabled } from "@/config/paymentConfig";
-import { TextConstants } from "@/constants/TextConstants";
-import { useProducts } from "@/context/ProductsContext";
-import { useSession } from "@/context/SessionContext";
-import { useSubscription } from "@/context/SubscriptionContext";
-import { ProductWithPrices } from "@/interfaces";
-import { SubscriptionInterval, SubscriptionTier } from "@/enums";
-import { PricingPlanCard } from "@/components/application/PricingPlanCard";
+import PricingCards from "@/components/marketing/PricingCards";
+import { defaultPricingPlans, pricingCardFeatures } from "@/data/marketing/pricing-data";
+import { Manrope } from "next/font/google";
+
+const manrope = Manrope({
+    subsets: ["latin"],
+    weight: ["400", "500", "600", "700"],
+});
 
 const ChoosePricingPlanPage = () => {
-    const [billingCycle, setBillingCycle] = useState<SubscriptionInterval>(
-        SubscriptionInterval.MONTHLY,
-    );
-
-    const { products } = useProducts();
-    const { authUser } = useSession();
-
-    const {
-        subscriptionStatus,
-        subscription: subscriptionData,
-        isLoading: isSubscriptionLoading,
-    } = useSubscription();
-
-    const productsOrder = [
-        SubscriptionTier.FREE,
-        SubscriptionTier.ESSENTIALS,
-        SubscriptionTier.FOUNDERS,
-    ];
-
-    const sortedProducts = products?.sort((a, b) => {
-        return (
-            productsOrder.indexOf(a.subscription_tier) - productsOrder.indexOf(b.subscription_tier)
-        );
-    });
-
-    const getSubscriptionIntervalText = (interval: SubscriptionInterval) => {
-        return interval === SubscriptionInterval.YEARLY
-            ? `${TextConstants.TEXT__YEARLY.toUpperCase()}`
-            : `${TextConstants.TEXT__MONTHLY.toUpperCase()}`;
-    };
-
-    const SubscriptionIntervalButton = ({ interval }: { interval: SubscriptionInterval }) => (
-        <button
-            onClick={() => setBillingCycle(interval)}
-            className={`rounded px-3 py-1 text-sm ${
-                billingCycle === interval ? "bg-gray-900 text-white" : "bg-gray-100"
-            }`}
-        >
-            {getSubscriptionIntervalText(interval)}
-        </button>
-    );
-
     return (
-        <div className="flex h-full min-h-screen w-full items-center justify-center">
-            <div className="container px-4 py-8">
-                {!isOneTimePaymentEnabled() && (
-                    <div className="mb-8 flex justify-center">
-                        <div className="flex gap-2">
-                            <SubscriptionIntervalButton interval={SubscriptionInterval.MONTHLY} />
-                            <SubscriptionIntervalButton interval={SubscriptionInterval.YEARLY} />
-                        </div>
+        <>
+            <div className="fixed inset-0 -z-10 h-full w-full">
+                <div className="h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]" />
+            </div>
+            <div
+                className={`flex min-h-screen w-full items-center justify-center px-8 py-16 ${manrope.className}`}
+            >
+                <div className="container max-w-7xl">
+                    <div className="mb-12 flex flex-col gap-6 text-start">
+                        <p className="text-sm font-medium text-blue-600">Lorem, ipsum.</p>
+                        <h2 className="max-w-4xl text-4xl font-medium leading-tight tracking-tight md:text-5xl">
+                            <>
+                                Lorem ipsum dolor sit{" "}
+                                <span className="relative mt-4 inline-block whitespace-nowrap bg-blue-600 p-2 text-white">
+                                    amet consectetur,
+                                </span>
+                                adipisicing elit.
+                            </>
+                        </h2>
+                        <p className="max-w-4xl text-lg text-gray-600">
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
+                        </p>
                     </div>
-                )}
-                <div
-                    className={`mx-auto grid w-full grid-cols-1 gap-8 ${
-                        isFreePlanEnabled()
-                            ? "max-w-8xl md:grid-cols-3"
-                            : "max-w-6xl md:grid-cols-2"
-                    }`}
-                >
-                    {!products || isSubscriptionLoading
-                        ? isFreePlanEnabled()
-                            ? [1, 2, 3].map((_, index) => <PricingPlanCardSkeleton key={index} />)
-                            : [1, 2].map((_, index) => <PricingPlanCardSkeleton key={index} />)
-                        : sortedProducts?.map((product: ProductWithPrices, index) => (
-                              <PricingPlanCard
-                                  key={index}
-                                  {...product}
-                                  subscriptionStatus={subscriptionStatus}
-                                  subscriptionData={subscriptionData}
-                                  supabaseUser={authUser ?? null}
-                                  isLoading={isSubscriptionLoading}
-                                  billingCycle={billingCycle}
-                                  setBillingCycle={setBillingCycle}
-                              />
-                          ))}
+                    <PricingCards
+                        plans={defaultPricingPlans}
+                        features={pricingCardFeatures}
+                        buttonText="Select Plan"
+                    />
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
