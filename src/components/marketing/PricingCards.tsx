@@ -50,7 +50,7 @@ const PricingCard = ({
         : null;
 
     return (
-        <Card>
+        <Card className="shadow-none">
             <CardHeader>
                 <CardTitle className="mb-4">{plan.name}</CardTitle>
                 <div>
