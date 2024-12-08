@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { v4 as uuidv4 } from "uuid";
+import { Separator } from "@/components/ui/separator";
 
 const _updateUserName = async (userId: string, firstName: string) => {
     const supabase = createClient();
@@ -88,6 +89,8 @@ const profileFormSchema = z.object({
         message: "Username must be at least 2 characters.",
     }),
     email: z.string().email(),
+    position: z.string().max(50).optional(),
+    bio: z.string().max(160).optional(),
 });
 
 const SearchParamsHandler = () => {
@@ -109,6 +112,24 @@ const SearchParamsHandler = () => {
     return null;
 };
 
+interface ProfileSectionProps {
+    title: string;
+    description: string;
+    children: React.ReactNode;
+}
+
+const ProfileSection = ({ title, description, children }: ProfileSectionProps) => {
+    return (
+        <div className="flex flex-col gap-20 md:flex-row">
+            <div className="md:w-2/5">
+                <h2 className="text-sm font-semibold">{title}</h2>
+                <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+            </div>
+            <div className="md:w-2/5">{children}</div>
+        </div>
+    );
+};
+
 const UserProfilePage = () => {
     const { authUser } = useSession();
     const { dbUser } = useUser();
@@ -123,6 +144,8 @@ const UserProfilePage = () => {
     const [isUpdatingPersonalInfo, setIsUpdatingPersonalInfo] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
+    const [bioCharactersLeft, setBioCharactersLeft] = useState(160);
+
     useEffect(() => {
         if (dbUser) {
             setFirstName(dbUser.first_name);
@@ -136,8 +159,16 @@ const UserProfilePage = () => {
         defaultValues: {
             username: "",
             email: "",
+            position: "",
+            bio: "",
         },
     });
+
+    useEffect(() => {
+        const bioValue = profileForm.watch("bio") || "";
+        setBioCharactersLeft(160 - bioValue.length);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [profileForm.watch("bio")]);
 
     const handlePersonalInfoSubmit = async () => {
         if (!validateEmailFormat(email)) {
@@ -211,8 +242,6 @@ const UserProfilePage = () => {
 
         const result = await _updateProfilePicture(authUser?.id ?? "", file);
 
-        console.log("→ [LOG] result", result);
-
         if (result.error) {
             toast.error(result.error);
         } else {
@@ -222,17 +251,19 @@ const UserProfilePage = () => {
     };
 
     return (
-        <div className="container h-full max-w-3xl bg-white">
+        <div className="flex max-w-5xl flex-col gap-12 bg-white">
             <Suspense fallback={null}>
                 <SearchParamsHandler />
             </Suspense>
-            <div className="mb-8">
+
+            <ProfileSection
+                title="Profile Picture"
+                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
+            >
                 <div className="flex flex-row items-center gap-4">
-                    <Avatar className="h-24 w-24 rounded-none">
-                        <AvatarImage src={profileImageUrl} className="rounded-none" />
-                        <AvatarFallback className="rounded-none">
-                            {firstName?.[0]?.toUpperCase()}
-                        </AvatarFallback>
+                    <Avatar className="h-24 w-24">
+                        <AvatarImage src={profileImageUrl} />
+                        <AvatarFallback>{firstName?.[0]?.toUpperCase()}</AvatarFallback>
                     </Avatar>
                     <input
                         type="file"
@@ -241,91 +272,119 @@ const UserProfilePage = () => {
                         className="hidden"
                         id="profile-picture-input"
                     />
+                    <Button variant="outline" size="sm" onClick={() => {}}>
+                        Delete Profile Picture
+                    </Button>
                     <Button
                         type="button"
                         onClick={() => document.getElementById("profile-picture-input")?.click()}
-                        className="w-fit rounded-none"
+                        className="w-fit"
                         size="sm"
                     >
                         Upload Profile Picture
                     </Button>
                 </div>
-            </div>
+            </ProfileSection>
 
-            <Form {...profileForm}>
-                <form
-                    onSubmit={profileForm.handleSubmit(handlePersonalInfoSubmit)}
-                    className="flex flex-col gap-4"
-                >
-                    <FormField
-                        control={profileForm.control}
-                        name="username"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Username</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        className="rounded-none"
-                                        placeholder="shadcn"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormDescription>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+            <Separator />
 
-                    <FormField
-                        control={profileForm.control}
-                        name="email"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Email</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        className="rounded-none"
-                                        type="email"
-                                        placeholder="m@example.com"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormDescription>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <Button
-                        type="submit"
-                        variant="default"
-                        size="sm"
-                        disabled={isUpdatingPersonalInfo}
-                        className="self-start rounded-none"
+            <ProfileSection
+                title="Personal Information"
+                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
+            >
+                <Form {...profileForm}>
+                    <form
+                        onSubmit={profileForm.handleSubmit(handlePersonalInfoSubmit)}
+                        className="flex flex-col gap-4"
                     >
-                        {isUpdatingPersonalInfo ? "Updating..." : "Update Profile"}
-                    </Button>
-                </form>
-            </Form>
+                        <FormField
+                            control={profileForm.control}
+                            name="username"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Username</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="shadcn" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-            <div className="mt-8 border-t pt-8">
-                <h2 className="mb-2 text-sm font-semibold">Delete Profile</h2>
-                <p className="mb-4 text-sm text-muted-foreground">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut voluptas rem quam,
-                    facere sequi error?
-                </p>
+                        <FormField
+                            control={profileForm.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="email"
+                                            placeholder="m@example.com"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            name="position"
+                            control={profileForm.control}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Position</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Software Engineer" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={profileForm.control}
+                            name="bio"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Bio</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Lorem ipsum dolor sit amet."
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormDescription>
+                                        {bioCharactersLeft} characters remaining
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <Button
+                            type="submit"
+                            variant="default"
+                            size="sm"
+                            disabled={isUpdatingPersonalInfo}
+                            className="self-start"
+                        >
+                            {isUpdatingPersonalInfo ? "Updating..." : "Update Profile"}
+                        </Button>
+                    </form>
+                </Form>
+            </ProfileSection>
+
+            <Separator />
+
+            <ProfileSection
+                title="Delete Profile"
+                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
+            >
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
-                        <Button
-                            variant="destructive"
-                            size="sm"
-                            className="rounded-none"
-                            disabled={isDeleting}
-                        >
+                        <Button variant="destructive" size="sm" disabled={isDeleting}>
                             {isDeleting ? "Deleting..." : "Delete Profile"}
                         </Button>
                     </AlertDialogTrigger>
@@ -338,7 +397,7 @@ const UserProfilePage = () => {
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                            <AlertDialogCancel className="rounded-none">Cancel</AlertDialogCancel>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction
                                 onClick={handleDeleteProfile}
                                 className="rounded-none bg-red-600 hover:bg-red-700"
@@ -348,7 +407,7 @@ const UserProfilePage = () => {
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>
-            </div>
+            </ProfileSection>
         </div>
     );
 };
