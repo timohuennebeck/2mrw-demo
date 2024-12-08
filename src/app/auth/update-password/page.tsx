@@ -1,17 +1,41 @@
 "use client";
 
-import InputField from "@/components/application/InputField";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense, useState } from "react";
-import { toast } from "sonner";
 import { updatePassword } from "./action";
-import CustomButton from "@/components/application/CustomButton";
 import { useSearchParams } from "next/navigation";
 import { TextConstants } from "@/constants/TextConstants";
 import PasswordStrengthChecker from "@/components/application/PasswordStrengthChecker";
 import FormStatusMessage from "@/components/application/FormStatusMessage";
 import { StatusMessage } from "@/interfaces";
+import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+
+const updatePasswordFormSchema = z
+    .object({
+        password: z.string().min(1, {
+            message: TextConstants.ERROR__PASSWORD_IS_MISSING,
+        }),
+        confirmPassword: z.string().min(1, {
+            message: TextConstants.ERROR__CONFIRMATION_PASSWORD_IS_MISSING,
+        }),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: TextConstants.ERROR__PASSWORDS_DO_NOT_MATCH,
+        path: ["confirmPassword"],
+    });
 
 const SearchParamsHandler = () => {
     const searchParams = useSearchParams();
@@ -23,31 +47,22 @@ const SearchParamsHandler = () => {
 
 const UpdatePassword = () => {
     const [isUpdating, setIsUpdating] = useState(false);
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
     const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(null);
 
     let tokens = { accessToken: "", refreshToken: "" };
 
-    const handleSubmit = async () => {
-        if (password === "") {
-            toast.error(TextConstants.ERROR__PASSWORD_IS_MISSING);
-            return;
-        }
+    const updatePasswordForm = useForm({
+        resolver: zodResolver(updatePasswordFormSchema),
+        defaultValues: {
+            password: "",
+            confirmPassword: "",
+        },
+    });
 
-        if (confirmPassword === "") {
-            toast.error(TextConstants.ERROR__CONFIRMATION_PASSWORD_IS_MISSING);
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            toast.error(TextConstants.ERROR__PASSWORDS_DO_NOT_MATCH);
-            return;
-        }
-
+    const handleFormSubmit = async (values: { password: string; confirmPassword: string }) => {
         setIsUpdating(true);
         const result = await updatePassword({
-            password,
+            password: values.password,
             accessToken: tokens.accessToken ?? "",
             refreshToken: tokens.refreshToken ?? "",
         });
@@ -69,7 +84,7 @@ const UpdatePassword = () => {
     };
 
     return (
-        <div className="flex h-full items-center justify-center">
+        <div className="flex h-full items-center">
             <Suspense>
                 {(() => {
                     tokens = SearchParamsHandler();
@@ -77,7 +92,7 @@ const UpdatePassword = () => {
                 })()}
             </Suspense>
 
-            <div className="mx-auto flex w-[448px] flex-col gap-4 rounded-md border p-8 lg:mx-0">
+            <div className="flex w-full flex-col gap-4">
                 <div className="mb-4 flex items-center gap-2">
                     <Image
                         src="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
@@ -88,9 +103,12 @@ const UpdatePassword = () => {
                 </div>
 
                 <div className="grid gap-2">
-                    <h1 className="text-2xl font-medium">{TextConstants.TEXT__UPDATE_PASSWORD}</h1>
+                    <h1 className="text-2xl font-semibold">
+                        {TextConstants.TEXT__UPDATE_PASSWORD}
+                    </h1>
                     <p className="text-sm text-gray-400">
-                        {TextConstants.TEXT__ENTER_PASSWORD_BELOW}
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem
+                        consectetur assumenda minus molestias magni exercitationem.
                     </p>
                 </div>
 
@@ -98,40 +116,50 @@ const UpdatePassword = () => {
                     <FormStatusMessage message={statusMessage.message} type={statusMessage.type} />
                 )}
 
-                <form
-                    className="flex flex-col gap-4"
-                    onSubmit={(e) => e.preventDefault()}
-                    suppressHydrationWarning
-                >
-                    <InputField
-                        label={TextConstants.TEXT__NEW_PASSWORD}
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={password}
-                        onChange={setPassword}
-                    />
-                    <InputField
-                        label={TextConstants.TEXT__CONFIRM_PASSWORD}
-                        id="confirmPassword"
-                        type="password"
-                        name="confirmPassword"
-                        value={confirmPassword}
-                        onChange={setConfirmPassword}
-                        disabled={password === ""}
-                    />
+                <Form {...updatePasswordForm}>
+                    <form
+                        onSubmit={updatePasswordForm.handleSubmit(handleFormSubmit)}
+                        className="flex flex-col gap-4"
+                    >
+                        <FormField
+                            control={updatePasswordForm.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>New Password</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} type="password" placeholder="******" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                    <div className="pb-4">
-                        <PasswordStrengthChecker password={password} />
-                    </div>
+                        <FormField
+                            control={updatePasswordForm.control}
+                            name="confirmPassword"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Confirm Password</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} type="password" placeholder="******" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                    <CustomButton
-                        title={TextConstants.TEXT__UPDATE_PASSWORD}
-                        disabled={isUpdating}
-                        onClick={handleSubmit}
-                        isLoading={isUpdating}
-                    />
-                </form>
+                        <div className="pb-4">
+                            <PasswordStrengthChecker
+                                password={updatePasswordForm.watch("password")}
+                            />
+                        </div>
+
+                        <Button type="submit" disabled={isUpdating} isLoading={isUpdating}>
+                            {TextConstants.TEXT__UPDATE_PASSWORD}
+                        </Button>
+                    </form>
+                </Form>
 
                 <p className="mt-4 text-center text-sm">
                     {TextConstants.TEXT__REMEMBER_PASSWORD}{" "}
