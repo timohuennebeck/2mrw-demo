@@ -93,13 +93,13 @@ const FeatureRow = ({ item }: { item: PricingFeatureItem }) => (
     <div className="grid grid-cols-4 gap-8 py-6">
         <div className="col-span-1 text-sm text-gray-600">{item.name}</div>
         <div className="col-span-1 text-center">
-            <FeatureCell value={item.starter} />
+            <FeatureCell value={item.free} />
         </div>
         <div className="col-span-1 text-center">
-            <FeatureCell value={item.growth} />
+            <FeatureCell value={item.pro} />
         </div>
         <div className="col-span-1 text-center">
-            <FeatureCell value={item.scale} />
+            <FeatureCell value={item.enterprise} />
         </div>
     </div>
 );

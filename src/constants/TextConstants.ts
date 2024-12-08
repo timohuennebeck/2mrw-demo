@@ -69,7 +69,7 @@ export const TextConstants = {
     ERROR_SIGNING_OUT: "Error signing out",
     ERROR__FAILED_TO_RESEND_EMAIL: "Failed to resend email.",
     ERROR__EMAIL_IS_MISSING: "Email is missing",
-    ERROR__PASSWORD_IS_MISSING: "Password is missing",
+    ERROR__PASSWORD_IS_MISSING: "Password is missing.",
     ERROR__FIRST_NAME_IS_MISSING: "First name is missing",
     ERROR__CONFIRMATION_PASSWORD_IS_MISSING: "Confirmation password is missing.",
     ERROR__PASSWORDS_DO_NOT_MATCH: "Passwords do not match.",
