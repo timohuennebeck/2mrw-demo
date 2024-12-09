@@ -97,14 +97,18 @@ export function AppSidebar() {
                                     <SidebarMenuButton
                                         asChild
                                         tooltip={item.title}
-                                        className={isSelected(item.url) ? "bg-slate-100" : ""}
+                                        className={
+                                            isSelected(item.url)
+                                                ? "bg-slate-100"
+                                                : "hover:bg-slate-100"
+                                        }
                                     >
                                         <div
                                             onClick={() => router.push(item.url)}
                                             className="cursor-pointer"
                                         >
                                             <item.icon />
-                                            <span>{item.title}</span>
+                                            <span className="font-medium">{item.title}</span>
                                         </div>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
