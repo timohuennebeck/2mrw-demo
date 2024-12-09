@@ -10,7 +10,7 @@ import { SearchParamsHandler } from "./components/SearchParamsHandler";
 
 const UserProfilePage = () => {
     return (
-        <div className="flex max-w-5xl flex-col gap-12 bg-white">
+        <div className="flex max-w-6xl flex-col gap-12 bg-white">
             <Suspense fallback={null}>
                 <SearchParamsHandler />
             </Suspense>

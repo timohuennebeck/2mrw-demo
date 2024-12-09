@@ -33,19 +33,18 @@ interface BillingSectionProps {
 
 const BillingSection = ({ title, description, children }: BillingSectionProps) => {
     return (
-        <div className="flex flex-col gap-20 md:flex-row">
+        <div className="flex flex-col gap-32 md:flex-row">
             <div className="md:w-2/5">
                 <h2 className="text-sm font-semibold">{title}</h2>
                 <p className="mt-1 text-sm text-muted-foreground">{description}</p>
             </div>
-            <div className="md:w-3/5">{children}</div>
+            <div className="mr-20 md:w-3/5">{children}</div>
         </div>
     );
 };
 
 const BillingPage = () => {
     const { authUser } = useSession();
-    const { products } = useProducts();
     const { subscription, invalidateSubscription } = useSubscription();
 
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
@@ -88,7 +87,7 @@ const BillingPage = () => {
                 />
             )}
 
-            <div className="flex max-w-5xl flex-col gap-12 bg-white">
+            <div className="flex max-w-6xl flex-col gap-12 bg-white">
                 {subscription?.billing_plan === BillingPlan.RECURRING && (
                     <BillingSection
                         title="Billing Portal"
@@ -116,7 +115,7 @@ const BillingPage = () => {
                                     <RadioGroupItem value="alternative" id="alternative" />
                                     <Label htmlFor="alternative">Lorem ipsum dolor sit amet.</Label>
                                 </div>
-                                <div className="ml-6 mr-20">
+                                <div className="ml-6">
                                     <Input type="email" placeholder="billing@untitledui.com" />
                                 </div>
                             </div>
@@ -130,9 +129,7 @@ const BillingPage = () => {
                     title="Subscription Plans"
                     description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
                 >
-                    <div className="mr-20">
-                        <CurrentSubscriptionPlan />
-                    </div>
+                    <CurrentSubscriptionPlan />
                 </BillingSection>
 
                 <Separator />
@@ -141,7 +138,7 @@ const BillingPage = () => {
                     title="Invoices"
                     description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
                 >
-                    <div className="mr-20 rounded-lg border p-6">
+                    <div className="rounded-lg border p-6">
                         <p className="text-sm text-muted-foreground">
                             To request an invoice, please reach out to our support team at{" "}
                             <a

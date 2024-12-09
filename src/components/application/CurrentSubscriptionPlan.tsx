@@ -35,7 +35,7 @@ const CurrentSubscriptionPlan = ({ plan }: CurrentSubscriptionPlanParams) => {
 
     return (
         <Card className="w-full border-none shadow-none">
-            <CardContent>
+            <CardContent className="p-0">
                 <div className="flex flex-col space-y-8">
                     {/* Header Section */}
                     <div className="flex justify-between gap-20">
