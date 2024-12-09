@@ -6,15 +6,16 @@ import { Check } from "lucide-react";
 import { Suspense, useState } from "react";
 import useSuccessParam from "@/hooks/useSuccessParam";
 import { useProducts } from "@/context/ProductsContext";
-import CurrentSubscriptionPlanSkeleton from "@/components/ui/CurrentSubscriptionPlanSkeleton";
-import ChangeSubscriptionPlanSkeleton from "@/components/ui/ChangeSubscriptionPlanSkeleton";
 import { TextConstants } from "@/constants/TextConstants";
 import { useSubscription } from "@/context/SubscriptionContext";
 import CustomPopup from "@/components/application/CustomPopup";
 import { BillingPlan, SubscriptionStatus } from "@/enums";
-import CurrentSubscriptionPlan from "@/components/application/CurrentSubscriptionPlan";
-import ChangeSubscriptionPlan from "@/components/application/ChangeSubscriptionPlan";
 import BillingPortal from "@/components/application/BillingPortal";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import SimplifiedPricingCard from "@/components/application/SimplifiedPricingCard";
 
 const SuccessHandler = ({ onSuccess }: { onSuccess: () => void }) => {
     useSuccessParam({
@@ -22,6 +23,24 @@ const SuccessHandler = ({ onSuccess }: { onSuccess: () => void }) => {
         redirectPath: "/billing",
     });
     return null;
+};
+
+interface BillingSectionProps {
+    title: string;
+    description: string;
+    children: React.ReactNode;
+}
+
+const BillingSection = ({ title, description, children }: BillingSectionProps) => {
+    return (
+        <div className="flex flex-col gap-20 md:flex-row">
+            <div className="md:w-2/5">
+                <h2 className="text-sm font-semibold">{title}</h2>
+                <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+            </div>
+            <div className="md:w-3/5">{children}</div>
+        </div>
+    );
 };
 
 const BillingPage = () => {
@@ -69,30 +88,56 @@ const BillingPage = () => {
                 />
             )}
 
-            <div className="container max-w-3xl bg-white">
-                <div className="flex flex-col gap-6">
-                    {subscription?.billing_plan === BillingPlan.RECURRING && <BillingPortal />}
+            <div className="flex max-w-5xl flex-col gap-12 bg-white">
+                {subscription?.billing_plan === BillingPlan.RECURRING && (
+                    <BillingSection
+                        title="Billing Portal"
+                        description="Manage your subscription and billing information."
+                    >
+                        <BillingPortal />
+                    </BillingSection>
+                )}
 
-                    {!products ? (
-                        <div className="flex flex-col gap-6">
-                            {subscription?.stripe_price_id !== undefined && (
-                                <CurrentSubscriptionPlanSkeleton />
-                            )}
+                <BillingSection
+                    title="Contact Email"
+                    description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
+                >
+                    <div className="space-y-4">
+                        <RadioGroup defaultValue="account">
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="account" id="account" />
+                                <Label htmlFor="account">
+                                    Lorem ipsum dolor sit amet.
+                                    <p className="text-sm text-muted-foreground">m@example.com</p>
+                                </Label>
+                            </div>
+                            <div className="flex flex-col space-y-2">
+                                <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="alternative" id="alternative" />
+                                    <Label htmlFor="alternative">Lorem ipsum dolor sit amet.</Label>
+                                </div>
+                                <div className="pl-6">
+                                    <Input
+                                        type="email"
+                                        placeholder="billing@untitledui.com"
+                                        className="max-w-md"
+                                    />
+                                </div>
+                            </div>
+                        </RadioGroup>
+                    </div>
+                </BillingSection>
 
-                            {showChangeSubscriptionPlan && <ChangeSubscriptionPlanSkeleton />}
-                        </div>
-                    ) : (
-                        <div className="flex flex-col gap-6">
-                            {subscription?.stripe_price_id !== undefined && (
-                                <CurrentSubscriptionPlan products={products} />
-                            )}
+                <Separator />
 
-                            {showChangeSubscriptionPlan && (
-                                <ChangeSubscriptionPlan products={products} />
-                            )}
-                        </div>
-                    )}
-                </div>
+                <BillingSection
+                    title="Subscription Plans"
+                    description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
+                >
+                    <div className="pr-20">
+                        <SimplifiedPricingCard />
+                    </div>
+                </BillingSection>
             </div>
         </>
     );
