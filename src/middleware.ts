@@ -12,7 +12,7 @@ const PUBLIC_ROUTES = [
 
 const AUTH_ROUTES = ["/auth/confirm", "/auth/callback", "/auth/email-change"];
 
-const PROTECTED_ROUTES = ["/dashboard", "/choose-pricing-plan"];
+const PROTECTED_ROUTES = ["/dashboard", "/onboarding", "/choose-pricing-plan"];
 
 const _handleRedirection = async (request: nextRequest, user: User | null) => {
     const { pathname } = request.nextUrl;
