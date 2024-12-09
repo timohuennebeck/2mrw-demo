@@ -227,7 +227,7 @@ const RegisterLoginForm = ({
                                                     data-test-id="password-input"
                                                     name="password"
                                                     type="password"
-                                                    placeholder="******"
+                                                    placeholder="••••••••"
                                                     onFocus={() =>
                                                         mode === "signup" && handlePasswordFocus()
                                                     }

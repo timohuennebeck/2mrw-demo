@@ -4,15 +4,17 @@ import { createClient } from "@/services/integration/server";
 import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
 
+interface UpdateUserProfileImageProps {
+    profileImageUrl: string;
+    userId: string;
+    formData: FormData;
+}
+
 export const updateUserProfileImage = async ({
     profileImageUrl,
     userId,
     formData,
-}: {
-    profileImageUrl: string;
-    userId: string;
-    formData: FormData;
-}) => {
+}: UpdateUserProfileImageProps) => {
     const supabase = await createClient();
 
     try {
