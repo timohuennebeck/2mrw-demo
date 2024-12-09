@@ -1,31 +1,30 @@
 "use client";
 
-import { ChevronUp, Building, User2, CreditCard } from "lucide-react";
 import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
     SidebarGroup,
     SidebarGroupContent,
+    SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    SidebarHeader,
     useSidebar,
 } from "@/components/ui/sidebar";
+import { TextConstants } from "@/constants/TextConstants";
+import { useUser } from "@/context/UserContext";
+import { createClient } from "@/services/integration/client";
+import { Building, ChevronUp, CreditCard, Power, Settings, User2 } from "lucide-react";
+import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "./dropdown-menu";
-
-import { toast } from "sonner";
-import { TextConstants } from "@/constants/TextConstants";
-import { createClient } from "@/services/integration/client";
-import { useRouter, usePathname } from "next/navigation";
-import { useUser } from "@/context/UserContext";
-import Image from "next/image";
 
 const items = [
     {
@@ -98,7 +97,7 @@ export function AppSidebar() {
                                     <SidebarMenuButton
                                         asChild
                                         tooltip={item.title}
-                                        className={isSelected(item.url) ? "bg-gray-100" : ""}
+                                        className={isSelected(item.url) ? "bg-slate-100" : ""}
                                     >
                                         <div
                                             onClick={() => router.push(item.url)}
@@ -121,22 +120,28 @@ export function AppSidebar() {
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <SidebarMenuButton>
-                                    <User2 />
+                                    <Settings />
                                     <span className="max-w-[150px] truncate">{dbUser?.email}</span>
                                     <ChevronUp className="ml-auto" />
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
                                 side="top"
-                                className="w-[--radix-popper-anchor-width]"
+                                className={open ? "w-[--radix-popper-anchor-width]" : "ml-2"}
                             >
-                                <DropdownMenuItem className="cursor-pointer">
-                                    <span onClick={() => router.push("/dashboard/user-profile")}>
-                                        Personal Information
-                                    </span>
+                                <DropdownMenuItem
+                                    className="cursor-pointer whitespace-nowrap"
+                                    onClick={() => router.push("/dashboard/user-profile")}
+                                >
+                                    <User2 />
+                                    Personal Information
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className="cursor-pointer">
-                                    <span onClick={_handleSignOut}>Sign out</span>
+                                <DropdownMenuItem
+                                    className="cursor-pointer"
+                                    onClick={_handleSignOut}
+                                >
+                                    <Power />
+                                    Sign out
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
