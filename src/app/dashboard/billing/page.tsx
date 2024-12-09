@@ -131,6 +131,25 @@ const BillingPage = () => {
                 <Separator />
 
                 <BillingSection
+                    title="Invoices"
+                    description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
+                >
+                    <div className="rounded-lg border border-muted p-6">
+                        <p className="text-sm text-muted-foreground">
+                            To request an invoice, please reach out to our support team at{" "}
+                            <a
+                                href="mailto:support@example.com"
+                                className="text-primary hover:underline"
+                            >
+                                support@example.com
+                            </a>
+                        </p>
+                    </div>
+                </BillingSection>
+
+                <Separator />
+
+                <BillingSection
                     title="Subscription Plans"
                     description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
                 >
