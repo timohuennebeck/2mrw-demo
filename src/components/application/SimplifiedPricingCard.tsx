@@ -50,7 +50,7 @@ const SimplifiedPricingCard = ({ plan }: SimplifiedPricingCardProps) => {
             name: "Superspark",
             email: "Superspark@mincorp.com",
             paymentMethod: {
-                type: "Visa",
+                type: "VISA",
                 last4: "**52",
                 bank: "HSBC Bank",
             },
