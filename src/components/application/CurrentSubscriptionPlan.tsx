@@ -13,6 +13,7 @@ interface CurrentSubscriptionPlanParams {
             type: string;
             last4: string;
         };
+        expirationDate: string;
     };
 }
 
@@ -27,6 +28,7 @@ const CurrentSubscriptionPlan = ({ plan }: CurrentSubscriptionPlanParams) => {
             type: "VISA",
             last4: "**52",
         },
+        expirationDate: "2024-04-30",
     };
 
     const currentPlan = plan || mockPlan;
@@ -39,7 +41,7 @@ const CurrentSubscriptionPlan = ({ plan }: CurrentSubscriptionPlanParams) => {
                     <div className="flex justify-between gap-20">
                         <div className="space-y-3">
                             <div className="flex items-center gap-2">
-                                <h3 className="text-2xl font-semibold">{currentPlan.name}</h3>
+                                <h3 className="text-2xl font-medium">{currentPlan.name}</h3>
                                 <Badge variant="default" className="flex items-center gap-1">
                                     {currentPlan.status}
                                 </Badge>
@@ -52,13 +54,16 @@ const CurrentSubscriptionPlan = ({ plan }: CurrentSubscriptionPlanParams) => {
 
                     {/* Billing Info */}
                     <div className="space-y-2">
-                        <p className="text-3xl font-semibold tracking-tight">
+                        <p className="text-3xl font-medium tracking-tight">
                             {currentPlan.price}
                             <span className="ml-1 text-sm text-muted-foreground">
                                 {currentPlan.billingInterval === "one-time"
                                     ? ""
                                     : `/${currentPlan.billingInterval.slice(0, 5)}`}
                             </span>
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                            Expires on {new Date(currentPlan.expirationDate).toLocaleDateString()}
                         </p>
                     </div>
 
