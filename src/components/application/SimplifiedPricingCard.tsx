@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { BadgeCheck } from "lucide-react";
+import { BadgeCheck, CreditCard } from "lucide-react";
 
 interface SimplifiedPricingCardProps {
     plan?: {
@@ -13,7 +13,6 @@ interface SimplifiedPricingCardProps {
         paymentMethod: {
             type: string;
             last4: string;
-            bank: string;
         };
     };
 }
@@ -23,59 +22,56 @@ const SimplifiedPricingCard = ({ plan }: SimplifiedPricingCardProps) => {
         name: "Enterprise Plan",
         status: "ACTIVE",
         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, sit!",
-        price: "$300.00",
+        price: "€300.00",
         billingInterval: "monthly" as const,
         paymentMethod: {
             type: "VISA",
             last4: "**52",
-            bank: "HSBC Bank",
         },
     };
 
     const currentPlan = plan || mockPlan;
 
     return (
-        <Card className="w-full shadow-none">
-            <CardContent className="p-6">
-                <div className="flex flex-col space-y-6">
+        <Card className="w-full border-none shadow-none">
+            <CardContent>
+                <div className="flex flex-col space-y-8">
                     {/* Header Section */}
                     <div className="flex justify-between gap-20">
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                             <div className="flex items-center gap-2">
-                                <div className="flex items-center gap-2">
-                                    <BadgeCheck className="h-5 w-5" />
-                                    <h3 className="text-xl font-semibold">{currentPlan.name}</h3>
-                                </div>
-                                <Badge variant="default">{currentPlan.status}</Badge>
+                                <h3 className="text-2xl font-semibold">{currentPlan.name}</h3>
+                                <Badge variant="default" className="flex items-center gap-1">
+                                    {currentPlan.status}
+                                </Badge>
                             </div>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm text-muted-foreground/80">
                                 {currentPlan.description}
                             </p>
-                        </div>
-                        <div className="text-right">
-                            <Button variant="secondary" size="sm">
-                                Change Plan
-                            </Button>
                         </div>
                     </div>
 
                     {/* Billing Info */}
                     <div className="space-y-2">
-                        <div className="flex justify-between">
-                            <div className="">
-                                <p className="text-2xl font-semibold">
-                                    {currentPlan.price}
-                                    <span className="text-sm text-muted-foreground">
-                                        {currentPlan.billingInterval === "one-time"
-                                            ? ""
-                                            : `/${currentPlan.billingInterval.slice(0, 5)}`}
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
+                        <p className="text-3xl font-semibold tracking-tight">
+                            {currentPlan.price}
+                            <span className="ml-1 text-sm text-muted-foreground">
+                                {currentPlan.billingInterval === "one-time"
+                                    ? ""
+                                    : `/${currentPlan.billingInterval.slice(0, 5)}`}
+                            </span>
+                        </p>
                     </div>
 
-                    {/* Company Info */}
+                    <Button
+                        variant="secondary"
+                        size="sm"
+                        className="transition-colors hover:bg-secondary/80"
+                    >
+                        Change Plan
+                    </Button>
+
+                    {/* Payment Info */}
                     <div className="flex justify-between">
                         <div className="flex items-center gap-2">
                             <div className="flex h-6 w-10 items-center justify-center rounded border">
@@ -83,9 +79,6 @@ const SimplifiedPricingCard = ({ plan }: SimplifiedPricingCardProps) => {
                             </div>
                             <span className="text-sm text-muted-foreground">
                                 ending in {currentPlan.paymentMethod.last4}
-                            </span>
-                            <span className="text-sm text-muted-foreground">
-                                • {currentPlan.paymentMethod.bank}
                             </span>
                         </div>
                     </div>

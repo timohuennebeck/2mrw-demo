@@ -127,6 +127,17 @@ const BillingPage = () => {
                 <Separator />
 
                 <BillingSection
+                    title="Subscription Plans"
+                    description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
+                >
+                    <div className="mr-20">
+                        <SimplifiedPricingCard />
+                    </div>
+                </BillingSection>
+
+                <Separator />
+
+                <BillingSection
                     title="Invoices"
                     description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
                 >
@@ -140,17 +151,6 @@ const BillingPage = () => {
                                 support@example.com
                             </a>
                         </p>
-                    </div>
-                </BillingSection>
-
-                <Separator />
-
-                <BillingSection
-                    title="Subscription Plans"
-                    description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
-                >
-                    <div className="mr-20">
-                        <SimplifiedPricingCard />
                     </div>
                 </BillingSection>
             </div>
