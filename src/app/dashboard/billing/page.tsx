@@ -5,7 +5,6 @@ import { useSupabaseRealtime } from "@/hooks/useSupabaseRealtime";
 import { Check } from "lucide-react";
 import { Suspense, useState } from "react";
 import useSuccessParam from "@/hooks/useSuccessParam";
-import { useProducts } from "@/context/ProductsContext";
 import { TextConstants } from "@/constants/TextConstants";
 import { useSubscription } from "@/context/SubscriptionContext";
 import CustomPopup from "@/components/application/CustomPopup";
@@ -60,11 +59,6 @@ const BillingPage = () => {
      * and if he has not cancelled his recurring subscription
      * otherwise, it's hidden because once a user has purchased a OTP plan, he cannot change the plan
      */
-
-    const hasOneTimePaymentPlan = subscription?.billing_plan === BillingPlan.ONE_TIME;
-    const hasCancelledSubscription = subscription?.status === SubscriptionStatus.CANCELLED;
-
-    const showChangeSubscriptionPlan = !hasOneTimePaymentPlan && !hasCancelledSubscription;
 
     return (
         <>
