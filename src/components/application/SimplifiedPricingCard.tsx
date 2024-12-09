@@ -8,52 +8,27 @@ interface SimplifiedPricingCardProps {
         name: string;
         status: string;
         description: string;
-        nextPayment: string;
-        lastInvoice: string;
         price: string;
         billingInterval: "monthly" | "yearly" | "one-time";
-        details: {
-            accounts: number;
-            planType: string;
-            addons: number;
-            lastUpdate: string;
-        };
-        company: {
-            name: string;
-            email: string;
-            paymentMethod: {
-                type: string;
-                last4: string;
-                bank: string;
-            };
+        paymentMethod: {
+            type: string;
+            last4: string;
+            bank: string;
         };
     };
 }
 
 const SimplifiedPricingCard = ({ plan }: SimplifiedPricingCardProps) => {
-    // Mock data for development
     const mockPlan = {
         name: "Enterprise Plan",
         status: "ACTIVE",
         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, sit!",
-        nextPayment: "4 December 2025",
-        lastInvoice: "04-12-2024",
         price: "$300.00",
         billingInterval: "monthly" as const,
-        details: {
-            accounts: 4,
-            planType: "Enterprise plan",
-            addons: 8,
-            lastUpdate: "Sat, 4 December at 10:30 AM",
-        },
-        company: {
-            name: "Superspark",
-            email: "Superspark@mincorp.com",
-            paymentMethod: {
-                type: "VISA",
-                last4: "**52",
-                bank: "HSBC Bank",
-            },
+        paymentMethod: {
+            type: "VISA",
+            last4: "**52",
+            bank: "HSBC Bank",
         },
     };
 
@@ -79,7 +54,7 @@ const SimplifiedPricingCard = ({ plan }: SimplifiedPricingCardProps) => {
                         </div>
                         <div className="text-right">
                             <Button variant="secondary" size="sm">
-                                Change plan
+                                Change Plan
                             </Button>
                         </div>
                     </div>
@@ -87,12 +62,6 @@ const SimplifiedPricingCard = ({ plan }: SimplifiedPricingCardProps) => {
                     {/* Billing Info */}
                     <div className="space-y-2">
                         <div className="flex justify-between">
-                            {/* <div>
-                                <p className="text-sm font-medium">Upcoming Invoice:</p>
-                                <p className="text-sm text-muted-foreground">
-                                    {currentPlan.nextPayment}
-                                </p>
-                            </div> */}
                             <div className="">
                                 <p className="text-2xl font-semibold">
                                     {currentPlan.price}
@@ -110,15 +79,13 @@ const SimplifiedPricingCard = ({ plan }: SimplifiedPricingCardProps) => {
                     <div className="flex justify-between">
                         <div className="flex items-center gap-2">
                             <div className="flex h-6 w-10 items-center justify-center rounded border">
-                                <span className="text-xs">
-                                    {currentPlan.company.paymentMethod.type}
-                                </span>
+                                <span className="text-xs">{currentPlan.paymentMethod.type}</span>
                             </div>
                             <span className="text-sm text-muted-foreground">
-                                ending in {currentPlan.company.paymentMethod.last4}
+                                ending in {currentPlan.paymentMethod.last4}
                             </span>
                             <span className="text-sm text-muted-foreground">
-                                • {currentPlan.company.paymentMethod.bank}
+                                • {currentPlan.paymentMethod.bank}
                             </span>
                         </div>
                     </div>
