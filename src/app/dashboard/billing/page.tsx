@@ -116,12 +116,8 @@ const BillingPage = () => {
                                     <RadioGroupItem value="alternative" id="alternative" />
                                     <Label htmlFor="alternative">Lorem ipsum dolor sit amet.</Label>
                                 </div>
-                                <div className="pl-6">
-                                    <Input
-                                        type="email"
-                                        placeholder="billing@untitledui.com"
-                                        className="max-w-md"
-                                    />
+                                <div className="ml-6 mr-20">
+                                    <Input type="email" placeholder="billing@untitledui.com" />
                                 </div>
                             </div>
                         </RadioGroup>
@@ -134,7 +130,7 @@ const BillingPage = () => {
                     title="Invoices"
                     description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
                 >
-                    <div className="rounded-lg border border-muted p-6">
+                    <div className="mr-20 rounded-lg border border-muted p-6">
                         <p className="text-sm text-muted-foreground">
                             To request an invoice, please reach out to our support team at{" "}
                             <a
@@ -153,7 +149,7 @@ const BillingPage = () => {
                     title="Subscription Plans"
                     description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
                 >
-                    <div className="pr-20">
+                    <div className="mr-20">
                         <SimplifiedPricingCard />
                     </div>
                 </BillingSection>
