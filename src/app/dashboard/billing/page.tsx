@@ -130,7 +130,7 @@ const BillingPage = () => {
                     title="Invoices"
                     description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
                 >
-                    <div className="mr-20 rounded-lg border border-muted p-6">
+                    <div className="mr-20 rounded-lg border p-6">
                         <p className="text-sm text-muted-foreground">
                             To request an invoice, please reach out to our support team at{" "}
                             <a
