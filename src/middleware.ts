@@ -50,7 +50,7 @@ const _handleRedirection = async (request: nextRequest, user: User | null) => {
 
     if (user) {
         // redirect from auth pages to dashboard
-        if (AUTH_ROUTES.includes(pathname)) {
+        if (pathname.startsWith("/auth")) {
             return nextResponse.redirect(new URL("/dashboard", request.url));
         }
 
