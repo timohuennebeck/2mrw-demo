@@ -1,139 +1,89 @@
-import { CheckBadgeIcon } from "@heroicons/react/24/solid";
-import { getProductDetailsByStripePriceId } from "@/services/domain/pricingService";
-import { getCurrency } from "@/config/paymentConfig";
-import { CalendarClock } from "lucide-react";
-import { getFeaturesWithAvailability } from "@/services/domain/featureService";
-import { formatDateToDayMonthYear } from "@/utils/date/dateHelper";
-import { useSubscription } from "@/context/SubscriptionContext";
-import { BillingPlan, SubscriptionInterval, SubscriptionStatus } from "@/enums";
-import { ProductWithPrices } from "@/interfaces";
-import { PlanFeatures } from "./PlanFeatures";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
-const _getProductPricing = (isFreeProduct: boolean, currentPrice: number) => {
-    if (isFreeProduct) {
-        return "Free";
-    }
-
-    if (currentPrice) {
-        return `${getCurrency() === "EUR" ? "€" : "$"} ${currentPrice}`;
-    }
-
-    return "N/A";
-};
-
-export interface CurrentSubscriptionPlanParams {
-    products: ProductWithPrices[];
+interface CurrentSubscriptionPlanParams {
+    plan?: {
+        name: string;
+        status: string;
+        description: string;
+        price: string;
+        billingInterval: "monthly" | "yearly" | "one-time";
+        paymentMethod: {
+            type: string;
+            last4: string;
+        };
+    };
 }
 
-const CurrentSubscriptionPlan = ({ products }: CurrentSubscriptionPlanParams) => {
-    const { subscription } = useSubscription();
-
-    const activeStripePriceId = subscription?.stripe_price_id ?? null;
-
-    const productDetails = getProductDetailsByStripePriceId(products, activeStripePriceId);
-
-    const features = productDetails
-        ? getFeaturesWithAvailability(productDetails.subscription_tier)
-        : [];
-
-    const isFreeProduct = productDetails?.billing_plan === BillingPlan.NONE;
-    const isOneTimePaymentProduct = productDetails?.billing_plan === BillingPlan.ONE_TIME;
-
-    const renderStatusBadge = (text: string, variant: "green" | "yellow" | "red") => {
-        const colors = {
-            green: "bg-green-100 text-green-800",
-            yellow: "bg-yellow-100 text-yellow-800",
-            red: "bg-red-100 text-red-800",
-        };
-
-        return (
-            <span className={`ml-3 rounded-md px-3 py-1 text-xs font-medium ${colors[variant]}`}>
-                {text}
-            </span>
-        );
+const CurrentSubscriptionPlan = ({ plan }: CurrentSubscriptionPlanParams) => {
+    const mockPlan = {
+        name: "Enterprise Plan",
+        status: "ACTIVE",
+        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, sit!",
+        price: "€300.00",
+        billingInterval: "monthly" as const,
+        paymentMethod: {
+            type: "VISA",
+            last4: "**52",
+        },
     };
 
-    const renderSubscriptionStatus = () => {
-        if (subscription?.status === SubscriptionStatus.ACTIVE) {
-            return renderStatusBadge("ACTIVE", "green");
-        }
-
-        if (subscription?.status === SubscriptionStatus.CANCELLED) {
-            return renderStatusBadge("CANCELLED", "red");
-        }
-
-        return null;
-    };
-
-    const getSubscriptionStatusMessage = () => {
-        if (subscription?.billing_plan === BillingPlan.NONE) {
-            return "You are on the free plan which is free forever!";
-        }
-
-        if (subscription?.billing_plan === BillingPlan.ONE_TIME) {
-            return "You have lifetime access to this product!";
-        }
-
-        if (subscription?.billing_plan === BillingPlan.RECURRING) {
-            const formattedEndDate = formatDateToDayMonthYear(subscription?.end_date);
-
-            if (subscription?.status === SubscriptionStatus.ACTIVE) {
-                return `Your subscription renews on ${formattedEndDate}!`;
-            }
-
-            if (subscription?.status === SubscriptionStatus.CANCELLED) {
-                return `Your subscription will be downgraded to the free plan on ${formattedEndDate}!`;
-            }
-        }
-    };
+    const currentPlan = plan || mockPlan;
 
     return (
-        <div className="border border-gray-200 p-4">
-            <div className="mb-2 flex items-center justify-between">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <CheckBadgeIcon className="h-5 w-5 text-black" aria-hidden="true" />
-                        <h4 className="text-xl font-medium text-gray-700">
-                            {productDetails?.name}
-                        </h4>
+        <Card className="w-full border-none shadow-none">
+            <CardContent>
+                <div className="flex flex-col space-y-8">
+                    {/* Header Section */}
+                    <div className="flex justify-between gap-20">
+                        <div className="space-y-3">
+                            <div className="flex items-center gap-2">
+                                <h3 className="text-2xl font-semibold">{currentPlan.name}</h3>
+                                <Badge variant="default" className="flex items-center gap-1">
+                                    {currentPlan.status}
+                                </Badge>
+                            </div>
+                            <p className="text-sm text-muted-foreground/80">
+                                {currentPlan.description}
+                            </p>
+                        </div>
                     </div>
 
-                    {renderSubscriptionStatus()}
+                    {/* Billing Info */}
+                    <div className="space-y-2">
+                        <p className="text-3xl font-semibold tracking-tight">
+                            {currentPlan.price}
+                            <span className="ml-1 text-sm text-muted-foreground">
+                                {currentPlan.billingInterval === "one-time"
+                                    ? ""
+                                    : `/${currentPlan.billingInterval.slice(0, 5)}`}
+                            </span>
+                        </p>
+                    </div>
+
+                    <Button
+                        variant="secondary"
+                        size="sm"
+                        className="transition-colors hover:bg-secondary/80"
+                    >
+                        Change Plan
+                    </Button>
+
+                    {/* Payment Info */}
+                    <div className="flex justify-between">
+                        <div className="flex items-center gap-2">
+                            <div className="flex h-6 w-10 items-center justify-center rounded border">
+                                <span className="text-xs">{currentPlan.paymentMethod.type}</span>
+                            </div>
+                            <span className="text-sm text-muted-foreground">
+                                ending in {currentPlan.paymentMethod.last4}
+                            </span>
+                        </div>
+                    </div>
                 </div>
-
-                <div className="text-right">
-                    <div className="whitespace-nowrap text-xl font-medium text-gray-700">
-                        {_getProductPricing(
-                            isFreeProduct,
-                            productDetails?.price?.current_amount ?? 0,
-                        )}
-                    </div>
-                    <div className="whitespace-nowrap text-sm font-medium text-gray-500">
-                        {isOneTimePaymentProduct
-                            ? "ONE-TIME PAYMENT"
-                            : isFreeProduct
-                              ? "FOREVER"
-                              : productDetails?.price?.interval === SubscriptionInterval.MONTHLY
-                                ? "PER MONTH"
-                                : "PER YEAR"}
-                    </div>
-                </div>
-            </div>
-            <p className="mb-4 text-sm text-gray-500">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Et odit autem alias aut.
-            </p>
-
-            <div className="border-t border-gray-200 pb-4" />
-
-            <div className="flex items-center gap-2">
-                <CalendarClock size={16} strokeWidth={1.5} className="text-gray-500" />
-                <p className="text-xs text-gray-500">{getSubscriptionStatusMessage()}</p>
-            </div>
-
-            <div className="mt-4">
-                <PlanFeatures features={features ?? []} />
-            </div>
-        </div>
+            </CardContent>
+        </Card>
     );
 };
 

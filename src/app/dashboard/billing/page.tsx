@@ -15,7 +15,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import SimplifiedPricingCard from "@/components/application/SimplifiedPricingCard";
+import CurrentSubscriptionPlan from "@/components/application/CurrentSubscriptionPlan";
 
 const SuccessHandler = ({ onSuccess }: { onSuccess: () => void }) => {
     useSuccessParam({
@@ -131,7 +131,7 @@ const BillingPage = () => {
                     description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
                 >
                     <div className="mr-20">
-                        <SimplifiedPricingCard />
+                        <CurrentSubscriptionPlan />
                     </div>
                 </BillingSection>
 
