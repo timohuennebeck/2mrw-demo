@@ -1,35 +1,16 @@
 import { Check, X } from "lucide-react";
 import React from "react";
 import { Button } from "../ui/button";
-
-interface PricingPlan {
-    name: string;
-    price: string;
-    period: string;
-    buttonVariant: string;
-    onClick: () => void;
-    stripePriceId: string;
-}
-
-interface PricingFeatureItem {
-    name: string;
-    free: boolean | string;
-    pro: boolean | string;
-    enterprise: boolean | string;
-}
-
-interface PricingFeatureSection {
-    category: string;
-    items: PricingFeatureItem[];
-}
+import { DefaultPricingPlan, PricingFeatureItem, PricingFeatureSection } from "@/data/marketing/pricing-data";
 
 interface PricingComparisonParams {
     title: React.ReactNode;
     subtitle: string;
     description: string;
     plans: {
-        monthly: PricingPlan[];
-        annual: PricingPlan[];
+        monthly: DefaultPricingPlan[];
+        annual: DefaultPricingPlan[];
+        oneTime: DefaultPricingPlan[];
     };
     features: PricingFeatureSection[];
     buttonText: string;
@@ -41,8 +22,8 @@ const PricingPlanHeader = ({
     buttonText,
     onClick,
 }: {
-    plan: PricingPlan;
-    annualPlans: PricingPlan[];
+    plan: DefaultPricingPlan;
+    annualPlans: DefaultPricingPlan[];
     buttonText: string;
     onClick: () => void;
 }) => {
@@ -56,20 +37,16 @@ const PricingPlanHeader = ({
             <h3 className="text-lg font-medium">{plan.name}</h3>
             <div>
                 <span className="text-4xl font-medium">{plan.price}</span>
-                <span className="text-sm text-gray-500">{plan.period}</span>
+                <span className="text-sm text-gray-500">{plan.billing_period}</span>
             </div>
             <span className="text-sm text-gray-500">
-                {plan.stripePriceId === "price_free"
+                {plan.stripe_price_id === "price_free"
                     ? "Free Forever"
                     : `${pricePerMonthForYearlyPlan} / month when billed per annum`}
             </span>
             <Button
                 size="lg"
-                className={`w-full rounded-md px-6 py-2.5 text-sm transition-colors ${
-                    plan.buttonVariant === "primary"
-                        ? "bg-black text-white hover:bg-gray-800"
-                        : "bg-gray-100 text-gray-900 hover:bg-gray-200"
-                }`}
+                variant={plan.is_highlighted ? "default" : "outline"}
                 onClick={onClick}
             >
                 {buttonText}

@@ -2,32 +2,14 @@ import { Check, X } from "lucide-react";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-
-interface PricingPlan {
-    name: string;
-    price: string;
-    period: string;
-    buttonVariant: string;
-    onClick: () => void;
-    stripePriceId: string;
-}
-
-interface PricingFeatureSection {
-    category: string;
-    items: PricingFeatureItem[];
-}
-
-interface PricingFeatureItem {
-    name: string;
-    free: boolean | string;
-    pro: boolean | string;
-    enterprise: boolean | string;
-}
+import { BillingPeriod, DefaultPricingPlan } from "@/data/marketing/pricing-data";
+import { PricingFeatureSection } from "@/data/marketing/pricing-data";
 
 interface PricingCardsProps {
     plans: {
-        monthly: PricingPlan[];
-        annual: PricingPlan[];
+        monthly: DefaultPricingPlan[];
+        annual: DefaultPricingPlan[];
+        oneTime: DefaultPricingPlan[];
     };
     features: PricingFeatureSection[];
     buttonText: string;
@@ -39,10 +21,10 @@ const PricingCard = ({
     buttonText,
     annualPlans,
 }: {
-    plan: PricingPlan;
+    plan: DefaultPricingPlan;
     features: PricingFeatureSection[];
     buttonText: string;
-    annualPlans: PricingPlan[];
+    annualPlans: DefaultPricingPlan[];
 }) => {
     const annualPlan = annualPlans.find((p) => p.name === plan.name)?.price;
     const pricePerMonthForYearlyPlan = annualPlan
@@ -55,10 +37,16 @@ const PricingCard = ({
                 <CardTitle className="mb-4">{plan.name}</CardTitle>
                 <div>
                     <span className="text-4xl font-medium">{plan.price}</span>
-                    <span className="text-sm text-gray-500">{plan.period}</span>
+                    <span className="text-sm text-gray-500">
+                        {plan.billing_period === BillingPeriod.MONTH
+                            ? "/month"
+                            : plan.billing_period === BillingPeriod.YEAR
+                              ? "/year"
+                              : "/lifetime"}
+                    </span>
                 </div>
                 <span className="mt-2 block text-sm text-gray-500">
-                    {plan.stripePriceId === "price_free"
+                    {plan.stripe_price_id === "price_free"
                         ? "Free Forever"
                         : `${pricePerMonthForYearlyPlan} / month when billed per annum`}
                 </span>
@@ -94,11 +82,8 @@ const PricingCard = ({
             <CardFooter>
                 <Button
                     size="lg"
-                    className={`w-full ${
-                        plan.buttonVariant === "primary"
-                            ? "bg-black text-white hover:bg-gray-800"
-                            : "bg-gray-100 text-gray-900 hover:bg-gray-200"
-                    }`}
+                    variant={plan.is_highlighted ? "default" : "outline"}
+                    className="w-full"
                     onClick={plan.onClick}
                 >
                     {buttonText}

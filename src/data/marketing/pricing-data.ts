@@ -1,64 +1,131 @@
-const _handlePlanSelection = (stripePriceId: string) => {
-    const signUpUrl = `/auth/sign-up?stripe_price_id=${stripePriceId}`;
-    window.location.href = signUpUrl;
-};
+export enum BillingType {
+    RECURRING = "RECURRING",
+    ONE_TIME = "ONE_TIME",
+}
 
-export const defaultPricingPlans = {
+export enum BillingPeriod {
+    MONTH = "month",
+    YEAR = "year",
+    LIFETIME = "lifetime",
+}
+
+export interface DefaultPricingPlan {
+    name: string;
+    description: string;
+    price: string;
+    billing_period: BillingPeriod;
+    billing_type: BillingType;
+    is_highlighted: boolean;
+    stripe_price_id: string;
+    onClick: () => void;
+}
+
+export interface PricingFeatureSection {
+    category: string;
+    items: PricingFeatureItem[];
+}
+
+export interface PricingFeatureItem {
+    name: string;
+    free: boolean | string;
+    pro: boolean | string;
+    enterprise: boolean | string;
+}
+
+export const defaultPricingPlans: {
+    monthly: DefaultPricingPlan[];
+    annual: DefaultPricingPlan[];
+    oneTime: DefaultPricingPlan[];
+} = {
     monthly: [
         {
             name: "Free",
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$0",
-            period: "/month",
-            buttonVariant: "secondary",
-            onClick: () => _handlePlanSelection("price_free"),
-            stripePriceId: "price_free",
+            billing_period: BillingPeriod.MONTH,
+            billing_type: BillingType.RECURRING,
+            is_highlighted: false,
+            stripe_price_id: "price_free",
+            onClick: () => {},
         },
         {
             name: "Pro",
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$49",
-            period: "/month",
-            buttonVariant: "primary",
-            onClick: () => _handlePlanSelection("price_def456"),
-            stripePriceId: "price_def456",
+            billing_period: BillingPeriod.MONTH,
+            billing_type: BillingType.RECURRING,
+            is_highlighted: true,
+            stripe_price_id: "price_def456",
+            onClick: () => {},
         },
         {
             name: "Enterprise",
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$99",
-            period: "/month",
-            buttonVariant: "secondary",
-            onClick: () => _handlePlanSelection("price_ghi789"),
-            stripePriceId: "price_ghi789",
+            billing_period: BillingPeriod.MONTH,
+            billing_type: BillingType.RECURRING,
+            is_highlighted: false,
+            stripe_price_id: "price_ghi789",
+            onClick: () => {},
         },
     ],
     annual: [
         {
             name: "Free",
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$0",
-            period: "/year",
-            buttonVariant: "secondary",
-            onClick: () => _handlePlanSelection("price_free"),
-            stripePriceId: "price_free",
+            billing_period: BillingPeriod.YEAR,
+            billing_type: BillingType.RECURRING,
+            is_highlighted: false,
+            stripe_price_id: "price_free",
+            onClick: () => {},
         },
         {
             name: "Pro",
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$490",
-            period: "/year",
-            buttonVariant: "primary",
-            onClick: () => _handlePlanSelection("price_mno345"),
-            stripePriceId: "price_mno345",
+            billing_period: BillingPeriod.YEAR,
+            billing_type: BillingType.RECURRING,
+            is_highlighted: true,
+            stripe_price_id: "price_mno345",
+            onClick: () => {},
         },
         {
             name: "Enterprise",
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$990",
-            period: "/year",
-            buttonVariant: "secondary",
-            onClick: () => _handlePlanSelection("price_pqr678"),
-            stripePriceId: "price_pqr678",
+            billing_period: BillingPeriod.YEAR,
+            billing_type: BillingType.RECURRING,
+            is_highlighted: false,
+            stripe_price_id: "price_pqr678",
+            onClick: () => {},
+        },
+    ],
+    oneTime: [
+        {
+            name: "Pro",
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            price: "$999",
+            billing_period: BillingPeriod.LIFETIME,
+            billing_type: BillingType.ONE_TIME,
+            is_highlighted: false,
+            stripe_price_id: "price_lifetime_pro",
+            onClick: () => {},
+        },
+        {
+            name: "Enterprise",
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            price: "$1,999",
+            billing_period: BillingPeriod.LIFETIME,
+            billing_type: BillingType.ONE_TIME,
+            is_highlighted: true,
+            stripe_price_id: "price_lifetime_ent",
+            onClick: () => {},
         },
     ],
 };
 
-export const pricingCardFeatures = [
+export const pricingCardFeatures: PricingFeatureSection[] = [
     {
         category: "Lorem Features",
         items: [
@@ -113,7 +180,7 @@ export const pricingCardFeatures = [
     },
 ];
 
-export const defaultPricingFeatures = [
+export const defaultPricingFeatures: PricingFeatureSection[] = [
     {
         category: "Lorem",
         items: [
