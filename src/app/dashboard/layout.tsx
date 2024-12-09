@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/ui/app-sidebar";
 import {
     Breadcrumb,
@@ -11,7 +9,9 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";
+import React from "react";
 
 const TopBar = () => {
     const pathname = usePathname();
@@ -35,7 +35,7 @@ const TopBar = () => {
         });
 
     return (
-        <div className="flex items-center gap-4 border-b border-gray-200 px-4 py-4">
+        <div className="flex items-center gap-4 px-4 py-4">
             <SidebarTrigger />
 
             <Breadcrumb>
@@ -66,7 +66,7 @@ const TopBar = () => {
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     return (
-        <SidebarProvider defaultOpen>
+        <SidebarProvider defaultOpen={false}>
             <div className="flex h-screen w-full overflow-hidden">
                 <AppSidebar />
 
