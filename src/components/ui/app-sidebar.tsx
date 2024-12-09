@@ -78,7 +78,8 @@ export function AppSidebar() {
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader
-                className={`bg-white ${open ? "flex flex-row items-center p-4" : "flex items-center justify-center"}`}
+                className={`bg-white cursor-pointer ${open ? "flex flex-row items-center p-4" : "flex items-center justify-center"}`}
+                onClick={() => router.push("/dashboard")}
             >
                 <Image
                     src="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
