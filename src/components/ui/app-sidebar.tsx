@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, ChevronUp, Building, User2, Users } from "lucide-react";
+import { ChevronUp, Building, User2, CreditCard } from "lucide-react";
 import {
     Sidebar,
     SidebarContent,
@@ -10,9 +10,8 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    SidebarMenuSubButton,
-    SidebarMenuSubItem,
-    SidebarMenuSub,
+    SidebarHeader,
+    useSidebar,
 } from "@/components/ui/sidebar";
 import {
     DropdownMenu,
@@ -20,14 +19,13 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "./dropdown-menu";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./collapsible";
 
 import { toast } from "sonner";
 import { TextConstants } from "@/constants/TextConstants";
 import { createClient } from "@/services/integration/client";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter, usePathname } from "next/navigation";
 import { useUser } from "@/context/UserContext";
+import Image from "next/image";
 
 const items = [
     {
@@ -36,18 +34,13 @@ const items = [
         icon: Building,
     },
     {
-        title: "Team",
-        url: "/team",
-        icon: Users,
-        subItems: [
-            { title: "Members", url: "/team/members" },
-            { title: "Roles", url: "/team/roles" },
-            { title: "Invites", url: "/team/invites" },
-        ],
+        title: "Billing",
+        url: "/dashboard/billing",
+        icon: CreditCard,
     },
 ];
 
-export const _handleSignOut = async (router: AppRouterInstance) => {
+export const _handleSignOut = async () => {
     const supabase = createClient();
 
     try {
@@ -71,6 +64,8 @@ export const _handleSignOut = async (router: AppRouterInstance) => {
 
 export function AppSidebar() {
     const { dbUser } = useUser();
+    const { open } = useSidebar();
+
     const router = useRouter();
     const pathname = usePathname();
 
@@ -83,70 +78,36 @@ export function AppSidebar() {
 
     return (
         <Sidebar collapsible="icon">
+            <SidebarHeader
+                className={`bg-white ${open ? "flex flex-row items-center p-4" : "flex items-center justify-center"}`}
+            >
+                <Image
+                    src="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
+                    alt="Logo"
+                    width={24}
+                    height={24}
+                />
+                {open && <span className="text-lg font-semibold">2mrw</span>}
+            </SidebarHeader>
             <SidebarContent className="bg-white">
                 <SidebarGroup>
                     <SidebarGroupContent>
-                        <SidebarMenu>
+                        <SidebarMenu className="flex flex-col gap-2">
                             {items.map((item) => (
                                 <SidebarMenuItem key={item.title}>
-                                    {item.subItems ? (
-                                        <Collapsible defaultOpen className="w-full">
-                                            <CollapsibleTrigger asChild>
-                                                <SidebarMenuButton
-                                                    tooltip={item.title}
-                                                >
-                                                    <item.icon />
-                                                    <span>{item.title}</span>
-                                                    <ChevronDown className="ml-auto h-4 w-4" />
-                                                </SidebarMenuButton>
-                                            </CollapsibleTrigger>
-                                            <CollapsibleContent>
-                                                <SidebarMenuSub>
-                                                    {item.subItems.map((subItem) => (
-                                                        <SidebarMenuSubItem
-                                                            key={subItem.title}
-                                                            className="cursor-pointer"
-                                                        >
-                                                            <SidebarMenuSubButton
-                                                                asChild
-                                                                className={
-                                                                    isSelected(subItem.url)
-                                                                        ? "bg-gray-100"
-                                                                        : ""
-                                                                }
-                                                            >
-                                                                <span
-                                                                    onClick={() =>
-                                                                        router.push(subItem.url)
-                                                                    }
-                                                                >
-                                                                    {subItem.title}
-                                                                </span>
-                                                            </SidebarMenuSubButton>
-                                                        </SidebarMenuSubItem>
-                                                    ))}
-                                                </SidebarMenuSub>
-                                            </CollapsibleContent>
-                                        </Collapsible>
-                                    ) : (
-                                        <SidebarMenuButton
-                                            asChild
-                                            tooltip={item.title}
-                                            className={
-                                                isSelected(item.url)
-                                                    ? "bg-gray-100"
-                                                    : ""
-                                            }
+                                    <SidebarMenuButton
+                                        asChild
+                                        tooltip={item.title}
+                                        className={isSelected(item.url) ? "bg-gray-100" : ""}
+                                    >
+                                        <div
+                                            onClick={() => router.push(item.url)}
+                                            className="cursor-pointer"
                                         >
-                                            <div
-                                                onClick={() => router.push(item.url)}
-                                                className="cursor-pointer"
-                                            >
-                                                <item.icon />
-                                                <span>{item.title}</span>
-                                            </div>
-                                        </SidebarMenuButton>
-                                    )}
+                                            <item.icon />
+                                            <span>{item.title}</span>
+                                        </div>
+                                    </SidebarMenuButton>
                                 </SidebarMenuItem>
                             ))}
                         </SidebarMenu>
@@ -170,15 +131,12 @@ export function AppSidebar() {
                                 className="w-[--radix-popper-anchor-width]"
                             >
                                 <DropdownMenuItem className="cursor-pointer">
-                                    <span onClick={() => router.push("/user-profile")}>
+                                    <span onClick={() => router.push("/dashboard/user-profile")}>
                                         Personal Information
                                     </span>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem className="cursor-pointer">
-                                    <span onClick={() => router.push("/billing")}>Billing</span>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem className="cursor-pointer">
-                                    <span onClick={() => _handleSignOut(router)}>Sign out</span>
+                                    <span onClick={_handleSignOut}>Sign out</span>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
