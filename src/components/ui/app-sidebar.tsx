@@ -76,7 +76,7 @@ export function AppSidebar() {
     };
 
     return (
-        <Sidebar collapsible="icon">
+        <Sidebar collapsible="icon" className="mt-2">
             <SidebarHeader
                 className={`bg-white cursor-pointer ${open ? "flex flex-row items-center p-4" : "flex items-center justify-center"}`}
                 onClick={() => router.push("/dashboard")}
@@ -87,12 +87,12 @@ export function AppSidebar() {
                     width={24}
                     height={24}
                 />
-                {open && <span className="text-lg font-semibold">2mrw</span>}
+                {open && <span className="text-lg font-medium">2mrw</span>}
             </SidebarHeader>
             <SidebarContent className="bg-white">
                 <SidebarGroup>
                     <SidebarGroupContent>
-                        <SidebarMenu className="flex flex-col gap-2">
+                        <SidebarMenu>
                             {items.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton
