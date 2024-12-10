@@ -16,6 +16,7 @@ import { TextConstants } from "@/constants/TextConstants";
 import { useUser } from "@/context/UserContext";
 import { createClient } from "@/services/integration/client";
 import { Building, ChevronUp, CreditCard, Power, Settings, User2 } from "lucide-react";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -39,10 +40,8 @@ const items = [
     },
 ];
 
-export const _handleSignOut = async () => {
+const _handleSignOut = async (router: AppRouterInstance) => {
     const supabase = createClient();
-
-    const router = useRouter();
 
     try {
         const { error } = await supabase.auth.signOut();
@@ -65,7 +64,7 @@ export const _handleSignOut = async () => {
     }
 };
 
-export function AppSidebar() {
+const AppSidebar = () => {
     const { dbUser } = useUser();
     const { open } = useSidebar();
 
@@ -147,7 +146,7 @@ export function AppSidebar() {
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                     className="cursor-pointer"
-                                    onClick={_handleSignOut}
+                                    onClick={() => _handleSignOut(router)}
                                 >
                                     <Power />
                                     Sign out
@@ -159,4 +158,6 @@ export function AppSidebar() {
             </SidebarFooter>
         </Sidebar>
     );
-}
+};
+
+export default AppSidebar;
