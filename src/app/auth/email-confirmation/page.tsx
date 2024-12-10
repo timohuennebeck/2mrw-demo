@@ -48,7 +48,7 @@ const EmailConfirmedPage = () => {
                 </div>
 
                 <Button onClick={() => router.push("/choose-pricing-plan")} className="w-full">
-                    Choose Your Plan
+                    Continue
                 </Button>
 
                 <p className="text-center text-sm text-gray-400">
