@@ -82,7 +82,7 @@ export interface RegisterLoginFormParams {
         password: string;
         firstName: string;
     }) => void;
-    loginWithMagicLink?: (email: string) => void;
+    loginOrSignupWithMagicLink?: (email: string) => void;
     isLoading: boolean;
     statusMessage?: StatusMessage | null;
 }
@@ -90,7 +90,7 @@ export interface RegisterLoginFormParams {
 const RegisterLoginForm = ({
     mode,
     handleSubmit,
-    loginWithMagicLink,
+    loginOrSignupWithMagicLink,
     isLoading,
     statusMessage,
 }: RegisterLoginFormParams) => {
@@ -114,7 +114,7 @@ const RegisterLoginForm = ({
         const { firstName, email, password } = values;
 
         if (authMethod === "magic-link") {
-            loginWithMagicLink?.(email);
+            loginOrSignupWithMagicLink?.(email);
         } else {
             handleSubmit({ email, password, firstName });
         }

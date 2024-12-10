@@ -5,20 +5,8 @@ import { useRouter } from "next/navigation";
 import { signIn } from "./action";
 import RegisterLoginForm from "@/components/application/RegisterLoginForm";
 import { TextConstants } from "@/constants/TextConstants";
-import { createClient } from "@/services/integration/client";
 import { StatusMessage } from "@/interfaces";
-
-const _sendMagicLink = async (email: string) => {
-    const supabase = createClient();
-
-    const result = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-            emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/settings`,
-        },
-    });
-    return result;
-};
+import { sendMagicLink } from "@/services/domain/authService";
 
 const SignInPage = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -50,44 +38,44 @@ const SignInPage = () => {
         setIsLoading(false);
     };
 
-    const loginWithMagicLink = async (email: string) => {
+    const handleLoginWithMagicLink = async (email: string) => {
         setIsLoading(true);
 
-        const result = await _sendMagicLink(email);
+        try {
+            const result = await sendMagicLink(email);
+            if (result.error) throw result.error;
 
-        if (result.error) {
-            setIsLoading(false);
-            setStatusMessage({
-                type: "error",
-                message: result.error.message,
-            });
-            setTimeout(() => setStatusMessage(null), 5000);
-            return;
-        }
-
-        setStatusMessage({
-            type: "info",
-            message: TextConstants.TEXT__MAGIC_LINK_SENT,
-        });
-
-        setTimeout(() => {
             setStatusMessage({
                 type: "info",
-                message: TextConstants.TEXT__DIDNT_RECEIVE_EMAIL,
-                action: {
-                    label: TextConstants.TEXT__RESEND_EMAIL,
-                    onClick: async () => await _sendMagicLink(email),
-                },
+                message: TextConstants.TEXT__MAGIC_LINK_SENT,
             });
-        }, 4000);
-        setIsLoading(false);
+
+            setTimeout(() => {
+                setStatusMessage({
+                    type: "info",
+                    message: TextConstants.TEXT__DIDNT_RECEIVE_EMAIL,
+                    action: {
+                        label: TextConstants.TEXT__RESEND_EMAIL,
+                        onClick: async () => await sendMagicLink(email),
+                    },
+                });
+            }, 4000);
+        } catch (error) {
+            setStatusMessage({
+                type: "error",
+                message: error instanceof Error ? error.message : "Unexpected error occurred",
+            });
+            setTimeout(() => setStatusMessage(null), 4000);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
         <RegisterLoginForm
             mode="signin"
             handleSubmit={handleSubmit}
-            loginWithMagicLink={loginWithMagicLink}
+            loginOrSignupWithMagicLink={handleLoginWithMagicLink}
             isLoading={isLoading}
             statusMessage={statusMessage}
         />

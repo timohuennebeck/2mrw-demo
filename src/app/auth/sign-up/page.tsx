@@ -8,6 +8,7 @@ import { checkUserEmailExists } from "@/services/database/userService";
 import { StatusMessage } from "@/interfaces";
 import { useSearchParams } from "next/navigation";
 import { AuthMethod } from "@/enums/user";
+import { sendMagicLink } from "@/services/domain/authService";
 
 interface HandleSubmitParams {
     firstName: string;
@@ -48,7 +49,13 @@ const SignUpPage = () => {
         }
     };
 
-    const _handleEmailConfirmation = (email: string, message: string) => {
+    const _handleEmailConfirmation = ({
+        message,
+        onClick,
+    }: {
+        message: string;
+        onClick: () => void;
+    }) => {
         setStatusMessage({
             type: "info",
             message,
@@ -60,7 +67,7 @@ const SignUpPage = () => {
                 message: TextConstants.TEXT__DIDNT_RECEIVE_EMAIL,
                 action: {
                     label: TextConstants.TEXT__RESEND_EMAIL,
-                    onClick: () => _handleResendConfirmationEmail(email),
+                    onClick: onClick,
                 },
             });
         }, 4000);
@@ -83,7 +90,10 @@ const SignUpPage = () => {
             const result = await signUpUserToSupabase(dataToUpdate);
             if (result.error) throw result.error;
 
-            _handleEmailConfirmation(email, result.data ?? "");
+            _handleEmailConfirmation({
+                message: result.data ?? "",
+                onClick: async () => await _handleResendConfirmationEmail(email),
+            });
         } catch (error) {
             setStatusMessage({
                 type: "error",
@@ -95,10 +105,34 @@ const SignUpPage = () => {
         }
     };
 
+    const handleSignUpWithMagicLink = async (email: string) => {
+        setIsLoading(true);
+
+        try {
+            const result = await sendMagicLink(email);
+
+            if (result.error) throw result.error;
+
+            _handleEmailConfirmation({
+                message: result.data ?? "",
+                onClick: async () => await sendMagicLink(email),
+            });
+        } catch (error) {
+            setStatusMessage({
+                type: "error",
+                message: error instanceof Error ? error.message : "Unexpected error occurred",
+            });
+            setTimeout(() => setStatusMessage(null), 4000);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <RegisterLoginForm
             mode="signup"
             handleSubmit={handleSubmit}
+            loginOrSignupWithMagicLink={handleSignUpWithMagicLink}
             isLoading={isLoading}
             statusMessage={statusMessage}
         />
