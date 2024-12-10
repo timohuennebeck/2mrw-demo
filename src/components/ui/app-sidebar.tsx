@@ -76,7 +76,7 @@ export function AppSidebar() {
     };
 
     return (
-        <Sidebar collapsible="icon" className="mt-2">
+        <Sidebar collapsible="icon" className="pt-2">
             <SidebarHeader
                 className={`bg-white cursor-pointer ${open ? "flex flex-row items-center p-4" : "flex items-center justify-center"}`}
                 onClick={() => router.push("/dashboard")}
