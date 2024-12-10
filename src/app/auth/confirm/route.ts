@@ -1,20 +1,13 @@
 "use server";
 
-import { User, type EmailOtpType } from "@supabase/supabase-js";
-import { NextResponse as nextResponse, type NextRequest } from "next/server";
-import { redirect } from "next/navigation";
+import { SignUpMethod } from "@/enums/user";
 import { createUserTable, fetchUser } from "@/services/database/userService";
 import { createClient } from "@/services/integration/server";
-import { getStripeCustomerId } from "@/services/stripe/stripeCustomer";
 import { stripe } from "@/services/stripe/client";
-
-const _handleCreateUser = async (authUser: User) => {
-    const { error } = await createUserTable(authUser);
-
-    if (error) {
-        return nextResponse.json({ error: "Failed to create user" }, { status: 500 });
-    }
-};
+import { getStripeCustomerId } from "@/services/stripe/stripeCustomer";
+import { type EmailOtpType } from "@supabase/supabase-js";
+import { redirect } from "next/navigation";
+import { NextResponse as nextResponse, type NextRequest } from "next/server";
 
 const _updateUserEmail = async (userId: string, email: string) => {
     const supabase = await createClient();
@@ -88,7 +81,16 @@ export const GET = async (request: NextRequest) => {
                 }
 
                 if (authUser) {
-                    await _handleCreateUser(authUser);
+                    const authMethod = authUser.user_metadata.auth_method as SignUpMethod;
+                    const { error } = await createUserTable(authUser, authMethod);
+
+                    if (error) {
+                        return nextResponse.json(
+                            { error: "Failed to create user" },
+                            { status: 500 },
+                        );
+                    }
+
                     return redirect("/dashboard");
                 }
             }

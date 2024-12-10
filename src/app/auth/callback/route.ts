@@ -1,9 +1,10 @@
 "use server";
 
+import { SignUpMethod } from "@/enums/user";
+import { createUserTable } from "@/services/database/userService";
+import { type CookieOptions, createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse as response } from "next/server";
-import { type CookieOptions, createServerClient } from "@supabase/ssr";
-import { checkUserEmailExists, createUserTable } from "@/services/database/userService";
 
 export const GET = async (request: Request) => {
     const { searchParams, origin } = new URL(request.url);
@@ -42,15 +43,12 @@ export const GET = async (request: Request) => {
             const { user: authUser } = data.session;
 
             try {
-                const { emailExists } = await checkUserEmailExists(authUser.user_metadata.email);
-
-                if (!emailExists) {
-                    await createUserTable(authUser);
-                }
+                const { error } = await createUserTable(authUser, SignUpMethod.GOOGLE);
+                if (error) throw error;
 
                 return response.redirect(`${origin}${next}`);
-            } catch (err) {
-                console.error("Unexpected error during Google sign in:", err);
+            } catch (error) {
+                console.error("Unexpected error during Google sign in:", error);
                 return response.redirect(`${origin}/auth/auth-code-error`);
             }
         }

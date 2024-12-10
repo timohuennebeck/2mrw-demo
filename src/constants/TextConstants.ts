@@ -17,6 +17,7 @@ export const TextConstants = {
     TEXT__FREE: "Free",
     TEXT__MONTHLY: "Monthly",
     TEXT__YEARLY: "Yearly",
+    TEXT__SUCCESS_USER_CREATED: "User has been created!",
     TEXT__HAVE_AN_ACCOUNT: "Have an account?",
     TEXT__FLEXIBLE_CANCELLATION: "Flexible cancellation, no strings attached.",
     TEXT__DO_NOT_HAVE_AN_ACCOUNT: "Don't have an account?",

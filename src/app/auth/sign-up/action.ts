@@ -6,19 +6,6 @@ import { SignUpMethod } from "@/enums/user";
 import { createClient } from "@/services/integration/server";
 import { AuthError } from "@supabase/supabase-js";
 
-const _updateUserSignUpMethod = async (userId: string, authMethod: SignUpMethod) => {
-    const supabase = await createClient();
-
-    const { error } = await supabase
-        .from("users")
-        .update({
-            auth_method: authMethod,
-        })
-        .eq("id", userId);
-
-    return { data: null, error: error ? error.message : null };
-};
-
 export const signUpUserToSupabase = async ({
     firstName,
     email,
@@ -33,19 +20,23 @@ export const signUpUserToSupabase = async ({
     const supabase = await createClient();
 
     try {
-        const { data, error } = await supabase.auth.signUp({
+        const { error } = await supabase.auth.signUp({
             email,
             password,
-            options: { data: { full_name: firstName } },
+            options: {
+                data: {
+                    full_name: firstName,
+                    auth_method: authMethod,
+                },
+            },
         });
 
         if (error) return { data: null, error: error.message };
 
-        const updateResult = await _updateUserSignUpMethod(data.user?.id ?? "", authMethod);
-
-        return updateResult.error
-            ? { data: null, error: updateResult.error }
-            : { data: TextConstants.TEXT__SIGNUP_CONFIRMATION_SENT, error: null };
+        return {
+            data: TextConstants.TEXT__SIGNUP_CONFIRMATION_SENT,
+            error: null,
+        };
     } catch (err) {
         return { data: null, error: TextConstants.ERROR__DURING_SIGN_UP };
     }

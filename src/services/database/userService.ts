@@ -1,11 +1,12 @@
 "use server";
 
+import { TextConstants } from "@/constants/TextConstants";
+import { SignUpMethod } from "@/enums/user";
 import { User } from "@/interfaces";
 import { handleSupabaseError } from "@/utils/errors/supabaseError";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import moment from "moment";
 import { createClient } from "../integration/server";
-import { TextConstants } from "@/constants/TextConstants";
 
 export const checkUserEmailExists = async (userEmail: string) => {
     try {
@@ -54,7 +55,7 @@ export const fetchUser = async (userId: string) => {
     }
 };
 
-export const createUserTable = async (authUser: SupabaseUser) => {
+export const createUserTable = async (authUser: SupabaseUser, authMethod: SignUpMethod) => {
     try {
         const supabase = await createClient();
 
@@ -64,14 +65,15 @@ export const createUserTable = async (authUser: SupabaseUser) => {
             email: authUser.email,
             updated_at: moment().toISOString(),
             created_at: moment().toISOString(),
+            auth_method: authMethod,
         });
 
         if (error) throw error;
 
-        return { success: true, error: null };
+        return { data: TextConstants.TEXT__SUCCESS_USER_CREATED, error: null };
     } catch (error) {
         return {
-            success: null,
+            data: null,
             error: handleSupabaseError({ error, fnTitle: "createUserTable" }),
         };
     }
