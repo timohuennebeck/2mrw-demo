@@ -9,16 +9,14 @@ import { AuthError } from "@supabase/supabase-js";
 const _updateUserSignUpMethod = async (userId: string, authMethod: SignUpMethod) => {
     const supabase = await createClient();
 
-    const { error: dbError } = await supabase
+    const { error } = await supabase
         .from("users")
         .update({
             auth_method: authMethod,
         })
         .eq("id", userId);
 
-    if (dbError) return { error: TextConstants.ERROR__USER_CREATION_FAILED };
-
-    return { success: true };
+    return { data: null, error: error ? error.message : null };
 };
 
 export const signUpUserToSupabase = async ({
@@ -38,22 +36,18 @@ export const signUpUserToSupabase = async ({
         const { data, error } = await supabase.auth.signUp({
             email,
             password,
-            options: {
-                data: {
-                    full_name: firstName,
-                },
-            },
+            options: { data: { full_name: firstName } },
         });
 
-        if (error) return { error: error.message };
+        if (error) return { data: null, error: error.message };
 
         const updateResult = await _updateUserSignUpMethod(data.user?.id ?? "", authMethod);
 
         return updateResult.error
-            ? { success: false, error: updateResult.error }
-            : { success: true, error: null };
+            ? { data: null, error: updateResult.error }
+            : { data: TextConstants.TEXT__SIGNUP_CONFIRMATION_SENT, error: null };
     } catch (err) {
-        return { success: false, error: TextConstants.ERROR__DURING_SIGN_UP };
+        return { data: null, error: TextConstants.ERROR__DURING_SIGN_UP };
     }
 };
 
@@ -68,19 +62,22 @@ export const resendConfirmationEmail = async (email: string) => {
 
         if (error) throw error;
 
-        return { success: true, message: TextConstants.TEXT__CONFIRMATION_EMAIL_SENT };
+        return {
+            data: TextConstants.TEXT__CONFIRMATION_EMAIL_SENT,
+            error: null,
+        };
     } catch (error) {
         const supabaseError = error as AuthError;
 
         if (supabaseError.code === SupabaseErrors.EMAIL_LIMIT_REACHED) {
             return {
-                success: false,
+                data: null,
                 error: TextConstants.ERROR__EMAIL_LIMIT_REACHED,
             };
         }
 
         return {
-            success: false,
+            data: null,
             error: TextConstants.ERROR__FAILED_TO_RESEND_EMAIL,
         };
     }

@@ -35,7 +35,7 @@ const SignUpPage = () => {
 
             setStatusMessage({
                 type: "info",
-                message: result.message ?? "",
+                message: result.data ?? "",
             });
         } catch (error) {
             setStatusMessage({
@@ -48,10 +48,10 @@ const SignUpPage = () => {
         }
     };
 
-    const _handleEmailConfirmation = (email: string) => {
+    const _handleEmailConfirmation = (email: string, message: string) => {
         setStatusMessage({
             type: "info",
-            message: TextConstants.TEXT__SIGNUP_CONFIRMATION_SENT,
+            message,
         });
 
         setTimeout(() => {
@@ -83,7 +83,7 @@ const SignUpPage = () => {
             const result = await signUpUserToSupabase(dataToUpdate);
             if (result.error) throw result.error;
 
-            _handleEmailConfirmation(email);
+            _handleEmailConfirmation(email, result.data ?? "");
         } catch (error) {
             setStatusMessage({
                 type: "error",
