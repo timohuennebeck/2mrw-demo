@@ -1,13 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import { useSession } from "@/context/SessionContext";
-import { createClient } from "@/services/integration/client";
-import { TextConstants } from "@/constants/TextConstants";
-import { validateEmailFormat } from "@/utils/validators/formatValidator";
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -19,12 +11,18 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ProfileSection } from "./ProfileSection";
-import { z } from "zod";
+import { useSession } from "@/context/SessionContext";
 import { useUser } from "@/context/UserContext";
+import { createClient } from "@/services/integration/client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+import { ProfileSection } from "./ProfileSection";
 
 const _profileFormSchema = z.object({
-    firstName: z.string().min(2, {
+    first_name: z.string().min(2, {
         message: "First name must be at least 2 characters.",
     }),
     email: z.string().email(),
@@ -32,25 +30,21 @@ const _profileFormSchema = z.object({
     bio: z.string().max(160).optional(),
 });
 
-const _updateUserName = async (userId: string, firstName: string) => {
+interface UserProfileUpdate {
+    first_name?: string;
+    email?: string;
+    position?: string;
+    bio?: string;
+}
+
+const LOADING_DELAY = 500;
+
+const _updateUserProfile = async (userId: string, updates: UserProfileUpdate) => {
     const supabase = createClient();
 
-    const { error } = await supabase
-        .from("users")
-        .update({
-            first_name: firstName,
-        })
-        .eq("id", userId);
+    const { error } = await supabase.from("users").update(updates).eq("id", userId);
 
-    const { error: authError } = await supabase.auth.updateUser({
-        data: {
-            full_name: firstName,
-        },
-    });
-
-    if (error || authError) {
-        return { error: "Error updating first name" };
-    }
+    return { error };
 };
 
 export const PersonalInfoSection = () => {
@@ -65,7 +59,7 @@ export const PersonalInfoSection = () => {
     const form = useForm({
         resolver: zodResolver(_profileFormSchema),
         defaultValues: {
-            firstName: "",
+            first_name: "",
             email: "",
             position: "",
             bio: "",
@@ -74,8 +68,10 @@ export const PersonalInfoSection = () => {
 
     useEffect(() => {
         if (dbUser) {
-            form.setValue("firstName", dbUser.first_name);
+            form.setValue("first_name", dbUser.first_name);
             form.setValue("email", dbUser.email);
+            form.setValue("position", dbUser.position);
+            form.setValue("bio", dbUser.bio);
         }
     }, [dbUser, form]);
 
@@ -85,33 +81,43 @@ export const PersonalInfoSection = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [form.watch("bio")]);
 
-    const handleSubmit = async (values: { firstName: string; email: string; bio: string }) => {
+    const handleSubmit = async (values: UserProfileUpdate) => {
         setIsUpdatingPersonalInfo(true);
 
-        if (values.email !== dbUser?.email) {
-            const { error } = await supabase.auth.updateUser({
-                email: values.email,
-            });
-            setIsUpdatingPersonalInfo(false);
+        try {
+            const updates: UserProfileUpdate = {};
 
-            toast.info("To update the email, please confirm in the email we just sent.");
+            // only include changed fields in the update
+            if (values.first_name !== dbUser?.first_name) updates.first_name = values.first_name;
+            if (values.position !== dbUser?.position) updates.position = values.position;
+            if (values.bio !== dbUser?.bio) updates.bio = values.bio;
 
-            if (error) {
-                setIsUpdatingPersonalInfo(false);
-                toast.error(error.message);
+            // handle email separately as it requires auth update
+            if (values.email !== dbUser?.email) {
+                const { error } = await supabase.auth.updateUser({
+                    email: values.email,
+                });
+
+                if (error) throw new Error(error.message);
+                toast.info("To update the email, please confirm in the email we just sent.");
             }
-        }
 
-        if (values.firstName !== dbUser?.first_name) {
-            const result = await _updateUserName(authUser?.id ?? "", values.firstName);
+            // only make the database call if there are changes to update
+            if (Object.keys(updates).length !== 0) {
+                const { error } = await _updateUserProfile(authUser?.id ?? "", updates);
+                if (error) throw new Error(error.message);
 
-            if (result?.error) {
-                setIsUpdatingPersonalInfo(false);
-                toast.error(result.error);
-            } else {
-                setIsUpdatingPersonalInfo(false);
-                toast.success("Your name has been updated!");
+                // brief delay to make the loading state feel more responsive
+                setTimeout(() => {
+                    toast.success("Profile has been updated!");
+                }, LOADING_DELAY);
             }
+        } catch (error) {
+            toast.error("Failed to update user profile");
+        } finally {
+            setTimeout(() => {
+                setIsUpdatingPersonalInfo(false);
+            }, LOADING_DELAY);
         }
     };
 
@@ -124,7 +130,7 @@ export const PersonalInfoSection = () => {
                 <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col gap-4">
                     <FormField
                         control={form.control}
-                        name="firstName"
+                        name="first_name"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>First name</FormLabel>
@@ -186,9 +192,10 @@ export const PersonalInfoSection = () => {
                         variant="default"
                         size="sm"
                         disabled={isUpdatingPersonalInfo}
+                        isLoading={isUpdatingPersonalInfo}
                         className="self-start"
                     >
-                        {isUpdatingPersonalInfo ? "Updating..." : "Update Profile"}
+                        Update Profile
                     </Button>
                 </form>
             </Form>
