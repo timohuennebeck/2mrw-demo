@@ -42,6 +42,8 @@ const items = [
 export const _handleSignOut = async () => {
     const supabase = createClient();
 
+    const router = useRouter();
+
     try {
         const { error } = await supabase.auth.signOut();
 
@@ -52,9 +54,11 @@ export const _handleSignOut = async () => {
             await new Promise((resolve) => setTimeout(resolve, 100));
 
             // uses window.location.href to force a page reload to ensure cookies are cleared
-            window.location.href = "/auth/sign-in";
+            router.replace("/auth/sign-in");
 
-            toast.success(TextConstants.TEXT__LOGOUT_SUCCESSFUL);
+            setTimeout(() => {
+                toast.success(TextConstants.TEXT__LOGOUT_SUCCESSFUL);
+            }, 500);
         }
     } catch (err) {
         toast.error(`${TextConstants.ERROR__UNEXPECTED_ERROR} ${err}`);
@@ -78,7 +82,7 @@ export function AppSidebar() {
     return (
         <Sidebar collapsible="icon" className="pt-2">
             <SidebarHeader
-                className={`bg-white cursor-pointer ${open ? "flex flex-row items-center p-4" : "flex items-center justify-center"}`}
+                className={`cursor-pointer bg-white ${open ? "flex flex-row items-center p-4" : "flex items-center justify-center"}`}
                 onClick={() => router.push("/dashboard")}
             >
                 <Image

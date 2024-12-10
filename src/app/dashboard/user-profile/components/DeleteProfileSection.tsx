@@ -1,11 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useSession } from "@/context/SessionContext";
-import { createClient } from "@/services/integration/client";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -17,14 +11,32 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { useSession } from "@/context/SessionContext";
+import { createSupabasePowerUserClient } from "@/services/integration/admin";
+import { createClient } from "@/services/integration/client";
+import { User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 import { ProfileSection } from "./ProfileSection";
+
+const _deleteUserProfile = async (authUser: User) => {
+    const adminSupabase = await createSupabasePowerUserClient();
+
+    const { error: dbError } = await adminSupabase.from("users").delete().eq("id", authUser?.id);
+    if (dbError) return { error: "Error deleting user profile from database" };
+
+    const { error: authError } = await adminSupabase.auth.admin.deleteUser(authUser?.id ?? "");
+    if (authError) return { error: "Error deleting user profile from auth" };
+
+    return { success: true };
+};
 
 export const DeleteProfileSection = () => {
     const { authUser } = useSession();
 
     const router = useRouter();
-
-    const supabase = createClient();
 
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -32,20 +44,28 @@ export const DeleteProfileSection = () => {
         setIsDeleting(true);
 
         try {
-            const { error: dbError } = await supabase.from("users").delete().eq("id", authUser?.id);
+            const result = await _deleteUserProfile(authUser as User);
 
-            if (dbError) throw dbError;
+            if (result.error) {
+                toast.error(result.error);
+                setIsDeleting(false);
+            } else {
+                const supabase = createClient();
+                await supabase.auth.signOut();
 
-            const { error: authError } = await supabase.auth.admin.deleteUser(authUser?.id ?? "");
+                // wait for a brief moment to ensure cookies are cleared
+                await new Promise((resolve) => setTimeout(resolve, 500));
 
-            if (authError) throw authError;
+                router.replace("/auth/sign-up");
 
-            toast.success("Your profile has been deleted");
-            router.push("/auth/signin");
-            setIsDeleting(false);
+                // wait for a brief moment to create a smooth transition
+                setTimeout(() => {
+                    setIsDeleting(false);
+                    toast.success("Your profile has been deleted");
+                }, 500);
+            }
         } catch (error) {
-            toast.error("Failed to delete profile");
-            setIsDeleting(false);
+            toast.error("Failed to delete user profile");
         }
     };
 
@@ -56,8 +76,13 @@ export const DeleteProfileSection = () => {
         >
             <AlertDialog>
                 <AlertDialogTrigger asChild>
-                    <Button variant="destructive" size="sm" disabled={isDeleting}>
-                        {isDeleting ? "Deleting..." : "Delete Profile"}
+                    <Button
+                        variant="destructive"
+                        size="sm"
+                        disabled={isDeleting}
+                        isLoading={isDeleting}
+                    >
+                        Delete Profile
                     </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
@@ -72,6 +97,7 @@ export const DeleteProfileSection = () => {
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction
                             onClick={handleDeleteProfile}
+                            disabled={isDeleting}
                             className="bg-red-600 hover:bg-red-700"
                         >
                             Delete Profile
