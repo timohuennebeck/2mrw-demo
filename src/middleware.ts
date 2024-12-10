@@ -7,6 +7,7 @@ const PUBLIC_ROUTES = [
     "/auth/sign-in",
     "/auth/sign-up",
     "/auth/forgot-password",
+    "/auth/update-password",
     "/auth/email-confirmation",
 ];
 
@@ -22,6 +23,11 @@ const _handleRedirection = async (request: nextRequest, user: User | null) => {
         return nextResponse.next({ request });
     }
 
+    // allow access to public routes
+    if (PUBLIC_ROUTES.includes(pathname)) {
+        return nextResponse.next({ request });
+    }
+
     // allow special auth routes needed for email confirmation etc.
     if (AUTH_ROUTES.includes(pathname)) {
         return nextResponse.next({ request });
@@ -29,11 +35,6 @@ const _handleRedirection = async (request: nextRequest, user: User | null) => {
 
     // if user is not logged in
     if (!user) {
-        // allow access to public routes
-        if (PUBLIC_ROUTES.includes(pathname)) {
-            return nextResponse.next({ request });
-        }
-
         // if trying to access protected routes, redirect to landing page
         if (PROTECTED_ROUTES.includes(pathname)) {
             return nextResponse.redirect(new URL("/", request.url));

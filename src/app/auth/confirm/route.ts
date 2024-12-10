@@ -91,7 +91,7 @@ export const GET = async (request: NextRequest) => {
                         );
                     }
 
-                    return redirect("/dashboard");
+                    return redirect("/auth/email-confirmation");
                 }
             }
 
