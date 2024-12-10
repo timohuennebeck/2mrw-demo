@@ -68,14 +68,20 @@ export const resendConfirmationEmail = async (email: string) => {
 
         if (error) throw error;
 
-        return { success: TextConstants.TEXT__CONFIRMATION_EMAIL_SENT };
+        return { success: true, message: TextConstants.TEXT__CONFIRMATION_EMAIL_SENT };
     } catch (error) {
         const supabaseError = error as AuthError;
 
         if (supabaseError.code === SupabaseErrors.EMAIL_LIMIT_REACHED) {
-            return { error: TextConstants.ERROR__EMAIL_LIMIT_REACHED };
+            return {
+                success: false,
+                error: TextConstants.ERROR__EMAIL_LIMIT_REACHED,
+            };
         }
 
-        return { error: TextConstants.ERROR__FAILED_TO_RESEND_EMAIL };
+        return {
+            success: false,
+            error: TextConstants.ERROR__FAILED_TO_RESEND_EMAIL,
+        };
     }
 };

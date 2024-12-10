@@ -31,11 +31,11 @@ const SignUpPage = () => {
 
         try {
             const result = await resendConfirmationEmail(email);
-            if (result.error) throw new Error(result.error);
+            if (result.error) throw result.error;
 
             setStatusMessage({
                 type: "info",
-                message: result.success ?? "",
+                message: result.message ?? "",
             });
         } catch (error) {
             setStatusMessage({
@@ -81,7 +81,7 @@ const SignUpPage = () => {
             };
 
             const result = await signUpUserToSupabase(dataToUpdate);
-            if (result.error) throw new Error(result.error);
+            if (result.error) throw result.error;
 
             _handleEmailConfirmation(email);
         } catch (error) {
