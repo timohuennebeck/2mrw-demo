@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest as nextRequest, NextResponse as nextResponse } from "next/server";
 import { User } from "@supabase/supabase-js";
-import { generalConfig } from "./config/generalConfig";
+import { appConfig } from "./config/appConfig";
 
 const PUBLIC_ROUTES = [
     "/",
@@ -18,7 +18,7 @@ const PROTECTED_ROUTES = ["/dashboard", "/onboarding", "/choose-pricing-plan"];
 
 const _handleOnboardingRedirection = (request: nextRequest, pathname: string, user: User) => {
     const onboardingCompleted = !!user.user_metadata?.onboarding_completed;
-    const { isRequired } = generalConfig.onboarding;
+    const { isRequired } = appConfig.onboarding;
 
     // if trying to access onboarding when it's already completed
     if (pathname === "/onboarding" && onboardingCompleted) {
@@ -70,7 +70,7 @@ const _handleRedirection = async (request: nextRequest, user: User | null) => {
     }
 
     if (user) {
-        const { isEnabled } = generalConfig.onboarding;
+        const { isEnabled } = appConfig.onboarding;
 
         // skip onboarding checks if it's disabled
         if (!isEnabled) {

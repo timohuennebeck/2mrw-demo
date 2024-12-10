@@ -1,6 +1,6 @@
 "use server";
 
-import { isOneTimePaymentEnabled } from "@/config/paymentConfig";
+import { isOneTimePaymentEnabled } from "@/config/billingConfig";
 import axios from "axios";
 import { getStripeCustomerId } from "./stripeCustomer";
 import { stripe } from "./client";

@@ -10,7 +10,7 @@ interface CompletePaymentConfig {
 
 const DEFAULT_CURRENCY = "EUR";
 
-export const paymentConfig: CompletePaymentConfig = {
+export const billingConfig: CompletePaymentConfig = {
     /**
      * if free plan is still shown after disabling it, reload the page
      * as it needs to refetch the products from the database
@@ -30,12 +30,12 @@ export const paymentConfig: CompletePaymentConfig = {
 
 // helper functions to get the active settings
 export const getCurrentPaymentSettings = () => {
-    return paymentConfig.billingPlan === BillingPlan.RECURRING
-        ? paymentConfig.subscriptionSettings
-        : paymentConfig.oneTimeSettings;
+    return billingConfig.billingPlan === BillingPlan.RECURRING
+        ? billingConfig.subscriptionSettings
+        : billingConfig.oneTimeSettings;
 };
 
 // helper to check if subscription features are enabled
-export const isFreePlanEnabled = () => paymentConfig.isFreePlanEnabled;
-export const getCurrency = () => paymentConfig.currency;
-export const isOneTimePaymentEnabled = () => paymentConfig.billingPlan === BillingPlan.ONE_TIME;
+export const isFreePlanEnabled = () => billingConfig.isFreePlanEnabled;
+export const getCurrency = () => billingConfig.currency;
+export const isOneTimePaymentEnabled = () => billingConfig.billingPlan === BillingPlan.ONE_TIME;

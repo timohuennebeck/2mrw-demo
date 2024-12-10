@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Manrope } from "next/font/google";
 import QuouteBlackImg from "@/assets/quotes.svg";
 import QuoteWhiteImg from "@/assets/quotes-white.svg";
-import { generalConfig } from "@/config/generalConfig";
+import { appConfig } from "@/config/appConfig";
 
 const manrope = Manrope({
     subsets: ["latin"],
@@ -11,7 +11,7 @@ const manrope = Manrope({
 });
 
 const Layout = ({ children }: { children: ReactNode }) => {
-    const bgImageUrl = generalConfig.authBgImageUrl;
+    const bgImageUrl = appConfig.authBgImageUrl;
     return (
         <div
             className={`flex justify-center py-8 lg:h-screen lg:py-0 ${manrope.variable} font-manrope`}
