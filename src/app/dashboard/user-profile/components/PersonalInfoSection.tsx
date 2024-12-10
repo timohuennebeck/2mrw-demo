@@ -26,8 +26,8 @@ const _profileFormSchema = z.object({
         message: "First name must be at least 2 characters.",
     }),
     email: z.string().email(),
-    position: z.string().max(50).optional(),
-    bio: z.string().max(160).optional(),
+    position: z.string().max(50).nullable().optional(),
+    bio: z.string().max(160).nullable().optional(),
 });
 
 interface UserProfileUpdate {
