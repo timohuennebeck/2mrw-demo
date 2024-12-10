@@ -1,4 +1,4 @@
-import { emailConfig as actualEmailConfig } from "@/config/emailConfig";
+import { emailConfig as actualEmailConfig } from "@/config";
 import PaidPlanEmailConfirmation from "@/emails/templates/PaidPlanEmailConfirmation";
 import { resend } from "./client";
 import { EmailTemplateProps } from "@/interfaces";

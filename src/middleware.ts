@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest as nextRequest, NextResponse as nextResponse } from "next/server";
 import { User } from "@supabase/supabase-js";
-import { appConfig } from "./config/appConfig";
+import { appConfig } from "./config";
 
 const PUBLIC_ROUTES = [
     "/",

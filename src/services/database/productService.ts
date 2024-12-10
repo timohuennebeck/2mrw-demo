@@ -1,6 +1,6 @@
 "use server";
 
-import { isFreePlanEnabled } from "@/config/billingConfig";
+import { isFreePlanEnabled } from "@/config";
 import { ProductWithPrices } from "@/interfaces";
 import { handleSupabaseError } from "@/utils/errors/supabaseError";
 import { createClient } from "../integration/server";

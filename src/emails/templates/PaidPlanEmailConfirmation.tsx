@@ -12,7 +12,7 @@ import {
     Tailwind,
     Link,
 } from "@react-email/components";
-import { emailConfig } from "@/config/emailConfig";
+import { emailConfig } from "@/config";
 
 interface PaidPlanEmailConfirmationProps {
     userFirstName: string;

@@ -1,4 +1,4 @@
-import { isOneTimePaymentEnabled } from "@/config/billingConfig";
+import { isOneTimePaymentEnabled } from "@/config";
 import { ProductWithPrices, StripePrice } from "@/interfaces";
 import { BillingPlan, SubscriptionInterval } from "@/enums";
 

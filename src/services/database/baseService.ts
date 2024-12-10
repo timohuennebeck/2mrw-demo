@@ -1,9 +1,10 @@
 "use server";
 
-import { isOneTimePaymentEnabled } from "@/config/billingConfig";
+
 import moment from "moment";
 import { createClient } from "../integration/server";
 import { stripe } from "../stripe/client";
+import { isOneTimePaymentEnabled } from "@/config";
 
 export const checkRowExists = async (tableId: string, userId: string) => {
     const supabase = await createClient();

@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Manrope } from "next/font/google";
 import QuouteBlackImg from "@/assets/quotes.svg";
 import QuoteWhiteImg from "@/assets/quotes-white.svg";
-import { appConfig } from "@/config/appConfig";
+import { appConfig } from "@/config";
 
 const manrope = Manrope({
     subsets: ["latin"],
