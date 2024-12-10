@@ -115,7 +115,7 @@ const SignUpPage = () => {
 
             _handleEmailConfirmation({
                 message: result.data ?? "",
-                onClick: async () => await sendMagicLink(email),
+                onClick: async () => await _handleResendConfirmationEmail(email),
             });
         } catch (error) {
             setStatusMessage({
