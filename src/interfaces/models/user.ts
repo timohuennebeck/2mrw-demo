@@ -1,3 +1,5 @@
+import { SignUpMethod } from "@/enums/user";
+
 export interface User {
     id: string;
     email: string;
@@ -6,6 +8,7 @@ export interface User {
     first_name: string;
     position: string;
     bio: string;
+    auth_method: SignUpMethod;
     updated_at: Date;
     created_at: Date;
 }

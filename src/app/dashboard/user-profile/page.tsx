@@ -7,8 +7,12 @@ import { PersonalInfoSection } from "./components/PersonalInfoSection";
 import { PasswordSection } from "./components/PasswordSection";
 import { DeleteProfileSection } from "./components/DeleteProfileSection";
 import { SearchParamsHandler } from "./components/SearchParamsHandler";
+import { useUser } from "@/context/UserContext";
+import { SignUpMethod } from "@/enums/user";
 
 const UserProfilePage = () => {
+    const { dbUser } = useUser();
+
     return (
         <div className="flex max-w-6xl flex-col gap-12 bg-white">
             <Suspense fallback={null}>
@@ -21,8 +25,12 @@ const UserProfilePage = () => {
             <PersonalInfoSection />
             <Separator />
 
-            <PasswordSection />
-            <Separator />
+            {dbUser?.auth_method === SignUpMethod.PASSWORD && (
+                <>
+                    <PasswordSection />
+                    <Separator />
+                </>
+            )}
 
             <DeleteProfileSection />
         </div>
