@@ -2,6 +2,7 @@
 
 import { TextConstants } from "@/constants/TextConstants";
 import { createClient } from "../integration/server";
+import { AuthMethod } from "@/enums/user";
 
 export const sendMagicLink = async (email: string) => {
     const supabase = await createClient();
@@ -10,6 +11,9 @@ export const sendMagicLink = async (email: string) => {
         email,
         options: {
             emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard`,
+            data: {
+                auth_method: AuthMethod.MAGIC_LINK,
+            },
         },
     });
 
