@@ -11,11 +11,11 @@ export const PasswordSection = () => {
         >
             <div className="rounded-lg border p-6">
                 <p className="text-sm text-muted-foreground">
-                    To reset the password, follow{" "}
+                    To change the password of this account, follow{" "}
                     <Link href="/auth/forgot-password" className="text-primary hover:underline">
                         this link
                     </Link>{" "}
-                    and we will send instructions to make reset it.
+                    and we will send instructions to make the changes.
                 </p>
             </div>
         </ProfileSection>
