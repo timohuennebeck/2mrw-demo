@@ -5,6 +5,7 @@ import { handleSupabaseError } from "@/utils/errors/supabaseError";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import moment from "moment";
 import { createClient } from "../integration/server";
+import { TextConstants } from "@/constants/TextConstants";
 
 export const checkUserEmailExists = async (userEmail: string) => {
     try {
@@ -16,12 +17,17 @@ export const checkUserEmailExists = async (userEmail: string) => {
             .eq("email", userEmail)
             .single();
 
+        if (error?.code === "PGRST116") {
+            // no matching email found (single row not found) - this is good for registration
+            return { data: null, error: null };
+        }
+
         if (error) throw error;
 
-        return { emailExists: true, error: null };
+        return { data: TextConstants.ERROR__EMAIL_ALREADY_IN_USE, error: null };
     } catch (error) {
         return {
-            emailExists: false,
+            data: null,
             error: handleSupabaseError({ error, fnTitle: "checkUserEmailExists" }),
         };
     }

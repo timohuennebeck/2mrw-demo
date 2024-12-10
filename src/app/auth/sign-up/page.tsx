@@ -70,8 +70,8 @@ const SignUpPage = () => {
         setIsLoading(true);
 
         try {
-            const { emailExists } = await checkUserEmailExists(email);
-            if (emailExists) throw new Error(TextConstants.ERROR__EMAIL_ALREADY_IN_USE);
+            const { data } = await checkUserEmailExists(email);
+            if (data) throw new Error(data); // throws an error because the email exists
 
             const dataToUpdate = {
                 firstName,
