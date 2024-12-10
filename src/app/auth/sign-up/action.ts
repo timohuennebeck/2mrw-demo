@@ -2,7 +2,7 @@
 
 import { TextConstants } from "@/constants/TextConstants";
 import { SupabaseErrors } from "@/enums";
-import { SignUpMethod } from "@/enums/user";
+import { AuthMethod } from "@/enums/user";
 import { createClient } from "@/services/integration/server";
 import { AuthError } from "@supabase/supabase-js";
 
@@ -15,7 +15,7 @@ export const signUpUserToSupabase = async ({
     firstName: string;
     email: string;
     password: string;
-    authMethod: SignUpMethod;
+    authMethod: AuthMethod;
 }) => {
     const supabase = await createClient();
 

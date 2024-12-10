@@ -1,7 +1,7 @@
 "use server";
 
 import { TextConstants } from "@/constants/TextConstants";
-import { SignUpMethod } from "@/enums/user";
+import { AuthMethod } from "@/enums/user";
 import { User } from "@/interfaces";
 import { handleSupabaseError } from "@/utils/errors/supabaseError";
 import { User as SupabaseUser } from "@supabase/supabase-js";
@@ -55,7 +55,7 @@ export const fetchUser = async (userId: string) => {
     }
 };
 
-export const createUserTable = async (authUser: SupabaseUser, authMethod: SignUpMethod) => {
+export const createUserTable = async (authUser: SupabaseUser, authMethod: AuthMethod) => {
     try {
         const supabase = await createClient();
 

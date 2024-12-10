@@ -7,7 +7,7 @@ import { TextConstants } from "@/constants/TextConstants";
 import { checkUserEmailExists } from "@/services/database/userService";
 import { StatusMessage } from "@/interfaces";
 import { useSearchParams } from "next/navigation";
-import { SignUpMethod } from "@/enums/user";
+import { AuthMethod } from "@/enums/user";
 
 interface HandleSubmitParams {
     firstName: string;
@@ -17,7 +17,7 @@ interface HandleSubmitParams {
 
 const _getSignUpMethod = (searchParams: URLSearchParams) => {
     const signUpMethod = searchParams.get("method");
-    return signUpMethod === "magic-link" ? SignUpMethod.MAGIC_LINK : SignUpMethod.PASSWORD;
+    return signUpMethod === "magic-link" ? AuthMethod.MAGIC_LINK : AuthMethod.PASSWORD;
 };
 
 const SignUpPage = () => {

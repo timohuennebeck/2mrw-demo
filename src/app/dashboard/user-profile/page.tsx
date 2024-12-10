@@ -8,7 +8,7 @@ import { PasswordSection } from "./components/PasswordSection";
 import { DeleteProfileSection } from "./components/DeleteProfileSection";
 import { SearchParamsHandler } from "./components/SearchParamsHandler";
 import { useUser } from "@/context/UserContext";
-import { SignUpMethod } from "@/enums/user";
+import { AuthMethod } from "@/enums/user";
 
 const UserProfilePage = () => {
     const { dbUser } = useUser();
@@ -25,7 +25,7 @@ const UserProfilePage = () => {
             <PersonalInfoSection />
             <Separator />
 
-            {dbUser?.auth_method === SignUpMethod.PASSWORD && (
+            {dbUser?.auth_method === AuthMethod.PASSWORD && (
                 <>
                     <PasswordSection />
                     <Separator />

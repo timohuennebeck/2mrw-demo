@@ -1,6 +1,6 @@
 "use server";
 
-import { SignUpMethod } from "@/enums/user";
+import { AuthMethod } from "@/enums/user";
 import { createUserTable } from "@/services/database/userService";
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
@@ -43,7 +43,7 @@ export const GET = async (request: Request) => {
             const { user: authUser } = data.session;
 
             try {
-                const { error } = await createUserTable(authUser, SignUpMethod.GOOGLE);
+                const { error } = await createUserTable(authUser, AuthMethod.GOOGLE);
                 if (error) throw error;
 
                 return response.redirect(`${origin}${next}`);

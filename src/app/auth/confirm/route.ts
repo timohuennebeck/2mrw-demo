@@ -1,6 +1,6 @@
 "use server";
 
-import { SignUpMethod } from "@/enums/user";
+import { AuthMethod } from "@/enums/user";
 import { createUserTable, fetchUser } from "@/services/database/userService";
 import { createClient } from "@/services/integration/server";
 import { stripe } from "@/services/stripe/client";
@@ -81,7 +81,7 @@ export const GET = async (request: NextRequest) => {
                 }
 
                 if (authUser) {
-                    const authMethod = authUser.user_metadata.auth_method as SignUpMethod;
+                    const authMethod = authUser.user_metadata.auth_method as AuthMethod;
                     const { error } = await createUserTable(authUser, authMethod);
 
                     if (error) {
