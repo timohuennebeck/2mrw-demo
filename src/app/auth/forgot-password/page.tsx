@@ -141,7 +141,7 @@ const ForgotPasswordPage = () => {
 
                 <p className="mt-4 text-center text-sm">
                     {TextConstants.TEXT__REMEMBER_PASSWORD}{" "}
-                    <Link href="/auth/sign-in" className="underline">
+                    <Link href="/auth/sign-in?method=magic-link" className="underline">
                         {TextConstants.TEXT__SIGN_IN}
                     </Link>
                 </p>
