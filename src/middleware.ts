@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest as nextRequest, NextResponse as nextResponse } from "next/server";
 import { User } from "@supabase/supabase-js";
+import { generalConfig } from "./config/generalConfig";
 
 const PUBLIC_ROUTES = [
     "/",
@@ -14,6 +15,25 @@ const PUBLIC_ROUTES = [
 const AUTH_ROUTES = ["/auth/confirm", "/auth/callback", "/auth/email-change"];
 
 const PROTECTED_ROUTES = ["/dashboard", "/onboarding", "/choose-pricing-plan"];
+
+const _handleOnboardingRedirection = (request: nextRequest, pathname: string, user: User) => {
+    const onboardingCompleted = !!user.user_metadata?.onboarding_completed;
+    const { isRequired } = generalConfig.onboarding;
+
+    // if trying to access onboarding when it's already completed
+    if (pathname === "/onboarding" && onboardingCompleted) {
+        return nextResponse.redirect(new URL("/dashboard", request.url));
+    }
+
+    const isProtectedRoute = PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
+
+    // if onboarding is not completed and trying to access other protected routes
+    if (pathname !== "/onboarding" && !onboardingCompleted && isProtectedRoute && isRequired) {
+        return nextResponse.redirect(new URL("/onboarding", request.url));
+    }
+
+    return nextResponse.next();
+};
 
 const _handleRedirection = async (request: nextRequest, user: User | null) => {
     const { pathname } = request.nextUrl;
@@ -50,13 +70,14 @@ const _handleRedirection = async (request: nextRequest, user: User | null) => {
     }
 
     if (user) {
-        // redirect from auth pages to dashboard
-        if (pathname.startsWith("/auth")) {
-            return nextResponse.redirect(new URL("/dashboard", request.url));
+        const { isEnabled } = generalConfig.onboarding;
+
+        // skip onboarding checks if it's disabled
+        if (!isEnabled) {
+            return nextResponse.next();
         }
 
-        // allow access to dashboard and other authenticated routes
-        return nextResponse.next();
+        return _handleOnboardingRedirection(request, pathname, user);
     }
 
     return nextResponse.next();

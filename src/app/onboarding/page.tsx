@@ -3,6 +3,40 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import OnboardingFlow from "@/components/application/OnboardingFlow";
+import { createClient } from "@/services/integration/client";
+import { User } from "@supabase/supabase-js";
+import { useSession } from "@/context/SessionContext";
+
+const _updateOnboardingStatusDatabase = async (authUser: User) => {
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+        .from("users")
+        .update({ onboarding_completed: true })
+        .eq("id", authUser?.id);
+
+    if (error) {
+        return { data: null, error };
+    }
+
+    return { data, error: null };
+};
+
+const _udpateOnboardingStatusMetadata = async () => {
+    const supabase = createClient();
+
+    const { data, error } = await supabase.auth.updateUser({
+        data: {
+            onboarding_completed: true,
+        },
+    });
+
+    if (error) {
+        return { data: null, error };
+    }
+
+    return { data, error: null };
+};
 
 interface OnboardingStep {
     title: string;
@@ -93,6 +127,8 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
 
 const OnboardingPage = () => {
     const router = useRouter();
+    const { authUser } = useSession();
+
     const searchParams = useSearchParams();
     const currentStep = parseInt(searchParams.get("step") || "1");
 
@@ -100,8 +136,11 @@ const OnboardingPage = () => {
         router.push(`/onboarding?step=${step}`);
     };
 
-    const handleContinue = () => {
+    const handleContinue = async () => {
         if (currentStep === ONBOARDING_STEPS.length) {
+            await _updateOnboardingStatusDatabase(authUser as User);
+            await _udpateOnboardingStatusMetadata();
+
             // if it's the last step, redirect to dashboard
             router.push("/dashboard");
         } else {

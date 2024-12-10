@@ -7,6 +7,7 @@ export interface User {
     profile_image_url: string;
     first_name: string;
     position: string;
+    onboarding_completed: boolean;
     bio: string;
     auth_method: AuthMethod;
     updated_at: Date;
