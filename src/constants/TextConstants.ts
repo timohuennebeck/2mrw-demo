@@ -11,6 +11,7 @@ export const TextConstants = {
     TEXT__SIGN_UP: "Sign Up",
     TEXT__SIGN_IN: "Log In",
     TEXT__LOGIN_WITH_MAGIC_LINK: "Login with Magic Link",
+    TEXT__SIGN_UP_WITH_MAGIC_LINK: "Sign up with Magic Link",
     TEXT__INVALID_CREDENTIALS:
         "Hmm, those login details don't match our records. Please check them.",
     TEXT__USER_DOES_NOT_EXIST: "Hmm, we couldn't find a user with that email address.",

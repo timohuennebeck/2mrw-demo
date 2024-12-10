@@ -1,19 +1,7 @@
 "use client";
 
-import GoogleButton from "@/components/application/GoogleButton";
-import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
-import { TextConstants } from "@/constants/TextConstants";
-import FormStatusMessage from "./FormStatusMessage";
-import PasswordStrengthChecker from "./PasswordStrengthChecker";
 import FormDivider from "@/components/application/FormDivider";
-import { StatusMessage } from "@/interfaces";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import GoogleButton from "@/components/application/GoogleButton";
 import {
     Form,
     FormControl,
@@ -22,9 +10,33 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
+import { TextConstants } from "@/constants/TextConstants";
+import { StatusMessage } from "@/interfaces";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import FormStatusMessage from "./FormStatusMessage";
+import PasswordStrengthChecker from "./PasswordStrengthChecker";
 
-const createFormSchema = (mode: string, authMethod: string) => {
+const _getButtontext = (mode: string, authMethod: string) => {
+    if (authMethod === "magic-link" && mode === "signin") {
+        return TextConstants.TEXT__LOGIN_WITH_MAGIC_LINK;
+    }
+
+    if (authMethod === "magic-link" && mode === "signup") {
+        return TextConstants.TEXT__SIGN_UP_WITH_MAGIC_LINK;
+    }
+
+    return mode === "signup" ? TextConstants.TEXT__SIGN_UP : TextConstants.TEXT__SIGN_IN;
+};
+
+const _createFormSchema = (mode: string, authMethod: string) => {
     // base schema with email validation
     const baseSchema = {
         email: z.string().email({
@@ -90,7 +102,7 @@ const RegisterLoginForm = ({
     const authMethod = searchParams.get("method") || "magic-link";
 
     const registerLoginForm = useForm({
-        resolver: zodResolver(createFormSchema(mode, authMethod)),
+        resolver: zodResolver(_createFormSchema(mode, authMethod)),
         defaultValues: {
             firstName: "",
             email: "",
@@ -266,11 +278,7 @@ const RegisterLoginForm = ({
                                 disabled={isLoading}
                                 isLoading={isLoading}
                             >
-                                {authMethod === "magic-link" && mode === "signin"
-                                    ? TextConstants.TEXT__LOGIN_WITH_MAGIC_LINK
-                                    : mode === "signup"
-                                      ? TextConstants.TEXT__SIGN_UP
-                                      : TextConstants.TEXT__SIGN_IN}
+                                {_getButtontext(mode, authMethod)}
                             </Button>
 
                             {mode === "signin" && authMethod === "magic-link" && (
