@@ -10,4 +10,9 @@ export const appConfig = {
         isEnabled: true, // toggle this to enable/disable onboarding
         isRequired: true, // if true, users must complete onboarding before accessing protected routes
     },
+
+    feedback: {
+        isEnabled: true,
+        formUrl: "https://tally.so/r/yourform",
+    },
 };

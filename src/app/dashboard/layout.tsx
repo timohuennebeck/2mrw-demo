@@ -1,5 +1,6 @@
 "use client";
 
+import FeedbackWidget from "@/components/application/FeedbackWidget";
 import AppSidebar from "@/components/ui/app-sidebar";
 import {
     Breadcrumb,
@@ -10,6 +11,7 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { appConfig } from "@/config";
 import { usePathname } from "next/navigation";
 import React from "react";
 
@@ -78,6 +80,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                     </main>
                 </SidebarInset>
             </div>
+
+            {appConfig.feedback.isEnabled && <FeedbackWidget />}
         </SidebarProvider>
     );
 };
