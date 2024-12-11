@@ -18,7 +18,8 @@ const _updateUserEmail = async (userId: string, email: string) => {
         .eq("id", userId);
 
     if (supabaseError) {
-        return nextResponse.json({ error: "Failed to update user email" }, { status: 500 });
+        console.error("Failed to update user email:", supabaseError);
+        return redirect("/auth-error?type=email-update");
     }
 
     await _updateUserEmailInStripe(email);
@@ -56,10 +57,7 @@ export const GET = async (request: NextRequest) => {
         });
 
         if (error) {
-            return nextResponse.json(
-                { error: "Error verifying token_hash or type" },
-                { status: 400 },
-            );
+            return redirect("/auth-error?type=token-expired");
         }
 
         const {
@@ -85,10 +83,8 @@ export const GET = async (request: NextRequest) => {
                     const { error } = await createUserTable(authUser, authMethod);
 
                     if (error) {
-                        return nextResponse.json(
-                            { error: "Failed to create user" },
-                            { status: 500 },
-                        );
+                        console.error("Failed to create user:", error);
+                        return redirect("/auth-error?type=create-user");
                     }
 
                     return redirect("/auth/email-confirmation");

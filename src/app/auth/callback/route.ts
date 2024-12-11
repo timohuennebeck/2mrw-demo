@@ -39,20 +39,20 @@ export const GET = async (request: Request) => {
 
         const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
-        if (!error && data.session) {
-            const { user: authUser } = data.session;
+        if (error) {
+            return response.redirect(`${origin}/auth-error?type=google-auth`);
+        }
 
-            try {
-                const { error } = await createUserTable(authUser, AuthMethod.GOOGLE);
-                if (error) throw error;
+        const { user: authUser } = data.session;
 
-                return response.redirect(`${origin}${next}`);
-            } catch (error) {
-                console.error("Unexpected error during Google sign in:", error);
-                return response.redirect(`${origin}/auth/auth-code-error`);
-            }
+        try {
+            const { error } = await createUserTable(authUser, AuthMethod.GOOGLE);
+            if (error) throw error;
+
+            return response.redirect(`${origin}${next}`);
+        } catch (error) {
+            console.error("Unexpected error during Google sign in:", error);
+            return response.redirect(`${origin}/auth-error?type=google-auth`);
         }
     }
-
-    return response.redirect(`${origin}/auth/auth-code-error`);
 };
