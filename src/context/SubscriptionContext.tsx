@@ -37,8 +37,8 @@ export const SubscriptionProvider = ({ children }: { children: React.ReactNode }
     return (
         <SubscriptionContext.Provider
             value={{
-                subscription: data?.subscription ?? null,
-                subscriptionStatus: data?.subscription?.status as SubscriptionStatus,
+                subscription: data?.data ?? null,
+                subscriptionStatus: data?.data?.status as SubscriptionStatus,
                 invalidateSubscription,
                 isLoading: isFetching,
             }}

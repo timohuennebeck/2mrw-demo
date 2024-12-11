@@ -29,7 +29,7 @@ export const checkUserEmailExists = async (userEmail: string) => {
     } catch (error) {
         return {
             data: null,
-            error: handleSupabaseError({ error, fnTitle: "checkUserEmailExists" }),
+            error: handleSupabaseError(error, "checkUserEmailExists"),
         };
     }
 };
@@ -50,7 +50,7 @@ export const fetchUser = async (userId: string) => {
     } catch (error) {
         return {
             user: null,
-            error: handleSupabaseError({ error, fnTitle: "fetchUser" }),
+            error: handleSupabaseError(error, "fetchUser"),
         };
     }
 };
@@ -74,7 +74,7 @@ export const createUserTable = async (authUser: SupabaseUser, authMethod: AuthMe
     } catch (error) {
         return {
             data: null,
-            error: handleSupabaseError({ error, fnTitle: "createUserTable" }),
+            error: handleSupabaseError(error, "createUserTable"),
         };
     }
 };

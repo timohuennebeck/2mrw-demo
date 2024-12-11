@@ -2,8 +2,9 @@ import { Check, X } from "lucide-react";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { BillingPeriod, DefaultPricingPlan } from "@/data/marketing/pricing-data";
+import { DefaultPricingPlan } from "@/data/marketing/pricing-data";
 import { PricingFeatureSection } from "@/data/marketing/pricing-data";
+import { BillingPeriod } from "@/enums";
 
 interface PricingCardsProps {
     plans: {
@@ -38,9 +39,9 @@ const PricingCard = ({
                 <div>
                     <span className="text-4xl font-medium">{plan.price}</span>
                     <span className="text-sm text-gray-500">
-                        {plan.billing_period === BillingPeriod.MONTH
+                        {plan.billing_period === BillingPeriod.MONTHLY
                             ? "/month"
-                            : plan.billing_period === BillingPeriod.YEAR
+                            : plan.billing_period === BillingPeriod.YEARLY
                               ? "/year"
                               : "/lifetime"}
                     </span>

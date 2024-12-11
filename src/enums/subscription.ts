@@ -10,3 +10,14 @@ export enum SubscriptionTier {
     ESSENTIALS = "ESSENTIALS",
     FOUNDERS = "FOUNDERS",
 }
+
+export enum BillingType {
+    RECURRING = "RECURRING",
+    ONE_TIME = "ONE_TIME",
+}
+
+export enum BillingPeriod {
+    MONTHLY = "MONTHLY",
+    YEARLY = "YEARLY",
+    LIFETIME = "LIFETIME",
+}

@@ -10,27 +10,13 @@ import { handleSupabaseError } from "@/utils/errors/supabaseError";
 import moment from "moment";
 import { createSupabasePowerUserClient } from "../integration/admin";
 import { createClient } from "../integration/server";
-import { checkRowExists, getEndDate } from "./baseService";
+import { getSubscriptionEndDate } from "./baseService";
 
 export const fetchUserSubscription = async (userId: string) => {
     try {
         const supabase = await createClient();
 
-        const defaultResponse = {
-            subscription: null,
-            error: null,
-        };
-
-        const { rowExists, error: rowCheckError } = await checkRowExists(
-            "user_subscriptions",
-            userId,
-        );
-
-        if (rowCheckError) throw rowCheckError;
-
-        if (!rowExists) return defaultResponse;
-
-        const { data: subscription, error } = await supabase
+        const { data, error } = await supabase
             .from("user_subscriptions")
             .select("*")
             .eq("user_id", userId)
@@ -39,13 +25,13 @@ export const fetchUserSubscription = async (userId: string) => {
         if (error) throw error;
 
         return {
-            subscription: subscription as PurchasedSubscription,
+            data: data as PurchasedSubscription,
             error: null,
         };
     } catch (error) {
         return {
-            subscription: null,
-            error: handleSupabaseError({ error, fnTitle: "fetchUserSubscription" }),
+            data: null,
+            error: handleSupabaseError(error, "fetchUserSubscription"),
         };
     }
 };
@@ -60,7 +46,7 @@ export const startUserSubscription = async ({
     try {
         const adminSupabase = await createSupabasePowerUserClient();
 
-        const endDate = await getEndDate(stripeSubscriptionId ?? "");
+        const endDate = await getSubscriptionEndDate(stripeSubscriptionId ?? "");
 
         const { error } = await adminSupabase.from("user_subscriptions").insert({
             user_id: userId,
@@ -87,7 +73,7 @@ export const startUserSubscription = async ({
     } catch (error) {
         return {
             success: null,
-            error: handleSupabaseError({ error, fnTitle: "startUserSubscription" }),
+            error: handleSupabaseError(error, "startUserSubscription"),
         };
     }
 };
@@ -121,7 +107,7 @@ export const terminateUserSubscription = async (userId: string) => {
     } catch (error) {
         return {
             success: null,
-            error: handleSupabaseError({ error, fnTitle: "terminateUserSubscription" }),
+            error: handleSupabaseError(error, "terminateUserSubscription"),
         };
     }
 };
@@ -165,7 +151,7 @@ export const updateUserSubscription = async ({
     } catch (error) {
         return {
             success: null,
-            error: handleSupabaseError({ error, fnTitle: "updateUserSubscription" }),
+            error: handleSupabaseError(error, "updateUserSubscription"),
         };
     }
 };
@@ -199,7 +185,7 @@ export const downgradeUserToFreePlan = async (userId: string) => {
     } catch (error) {
         return {
             success: null,
-            error: handleSupabaseError({ error, fnTitle: "startFreePlan" }),
+            error: handleSupabaseError(error, "startFreePlan"),
         };
     }
 };
@@ -231,7 +217,7 @@ export const startFreePlan = async (userId: string) => {
     } catch (error) {
         return {
             success: null,
-            error: handleSupabaseError({ error, fnTitle: "startFreePlan" }),
+            error: handleSupabaseError(error, "startFreePlan"),
         };
     }
 };
@@ -262,7 +248,7 @@ export const cancelUserSubscription = async (userId: string, endDate: string) =>
     } catch (error) {
         return {
             success: null,
-            error: handleSupabaseError({ error, fnTitle: "cancelUserSubscription" }),
+            error: handleSupabaseError(error, "cancelUserSubscription"),
         };
     }
 };

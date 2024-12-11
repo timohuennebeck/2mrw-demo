@@ -1,13 +1,4 @@
-export enum BillingType {
-    RECURRING = "RECURRING",
-    ONE_TIME = "ONE_TIME",
-}
-
-export enum BillingPeriod {
-    MONTH = "month",
-    YEAR = "year",
-    LIFETIME = "lifetime",
-}
+import { BillingType, BillingPeriod, SubscriptionTier } from "@/enums";
 
 export interface DefaultPricingPlan {
     name: string;
@@ -17,6 +8,7 @@ export interface DefaultPricingPlan {
     billing_type: BillingType;
     is_highlighted: boolean;
     stripe_price_id: string;
+    subscription_tier: SubscriptionTier;
     onClick: () => void;
 }
 
@@ -42,30 +34,33 @@ export const defaultPricingPlans: {
             name: "Free",
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$0",
-            billing_period: BillingPeriod.MONTH,
+            billing_period: BillingPeriod.MONTHLY,
             billing_type: BillingType.RECURRING,
             is_highlighted: false,
             stripe_price_id: "price_free",
+            subscription_tier: SubscriptionTier.FREE,
             onClick: () => {},
         },
         {
             name: "Pro",
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$49",
-            billing_period: BillingPeriod.MONTH,
+            billing_period: BillingPeriod.MONTHLY,
             billing_type: BillingType.RECURRING,
             is_highlighted: true,
             stripe_price_id: "price_def456",
+            subscription_tier: SubscriptionTier.ESSENTIALS,
             onClick: () => {},
         },
         {
             name: "Enterprise",
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$99",
-            billing_period: BillingPeriod.MONTH,
+            billing_period: BillingPeriod.MONTHLY,
             billing_type: BillingType.RECURRING,
             is_highlighted: false,
             stripe_price_id: "price_ghi789",
+            subscription_tier: SubscriptionTier.FOUNDERS,
             onClick: () => {},
         },
     ],
@@ -74,30 +69,33 @@ export const defaultPricingPlans: {
             name: "Free",
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$0",
-            billing_period: BillingPeriod.YEAR,
+            billing_period: BillingPeriod.YEARLY,
             billing_type: BillingType.RECURRING,
             is_highlighted: false,
             stripe_price_id: "price_free",
+            subscription_tier: SubscriptionTier.FREE,
             onClick: () => {},
         },
         {
             name: "Pro",
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$490",
-            billing_period: BillingPeriod.YEAR,
+            billing_period: BillingPeriod.YEARLY,
             billing_type: BillingType.RECURRING,
             is_highlighted: true,
             stripe_price_id: "price_mno345",
+            subscription_tier: SubscriptionTier.ESSENTIALS,
             onClick: () => {},
         },
         {
             name: "Enterprise",
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$990",
-            billing_period: BillingPeriod.YEAR,
+            billing_period: BillingPeriod.YEARLY,
             billing_type: BillingType.RECURRING,
             is_highlighted: false,
             stripe_price_id: "price_pqr678",
+            subscription_tier: SubscriptionTier.FOUNDERS,
             onClick: () => {},
         },
     ],
@@ -110,6 +108,7 @@ export const defaultPricingPlans: {
             billing_type: BillingType.ONE_TIME,
             is_highlighted: false,
             stripe_price_id: "price_lifetime_pro",
+            subscription_tier: SubscriptionTier.ESSENTIALS,
             onClick: () => {},
         },
         {
@@ -120,6 +119,7 @@ export const defaultPricingPlans: {
             billing_type: BillingType.ONE_TIME,
             is_highlighted: true,
             stripe_price_id: "price_lifetime_ent",
+            subscription_tier: SubscriptionTier.FOUNDERS,
             onClick: () => {},
         },
     ],

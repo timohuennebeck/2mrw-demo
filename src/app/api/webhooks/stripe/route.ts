@@ -4,10 +4,13 @@ import { StripeWebhookEvents } from "@/enums";
 import { queryClient } from "@/lib/qClient/qClient";
 import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { stripe } from "@/services/stripe/client";
-import { handleCheckoutSessionCompleted, handleSubscriptionUpdated } from "@/services/stripe/stripeWebhook";
+import {
+    handleCancelSubscription,
+    handleCheckoutSessionCompleted,
+    handleUpdateSubscription,
+} from "@/services/stripe/stripeWebhook";
 import { NextRequest as request, NextResponse as response } from "next/server";
 import Stripe from "stripe";
-
 
 const _verifyStripeWebhook = async (body: string, signature: string) => {
     try {
@@ -69,7 +72,15 @@ export const POST = async (req: request) => {
                 const customerId = subscription.customer as string;
                 const userId = await _getUserIdFromStripeCustomerId(customerId);
 
-                await handleSubscriptionUpdated(event.data.object, userId);
+                if (subscription.cancel_at_period_end) {
+                    /**
+                     * checks if the subscription is set to cancel at the end of the current period
+                     * if it is, cancel the subscripton
+                     */
+                    await handleCancelSubscription(userId, subscription);
+                } else {
+                    await handleUpdateSubscription(event.data.object, userId);
+                }
 
                 if (userId) {
                     queryClient.invalidateQueries({ queryKey: ["subscription", userId] });

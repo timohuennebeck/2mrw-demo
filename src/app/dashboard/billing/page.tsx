@@ -1,15 +1,12 @@
 "use client";
 
-import { useSession } from "@/context/SessionContext";
-import { useSupabaseRealtime } from "@/hooks/useSupabaseRealtime";
-import { Check } from "lucide-react";
-import { Suspense, useState } from "react";
-import useSuccessParam from "@/hooks/useSuccessParam";
-import { TextConstants } from "@/constants/TextConstants";
-import { useSubscription } from "@/context/SubscriptionContext";
-import CustomPopup from "@/components/application/CustomPopup";
-import { Separator } from "@/components/ui/separator";
 import CurrentSubscriptionPlan from "@/components/application/CurrentSubscriptionPlan";
+import { Separator } from "@/components/ui/separator";
+import { useSession } from "@/context/SessionContext";
+import { useSubscription } from "@/context/SubscriptionContext";
+import useSuccessParam from "@/hooks/useSuccessParam";
+import { useSupabaseRealtime } from "@/hooks/useSupabaseRealtime";
+import { Suspense, useState } from "react";
 
 const SuccessHandler = ({ onSuccess }: { onSuccess: () => void }) => {
     useSuccessParam({
@@ -60,21 +57,6 @@ const BillingPage = () => {
             <Suspense fallback={null}>
                 <SuccessHandler onSuccess={() => setShowSuccessPopup(true)} />
             </Suspense>
-
-            {showSuccessPopup && (
-                <CustomPopup
-                    dataTestId="subscription-success-popup"
-                    title={TextConstants.TEXT__SUBSCRIPTION_CONFIRMED}
-                    description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, itaque!"
-                    icon={<Check size={32} strokeWidth={1.5} className="text-green-500" />}
-                    iconBackgroundColor="bg-green-100"
-                    mainButtonText={TextConstants.TEXT__CONTINUE}
-                    onConfirm={() => setShowSuccessPopup(false)}
-                    hideSecondaryButton
-                    showConfetti
-                    onCancel={() => setShowSuccessPopup(false)}
-                />
-            )}
 
             <div className="flex max-w-6xl flex-col gap-12 bg-white">
                 <BillingSection
