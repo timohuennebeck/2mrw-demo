@@ -49,18 +49,13 @@ const Header = ({ navItems, logoSrc, loginOnClick, userIsLoggedIn }: HeaderParam
                     ))}
                 </nav>
 
-                {/* Login Button */}
-                {!userIsLoggedIn ? (
-                    <Button variant="ghost" onClick={loginOnClick}>
-                        Log in
-                        <ArrowRight size={16} className="text-gray-400" />
-                    </Button>
-                ) : (
-                    <Button variant="secondary" onClick={() => router.push("/dashboard")}>
-                        Dashboard
-                        <ArrowRight size={16} className="text-gray-400" />
-                    </Button>
-                )}
+                <Button
+                    variant="ghost"
+                    onClick={userIsLoggedIn ? () => router.push("/dashboard") : loginOnClick}
+                >
+                    Log in
+                    <ArrowRight size={16} className="text-gray-400" />
+                </Button>
             </div>
         </header>
     );
