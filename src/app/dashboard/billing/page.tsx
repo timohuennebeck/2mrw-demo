@@ -8,11 +8,6 @@ import useSuccessParam from "@/hooks/useSuccessParam";
 import { TextConstants } from "@/constants/TextConstants";
 import { useSubscription } from "@/context/SubscriptionContext";
 import CustomPopup from "@/components/application/CustomPopup";
-import { BillingPlan, SubscriptionStatus } from "@/enums";
-import BillingPortal from "@/components/application/BillingPortal";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import CurrentSubscriptionPlan from "@/components/application/CurrentSubscriptionPlan";
 
@@ -44,7 +39,7 @@ const BillingSection = ({ title, description, children }: BillingSectionProps) =
 
 const BillingPage = () => {
     const { authUser } = useSession();
-    const { subscription, invalidateSubscription } = useSubscription();
+    const { invalidateSubscription } = useSubscription();
 
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
@@ -82,43 +77,6 @@ const BillingPage = () => {
             )}
 
             <div className="flex max-w-6xl flex-col gap-12 bg-white">
-                {subscription?.billing_plan === BillingPlan.RECURRING && (
-                    <BillingSection
-                        title="Billing Portal"
-                        description="Manage your subscription and billing information."
-                    >
-                        <BillingPortal />
-                    </BillingSection>
-                )}
-
-                <BillingSection
-                    title="Contact Email"
-                    description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
-                >
-                    <div className="space-y-4">
-                        <RadioGroup defaultValue="account">
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="account" id="account" />
-                                <Label htmlFor="account">
-                                    Lorem ipsum dolor sit amet.
-                                    <p className="text-sm text-muted-foreground">m@example.com</p>
-                                </Label>
-                            </div>
-                            <div className="flex flex-col space-y-2">
-                                <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="alternative" id="alternative" />
-                                    <Label htmlFor="alternative">Lorem ipsum dolor sit amet.</Label>
-                                </div>
-                                <div className="ml-6">
-                                    <Input type="email" placeholder="billing@untitledui.com" />
-                                </div>
-                            </div>
-                        </RadioGroup>
-                    </div>
-                </BillingSection>
-
-                <Separator />
-
                 <BillingSection
                     title="Subscription Plans"
                     description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
