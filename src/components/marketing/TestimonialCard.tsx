@@ -16,6 +16,8 @@ export interface Testimonial {
     featured?: boolean;
     date?: string;
     verified?: boolean;
+    showInSidePanel?: boolean;
+    backgroundUrl?: string;
 }
 
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {

@@ -1,6 +1,5 @@
 import { Testimonial } from "@/components/marketing/TestimonialCard";
 
-
 export const testimonials: Testimonial[] = [
     {
         content: {
@@ -17,6 +16,9 @@ export const testimonials: Testimonial[] = [
         featured: true,
         date: "2024-03-15",
         verified: true,
+        showInSidePanel: true,
+        backgroundUrl:
+            "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=2940&auto=format&fit=crop",
     },
     {
         content: {
@@ -36,21 +38,6 @@ export const testimonials: Testimonial[] = [
     },
     {
         content: {
-            text: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            highlights: ["minim veniam", "commodo consequat"],
-        },
-        author: {
-            name: "Consectetur Elit",
-            role: "Founder",
-            company: "Ullamco Laboris",
-            image: "https://i.imgur.com/E6nCVLy.jpeg",
-        },
-        rating: 5,
-        date: "2024-03-10",
-        verified: true,
-    },
-    {
-        content: {
             text: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
             highlights: ["irure dolor", "voluptate velit"],
         },
@@ -63,6 +50,9 @@ export const testimonials: Testimonial[] = [
         rating: 5,
         date: "2024-03-08",
         verified: true,
+        showInSidePanel: true,
+        backgroundUrl:
+            "https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2940&auto=format&fit=crop",
     },
     {
         content: {
@@ -78,21 +68,9 @@ export const testimonials: Testimonial[] = [
         rating: 4,
         date: "2024-03-05",
         verified: true,
-    },
-    {
-        content: {
-            text: "Eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum.",
-            highlights: ["dignissimos", "praesentium"],
-        },
-        author: {
-            name: "Iusto Odio",
-            role: "Software Architect",
-            company: "Dignissimos Labs",
-            image: "https://i.imgur.com/E6nCVLy.jpeg",
-        },
-        rating: 5,
-        date: "2024-02-20",
-        verified: true,
+        showInSidePanel: true,
+        backgroundUrl:
+            "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=2940&auto=format&fit=crop",
     },
     {
         content: {
@@ -108,6 +86,9 @@ export const testimonials: Testimonial[] = [
         rating: 5,
         date: "2024-02-15",
         verified: true,
+        showInSidePanel: true,
+        backgroundUrl:
+            "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=2940&auto=format&fit=crop",
     },
     {
         content: {
