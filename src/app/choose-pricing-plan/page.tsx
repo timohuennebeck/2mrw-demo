@@ -3,9 +3,7 @@
 import PricingCard from "@/components/marketing/PricingCard";
 import { isFreePlanEnabled, isOneTimePaymentEnabled } from "@/config/billingConfig";
 import { useSession } from "@/context/SessionContext";
-import {
-    getFilteredPricingPlans
-} from "@/data/marketing/pricing-data";
+import { getFilteredPricingPlans } from "@/data/marketing/pricing-data";
 import { Manrope } from "next/font/google";
 
 const manrope = Manrope({
@@ -32,7 +30,9 @@ const ChoosePricingPlanPage = () => {
                 className={`flex min-h-screen w-full items-center justify-center px-8 py-16 ${manrope.className}`}
             >
                 <div className="container max-w-7xl">
-                    <div className="mb-12 flex flex-col gap-6 text-start">
+                    <div
+                        className={`mb-12 flex flex-col gap-6 ${showFreePlan ? "text-start" : "items-center text-center"}`}
+                    >
                         <p className="text-sm font-medium text-blue-600">Lorem, ipsum.</p>
                         <h2 className="max-w-4xl text-4xl font-medium leading-tight tracking-tight md:text-5xl">
                             <>
@@ -49,7 +49,9 @@ const ChoosePricingPlanPage = () => {
                     </div>
 
                     <div
-                        className={`grid gap-8 ${showFreePlan ? "md:grid-cols-3" : "md:grid-cols-2"}`}
+                        className={`grid gap-8 ${
+                            showFreePlan ? "md:grid-cols-3" : "mx-auto max-w-[882px] md:grid-cols-2"
+                        }`}
                     >
                         {plansToShow.map((plan) => (
                             <PricingCard
