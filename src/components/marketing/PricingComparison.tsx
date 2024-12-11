@@ -1,7 +1,23 @@
 import { Check, X } from "lucide-react";
 import React from "react";
 import { Button } from "../ui/button";
-import { DefaultPricingPlan, PricingFeatureItem, PricingFeatureSection } from "@/data/marketing/pricing-data";
+import {
+    DefaultPricingPlan,
+    PricingFeatureItem,
+    PricingFeatureSection,
+} from "@/data/marketing/pricing-data";
+import { BillingPeriod, BillingPlan } from "@/enums";
+
+const _getBillingPeriodText = (billingPeriod: BillingPeriod, billingPlan: BillingPlan) => {
+    switch (billingPeriod) {
+        case BillingPeriod.MONTHLY:
+            return "/ MONTH";
+        case BillingPeriod.YEARLY:
+            return "/ YEAR";
+        case BillingPeriod.LIFETIME:
+            return "ONE TIME";
+    }
+};
 
 interface PricingComparisonParams {
     title: React.ReactNode;
@@ -37,7 +53,9 @@ const PricingPlanHeader = ({
             <h3 className="text-lg font-medium">{plan.name}</h3>
             <div>
                 <span className="text-4xl font-medium">{plan.price}</span>
-                <span className="text-sm text-gray-500">{plan.billing_period}</span>
+                <span className="text-sm text-gray-500">
+                    {_getBillingPeriodText(plan.billing_period, plan.billing_plan)}
+                </span>
             </div>
             <span className="text-sm text-gray-500">
                 {plan.stripe_price_id === "price_free"
