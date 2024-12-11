@@ -1,5 +1,5 @@
 import { defaultPricingPlans } from "@/data/marketing/pricing-data";
-import { BillingType, SubscriptionStatus } from "@/enums";
+import { BillingPlan, SubscriptionStatus } from "@/enums";
 import moment from "moment";
 import Stripe from "stripe";
 import { getSubscriptionEndDate } from "../database/baseService";
@@ -28,7 +28,7 @@ const _getSubscriptionTierBillingPlan = (stripePriceId: string) => {
     return {
         subscriptionTier: plan.subscription_tier,
         billingPlan:
-            plan.billing_type === "RECURRING" ? BillingType.RECURRING : BillingType.ONE_TIME,
+            plan.billing_plan === "RECURRING" ? BillingPlan.RECURRING : BillingPlan.ONE_TIME,
     };
 };
 

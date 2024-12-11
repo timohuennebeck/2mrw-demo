@@ -11,7 +11,7 @@ export enum SubscriptionTier {
     FOUNDERS = "FOUNDERS",
 }
 
-export enum BillingType {
+export enum BillingPlan {
     RECURRING = "RECURRING",
     ONE_TIME = "ONE_TIME",
 }

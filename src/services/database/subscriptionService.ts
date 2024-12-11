@@ -165,7 +165,7 @@ export const downgradeUserToFreePlan = async (userId: string) => {
             .update({
                 status: SubscriptionStatus.ACTIVE,
                 subscription_tier: SubscriptionTier.FREE,
-                billing_plan: BillingPlan.NONE,
+                billing_plan: null,
                 stripe_price_id: null,
                 stripe_subscription_id: null,
                 end_date: null,
@@ -198,7 +198,7 @@ export const startFreePlan = async (userId: string) => {
             user_id: userId,
             status: SubscriptionStatus.ACTIVE,
             subscription_tier: SubscriptionTier.FREE,
-            billing_plan: BillingPlan.NONE,
+            billing_plan: null,
             stripe_price_id: null,
             stripe_subscription_id: null,
             end_date: null,
