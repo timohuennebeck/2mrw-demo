@@ -1,18 +1,40 @@
+import { Button } from "@/components/ui/button";
+import { Manrope } from "next/font/google";
 import Link from "next/link";
+
+const manrope = Manrope({
+    subsets: ["latin"],
+    variable: "--font-manrope",
+});
 
 export default function NotFound() {
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-white px-4 text-center">
-            <h1 className="mb-2 text-4xl font-bold md:text-5xl">404 - Oops! Lost in Space.</h1>
-            <p className="mb-8 text-lg text-gray-600">
-                The requested page was not found.
-            </p>
-            <Link
-                href="/"
-                className="rounded-md bg-gray-900 px-6 py-3 text-white transition-colors hover:bg-gray-800"
+        <>
+            <div className="fixed inset-0 -z-10 h-full w-full">
+                <div className="h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]" />
+            </div>
+
+            <div
+                className={`${manrope.variable} flex min-h-screen flex-col items-center justify-center px-4 font-manrope`}
             >
-                Return to website
-            </Link>
-        </div>
+                <div className="flex max-w-2xl flex-col items-center text-center">
+                    <span className="mb-4 text-sm font-medium text-blue-600">404 ERROR</span>
+                    <h1 className="mb-4 text-4xl font-medium tracking-tight md:text-5xl">
+                        Oops! Lost in{" "}
+                        <span className="relative mt-4 inline-block whitespace-nowrap bg-blue-600 p-2 text-white">
+                            Digital Space
+                        </span>
+                    </h1>
+                    <p className="mb-8 text-muted-foreground">
+                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quo repellat
+                        deserunt totam laudantium eum nemo sapiente delectus voluptatem omnis
+                        maiores!
+                    </p>
+                    <Button asChild size="lg">
+                        <Link href="/">Return to Homepage</Link>
+                    </Button>
+                </div>
+            </div>
+        </>
     );
 }
