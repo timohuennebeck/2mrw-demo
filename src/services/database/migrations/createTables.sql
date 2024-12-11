@@ -2,9 +2,9 @@ CREATE TYPE SubscriptionStatusEnums AS ENUM ('ACTIVE', 'TRIALING', 'CANCELLED', 
 
 CREATE TYPE SubscriptionTierEnums AS ENUM ('FREE', 'ESSENTIALS', 'FOUNDERS');
 
-CREATE TYPE BillingPlan AS ENUM ('NONE', 'ONE_TIME', 'RECURRING');
+CREATE TYPE BillingPlanEnums AS ENUM ('RECURRING', 'ONE_TIME');
 
-CREATE TYPE SubscriptionInterval AS ENUM ('NONE', 'MONTHLY', 'YEARLY');
+CREATE TYPE BillingPeriodEnums AS ENUM ('MONTHLY', 'YEARLY', 'LIFETIME');
 
 CREATE TABLE
     users (
@@ -18,19 +18,6 @@ CREATE TABLE
     );
 
 CREATE TABLE
-    products (
-        id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid (),
-        name TEXT NOT NULL,
-        description TEXT NOT NULL,
-        is_highlighted BOOLEAN NOT NULL,
-        is_active BOOLEAN NOT NULL,
-        subscription_tier SubscriptionTierEnums NOT NULL,
-        billing_plan BillingPlan NOT NULL,
-        created_at TIMESTAMPTZ,
-        updated_at TIMESTAMPTZ
-    );
-
-CREATE TABLE
     user_subscriptions (
         id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid (),
         user_id UNIQUE UUID REFERENCES public.users (id) ON DELETE CASCADE NOT NULL,
@@ -38,22 +25,9 @@ CREATE TABLE
         stripe_subscription_id TEXT,
         status SubscriptionStatusEnums NOT NULL,
         subscription_tier SubscriptionTierEnums NOT NULL,
+        billing_plan BillingPlanEnums NOT NULL,
+        billing_period BillingPeriodEnums NOT NULL,
         end_date TIMESTAMPTZ,
-        billing_plan BillingPlan NOT NULL,
-        created_at TIMESTAMPTZ,
-        updated_at TIMESTAMPTZ
-    );
-
-CREATE TABLE
-    stripe_prices (
-        id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid (),
-        product_id UUID REFERENCES public.products (id) ON DELETE CASCADE NOT NULL,
-        subscription_interval SubscriptionInterval NOT NULL,
-        stripe_price_id TEXT NOT NULL,
-        current_amount NUMERIC NOT NULL,
-        previous_amount NUMERIC,
-        is_active BOOLEAN NOT NULL,
-        billing_plan BillingPlan NOT NULL,
         created_at TIMESTAMPTZ,
         updated_at TIMESTAMPTZ
     );

@@ -1,9 +1,9 @@
-import { BillingPlan } from "@/enums";
+import { BillingType } from "@/enums";
 
 interface CompletePaymentConfig {
     isFreePlanEnabled: boolean;
     currency: string;
-    billingPlan: BillingPlan;
+    billingType: BillingType;
     subscriptionSettings: {};
     oneTimeSettings: {};
 }
@@ -17,7 +17,7 @@ export const billingConfig: CompletePaymentConfig = {
      */
     isFreePlanEnabled: true,
     currency: DEFAULT_CURRENCY,
-    billingPlan: BillingPlan.RECURRING,
+    billingType: BillingType.RECURRING,
 
     /**
      * the subscriptionSettings and oneTimeSettings are work in progress
@@ -30,7 +30,7 @@ export const billingConfig: CompletePaymentConfig = {
 
 // helper functions to get the active settings
 export const getCurrentPaymentSettings = () => {
-    return billingConfig.billingPlan === BillingPlan.RECURRING
+    return billingConfig.billingType === BillingType.RECURRING
         ? billingConfig.subscriptionSettings
         : billingConfig.oneTimeSettings;
 };
@@ -38,4 +38,4 @@ export const getCurrentPaymentSettings = () => {
 // helper to check if subscription features are enabled
 export const isFreePlanEnabled = () => billingConfig.isFreePlanEnabled;
 export const getCurrency = () => billingConfig.currency;
-export const isOneTimePaymentEnabled = () => billingConfig.billingPlan === BillingPlan.ONE_TIME;
+export const isOneTimePaymentEnabled = () => billingConfig.billingType === BillingType.ONE_TIME;
