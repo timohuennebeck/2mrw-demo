@@ -21,4 +21,24 @@ export const appConfig = {
         isEnabled: true,
         formUrl: "https://tally.so/r/yourform",
     },
+
+    companyInformation: {
+        name: "2mrw",
+        supportEmail: "contact@joinforj.com",
+        senderEmail: "info@updates.joinforj.com",
+        logoUrl: "https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg",
+    },
+
+    socialLinks: {
+        twitter: {
+            founder: {
+                url: "www.x.com/timohuennebeck",
+                tag: "@timohuennebeck",
+            },
+            company: {
+                url: "www.x.com/joinforj",
+                tag: "@joinforj",
+            },
+        },
+    },
 };

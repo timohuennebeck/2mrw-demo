@@ -1,63 +1,16 @@
 "use server";
 
-import moment from "moment";
-import { sendEmail } from "@/services/email/emailService";
-import { checkRowExists, getEndDate } from "./baseService";
-import { getProductNameByTier } from "./productService";
-import { createClient } from "../integration/server";
-import { createSupabasePowerUserClient } from "../integration/admin";
-import { validateEmailProps } from "@/utils/validators/emailValidator";
-import { handleSupabaseError } from "@/utils/errors/supabaseError";
+import { BillingPlan, SubscriptionStatus, SubscriptionTier } from "@/enums";
 import {
-    PurchasedSubscription,
     CreatePurchasedSubscriptionTableParams,
+    PurchasedSubscription,
     UpdateUserSubscriptionStatusParams,
 } from "@/interfaces";
-import { BillingPlan, EmailTemplate, SubscriptionStatus, SubscriptionTier } from "@/enums";
-
-const _sendSubscriptionConfirmationEmail = async (
-    userId: string,
-    subscriptionTier: SubscriptionTier,
-) => {
-    try {
-        const supabase = await createClient();
-
-        const { data: userData, error: userError } = await supabase
-            .from("users")
-            .select("first_name, email")
-            .eq("id", userId)
-            .single();
-
-        if (userError) {
-            console.error("Failed to fetch user data for email:", userError);
-            return { success: true, error: null };
-        }
-
-        const purchasedPackage = await getProductNameByTier(subscriptionTier);
-
-        const { error: validationError } = validateEmailProps(
-            EmailTemplate.SUBSCRIPTION_CONFIRMATION,
-            {
-                userEmail: userData.email,
-                userFirstName: userData.first_name,
-                purchasedPackage,
-            },
-        );
-
-        if (validationError) {
-            console.error("Invalid email props:", validationError);
-            return { success: true, error: null };
-        }
-
-        await sendEmail(EmailTemplate.SUBSCRIPTION_CONFIRMATION, {
-            userEmail: userData.email,
-            userFirstName: userData.first_name,
-            purchasedPackage,
-        });
-    } catch (emailError) {
-        console.error("Failed to send onboarding email:", emailError);
-    }
-};
+import { handleSupabaseError } from "@/utils/errors/supabaseError";
+import moment from "moment";
+import { createSupabasePowerUserClient } from "../integration/admin";
+import { createClient } from "../integration/server";
+import { checkRowExists, getEndDate } from "./baseService";
 
 export const fetchUserSubscription = async (userId: string) => {
     try {
@@ -129,8 +82,6 @@ export const startUserSubscription = async ({
                 subscription_updated_at: moment().toISOString(),
             },
         });
-
-        await _sendSubscriptionConfirmationEmail(userId, subscriptionTier);
 
         return { success: true, error: null };
     } catch (error) {

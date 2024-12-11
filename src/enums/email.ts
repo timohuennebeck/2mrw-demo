@@ -1,3 +1,0 @@
-export enum EmailTemplate {
-    SUBSCRIPTION_CONFIRMATION = "SUBSCRIPTION_CONFIRMATION",
-}
