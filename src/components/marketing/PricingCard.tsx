@@ -1,6 +1,6 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { DefaultPricingPlan, PricingFeatureSection } from "@/data/marketing/pricing-data";
-import { BillingPeriod } from "@/enums";
+import { getBillingPeriodText, getPlanPriceDescription } from "@/utils/pricing/pricingHelper";
 import { Check, X } from "lucide-react";
 import PricingPlanButton from "../application/PricingPlanButton";
 
@@ -27,17 +27,11 @@ const PricingCard = ({
                 <div>
                     <span className="text-4xl font-medium">{plan.price}</span>
                     <span className="text-sm text-gray-500">
-                        {plan.billing_period === BillingPeriod.MONTHLY
-                            ? "/month"
-                            : plan.billing_period === BillingPeriod.YEARLY
-                              ? "/year"
-                              : "/lifetime"}
+                        {getBillingPeriodText(plan.billing_period)}
                     </span>
                 </div>
-                <span className="mt-2 block text-sm text-gray-500">
-                    {plan.stripe_price_id === "price_free"
-                        ? "Free Forever"
-                        : `${pricePerMonthForYearlyPlan} / month when billed per annum`}
+                <span className="pt-2 block text-sm text-gray-500">
+                    {getPlanPriceDescription(plan, pricePerMonthForYearlyPlan)}
                 </span>
             </CardHeader>
 

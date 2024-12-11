@@ -1,24 +1,13 @@
+import { isFreePlanEnabled, isOneTimePaymentEnabled } from "@/config";
 import {
     DefaultPricingPlan,
     PricingFeatureItem,
     PricingFeatureSection,
 } from "@/data/marketing/pricing-data";
-import { BillingPeriod, BillingPlan } from "@/enums";
+import { getBillingPeriodText, getPlanPriceDescription } from "@/utils/pricing/pricingHelper";
 import { Check, X } from "lucide-react";
 import React from "react";
 import PricingPlanButton from "../application/PricingPlanButton";
-import { isFreePlanEnabled, isOneTimePaymentEnabled } from "@/config";
-
-const _getBillingPeriodText = (billingPeriod: BillingPeriod, billingPlan: BillingPlan) => {
-    switch (billingPeriod) {
-        case BillingPeriod.MONTHLY:
-            return "/ MONTH";
-        case BillingPeriod.YEARLY:
-            return "/ YEAR";
-        case BillingPeriod.LIFETIME:
-            return "ONE TIME";
-    }
-};
 
 interface PricingComparisonParams {
     title: React.ReactNode;
@@ -53,13 +42,11 @@ const PricingPlanHeader = ({
             <div>
                 <span className="text-4xl font-medium">{plan.price}</span>
                 <span className="text-sm text-gray-500">
-                    {_getBillingPeriodText(plan.billing_period, plan.billing_plan)}
+                    {getBillingPeriodText(plan.billing_period)}
                 </span>
             </div>
             <span className="text-sm text-gray-500">
-                {plan.stripe_price_id === "price_free"
-                    ? "Free Forever"
-                    : `${pricePerMonthForYearlyPlan} / month when billed per annum`}
+                {getPlanPriceDescription(plan, pricePerMonthForYearlyPlan)}
             </span>
             <PricingPlanButton
                 plan={plan}
