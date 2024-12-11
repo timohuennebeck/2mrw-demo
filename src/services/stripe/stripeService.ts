@@ -68,12 +68,7 @@ export const initiateStripeCheckoutProcess = async ({
     stripePriceId,
     successUrl,
     cancelUrl,
-    existingSubscriptionId,
 }: InitiateStripeCheckoutProcessParams) => {
-    if (existingSubscriptionId) {
-        return _updateCustomerSubscription({ existingSubscriptionId, stripePriceId, successUrl });
-    }
-
     const { stripeCustomerId, error } = await getStripeCustomerId();
     if (error) return { checkoutUrl: null, error };
 

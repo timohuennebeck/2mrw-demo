@@ -7,5 +7,4 @@ export interface InitiateStripeCheckoutProcessParams {
     stripePriceId: string;
     successUrl: string;
     cancelUrl: string;
-    existingSubscriptionId?: string;
 }

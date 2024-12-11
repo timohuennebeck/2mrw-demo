@@ -1,7 +1,11 @@
 "use client";
 
-import PricingCards from "@/components/marketing/PricingCards";
-import { defaultPricingPlans, pricingCardFeatures } from "@/data/marketing/pricing-data";
+import PricingCard from "@/components/marketing/PricingCard";
+import { isFreePlanEnabled, isOneTimePaymentEnabled } from "@/config/billingConfig";
+import { useSession } from "@/context/SessionContext";
+import {
+    getFilteredPricingPlans
+} from "@/data/marketing/pricing-data";
 import { Manrope } from "next/font/google";
 
 const manrope = Manrope({
@@ -10,6 +14,15 @@ const manrope = Manrope({
 });
 
 const ChoosePricingPlanPage = () => {
+    const { authUser } = useSession();
+
+    const filteredPlans = getFilteredPricingPlans();
+
+    const showFreePlan = isFreePlanEnabled();
+    const isOneTimePayment = isOneTimePaymentEnabled();
+
+    const plansToShow = isOneTimePayment ? filteredPlans.oneTime : filteredPlans.monthly;
+
     return (
         <>
             <div className="fixed inset-0 -z-10 h-full w-full">
@@ -34,11 +47,20 @@ const ChoosePricingPlanPage = () => {
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
                         </p>
                     </div>
-                    <PricingCards
-                        plans={defaultPricingPlans}
-                        features={pricingCardFeatures}
-                        buttonText="Select Plan"
-                    />
+
+                    <div
+                        className={`grid gap-8 ${showFreePlan ? "md:grid-cols-3" : "md:grid-cols-2"}`}
+                    >
+                        {plansToShow.map((plan) => (
+                            <PricingCard
+                                key={plan.name}
+                                plan={plan}
+                                features={getFilteredPricingPlans().pricingCardFeatures}
+                                annualPlans={getFilteredPricingPlans().annual}
+                                isUserLoggedIn={!!authUser}
+                            />
+                        ))}
+                    </div>
                 </div>
             </div>
         </>

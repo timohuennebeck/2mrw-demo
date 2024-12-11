@@ -1,4 +1,35 @@
+import { isFreePlanEnabled } from "@/config/billingConfig";
 import { BillingPlan, BillingPeriod, SubscriptionTier } from "@/enums";
+
+export const getFilteredPricingPlans = () => {
+    const showFreePlan = isFreePlanEnabled();
+
+    const filterPlans = (plans: DefaultPricingPlan[]) => {
+        return showFreePlan ? plans : plans.filter((plan) => plan.name !== "Free");
+    };
+
+    const filterFeatures = (sections: PricingFeatureSection[]) => {
+        if (showFreePlan) return sections;
+
+        // omit the 'free' property when free plan is disabled
+        return sections.map((section) => ({
+            ...section,
+            items: section.items.map((item) => ({
+                name: item.name,
+                pro: item.pro,
+                enterprise: item.enterprise,
+            })),
+        }));
+    };
+
+    return {
+        monthly: filterPlans(defaultPricingPlans.monthly),
+        annual: filterPlans(defaultPricingPlans.annual),
+        oneTime: defaultPricingPlans.oneTime,
+        pricingCardFeatures: filterFeatures(pricingCardFeatures),
+        defaultPricingFeatures: filterFeatures(defaultPricingFeatures),
+    };
+};
 
 export interface DefaultPricingPlan {
     name: string;
@@ -9,7 +40,6 @@ export interface DefaultPricingPlan {
     is_highlighted: boolean;
     stripe_price_id: string;
     subscription_tier: SubscriptionTier;
-    onClick: () => void;
 }
 
 export interface PricingFeatureSection {
@@ -19,7 +49,7 @@ export interface PricingFeatureSection {
 
 export interface PricingFeatureItem {
     name: string;
-    free: boolean | string;
+    free?: boolean | string;
     pro: boolean | string;
     enterprise: boolean | string;
 }
@@ -39,7 +69,6 @@ export const defaultPricingPlans: {
             is_highlighted: false,
             stripe_price_id: "price_free",
             subscription_tier: SubscriptionTier.FREE,
-            onClick: () => {},
         },
         {
             name: "Pro",
@@ -50,7 +79,6 @@ export const defaultPricingPlans: {
             is_highlighted: true,
             stripe_price_id: "price_def456",
             subscription_tier: SubscriptionTier.ESSENTIALS,
-            onClick: () => {},
         },
         {
             name: "Enterprise",
@@ -61,7 +89,6 @@ export const defaultPricingPlans: {
             is_highlighted: false,
             stripe_price_id: "price_ghi789",
             subscription_tier: SubscriptionTier.FOUNDERS,
-            onClick: () => {},
         },
     ],
     annual: [
@@ -74,7 +101,6 @@ export const defaultPricingPlans: {
             is_highlighted: false,
             stripe_price_id: "price_free",
             subscription_tier: SubscriptionTier.FREE,
-            onClick: () => {},
         },
         {
             name: "Pro",
@@ -85,7 +111,6 @@ export const defaultPricingPlans: {
             is_highlighted: true,
             stripe_price_id: "price_mno345",
             subscription_tier: SubscriptionTier.ESSENTIALS,
-            onClick: () => {},
         },
         {
             name: "Enterprise",
@@ -96,7 +121,6 @@ export const defaultPricingPlans: {
             is_highlighted: false,
             stripe_price_id: "price_pqr678",
             subscription_tier: SubscriptionTier.FOUNDERS,
-            onClick: () => {},
         },
     ],
     oneTime: [
@@ -109,7 +133,6 @@ export const defaultPricingPlans: {
             is_highlighted: false,
             stripe_price_id: "price_lifetime_pro",
             subscription_tier: SubscriptionTier.ESSENTIALS,
-            onClick: () => {},
         },
         {
             name: "Enterprise",
@@ -120,7 +143,6 @@ export const defaultPricingPlans: {
             is_highlighted: true,
             stripe_price_id: "price_lifetime_ent",
             subscription_tier: SubscriptionTier.FOUNDERS,
-            onClick: () => {},
         },
     ],
 };

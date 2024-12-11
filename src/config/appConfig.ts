@@ -1,7 +1,4 @@
 export const appConfig = {
-    /**
-     * - isEnabled: Controls whether the side panel is shown or hidden
-     */
     auth: {
         sidePanel: {
             isEnabled: true,
@@ -9,7 +6,7 @@ export const appConfig = {
     },
 
     /**
-     * - isEnabled: Controls whether the onboarding flow is active. When enabled, users are directed to onboarding; when disabled, they go to dashboard
+     * - isEnabled: Controls whether the onboarding flow is active. When enabled, users are directed to "/onboarding"; when disabled, they go to "/dashboard"
      * - isRequired: If true, users must complete onboarding before accessing any protected routes in the application
      */
     onboarding: {

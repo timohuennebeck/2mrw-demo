@@ -1,12 +1,13 @@
-import { Check, X } from "lucide-react";
-import React from "react";
-import { Button } from "../ui/button";
 import {
     DefaultPricingPlan,
     PricingFeatureItem,
     PricingFeatureSection,
 } from "@/data/marketing/pricing-data";
 import { BillingPeriod, BillingPlan } from "@/enums";
+import { Check, X } from "lucide-react";
+import React from "react";
+import PricingPlanButton from "../application/PricingPlanButton";
+import { isFreePlanEnabled, isOneTimePaymentEnabled } from "@/config";
 
 const _getBillingPeriodText = (billingPeriod: BillingPeriod, billingPlan: BillingPlan) => {
     switch (billingPeriod) {
@@ -29,19 +30,17 @@ interface PricingComparisonParams {
         oneTime: DefaultPricingPlan[];
     };
     features: PricingFeatureSection[];
-    buttonText: string;
+    isUserLoggedIn: boolean;
 }
 
 const PricingPlanHeader = ({
     plan,
     annualPlans,
-    buttonText,
-    onClick,
+    isUserLoggedIn,
 }: {
     plan: DefaultPricingPlan;
     annualPlans: DefaultPricingPlan[];
-    buttonText: string;
-    onClick: () => void;
+    isUserLoggedIn: boolean;
 }) => {
     const annualPlan = annualPlans.find((p) => p.name === plan.name)?.price;
     const pricePerMonthForYearlyPlan = annualPlan
@@ -62,13 +61,11 @@ const PricingPlanHeader = ({
                     ? "Free Forever"
                     : `${pricePerMonthForYearlyPlan} / month when billed per annum`}
             </span>
-            <Button
-                size="lg"
-                variant={plan.is_highlighted ? "default" : "outline"}
-                onClick={onClick}
-            >
-                {buttonText}
-            </Button>
+            <PricingPlanButton
+                plan={plan}
+                activePlanStripePriceId=""
+                isUserLoggedIn={isUserLoggedIn}
+            />
         </div>
     );
 };
@@ -84,12 +81,20 @@ const FeatureCell = ({ value }: { value: boolean | string }) => {
     return <span className="text-sm">{value}</span>;
 };
 
-const FeatureRow = ({ item }: { item: PricingFeatureItem }) => (
-    <div className="grid grid-cols-4 gap-8 py-6">
+const FeatureRow = ({
+    item,
+    showFreePlan,
+}: {
+    item: PricingFeatureItem;
+    showFreePlan: boolean;
+}) => (
+    <div className={`grid gap-8 py-6 ${showFreePlan ? "grid-cols-4" : "grid-cols-3"}`}>
         <div className="col-span-1 text-sm text-gray-600">{item.name}</div>
-        <div className="col-span-1 text-center">
-            <FeatureCell value={item.free} />
-        </div>
+        {showFreePlan && (
+            <div className="col-span-1 text-center">
+                <FeatureCell value={item.free ?? false} />
+            </div>
+        )}
         <div className="col-span-1 text-center">
             <FeatureCell value={item.pro} />
         </div>
@@ -105,8 +110,13 @@ const PricingComparison = ({
     description,
     plans,
     features,
-    buttonText,
+    isUserLoggedIn,
 }: PricingComparisonParams) => {
+    const showFreePlan = isFreePlanEnabled();
+    const isOneTimePayment = isOneTimePaymentEnabled();
+
+    const plansToShow = isOneTimePayment ? plans.oneTime : plans.monthly;
+
     return (
         <div className="flex flex-col gap-16">
             {/* Header Section */}
@@ -119,15 +129,14 @@ const PricingComparison = ({
             </div>
 
             {/* Plan Headers */}
-            <div className="grid grid-cols-4 gap-8">
+            <div className={`grid gap-8 ${showFreePlan ? "grid-cols-4" : "grid-cols-3"}`}>
                 <div className="col-span-1" />
-                {plans.monthly.map((plan) => (
+                {plansToShow.map((plan) => (
                     <PricingPlanHeader
                         key={plan.name}
                         plan={plan}
                         annualPlans={plans.annual}
-                        buttonText={buttonText}
-                        onClick={plan.onClick}
+                        isUserLoggedIn={isUserLoggedIn}
                     />
                 ))}
             </div>
@@ -139,7 +148,11 @@ const PricingComparison = ({
                         <h4 className="text-base font-medium">{section.category}</h4>
                         <div className="divide-y divide-gray-200">
                             {section.items.map((item) => (
-                                <FeatureRow key={item.name} item={item} />
+                                <FeatureRow
+                                    key={item.name}
+                                    item={item}
+                                    showFreePlan={showFreePlan}
+                                />
                             ))}
                         </div>
                     </div>

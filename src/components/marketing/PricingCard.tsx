@@ -1,31 +1,19 @@
-import { Check, X } from "lucide-react";
-import React from "react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { DefaultPricingPlan } from "@/data/marketing/pricing-data";
-import { PricingFeatureSection } from "@/data/marketing/pricing-data";
+import { DefaultPricingPlan, PricingFeatureSection } from "@/data/marketing/pricing-data";
 import { BillingPeriod } from "@/enums";
-
-interface PricingCardsProps {
-    plans: {
-        monthly: DefaultPricingPlan[];
-        annual: DefaultPricingPlan[];
-        oneTime: DefaultPricingPlan[];
-    };
-    features: PricingFeatureSection[];
-    buttonText: string;
-}
+import { Check, X } from "lucide-react";
+import PricingPlanButton from "../application/PricingPlanButton";
 
 const PricingCard = ({
     plan,
     features,
-    buttonText,
     annualPlans,
+    isUserLoggedIn,
 }: {
     plan: DefaultPricingPlan;
     features: PricingFeatureSection[];
-    buttonText: string;
     annualPlans: DefaultPricingPlan[];
+    isUserLoggedIn: boolean;
 }) => {
     const annualPlan = annualPlans.find((p) => p.name === plan.name)?.price;
     const pricePerMonthForYearlyPlan = annualPlan
@@ -81,33 +69,14 @@ const PricingCard = ({
             </CardContent>
 
             <CardFooter>
-                <Button
-                    size="lg"
-                    variant={plan.is_highlighted ? "default" : "outline"}
-                    className="w-full"
-                    onClick={plan.onClick}
-                >
-                    {buttonText}
-                </Button>
+                <PricingPlanButton
+                    plan={plan}
+                    activePlanStripePriceId=""
+                    isUserLoggedIn={isUserLoggedIn}
+                />
             </CardFooter>
         </Card>
     );
 };
 
-const PricingCards = ({ plans, features, buttonText }: PricingCardsProps) => {
-    return (
-        <div className="grid gap-8 md:grid-cols-3">
-            {plans.monthly.map((plan) => (
-                <PricingCard
-                    key={plan.name}
-                    plan={plan}
-                    features={features}
-                    buttonText={buttonText}
-                    annualPlans={plans.annual}
-                />
-            ))}
-        </div>
-    );
-};
-
-export default PricingCards;
+export default PricingCard;

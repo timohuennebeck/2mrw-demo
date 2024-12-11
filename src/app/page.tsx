@@ -21,7 +21,7 @@ import { faq } from "@/data/marketing/faq-data";
 import { authFeatures, databaseFeatures, emailFeatures } from "@/data/marketing/features-data";
 import { featuresList } from "@/data/marketing/features-list-data";
 import { footerLinks } from "@/data/marketing/footer-data";
-import { defaultPricingFeatures, defaultPricingPlans } from "@/data/marketing/pricing-data";
+import { getFilteredPricingPlans } from "@/data/marketing/pricing-data";
 import { exampleStats } from "@/data/marketing/stats-data";
 import { testimonials } from "@/data/marketing/testimonials-data";
 import { handleSmoothScroll } from "@/utils/navigation";
@@ -331,9 +331,9 @@ const LandingPage = () => {
                             }
                             subtitle="Lorem, ipsum dolor."
                             description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, similique."
-                            plans={defaultPricingPlans}
-                            features={defaultPricingFeatures}
-                            buttonText="Start Now"
+                            plans={getFilteredPricingPlans()}
+                            features={getFilteredPricingPlans().defaultPricingFeatures}
+                            isUserLoggedIn={!!authUser}
                         />
                     </Section>
 
