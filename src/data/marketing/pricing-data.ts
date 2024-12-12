@@ -61,7 +61,7 @@ export const defaultPricingPlans: {
 } = {
     monthly: [
         {
-            name: "Free",
+            name: SubscriptionTier.FREE,
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$0",
             billing_period: BillingPeriod.MONTHLY,
@@ -71,7 +71,7 @@ export const defaultPricingPlans: {
             subscription_tier: SubscriptionTier.FREE,
         },
         {
-            name: "Pro",
+            name: SubscriptionTier.ESSENTIALS,
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$49",
             billing_period: BillingPeriod.MONTHLY,
@@ -81,7 +81,7 @@ export const defaultPricingPlans: {
             subscription_tier: SubscriptionTier.ESSENTIALS,
         },
         {
-            name: "Enterprise",
+            name: SubscriptionTier.FOUNDERS,
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$99",
             billing_period: BillingPeriod.MONTHLY,
@@ -93,7 +93,7 @@ export const defaultPricingPlans: {
     ],
     annual: [
         {
-            name: "Free",
+            name: SubscriptionTier.FREE,
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$0",
             billing_period: BillingPeriod.YEARLY,
@@ -103,7 +103,7 @@ export const defaultPricingPlans: {
             subscription_tier: SubscriptionTier.FREE,
         },
         {
-            name: "Pro",
+            name: SubscriptionTier.ESSENTIALS,
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$490",
             billing_period: BillingPeriod.YEARLY,
@@ -113,7 +113,7 @@ export const defaultPricingPlans: {
             subscription_tier: SubscriptionTier.ESSENTIALS,
         },
         {
-            name: "Enterprise",
+            name: SubscriptionTier.FOUNDERS,
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$990",
             billing_period: BillingPeriod.YEARLY,
@@ -125,7 +125,7 @@ export const defaultPricingPlans: {
     ],
     oneTime: [
         {
-            name: "Pro",
+            name: SubscriptionTier.ESSENTIALS,
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$999",
             billing_period: BillingPeriod.LIFETIME,
@@ -135,7 +135,7 @@ export const defaultPricingPlans: {
             subscription_tier: SubscriptionTier.ESSENTIALS,
         },
         {
-            name: "Enterprise",
+            name: SubscriptionTier.FOUNDERS,
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$1,999",
             billing_period: BillingPeriod.LIFETIME,

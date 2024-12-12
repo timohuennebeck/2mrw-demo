@@ -4,6 +4,16 @@ import { getBillingPeriodText, getPlanPriceDescription } from "@/utils/pricing/p
 import { Check, X } from "lucide-react";
 import PricingPlanButton from "../application/PricingPlanButton";
 
+const _toTitleCase = (text: string): string => {
+    if (!text) return text;
+
+    return text
+        .toLowerCase()
+        .split(" ")
+        .map((word) => (word.length > 0 ? word.charAt(0).toUpperCase() + word.slice(1) : word))
+        .join(" ");
+};
+
 const PricingCard = ({
     plan,
     features,
@@ -25,14 +35,14 @@ const PricingCard = ({
     return (
         <Card className="shadow-none">
             <CardHeader>
-                <CardTitle className="mb-4">{plan.name}</CardTitle>
+                <CardTitle className="mb-4 font-medium text-lg">{_toTitleCase(plan.name)}</CardTitle>
                 <div>
                     <span className="text-4xl font-medium">{plan.price}</span>
                     <span className="text-sm text-gray-500">
                         {getBillingPeriodText(plan.billing_period)}
                     </span>
                 </div>
-                <span className="pt-2 block text-sm text-gray-500">
+                <span className="block pt-2 text-sm text-gray-500">
                     {getPlanPriceDescription(plan, pricePerMonthForYearlyPlan)}
                 </span>
             </CardHeader>
