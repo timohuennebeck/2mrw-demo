@@ -20,16 +20,19 @@ interface PricingComparisonParams {
     };
     features: PricingFeatureSection[];
     isUserLoggedIn: boolean;
+    currentPlanStripePriceId: string;
 }
 
 const PricingPlanHeader = ({
     plan,
     annualPlans,
     isUserLoggedIn,
+    currentPlanStripePriceId,
 }: {
     plan: DefaultPricingPlan;
     annualPlans: DefaultPricingPlan[];
     isUserLoggedIn: boolean;
+    currentPlanStripePriceId: string;
 }) => {
     const annualPlan = annualPlans.find((p) => p.name === plan.name)?.price;
     const pricePerMonthForYearlyPlan = annualPlan
@@ -50,7 +53,7 @@ const PricingPlanHeader = ({
             </span>
             <PricingPlanButton
                 plan={plan}
-                activePlanStripePriceId=""
+                currentPlanStripePriceId={currentPlanStripePriceId}
                 isUserLoggedIn={isUserLoggedIn}
             />
         </div>
@@ -98,6 +101,7 @@ const PricingComparison = ({
     plans,
     features,
     isUserLoggedIn,
+    currentPlanStripePriceId,
 }: PricingComparisonParams) => {
     const showFreePlan = isFreePlanEnabled();
     const isOneTimePayment = isOneTimePaymentEnabled();
@@ -124,6 +128,7 @@ const PricingComparison = ({
                         plan={plan}
                         annualPlans={plans.annual}
                         isUserLoggedIn={isUserLoggedIn}
+                        currentPlanStripePriceId={currentPlanStripePriceId}
                     />
                 ))}
             </div>

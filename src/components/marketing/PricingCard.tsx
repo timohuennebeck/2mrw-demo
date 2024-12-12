@@ -9,11 +9,13 @@ const PricingCard = ({
     features,
     annualPlans,
     isUserLoggedIn,
+    currentPlanStripePriceId,
 }: {
     plan: DefaultPricingPlan;
     features: PricingFeatureSection[];
     annualPlans: DefaultPricingPlan[];
     isUserLoggedIn: boolean;
+    currentPlanStripePriceId: string;
 }) => {
     const annualPlan = annualPlans.find((p) => p.name === plan.name)?.price;
     const pricePerMonthForYearlyPlan = annualPlan
@@ -65,7 +67,7 @@ const PricingCard = ({
             <CardFooter>
                 <PricingPlanButton
                     plan={plan}
-                    activePlanStripePriceId=""
+                    currentPlanStripePriceId={currentPlanStripePriceId}
                     isUserLoggedIn={isUserLoggedIn}
                 />
             </CardFooter>

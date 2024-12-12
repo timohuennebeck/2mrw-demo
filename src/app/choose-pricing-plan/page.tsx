@@ -3,6 +3,7 @@
 import PricingCard from "@/components/marketing/PricingCard";
 import { isFreePlanEnabled, isOneTimePaymentEnabled } from "@/config/billingConfig";
 import { useSession } from "@/context/SessionContext";
+import { useSubscription } from "@/context/SubscriptionContext";
 import { getFilteredPricingPlans } from "@/data/marketing/pricing-data";
 import { Manrope } from "next/font/google";
 
@@ -13,6 +14,7 @@ const manrope = Manrope({
 
 const ChoosePricingPlanPage = () => {
     const { authUser } = useSession();
+    const { subscription } = useSubscription();
 
     const filteredPlans = getFilteredPricingPlans();
 
@@ -60,6 +62,7 @@ const ChoosePricingPlanPage = () => {
                                 features={getFilteredPricingPlans().pricingCardFeatures}
                                 annualPlans={getFilteredPricingPlans().annual}
                                 isUserLoggedIn={!!authUser}
+                                currentPlanStripePriceId={subscription?.stripe_price_id ?? ""}
                             />
                         ))}
                     </div>

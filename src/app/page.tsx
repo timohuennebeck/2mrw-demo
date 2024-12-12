@@ -17,6 +17,7 @@ import Stats from "@/components/marketing/Stats";
 import TestimonialsGrid from "@/components/marketing/TestimonialsGrid";
 import Section from "@/components/ui/Section";
 import { useSession } from "@/context/SessionContext";
+import { useSubscription } from "@/context/SubscriptionContext";
 import { faq } from "@/data/marketing/faq-data";
 import { authFeatures, databaseFeatures, emailFeatures } from "@/data/marketing/features-data";
 import { featuresList } from "@/data/marketing/features-list-data";
@@ -36,6 +37,7 @@ const manrope = Manrope({
 
 const LandingPage = () => {
     const { authUser } = useSession();
+    const { subscription } = useSubscription();
 
     const router = useRouter();
 
@@ -334,6 +336,7 @@ const LandingPage = () => {
                             plans={getFilteredPricingPlans()}
                             features={getFilteredPricingPlans().defaultPricingFeatures}
                             isUserLoggedIn={!!authUser}
+                            currentPlanStripePriceId={subscription?.stripe_price_id ?? ""}
                         />
                     </Section>
 
