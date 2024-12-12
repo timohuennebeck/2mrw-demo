@@ -107,9 +107,9 @@ const Features = ({
             </div>
 
             <div className="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
-                {features.map((feature) => (
+                {features.map((feature, index) => (
                     <FeatureItem
-                        key={feature.name}
+                        key={`${feature.name}-${index}`}
                         feature={feature}
                         badgeTextColor={badge.textColor}
                     />

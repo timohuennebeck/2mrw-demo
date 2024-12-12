@@ -42,9 +42,9 @@ const FeaturesList = ({
             {/* Features Columns */}
             <div className="lg:col-span-2">
                 <div className="grid grid-cols-1 gap-12 sm:grid-cols-2">
-                    {features.map((feature) => (
+                    {features.map((feature, index) => (
                         <FeatureItem
-                            key={feature.title}
+                            key={`${feature.title}-${index}`}
                             title={feature.title}
                             description={feature.description}
                         />
