@@ -87,6 +87,9 @@ export const POST = async (req: request) => {
                 }
                 break;
             }
+            case StripeWebhookEvents.CUSTOMER_SUBSCRIPTION_TRIAL_WILL_END: {
+                break; // notify user that their free trial is ending in three days
+            }
             default:
                 break;
         }

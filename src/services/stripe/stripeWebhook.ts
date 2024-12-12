@@ -10,27 +10,7 @@ import {
     updateUserSubscription,
 } from "../database/subscriptionService";
 import { createSupabasePowerUserClient } from "../integration/admin";
-
-const _getSubscriptionTierBillingPlan = (stripePriceId: string) => {
-    // check all plan types (monthly, annual, oneTime)
-    const allPlans = [
-        ...defaultPricingPlans.monthly,
-        ...defaultPricingPlans.annual,
-        ...defaultPricingPlans.oneTime,
-    ];
-
-    const plan = allPlans.find((p) => p.stripe_price_id === stripePriceId);
-
-    if (!plan) {
-        throw new Error(`Error: There was no plan for stripe price id: ${stripePriceId}`);
-    }
-
-    return {
-        subscriptionTier: plan.subscription_tier,
-        billingPlan:
-            plan.billing_plan === "RECURRING" ? BillingPlan.RECURRING : BillingPlan.ONE_TIME,
-    };
-};
+import { getBillingPlan, getSubscriptionTier } from "../domain/subscriptionService";
 
 export const handleCheckoutSessionCompleted = async (
     session: Stripe.Checkout.Session,
@@ -51,7 +31,8 @@ export const handleCheckoutSessionCompleted = async (
         // for one-time payments, end_date will be null
         const endDate = await getSubscriptionEndDate(stripeSubscriptionId ?? "");
 
-        const { subscriptionTier, billingPlan } = _getSubscriptionTierBillingPlan(stripePriceId);
+        const { subscriptionTier } = getSubscriptionTier(stripePriceId);
+        const { billingPlan } = getBillingPlan(stripePriceId);
 
         const dataToUpdate = {
             userId,
@@ -98,7 +79,8 @@ export const handleUpdateSubscription = async (
     if (!stripePriceId) throw new Error("Stripe price id is missing!");
 
     try {
-        const { subscriptionTier, billingPlan } = _getSubscriptionTierBillingPlan(stripePriceId);
+        const { subscriptionTier } = getSubscriptionTier(stripePriceId);
+        const { billingPlan } = getBillingPlan(stripePriceId);
 
         await updateUserSubscription({
             userId,

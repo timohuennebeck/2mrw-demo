@@ -26,7 +26,7 @@ const _updateUserEmail = async (userId: string, email: string) => {
 };
 
 const _updateUserEmailInStripe = async (email: string) => {
-    const stripeCustomerId = await getStripeCustomerId();
+    const { stripeCustomerId } = await getStripeCustomerId();
 
     if (stripeCustomerId) {
         await stripe.customers.update(stripeCustomerId, {

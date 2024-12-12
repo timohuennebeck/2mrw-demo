@@ -7,15 +7,24 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
+import { useFreeTrial } from "@/context/FreeTrialContext";
+import { useSubscription } from "@/context/SubscriptionContext";
+import { startFreeTrial } from "@/services/database/freeTrialService";
+import { billingConfig } from "@/config";
+import { TextConstants } from "@/constants/TextConstants";
 
 const _getButtonText = ({
     currentPlanStripePriceId,
     plan,
     isUserLoggedIn,
+    hasActiveTrial,
+    isTrialAvailable,
 }: {
     currentPlanStripePriceId: string;
     plan: DefaultPricingPlan;
     isUserLoggedIn: boolean;
+    hasActiveTrial: boolean;
+    isTrialAvailable: boolean;
 }) => {
     if (!isUserLoggedIn && plan.stripe_price_id === "price_free") {
         return "Sign Up - It's Free";
@@ -38,6 +47,10 @@ const _getButtonText = ({
 
     if (!currentPlanStripePriceId && plan.stripe_price_id === "price_free") {
         return "Unlock Plan - It's Free";
+    }
+
+    if (isTrialAvailable && !hasActiveTrial && plan.stripe_price_id !== "price_free") {
+        return TextConstants.TEXT__START_FREE_TRIAL(billingConfig.freeTrial.duration);
     }
 
     return "Unlock Plan";
@@ -85,8 +98,11 @@ const PricingPlanButton = ({
     currentPlanStripePriceId,
     isUserLoggedIn,
 }: PricingPlanButtonProps) => {
-    const router = useRouter();
     const { dbUser } = useUser();
+    const { isTrialAvailable, hasActiveTrial, invalidateFreeTrial } = useFreeTrial();
+    const { invalidateSubscription } = useSubscription();
+
+    const router = useRouter();
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -105,6 +121,16 @@ const PricingPlanButton = ({
 
             if (plan.stripe_price_id === "price_free") {
                 await startFreePlan(dbUser?.id ?? "");
+                invalidateSubscription();
+                return;
+            }
+
+            if (isTrialAvailable && !hasActiveTrial) {
+                const { error } = await startFreeTrial(dbUser?.id ?? "", plan.stripe_price_id);
+                if (error) throw error;
+
+                invalidateFreeTrial();
+                invalidateSubscription();
                 return;
             }
 
@@ -114,6 +140,8 @@ const PricingPlanButton = ({
         }
     };
 
+    // TO-DO: think about post-purchase subscription flow (where to redirect the user after the purchase - also for free plan)
+
     return (
         <Button
             onClick={handleClick}
@@ -122,7 +150,13 @@ const PricingPlanButton = ({
             isLoading={isLoading}
             className="w-full"
         >
-            {_getButtonText({ currentPlanStripePriceId, plan, isUserLoggedIn })}
+            {_getButtonText({
+                currentPlanStripePriceId,
+                plan,
+                isUserLoggedIn,
+                hasActiveTrial,
+                isTrialAvailable,
+            })}
         </Button>
     );
 };
