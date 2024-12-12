@@ -34,15 +34,17 @@ const CurrentSubscriptionPlan = ({ plan }: CurrentSubscriptionPlanParams) => {
     const currentPlan = plan || mockPlan;
 
     return (
-        <Card className="w-full border-none shadow-none">
+        <Card className="w-full border-none bg-transparent shadow-none">
             <CardContent className="p-0">
-                <div className="flex flex-col space-y-8">
+                <div className="flex flex-col space-y-6 md:space-y-8">
                     {/* Header Section */}
-                    <div className="flex justify-between gap-20">
-                        <div className="space-y-3">
-                            <div className="flex items-center gap-2">
-                                <h3 className="text-2xl font-medium">{currentPlan.name}</h3>
-                                <Badge variant="default" className="flex items-center gap-1">
+                    <div className="flex flex-col md:flex-row md:justify-between md:gap-20">
+                        <div className="space-y-2 md:space-y-3">
+                            <div className="flex flex-col gap-2 md:flex-row md:items-center">
+                                <h3 className="text-xl font-medium md:text-2xl">
+                                    {currentPlan.name}
+                                </h3>
+                                <Badge variant="default" className="flex w-fit items-center gap-1">
                                     {currentPlan.status}
                                 </Badge>
                             </div>
@@ -54,14 +56,16 @@ const CurrentSubscriptionPlan = ({ plan }: CurrentSubscriptionPlanParams) => {
 
                     {/* Billing Info */}
                     <div className="space-y-2">
-                        <p className="text-3xl font-medium tracking-tight">
-                            {currentPlan.price}
-                            <span className="ml-1 text-sm text-muted-foreground">
+                        <div className="flex items-baseline gap-1">
+                            <p className="text-2xl font-medium tracking-tight md:text-3xl">
+                                {currentPlan.price}
+                            </p>
+                            <span className="text-sm text-muted-foreground">
                                 {currentPlan.billingInterval === "one-time"
                                     ? ""
                                     : `/${currentPlan.billingInterval.slice(0, 5)}`}
                             </span>
-                        </p>
+                        </div>
                         <p className="text-sm text-muted-foreground">
                             Expires on {new Date(currentPlan.expirationDate).toLocaleDateString()}
                         </p>
@@ -70,7 +74,7 @@ const CurrentSubscriptionPlan = ({ plan }: CurrentSubscriptionPlanParams) => {
                     <Button
                         variant="secondary"
                         size="sm"
-                        className="transition-colors hover:bg-secondary/80"
+                        className="w-full transition-colors hover:bg-secondary/80 md:w-auto"
                     >
                         Change Plan
                     </Button>
