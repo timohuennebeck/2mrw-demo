@@ -94,18 +94,24 @@ const CurrentSubscriptionPlan = ({
                         </p>
                     </div>
 
-                    {subscription?.stripe_price_id !== "price_free" && (
-                        <Button
-                            variant="secondary"
-                            size="sm"
-                            className="w-full transition-colors hover:bg-secondary/80 md:w-auto"
-                            disabled={isOpeningBillingPortal}
-                            isLoading={isOpeningBillingPortal}
-                            onClick={handleBillingPortal}
-                        >
-                            Change Subscription
-                        </Button>
-                    )}
+                    <Button
+                        variant="secondary"
+                        size="sm"
+                        className="w-full transition-colors hover:bg-secondary/80 md:w-auto"
+                        disabled={isOpeningBillingPortal}
+                        isLoading={isOpeningBillingPortal}
+                        onClick={() => {
+                            if (subscription?.stripe_price_id === "price_free") {
+                                router.push("/choose-pricing-plan");
+                            } else {
+                                handleBillingPortal();
+                            }
+                        }}
+                    >
+                        {subscription?.stripe_price_id === "price_free"
+                            ? "Upgrade to Paid Plan"
+                            : "Change Subscription"}
+                    </Button>
 
                     {/* Payment Info */}
                     <div className="flex justify-between">

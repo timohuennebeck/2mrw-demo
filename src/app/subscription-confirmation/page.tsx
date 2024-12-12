@@ -34,11 +34,18 @@ const SubscriptionSuccess = () => {
                 <div className="h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]" />
             </div>
 
+            {showConfetti && (
+                <Confetti
+                    width={window.innerWidth}
+                    recycle={false}
+                    numberOfPieces={200}
+                    style={{ zIndex: 999 }}
+                />
+            )}
+
             <div
                 className={`${manrope.variable} flex min-h-screen items-center justify-center p-4 font-manrope sm:p-8`}
             >
-                {showConfetti && <Confetti recycle={false} numberOfPieces={200} />}
-
                 <div className="container max-w-7xl">
                     <div className="mx-auto flex flex-col gap-12">
                         {/* Header Section */}

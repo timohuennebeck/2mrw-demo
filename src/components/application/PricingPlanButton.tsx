@@ -74,7 +74,7 @@ const _handleStripeCheckout = async (plan: DefaultPricingPlan, router: AppRouter
     try {
         const { checkoutUrl, error } = await initiateStripeCheckoutProcess({
             stripePriceId: plan.stripe_price_id,
-            successUrl: `${window.location.origin}/choose-pricing-plan`,
+            successUrl: `${window.location.origin}/subscription-confirmation`,
             cancelUrl: `${window.location.origin}/choose-pricing-plan`,
         });
 
