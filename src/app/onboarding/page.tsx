@@ -129,18 +129,23 @@ const OnboardingPage = () => {
     const currentStepData = ONBOARDING_STEPS[currentStep - 1];
 
     return (
-        <OnboardingFlow
-            title={currentStepData.title}
-            description={currentStepData.description}
-            currentStep={currentStep}
-            totalSteps={ONBOARDING_STEPS.length}
-            onSkip={() => continueStep(currentStep + 1)}
-            showSkip={currentStep !== ONBOARDING_STEPS.length} // hides the skip button on the last step
-            buttonText={currentStepData.buttonText}
-            onContinue={handleContinue}
-        >
-            {currentStepData.content()}
-        </OnboardingFlow>
+        <>
+            <div className="fixed inset-0 -z-10 h-full w-full">
+                <div className="h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]" />
+            </div>
+            <OnboardingFlow
+                title={currentStepData.title}
+                description={currentStepData.description}
+                currentStep={currentStep}
+                totalSteps={ONBOARDING_STEPS.length}
+                onSkip={() => continueStep(currentStep + 1)}
+                showSkip={currentStep !== ONBOARDING_STEPS.length} // hides the skip button on the last step
+                buttonText={currentStepData.buttonText}
+                onContinue={handleContinue}
+            >
+                {currentStepData.content()}
+            </OnboardingFlow>
+        </>
     );
 };
 
