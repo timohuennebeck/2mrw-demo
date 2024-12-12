@@ -3,6 +3,7 @@
 import CurrentSubscriptionPlan from "@/components/application/CurrentSubscriptionPlan";
 import { Button } from "@/components/ui/button";
 import { useSubscription } from "@/context/SubscriptionContext";
+import { useUser } from "@/context/UserContext";
 import { PurchasedSubscription } from "@/interfaces";
 import { Manrope } from "next/font/google";
 import { useRouter } from "next/navigation";
@@ -16,6 +17,7 @@ const manrope = Manrope({
 
 const SubscriptionSuccess = () => {
     const { subscription } = useSubscription();
+    const { dbUser } = useUser();
 
     const router = useRouter();
 
@@ -60,6 +62,7 @@ const SubscriptionSuccess = () => {
                         <div className="mx-auto w-full max-w-2xl">
                             <CurrentSubscriptionPlan
                                 subscription={subscription as PurchasedSubscription}
+                                stripeCustomerId={dbUser?.stripe_customer_id as string}
                                 currentPlanStripePriceId={subscription?.stripe_price_id as string}
                             />
                         </div>

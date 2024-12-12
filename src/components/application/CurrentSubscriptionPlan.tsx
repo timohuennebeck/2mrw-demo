@@ -4,16 +4,55 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BillingPeriod } from "@/enums";
 import { PurchasedSubscription } from "@/interfaces";
 import { getPricingPlan } from "@/services/domain/subscriptionService";
+import { stripe } from "@/services/stripe/client";
 import moment from "moment";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+
+export const _createStripeBillingPortal = async (stripeCustomerId: string) => {
+    try {
+        const { url } = await stripe.billingPortal.sessions.create({
+            customer: stripeCustomerId,
+            return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/billing`,
+        });
+
+        return { portalUrl: url, error: null };
+    } catch (error) {
+        return { portalUrl: null, error };
+    }
+};
 
 const CurrentSubscriptionPlan = ({
     subscription,
+    stripeCustomerId,
     currentPlanStripePriceId,
 }: {
     subscription: PurchasedSubscription;
+    stripeCustomerId: string;
     currentPlanStripePriceId: string;
 }) => {
+    const [isOpeningBillingPortal, setIsOpeningBillingPortal] = useState(false);
+
+    const router = useRouter();
+
     const { pricingPlan } = getPricingPlan(currentPlanStripePriceId);
+
+    const handleBillingPortal = async () => {
+        setIsOpeningBillingPortal(true);
+        try {
+            const { portalUrl, error } = await _createStripeBillingPortal(stripeCustomerId);
+            if (error) throw error;
+
+            if (portalUrl) {
+                router.push(portalUrl);
+            }
+        } catch (error) {
+            toast.error("There has been an error opening the billing portal");
+        } finally {
+            setIsOpeningBillingPortal(false);
+        }
+    };
 
     return (
         <Card className="w-full border-none bg-transparent shadow-none">
@@ -55,13 +94,18 @@ const CurrentSubscriptionPlan = ({
                         </p>
                     </div>
 
-                    <Button
-                        variant="secondary"
-                        size="sm"
-                        className="w-full transition-colors hover:bg-secondary/80 md:w-auto"
-                    >
-                        Change Plan
-                    </Button>
+                    {subscription.stripe_price_id !== "price_free" && (
+                        <Button
+                            variant="secondary"
+                            size="sm"
+                            className="w-full transition-colors hover:bg-secondary/80 md:w-auto"
+                            disabled={isOpeningBillingPortal}
+                            isLoading={isOpeningBillingPortal}
+                            onClick={handleBillingPortal}
+                        >
+                            Change Subscription
+                        </Button>
+                    )}
 
                     {/* Payment Info */}
                     <div className="flex justify-between">
