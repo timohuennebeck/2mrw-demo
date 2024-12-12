@@ -11,7 +11,7 @@ export const appConfig = {
      */
     onboarding: {
         isEnabled: true,
-        isRequired: true,
+        isRequired: false,
     },
 
     feedback: {

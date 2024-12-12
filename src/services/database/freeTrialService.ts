@@ -4,6 +4,7 @@ import { billingConfig } from "@/config";
 import { FreeTrialStatus, SubscriptionStatus } from "@/enums";
 import { handleSupabaseError } from "@/utils/errors/supabaseError";
 import moment from "moment";
+import { redirect } from "next/navigation";
 import {
     getBillingPeriod,
     getBillingPlan,
@@ -83,7 +84,7 @@ export const startFreeTrial = async (userId: string, stripePriceId: string) => {
 
         if (trialError) throw trialError;
 
-        return { success: true, error: null };
+        redirect("/plan-confirmation?mode=free-trial");
     } catch (error) {
         return {
             success: false,

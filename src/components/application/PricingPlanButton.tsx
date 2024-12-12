@@ -17,14 +17,14 @@ const _getButtonText = ({
     currentPlanStripePriceId,
     plan,
     isUserLoggedIn,
-    hasActiveTrial,
-    isTrialAvailable,
+    isOnFreeTrial,
+    canStartFreeTrial,
 }: {
     currentPlanStripePriceId: string;
     plan: DefaultPricingPlan;
     isUserLoggedIn: boolean;
-    hasActiveTrial: boolean;
-    isTrialAvailable: boolean;
+    isOnFreeTrial: boolean;
+    canStartFreeTrial: boolean;
 }) => {
     if (!isUserLoggedIn && plan.stripe_price_id === "price_free") {
         return "Sign Up - It's Free";
@@ -49,7 +49,7 @@ const _getButtonText = ({
         return "Unlock Plan - It's Free";
     }
 
-    if (isTrialAvailable && !hasActiveTrial && plan.stripe_price_id !== "price_free") {
+    if (canStartFreeTrial && !isOnFreeTrial && plan.stripe_price_id !== "price_free") {
         return TextConstants.TEXT__START_FREE_TRIAL(billingConfig.freeTrial.duration);
     }
 
@@ -74,7 +74,7 @@ const _handleStripeCheckout = async (plan: DefaultPricingPlan, router: AppRouter
     try {
         const { checkoutUrl, error } = await initiateStripeCheckoutProcess({
             stripePriceId: plan.stripe_price_id,
-            successUrl: `${window.location.origin}/subscription-confirmation`,
+            successUrl: `${window.location.origin}/plan-confirmation?mode=subscription`,
             cancelUrl: `${window.location.origin}/choose-pricing-plan`,
         });
 
@@ -99,7 +99,7 @@ const PricingPlanButton = ({
     isUserLoggedIn,
 }: PricingPlanButtonProps) => {
     const { dbUser } = useUser();
-    const { isTrialAvailable, hasActiveTrial, invalidateFreeTrial } = useFreeTrial();
+    const { canStartFreeTrial, isOnFreeTrial, invalidateFreeTrial } = useFreeTrial();
     const { invalidateSubscription } = useSubscription();
 
     const router = useRouter();
@@ -125,7 +125,7 @@ const PricingPlanButton = ({
                 return;
             }
 
-            if (isTrialAvailable && !hasActiveTrial) {
+            if (canStartFreeTrial && !isOnFreeTrial) {
                 const { error } = await startFreeTrial(dbUser?.id ?? "", plan.stripe_price_id);
                 if (error) throw error;
 
@@ -154,8 +154,8 @@ const PricingPlanButton = ({
                 currentPlanStripePriceId,
                 plan,
                 isUserLoggedIn,
-                hasActiveTrial,
-                isTrialAvailable,
+                isOnFreeTrial,
+                canStartFreeTrial,
             })}
         </Button>
     );

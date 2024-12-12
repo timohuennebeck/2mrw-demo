@@ -1,8 +1,9 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { BillingPeriod } from "@/enums";
+import { BillingPeriod, FreeTrialStatus } from "@/enums";
 import { PurchasedSubscription } from "@/interfaces";
+import { FreeTrial } from "@/interfaces/models/freeTrial";
 import { getPricingPlan } from "@/services/domain/subscriptionService";
 import { stripe } from "@/services/stripe/client";
 import moment from "moment";
@@ -25,10 +26,12 @@ export const _createStripeBillingPortal = async (stripeCustomerId: string) => {
 
 const CurrentSubscriptionPlan = ({
     subscription,
+    freeTrial,
     stripeCustomerId,
     currentPlanStripePriceId,
 }: {
     subscription: PurchasedSubscription;
+    freeTrial: FreeTrial;
     stripeCustomerId: string;
     currentPlanStripePriceId: string;
 }) => {
@@ -89,7 +92,7 @@ const CurrentSubscriptionPlan = ({
                         </div>
                         <p className="text-sm text-muted-foreground">
                             {subscription?.end_date
-                                ? moment(subscription?.end_date).format("DD/MM/YYYY")
+                                ? moment(subscription?.end_date).format("DD-MM-YYYY")
                                 : "Free Forever"}
                         </p>
                     </div>
@@ -101,14 +104,16 @@ const CurrentSubscriptionPlan = ({
                         disabled={isOpeningBillingPortal}
                         isLoading={isOpeningBillingPortal}
                         onClick={() => {
-                            if (subscription?.stripe_price_id === "price_free") {
+                            const isOnFreeTrial = freeTrial?.status === FreeTrialStatus.ACTIVE;
+                            if (subscription?.stripe_price_id === "price_free" || isOnFreeTrial) {
                                 router.push("/choose-pricing-plan");
                             } else {
                                 handleBillingPortal();
                             }
                         }}
                     >
-                        {subscription?.stripe_price_id === "price_free"
+                        {subscription?.stripe_price_id === "price_free" ||
+                        freeTrial?.status === FreeTrialStatus.ACTIVE
                             ? "Upgrade to Paid Plan"
                             : "Change Subscription"}
                     </Button>

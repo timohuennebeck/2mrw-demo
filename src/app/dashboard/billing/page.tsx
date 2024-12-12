@@ -2,9 +2,11 @@
 
 import CurrentSubscriptionPlan from "@/components/application/CurrentSubscriptionPlan";
 import { Separator } from "@/components/ui/separator";
+import { useFreeTrial } from "@/context/FreeTrialContext";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { useUser } from "@/context/UserContext";
 import { PurchasedSubscription } from "@/interfaces";
+import { FreeTrial } from "@/interfaces/models/freeTrial";
 
 interface BillingSectionProps {
     title: string;
@@ -27,6 +29,7 @@ const BillingSection = ({ title, description, children }: BillingSectionProps) =
 const BillingPage = () => {
     const { subscription } = useSubscription();
     const { dbUser } = useUser();
+    const { freeTrial } = useFreeTrial();
 
     /**
      * the ChangeSubscriptionPlan component is only shown if the user has not yet purchased a plan (one-time or recurring)
@@ -42,6 +45,7 @@ const BillingPage = () => {
             >
                 <CurrentSubscriptionPlan
                     subscription={subscription as PurchasedSubscription}
+                    freeTrial={freeTrial as FreeTrial}
                     stripeCustomerId={dbUser?.stripe_customer_id as string}
                     currentPlanStripePriceId={subscription?.stripe_price_id as string}
                 />

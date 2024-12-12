@@ -14,7 +14,7 @@ const PUBLIC_ROUTES = [
 
 const AUTH_ROUTES = ["/auth/confirm", "/auth/callback", "/auth/email-change"];
 
-const PROTECTED_ROUTES = ["/dashboard", "/onboarding", "/choose-pricing-plan"];
+const PROTECTED_ROUTES = ["/dashboard", "/onboarding", "/choose-pricing-plan", "/plan-confirmation"];
 
 const _handleOnboardingRedirection = (request: nextRequest, pathname: string, user: User) => {
     const onboardingCompleted = !!user.user_metadata?.onboarding_completed;

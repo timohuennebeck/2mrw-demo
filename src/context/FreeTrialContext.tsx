@@ -8,16 +8,16 @@ import { FreeTrial } from "@/interfaces/models/freeTrial";
 
 interface FreeTrialContextType {
     freeTrial: FreeTrial | null;
-    isTrialAvailable: boolean;
-    hasActiveTrial: boolean;
+    canStartFreeTrial: boolean;
+    isOnFreeTrial: boolean;
     invalidateFreeTrial: () => void;
     isLoading: boolean;
 }
 
 const FreeTrialContext = createContext<FreeTrialContextType>({
     freeTrial: null,
-    isTrialAvailable: false,
-    hasActiveTrial: false,
+    canStartFreeTrial: false,
+    isOnFreeTrial: false,
     invalidateFreeTrial: () => {},
     isLoading: false,
 });
@@ -37,15 +37,15 @@ export const FreeTrialProvider = ({ children }: { children: React.ReactNode }) =
     };
 
     const freeTrial = data?.data;
-    const hasActiveTrial = freeTrial?.status === FreeTrialStatus.ACTIVE;
-    const isTrialAvailable = billingConfig.freeTrial.isEnabled && !freeTrial;
+    const isOnFreeTrial = freeTrial?.status === FreeTrialStatus.ACTIVE;
+    const canStartFreeTrial = billingConfig.freeTrial.isEnabled && !freeTrial;
 
     return (
         <FreeTrialContext.Provider
             value={{
                 freeTrial,
-                isTrialAvailable,
-                hasActiveTrial,
+                canStartFreeTrial,
+                isOnFreeTrial,
                 invalidateFreeTrial,
                 isLoading: isFetching,
             }}
