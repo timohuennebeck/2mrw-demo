@@ -72,7 +72,7 @@ const OnboardingFlow = ({
                                     className={`flex h-10 w-10 items-center justify-center rounded-full border ${
                                         index + 1 <= currentStep
                                             ? "border-primary bg-primary text-white"
-                                            : "border-gray-200 text-gray-400"
+                                            : "border-gray-200 bg-white text-gray-400"
                                     }`}
                                 >
                                     {index + 1}
