@@ -1,37 +1,19 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { BillingPeriod } from "@/enums";
+import { PurchasedSubscription } from "@/interfaces";
+import { getPricingPlan } from "@/services/domain/subscriptionService";
+import moment from "moment";
 
-interface CurrentSubscriptionPlanParams {
-    plan?: {
-        name: string;
-        status: string;
-        description: string;
-        price: string;
-        billingInterval: "monthly" | "yearly" | "one-time";
-        paymentMethod: {
-            type: string;
-            last4: string;
-        };
-        expirationDate: string;
-    };
-}
-
-const CurrentSubscriptionPlan = ({ plan }: CurrentSubscriptionPlanParams) => {
-    const mockPlan = {
-        name: "Enterprise Plan",
-        status: "ACTIVE",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, sit!",
-        price: "€300.00",
-        billingInterval: "monthly" as const,
-        paymentMethod: {
-            type: "VISA",
-            last4: "**52",
-        },
-        expirationDate: "2024-04-30",
-    };
-
-    const currentPlan = plan || mockPlan;
+const CurrentSubscriptionPlan = ({
+    subscription,
+    currentPlanStripePriceId,
+}: {
+    subscription: PurchasedSubscription;
+    currentPlanStripePriceId: string;
+}) => {
+    const { pricingPlan } = getPricingPlan(currentPlanStripePriceId);
 
     return (
         <Card className="w-full border-none bg-transparent shadow-none">
@@ -42,14 +24,14 @@ const CurrentSubscriptionPlan = ({ plan }: CurrentSubscriptionPlanParams) => {
                         <div className="space-y-2 md:space-y-3">
                             <div className="flex flex-col gap-2 md:flex-row md:items-center">
                                 <h3 className="text-xl font-medium md:text-2xl">
-                                    {currentPlan.name}
+                                    {pricingPlan?.name}
                                 </h3>
                                 <Badge variant="default" className="flex w-fit items-center gap-1">
-                                    {currentPlan.status}
+                                    {subscription?.status}
                                 </Badge>
                             </div>
                             <p className="text-sm text-muted-foreground/80">
-                                {currentPlan.description}
+                                {pricingPlan?.description}
                             </p>
                         </div>
                     </div>
@@ -58,16 +40,18 @@ const CurrentSubscriptionPlan = ({ plan }: CurrentSubscriptionPlanParams) => {
                     <div className="space-y-2">
                         <div className="flex items-baseline gap-1">
                             <p className="text-2xl font-medium tracking-tight md:text-3xl">
-                                {currentPlan.price}
+                                {pricingPlan?.price}
                             </p>
                             <span className="text-sm text-muted-foreground">
-                                {currentPlan.billingInterval === "one-time"
+                                {pricingPlan?.billing_period === BillingPeriod.LIFETIME
                                     ? ""
-                                    : `/${currentPlan.billingInterval.slice(0, 5)}`}
+                                    : `/${pricingPlan?.billing_period.slice(0, 5)}`}
                             </span>
                         </div>
                         <p className="text-sm text-muted-foreground">
-                            Expires on {new Date(currentPlan.expirationDate).toLocaleDateString()}
+                            {subscription?.end_date
+                                ? moment(subscription?.end_date).format("DD/MM/YYYY")
+                                : "Free Forever"}
                         </p>
                     </div>
 
@@ -82,12 +66,10 @@ const CurrentSubscriptionPlan = ({ plan }: CurrentSubscriptionPlanParams) => {
                     {/* Payment Info */}
                     <div className="flex justify-between">
                         <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-10 items-center justify-center rounded border">
-                                <span className="text-xs">{currentPlan.paymentMethod.type}</span>
+                            <div className="flex h-6 items-center justify-center rounded border bg-white px-2">
+                                <span className="text-xs">MASTERCARD</span>
                             </div>
-                            <span className="text-sm text-muted-foreground">
-                                ending in {currentPlan.paymentMethod.last4}
-                            </span>
+                            <span className="text-sm text-muted-foreground">ending in **52</span>
                         </div>
                     </div>
                 </div>

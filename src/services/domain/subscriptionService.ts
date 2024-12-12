@@ -20,3 +20,8 @@ export const getBillingPeriod = (stripePriceId: string) => {
     const plan = allPlans.find((p) => p.stripe_price_id === stripePriceId);
     return { billingPeriod: plan?.billing_period };
 };
+
+export const getPricingPlan = (stripePriceId: string) => {
+    const plan = allPlans.find((p) => p.stripe_price_id === stripePriceId);
+    return { pricingPlan: plan };
+};

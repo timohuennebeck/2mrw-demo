@@ -2,6 +2,8 @@
 
 import CurrentSubscriptionPlan from "@/components/application/CurrentSubscriptionPlan";
 import { Button } from "@/components/ui/button";
+import { useSubscription } from "@/context/SubscriptionContext";
+import { PurchasedSubscription } from "@/interfaces";
 import { Manrope } from "next/font/google";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
@@ -13,8 +15,11 @@ const manrope = Manrope({
 });
 
 const SubscriptionSuccess = () => {
-    const [showConfetti, setShowConfetti] = React.useState(true);
+    const { subscription } = useSubscription();
+
     const router = useRouter();
+
+    const [showConfetti, setShowConfetti] = React.useState(true);
 
     useEffect(() => {
         const timer = setTimeout(() => setShowConfetti(false), 5000);
@@ -28,7 +33,7 @@ const SubscriptionSuccess = () => {
             </div>
 
             <div
-                className={`${manrope.variable} flex min-h-screen items-center justify-center font-manrope p-4 sm:p-8`}
+                className={`${manrope.variable} flex min-h-screen items-center justify-center p-4 font-manrope sm:p-8`}
             >
                 {showConfetti && <Confetti recycle={false} numberOfPieces={200} />}
 
@@ -53,7 +58,10 @@ const SubscriptionSuccess = () => {
 
                         {/* Subscription Details */}
                         <div className="mx-auto w-full max-w-2xl">
-                            <CurrentSubscriptionPlan />
+                            <CurrentSubscriptionPlan
+                                subscription={subscription as PurchasedSubscription}
+                                currentPlanStripePriceId={subscription?.stripe_price_id as string}
+                            />
                         </div>
 
                         {/* CTA Button */}

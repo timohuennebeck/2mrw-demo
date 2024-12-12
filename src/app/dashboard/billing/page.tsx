@@ -2,19 +2,8 @@
 
 import CurrentSubscriptionPlan from "@/components/application/CurrentSubscriptionPlan";
 import { Separator } from "@/components/ui/separator";
-import { useSession } from "@/context/SessionContext";
 import { useSubscription } from "@/context/SubscriptionContext";
-import useSuccessParam from "@/hooks/useSuccessParam";
-import { useSupabaseRealtime } from "@/hooks/useSupabaseRealtime";
-import { Suspense, useState } from "react";
-
-const SuccessHandler = ({ onSuccess }: { onSuccess: () => void }) => {
-    useSuccessParam({
-        onSuccess,
-        redirectPath: "/billing",
-    });
-    return null;
-};
+import { PurchasedSubscription } from "@/interfaces";
 
 interface BillingSectionProps {
     title: string;
@@ -35,16 +24,7 @@ const BillingSection = ({ title, description, children }: BillingSectionProps) =
 };
 
 const BillingPage = () => {
-    const { authUser } = useSession();
-    const { invalidateSubscription } = useSubscription();
-
-    const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-
-    useSupabaseRealtime({
-        table: "user_subscriptions",
-        filter: `user_id=eq.${authUser?.id}`,
-        onChange: invalidateSubscription,
-    });
+    const { subscription } = useSubscription();
 
     /**
      * the ChangeSubscriptionPlan component is only shown if the user has not yet purchased a plan (one-time or recurring)
@@ -53,39 +33,36 @@ const BillingPage = () => {
      */
 
     return (
-        <>
-            <Suspense fallback={null}>
-                <SuccessHandler onSuccess={() => setShowSuccessPopup(true)} />
-            </Suspense>
+        <div className="flex max-w-6xl flex-col gap-12 bg-white">
+            <BillingSection
+                title="Subscription Plans"
+                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
+            >
+                <CurrentSubscriptionPlan
+                    subscription={subscription as PurchasedSubscription}
+                    currentPlanStripePriceId={subscription?.stripe_price_id as string}
+                />
+            </BillingSection>
 
-            <div className="flex max-w-6xl flex-col gap-12 bg-white">
-                <BillingSection
-                    title="Subscription Plans"
-                    description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
-                >
-                    <CurrentSubscriptionPlan />
-                </BillingSection>
+            <Separator />
 
-                <Separator />
-
-                <BillingSection
-                    title="Invoices"
-                    description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
-                >
-                    <div className="rounded-lg border p-6">
-                        <p className="text-sm text-muted-foreground">
-                            To request an invoice, please reach out to our support team at{" "}
-                            <a
-                                href="mailto:support@example.com"
-                                className="text-primary hover:underline"
-                            >
-                                support@example.com
-                            </a>
-                        </p>
-                    </div>
-                </BillingSection>
-            </div>
-        </>
+            <BillingSection
+                title="Invoices"
+                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, iste!"
+            >
+                <div className="rounded-lg border p-6">
+                    <p className="text-sm text-muted-foreground">
+                        To request an invoice, please reach out to our support team at{" "}
+                        <a
+                            href="mailto:support@example.com"
+                            className="text-primary hover:underline"
+                        >
+                            support@example.com
+                        </a>
+                    </p>
+                </div>
+            </BillingSection>
+        </div>
     );
 };
 
