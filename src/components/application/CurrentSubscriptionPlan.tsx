@@ -6,6 +6,7 @@ import { PurchasedSubscription } from "@/interfaces";
 import { FreeTrial } from "@/interfaces/models/freeTrial";
 import { getPricingPlan } from "@/services/domain/subscriptionService";
 import { stripe } from "@/services/stripe/client";
+import { toTitleCase } from "@/utils/formatting/textHelper";
 import moment from "moment";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -66,7 +67,7 @@ const CurrentSubscriptionPlan = ({
                         <div className="space-y-2 md:space-y-3">
                             <div className="flex flex-col gap-2 md:flex-row md:items-center">
                                 <h3 className="text-xl font-medium md:text-2xl">
-                                    {pricingPlan?.name}
+                                    {toTitleCase(pricingPlan?.name ?? "")}
                                 </h3>
                                 <Badge variant="default" className="flex w-fit items-center gap-1">
                                     {subscription?.status}

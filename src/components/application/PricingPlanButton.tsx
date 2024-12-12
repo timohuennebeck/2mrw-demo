@@ -1,5 +1,10 @@
+import { billingConfig } from "@/config";
+import { TextConstants } from "@/constants/TextConstants";
+import { useFreeTrial } from "@/context/FreeTrialContext";
+import { useSubscription } from "@/context/SubscriptionContext";
 import { useUser } from "@/context/UserContext";
 import { DefaultPricingPlan } from "@/data/marketing/pricing-data";
+import { startFreeTrial } from "@/services/database/freeTrialService";
 import { startFreePlan } from "@/services/database/subscriptionService";
 import { initiateStripeCheckoutProcess } from "@/services/stripe/stripeService";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
@@ -7,11 +12,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
-import { useFreeTrial } from "@/context/FreeTrialContext";
-import { useSubscription } from "@/context/SubscriptionContext";
-import { startFreeTrial } from "@/services/database/freeTrialService";
-import { billingConfig } from "@/config";
-import { TextConstants } from "@/constants/TextConstants";
 
 const _getButtonText = ({
     currentPlanStripePriceId,
@@ -122,21 +122,27 @@ const PricingPlanButton = ({
             if (plan.stripe_price_id === "price_free") {
                 await startFreePlan(dbUser?.id ?? "");
                 invalidateSubscription();
+                setIsLoading(false);
                 return;
             }
 
             if (canStartFreeTrial && !isOnFreeTrial) {
-                const { error } = await startFreeTrial(dbUser?.id ?? "", plan.stripe_price_id);
-                if (error) throw error;
+                const response = await startFreeTrial(dbUser?.id ?? "", plan.stripe_price_id);
+                if (response?.error) throw response.error;
 
                 invalidateFreeTrial();
                 invalidateSubscription();
+
+                router.push("/plan-confirmation?mode=free-trial");
+                setIsLoading(false);
                 return;
             }
 
             await _handleStripeCheckout(plan, router);
-        } finally {
             setIsLoading(false);
+        } catch (error) {
+            toast.error("There has been an error creating the checkout session");
+            throw error;
         }
     };
 

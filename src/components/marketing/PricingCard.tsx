@@ -3,16 +3,7 @@ import { DefaultPricingPlan, PricingFeatureSection } from "@/data/marketing/pric
 import { getBillingPeriodText, getPlanPriceDescription } from "@/utils/pricing/pricingHelper";
 import { Check, X } from "lucide-react";
 import PricingPlanButton from "../application/PricingPlanButton";
-
-const _toTitleCase = (text: string): string => {
-    if (!text) return text;
-
-    return text
-        .toLowerCase()
-        .split(" ")
-        .map((word) => (word.length > 0 ? word.charAt(0).toUpperCase() + word.slice(1) : word))
-        .join(" ");
-};
+import { toTitleCase } from "@/utils/formatting/textHelper";
 
 const PricingCard = ({
     plan,
@@ -35,7 +26,7 @@ const PricingCard = ({
     return (
         <Card className="shadow-none">
             <CardHeader>
-                <CardTitle className="mb-4 font-medium text-lg">{_toTitleCase(plan.name)}</CardTitle>
+                <CardTitle className="mb-4 font-medium text-lg">{toTitleCase(plan.name)}</CardTitle>
                 <div>
                     <span className="text-4xl font-medium">{plan.price}</span>
                     <span className="text-sm text-gray-500">

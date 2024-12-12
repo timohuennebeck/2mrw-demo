@@ -7,6 +7,7 @@ import { useSubscription } from "@/context/SubscriptionContext";
 import { useUser } from "@/context/UserContext";
 import { PurchasedSubscription } from "@/interfaces";
 import { FreeTrial } from "@/interfaces/models/freeTrial";
+import moment from "moment";
 import { Manrope } from "next/font/google";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
@@ -37,11 +38,11 @@ const PlanConfirmation = () => {
     const getHeaderContent = () => {
         switch (mode) {
             case "free-trial":
+                const freeTrialEndDate = moment(freeTrial?.end_date).format("DD-MM-YYYY");
                 return {
                     badge: "FREE TRIAL ACTIVATED",
                     title: "Hello there!",
-                    subtitle:
-                        "Your free trial has started. You now have full access to all our premium features until the 25-12-2024.",
+                    subtitle: `Your free trial has started. You now have full access to all our premium features until ${freeTrialEndDate}.`,
                     highlightText: "Let's get started",
                 };
             case "subscription":
@@ -56,7 +57,7 @@ const PlanConfirmation = () => {
                 return {
                     badge: "PLAN CONFIRMED",
                     title: "Thank You!",
-                    subtitle: "Your plan has been successfully activated.",
+                    subtitle: "Your plan has been activated.",
                     highlightText: "You're all set",
                 };
         }
@@ -95,7 +96,7 @@ const PlanConfirmation = () => {
                                     {headerContent.highlightText}
                                 </span>
                             </h2>
-                            <p className="mx-auto max-w-2xl text-base text-gray-600 sm:text-lg">
+                            <p className="mx-auto max-w-2xl text-base text-gray-600">
                                 {headerContent.subtitle}
                             </p>
                         </div>
