@@ -94,7 +94,7 @@ const CurrentSubscriptionPlan = ({
                         </p>
                     </div>
 
-                    {subscription.stripe_price_id !== "price_free" && (
+                    {subscription?.stripe_price_id !== "price_free" && (
                         <Button
                             variant="secondary"
                             size="sm"
