@@ -53,7 +53,7 @@ const PricingPlanHeader = ({
             </span>
             <PricingPlanButton
                 plan={plan}
-                currentPlanStripePriceId={currentPlanStripePriceId}
+                currentPlanStripePriceId={currentPlanStripePriceId ?? ""}
                 isUserLoggedIn={isUserLoggedIn}
             />
         </div>

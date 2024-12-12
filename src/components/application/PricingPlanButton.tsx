@@ -1,10 +1,12 @@
-import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
+import { useUser } from "@/context/UserContext";
 import { DefaultPricingPlan } from "@/data/marketing/pricing-data";
+import { startFreePlan } from "@/services/database/subscriptionService";
 import { initiateStripeCheckoutProcess } from "@/services/stripe/stripeService";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { Button } from "../ui/button";
 
 const _getButtonText = ({
     currentPlanStripePriceId,
@@ -25,12 +27,17 @@ const _getButtonText = ({
 
     const isCurrentPlan = plan.stripe_price_id === currentPlanStripePriceId;
 
-    if (isCurrentPlan && currentPlanStripePriceId) {
+    if (isCurrentPlan) {
         return "Current Plan";
     }
 
-    if (currentPlanStripePriceId) {
-        return "Switch to Plan";
+    // check if the user has an active subscription that is not the free plan
+    if (currentPlanStripePriceId && plan.stripe_price_id === "price_free") {
+        return "Downgrade to Free";
+    }
+
+    if (!currentPlanStripePriceId && plan.stripe_price_id === "price_free") {
+        return "Unlock Plan - It's Free";
     }
 
     return "Unlock Plan";
@@ -79,6 +86,7 @@ const PricingPlanButton = ({
     isUserLoggedIn,
 }: PricingPlanButtonProps) => {
     const router = useRouter();
+    const { dbUser } = useUser();
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -95,6 +103,11 @@ const PricingPlanButton = ({
                 return; // current plan - no action needed
             }
 
+            if (plan.stripe_price_id === "price_free") {
+                await startFreePlan(dbUser?.id ?? "");
+                return;
+            }
+
             await _handleStripeCheckout(plan, router);
         } finally {
             setIsLoading(false);
@@ -104,7 +117,7 @@ const PricingPlanButton = ({
     return (
         <Button
             onClick={handleClick}
-            variant={_getButtonColors(currentPlanStripePriceId, plan)}
+            variant={_getButtonColors(currentPlanStripePriceId ?? "", plan)}
             disabled={currentPlanStripePriceId === plan.stripe_price_id}
             isLoading={isLoading}
             className="w-full"

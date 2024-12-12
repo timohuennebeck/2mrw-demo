@@ -12,6 +12,8 @@ import { createSupabasePowerUserClient } from "../integration/admin";
 import { createClient } from "../integration/server";
 import { getSubscriptionEndDate } from "./baseService";
 
+const FREE_PLAN_IDENTIFIER = "price_free";
+
 export const fetchUserSubscription = async (userId: string) => {
     try {
         const supabase = await createClient();
@@ -165,8 +167,11 @@ export const downgradeUserToFreePlan = async (userId: string) => {
             .update({
                 status: SubscriptionStatus.ACTIVE,
                 subscription_tier: SubscriptionTier.FREE,
+                stripe_price_id: FREE_PLAN_IDENTIFIER,
+
+                // these should be null for free plans
                 billing_plan: null,
-                stripe_price_id: null,
+                billing_period: null,
                 stripe_subscription_id: null,
                 end_date: null,
                 updated_at: moment().toISOString(),
@@ -198,11 +203,15 @@ export const startFreePlan = async (userId: string) => {
             user_id: userId,
             status: SubscriptionStatus.ACTIVE,
             subscription_tier: SubscriptionTier.FREE,
+            stripe_price_id: FREE_PLAN_IDENTIFIER,
+
+            // these should be null for free plans
             billing_plan: null,
-            stripe_price_id: null,
+            billing_period: null,
             stripe_subscription_id: null,
             end_date: null,
             updated_at: moment().toISOString(),
+            created_at: moment().toISOString(),
         });
 
         await adminSupabase.auth.admin.updateUserById(userId, {
