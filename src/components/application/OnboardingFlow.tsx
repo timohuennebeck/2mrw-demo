@@ -17,6 +17,8 @@ interface OnboardingFlowParams {
     children: React.ReactNode;
     onSkip?: () => void;
     showSkip?: boolean;
+    buttonText: string;
+    onContinue: () => void;
 }
 
 const OnboardingFlow = ({
@@ -27,6 +29,8 @@ const OnboardingFlow = ({
     children,
     onSkip,
     showSkip,
+    buttonText,
+    onContinue,
 }: OnboardingFlowParams) => {
     const router = useRouter();
 
@@ -47,62 +51,79 @@ const OnboardingFlow = ({
 
     return (
         <div className={`flex min-h-screen justify-center ${manrope.variable} font-manrope`}>
-            <div className="w-full max-w-[596px] px-4 py-8 md:mt-[12vh] md:px-16">
-                <div className="flex flex-col">
-                    {/* Logo */}
-                    <div className="mb-4 flex items-center gap-2">
+            <div className="w-full max-w-[596px] py-8 md:mt-[12vh]">
+                <div className="flex w-full flex-col items-center">
+                    {/* Logo - centered */}
+                    <div className="mb-8 flex items-center justify-center">
                         <Image
                             src="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
                             alt="logo"
                             width={40}
                             height={40}
-                            className="w-8 md:w-10"
+                            className="w-10"
                         />
                     </div>
 
-                    {/* Header */}
-                    <div className="grid gap-2">
-                        <h1 className="text-xl font-semibold md:text-2xl">{title}</h1>
-                        <p className="text-xs text-gray-400 md:text-sm">{description}</p>
-                    </div>
-
-                    {/* Step Indicator */}
-                    <div className="my-6 flex justify-center gap-1 md:my-8 md:gap-2">
+                    {/* Updated Step Indicator */}
+                    <div className="mb-12 flex justify-center gap-4">
                         {[...Array(totalSteps)].map((_, index) => (
-                            <div
-                                key={index}
-                                className={`h-1 w-8 rounded-full transition-all md:w-16 ${
-                                    index + 1 === currentStep ? "bg-primary" : "bg-gray-200"
-                                }`}
-                            />
+                            <div key={index} className="flex items-center">
+                                <div
+                                    className={`flex h-10 w-10 items-center justify-center rounded-full border ${
+                                        index + 1 <= currentStep
+                                            ? "border-primary bg-primary text-white"
+                                            : "border-gray-200 text-gray-400"
+                                    }`}
+                                >
+                                    {index + 1}
+                                </div>
+                                {index < totalSteps - 1 && (
+                                    <div className="ml-4 h-[1px] w-8 bg-gray-200" />
+                                )}
+                            </div>
                         ))}
                     </div>
 
-                    <div className="flex-1">{children}</div>
+                    {/* Header */}
+                    <div className="grid w-full gap-4 text-center">
+                        <h1 className="text-xl font-semibold md:text-3xl">{title}</h1>
+                        <p className="text-xs text-gray-400 md:text-sm">{description}</p>
+                    </div>
 
-                    <div className="mt-6 flex flex-col gap-4 md:mt-8">
-                        <div className="flex flex-col-reverse justify-between gap-2 md:flex-row">
-                            {currentStep > 1 ? (
-                                <Button
-                                    onClick={handlePrevious}
-                                    variant="ghost"
-                                    className="w-full text-gray-500 md:w-auto"
-                                >
-                                    Previous
-                                </Button>
-                            ) : (
-                                <div />
-                            )}
+                    {/* Content - Note the max-w-[380px] addition */}
+                    <div className="mt-8 w-full max-w-[448px]">
+                        {children}
 
-                            {showSkip && (
-                                <Button
-                                    onClick={handleSkip}
-                                    variant="ghost"
-                                    className="w-full text-gray-500 md:w-auto"
-                                >
-                                    Let's do this step later...
-                                </Button>
-                            )}
+                        <Button onClick={onContinue} className="mt-8 w-full">
+                            {buttonText}
+                        </Button>
+                        {/* Fixed-width buttons */}
+                        <div className="mt-4 flex w-full flex-col gap-4">
+                            <div className="flex flex-col-reverse justify-between gap-2 md:flex-row">
+                                <div className="w-full md:w-[120px]">
+                                    {currentStep > 1 && (
+                                        <Button
+                                            onClick={handlePrevious}
+                                            variant="ghost"
+                                            className="w-full text-gray-500"
+                                        >
+                                            Previous
+                                        </Button>
+                                    )}
+                                </div>
+
+                                <div className="w-full md:w-[180px]">
+                                    {showSkip && (
+                                        <Button
+                                            onClick={handleSkip}
+                                            variant="ghost"
+                                            className="w-full text-gray-500"
+                                        >
+                                            Let's do this step later...
+                                        </Button>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
