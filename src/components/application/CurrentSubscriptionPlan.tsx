@@ -1,17 +1,20 @@
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { BillingPeriod, FreeTrialStatus, SubscriptionStatus } from "@/enums";
-import { Badge } from "@/components/ui/badge";
 import { PurchasedSubscription } from "@/interfaces";
 import { FreeTrial } from "@/interfaces/models/freeTrial";
 import { getPricingPlan } from "@/services/domain/subscriptionService";
-import { stripe } from "@/services/stripe/client";
+import {
+    createStripeBillingPortal,
+    getStripeCreditCardDetails,
+    initiateStripeCheckoutProcess,
+} from "@/services/stripe/stripeService";
 import { toTitleCase } from "@/utils/formatting/textHelper";
 import moment from "moment";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { initiateStripeCheckoutProcess } from "@/services/stripe/stripeService";
 
 const _getExpirationDateText = (subscription: PurchasedSubscription, freeTrial: FreeTrial) => {
     const isFreePlan = subscription?.stripe_price_id === "price_free";
@@ -38,19 +41,6 @@ const _getExpirationDateText = (subscription: PurchasedSubscription, freeTrial: 
     return "N/A";
 };
 
-export const _createStripeBillingPortal = async (stripeCustomerId: string) => {
-    try {
-        const { url } = await stripe.billingPortal.sessions.create({
-            customer: stripeCustomerId,
-            return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/billing`,
-        });
-
-        return { portalUrl: url, error: null };
-    } catch (error) {
-        return { portalUrl: null, error };
-    }
-};
-
 const CurrentSubscriptionPlan = ({
     subscription,
     freeTrial,
@@ -63,16 +53,34 @@ const CurrentSubscriptionPlan = ({
     currentPlanStripePriceId: string;
 }) => {
     const [isLoading, setIsLoading] = useState(false);
+    const [lastFourDigits, setLastFourDigits] = useState("");
+    const [cardBrand, setCardBrand] = useState("");
 
     const router = useRouter();
 
     const { pricingPlan } = getPricingPlan(currentPlanStripePriceId);
 
+    useEffect(() => {
+        const fetchPaymentMethod = async () => {
+            try {
+                const { paymentMethod, error } = await getStripeCreditCardDetails(stripeCustomerId);
+                if (error) throw error;
+
+                setLastFourDigits(paymentMethod?.card?.last4 ?? "");
+                setCardBrand(paymentMethod?.card?.brand ?? "");
+            } catch (error) {
+                throw error;
+            }
+        };
+
+        fetchPaymentMethod();
+    }, [stripeCustomerId]);
+
     const handleBillingPortal = async () => {
         setIsLoading(true);
 
         try {
-            const { portalUrl, error } = await _createStripeBillingPortal(stripeCustomerId);
+            const { portalUrl, error } = await createStripeBillingPortal(stripeCustomerId);
             if (error) throw error;
 
             if (portalUrl) {
@@ -170,14 +178,18 @@ const CurrentSubscriptionPlan = ({
                     </Button>
 
                     {/* Payment Info */}
-                    <div className="flex justify-between">
-                        <div className="flex items-center gap-2">
-                            <div className="flex h-6 items-center justify-center rounded border bg-white px-2">
-                                <span className="text-xs">MASTERCARD</span>
+                    {lastFourDigits && cardBrand && (
+                        <div className="flex justify-between">
+                            <div className="flex items-center gap-2">
+                                <div className="flex h-6 items-center justify-center rounded border bg-white px-2">
+                                    <span className="text-xs">{cardBrand?.toUpperCase()}</span>
+                                </div>
+                                <span className="text-sm text-muted-foreground">
+                                    ending in {lastFourDigits}
+                                </span>
                             </div>
-                            <span className="text-sm text-muted-foreground">ending in **52</span>
                         </div>
-                    </div>
+                    )}
                 </div>
             </CardContent>
         </Card>

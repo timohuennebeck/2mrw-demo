@@ -74,3 +74,29 @@ export const initiateStripeCheckoutProcess = async ({
 
     return _createStripeCheckoutSession({ stripeCustomerId, stripePriceId, successUrl, cancelUrl });
 };
+
+export const createStripeBillingPortal = async (stripeCustomerId: string) => {
+    try {
+        const { url } = await stripe.billingPortal.sessions.create({
+            customer: stripeCustomerId,
+            return_url: `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard/billing`,
+        });
+
+        return { portalUrl: url, error: null };
+    } catch (error) {
+        return { portalUrl: null, error };
+    }
+};
+
+export const getStripeCreditCardDetails = async (stripeCustomerId: string) => {
+    try {
+        const paymentMethods = await stripe.paymentMethods.list({
+            customer: stripeCustomerId ?? "",
+            type: "card",
+        });
+
+        return { paymentMethod: paymentMethods.data[0], error: null };
+    } catch (error) {
+        return { paymentMethod: null, error };
+    }
+};
