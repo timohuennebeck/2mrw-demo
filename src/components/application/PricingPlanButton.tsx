@@ -80,7 +80,7 @@ const _handleStripeCheckout = async (plan: DefaultPricingPlan, router: AppRouter
 
         if (error) throw error;
 
-        router.push(checkoutUrl ?? "/choose-pricing-plan");
+        window.open(checkoutUrl ?? "/choose-pricing-plan", "_blank");
     } catch (error) {
         toast.error("There has been an error creating the checkout session");
         throw error;

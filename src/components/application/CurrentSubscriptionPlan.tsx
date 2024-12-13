@@ -1,7 +1,7 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { BillingPeriod, FreeTrialStatus } from "@/enums";
+import { BillingPeriod, FreeTrialStatus, SubscriptionStatus } from "@/enums";
+import { Badge } from "@/components/ui/badge";
 import { PurchasedSubscription } from "@/interfaces";
 import { FreeTrial } from "@/interfaces/models/freeTrial";
 import { getPricingPlan } from "@/services/domain/subscriptionService";
@@ -11,6 +11,32 @@ import moment from "moment";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { initiateStripeCheckoutProcess } from "@/services/stripe/stripeService";
+
+const _getExpirationDateText = (subscription: PurchasedSubscription, freeTrial: FreeTrial) => {
+    const isFreePlan = subscription?.stripe_price_id === "price_free";
+    const isOnFreeTrial = subscription?.status === SubscriptionStatus.TRIALING;
+    const isSubscriptionCancelled = subscription?.status === SubscriptionStatus.CANCELLED;
+    const subscriptionRenews = subscription?.status === SubscriptionStatus.ACTIVE;
+
+    if (isFreePlan) {
+        return "Free Forever";
+    }
+
+    if (isOnFreeTrial) {
+        return `Free Trial Expires on ${moment(freeTrial?.end_date).format("DD-MM-YYYY")}`;
+    }
+
+    if (isSubscriptionCancelled) {
+        return `Expires on ${moment(subscription?.end_date).format("DD-MM-YYYY")}`;
+    }
+
+    if (subscriptionRenews) {
+        return `Renews on ${moment(subscription?.end_date).format("DD-MM-YYYY")}`;
+    }
+
+    return "N/A";
+};
 
 export const _createStripeBillingPortal = async (stripeCustomerId: string) => {
     try {
@@ -36,14 +62,15 @@ const CurrentSubscriptionPlan = ({
     stripeCustomerId: string;
     currentPlanStripePriceId: string;
 }) => {
-    const [isOpeningBillingPortal, setIsOpeningBillingPortal] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const router = useRouter();
 
     const { pricingPlan } = getPricingPlan(currentPlanStripePriceId);
 
     const handleBillingPortal = async () => {
-        setIsOpeningBillingPortal(true);
+        setIsLoading(true);
+
         try {
             const { portalUrl, error } = await _createStripeBillingPortal(stripeCustomerId);
             if (error) throw error;
@@ -54,7 +81,28 @@ const CurrentSubscriptionPlan = ({
         } catch (error) {
             toast.error("There has been an error opening the billing portal");
         } finally {
-            setIsOpeningBillingPortal(false);
+            setIsLoading(false);
+        }
+    };
+
+    const handleStripeCheckout = async (stripePriceId: string) => {
+        setIsLoading(true);
+
+        try {
+            const { checkoutUrl, error } = await initiateStripeCheckoutProcess({
+                stripePriceId: stripePriceId,
+                successUrl: `${window.location.origin}/plan-confirmation?mode=subscription`,
+                cancelUrl: `${window.location.origin}/plan-confirmation?mode=free-trial`,
+            });
+
+            if (error) throw error;
+
+            window.open(checkoutUrl ?? "/choose-pricing-plan", "_blank");
+        } catch (error) {
+            toast.error("There has been an error creating the checkout session");
+            throw error;
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -92,9 +140,7 @@ const CurrentSubscriptionPlan = ({
                             </span>
                         </div>
                         <p className="text-sm text-muted-foreground">
-                            {subscription?.end_date
-                                ? moment(subscription?.end_date).format("DD-MM-YYYY")
-                                : "Free Forever"}
+                            {_getExpirationDateText(subscription, freeTrial)}
                         </p>
                     </div>
 
@@ -102,12 +148,16 @@ const CurrentSubscriptionPlan = ({
                         variant="secondary"
                         size="sm"
                         className="w-full transition-colors hover:bg-secondary/80 md:w-auto"
-                        disabled={isOpeningBillingPortal}
-                        isLoading={isOpeningBillingPortal}
+                        disabled={isLoading}
+                        isLoading={isLoading}
                         onClick={() => {
                             const isOnFreeTrial = freeTrial?.status === FreeTrialStatus.ACTIVE;
-                            if (subscription?.stripe_price_id === "price_free" || isOnFreeTrial) {
+                            if (subscription?.stripe_price_id === "price_free") {
                                 router.push("/choose-pricing-plan");
+                            }
+
+                            if (isOnFreeTrial) {
+                                handleStripeCheckout(subscription?.stripe_price_id);
                             } else {
                                 handleBillingPortal();
                             }
