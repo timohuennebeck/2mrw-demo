@@ -1,9 +1,8 @@
 import { fetchUser } from "@/services/database/userService";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
 import { useSession } from "./SessionContext";
 import { User } from "@/interfaces";
-import { queryClient } from "@/lib/qClient/qClient";
 
 interface UserContextType {
     dbUser: User | null;
@@ -17,6 +16,8 @@ const UserContext = createContext<UserContextType>({
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const { authUser } = useSession();
+
+    const queryClient = useQueryClient();
 
     const { data } = useQuery({
         queryKey: ["user"],

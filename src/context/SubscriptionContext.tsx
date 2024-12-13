@@ -8,30 +8,33 @@ import { SubscriptionStatus } from "@/enums";
 interface SubscriptionContextType {
     subscription: PurchasedSubscription | null;
     subscriptionStatus: SubscriptionStatus;
-    invalidateSubscription: () => void;
+    invalidateSubscription: () => Promise<void>;
     isLoading: boolean;
 }
 
 const SubscriptionContext = createContext<SubscriptionContextType>({
     subscription: null,
     subscriptionStatus: SubscriptionStatus.EXPIRED,
-    invalidateSubscription: () => {},
+    invalidateSubscription: async () => {},
     isLoading: false,
 });
 
 export const SubscriptionProvider = ({ children }: { children: React.ReactNode }) => {
-    const queryClient = useQueryClient();
-
     const { authUser } = useSession();
 
+    const queryClient = useQueryClient();
+
     const { data, isFetching } = useQuery({
-        queryKey: ["subscription"],
+        queryKey: ["subscription", authUser?.id],
         queryFn: () => fetchUserSubscription(authUser?.id ?? ""),
         enabled: !!authUser?.id,
     });
 
-    const invalidateSubscription = () => {
-        queryClient.invalidateQueries({ queryKey: ["subscription", authUser?.id] });
+    const invalidateSubscription = async () => {
+        await queryClient.invalidateQueries({
+            queryKey: ["subscription", authUser?.id],
+            refetchType: "active",
+        });
     };
 
     return (

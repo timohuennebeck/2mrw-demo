@@ -130,8 +130,7 @@ const PricingPlanButton = ({
                 const response = await startFreeTrial(dbUser?.id ?? "", plan.stripe_price_id);
                 if (response?.error) throw response.error;
 
-                invalidateFreeTrial();
-                invalidateSubscription();
+                await Promise.all([invalidateFreeTrial(), invalidateSubscription()]);
 
                 router.push("/plan-confirmation?mode=free-trial");
                 setIsLoading(false);

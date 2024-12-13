@@ -1,7 +1,6 @@
 "use server";
 
 import { StripeWebhookEvents } from "@/enums";
-import { queryClient } from "@/lib/qClient/qClient";
 import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { stripe } from "@/services/stripe/client";
 import {
@@ -9,6 +8,7 @@ import {
     handleCheckoutSessionCompleted,
     handleUpdateSubscription,
 } from "@/services/stripe/stripeWebhook";
+import { useQueryClient } from "@tanstack/react-query";
 import { NextRequest as request, NextResponse as response } from "next/server";
 import Stripe from "stripe";
 
@@ -43,6 +43,8 @@ const _getUserIdFromStripeCustomerId = async (customerId: string) => {
 };
 
 export const POST = async (req: request) => {
+    const queryClient = useQueryClient();
+
     try {
         const body = await req.text();
         const signature = req.headers.get("stripe-signature");
@@ -64,7 +66,7 @@ export const POST = async (req: request) => {
                 await handleCheckoutSessionCompleted(session, userId ?? "");
 
                 if (userId) {
-                    queryClient.invalidateQueries({ queryKey: ["subscription", userId] });
+                    await queryClient.invalidateQueries({ queryKey: ["subscription", userId] });
                 }
                 break;
             }
@@ -83,7 +85,7 @@ export const POST = async (req: request) => {
                 }
 
                 if (userId) {
-                    queryClient.invalidateQueries({ queryKey: ["subscription", userId] });
+                    await queryClient.invalidateQueries({ queryKey: ["subscription", userId] });
                 }
                 break;
             }
