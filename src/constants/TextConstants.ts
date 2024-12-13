@@ -9,6 +9,7 @@ export const TextConstants = {
     TEXT__SIGN_UP_EMAIIL_OR_ANOTHER_SERVICE: "Sign up using email or another service to continue!",
     TEXT__SIGN_IN_EMAIL_OR_ANOTHER_SERVICE: "Sign in using email or another service to continue!",
     TEXT__SIGN_UP: "Sign Up",
+    TEXT__EMAIL_HAS_BEEN_SENT: "Email has been sent!",
     TEXT__START_FREE_TRIAL: (duration: number) => `Start Free Trial - ${duration} DAYS`,
     TEXT__SIGN_IN: "Log In",
     TEXT__LOGIN_WITH_MAGIC_LINK: "Login with Magic Link",

@@ -3,6 +3,8 @@
 import { TextConstants } from "@/constants/TextConstants";
 import { createClient } from "../integration/server";
 import { AuthMethod } from "@/enums/user";
+import { EmailType } from "@/enums";
+import { sendLoopsTransactionalEmail } from "../loops/loopsService";
 
 export const sendMagicLink = async (email: string) => {
     const supabase = await createClient();
