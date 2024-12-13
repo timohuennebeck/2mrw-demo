@@ -1,8 +1,11 @@
 export const appConfig = {
-    auth: {
-        sidePanel: {
-            isEnabled: true,
-        },
+    /**
+     * - isEnabled: Controls whether the testimonial side panel on the auth pages is enabled. When enabled, the side panel is displayed on the right side of the screen
+     * - direction: Controls the direction of the side panel. Can be "left" or "right"
+     */
+    testimonialSidePanel: {
+        isEnabled: true,
+        direction: "right",
     },
 
     /**
@@ -14,6 +17,10 @@ export const appConfig = {
         isRequired: false,
     },
 
+    /**
+     * - isEnabled: Controls whether the feedback form is enabled. When enabled, users are redirected to the feedback form when they click the "Feedback" button in the bottom right corner of the screen
+     * - formUrl: The URL of the feedback form
+     */
     feedback: {
         isEnabled: true,
         formUrl: "https://tally.so/r/yourform",
