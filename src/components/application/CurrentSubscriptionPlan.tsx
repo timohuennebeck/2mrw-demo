@@ -63,11 +63,11 @@ const CurrentSubscriptionPlan = ({
     useEffect(() => {
         const fetchPaymentMethod = async () => {
             try {
-                const { paymentMethod, error } = await getStripeCreditCardDetails(stripeCustomerId);
-                if (error) throw error;
+                const response = await getStripeCreditCardDetails(stripeCustomerId);
+                if (response.error) throw response.error;
 
-                setLastFourDigits(paymentMethod?.card?.last4 ?? "");
-                setCardBrand(paymentMethod?.card?.brand ?? "");
+                setLastFourDigits(response.lastFourDigits ?? "");
+                setCardBrand(response.brand ?? "");
             } catch (error) {
                 throw error;
             }

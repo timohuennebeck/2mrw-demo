@@ -95,8 +95,14 @@ export const getStripeCreditCardDetails = async (stripeCustomerId: string) => {
             type: "card",
         });
 
-        return { paymentMethod: paymentMethods.data[0], error: null };
+        const card = paymentMethods.data[0].card;
+
+        return {
+            lastFourDigits: card?.last4,
+            brand: card?.brand,
+            error: null,
+        };
     } catch (error) {
-        return { paymentMethod: null, error };
+        return { lastFourDigits: null, brand: null, error: "Error fetching credit card details" };
     }
 };
