@@ -1,5 +1,5 @@
 import { SubscriptionStatus } from "@/enums";
-import { downgradeUserToFreePlan } from "@/services/database/subscriptionService";
+import { downgradeToFreePlan } from "@/services/database/subscriptionService";
 import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { handleSupabaseError } from "@/utils/errors/supabaseError";
 import moment from "moment";
@@ -41,8 +41,7 @@ export const GET = async () => {
             if (endDate.isBefore(now)) {
                 console.log(`[Cron] Processing expired subscription for : ${subscription.user_id}`);
 
-                const downgradeResponse = await downgradeUserToFreePlan(subscription.user_id);
-                if (downgradeResponse.error) throw downgradeResponse.error;
+                await downgradeToFreePlan(subscription.user_id);
 
                 console.log(`[Cron] Processed subscription for user: ${subscription.user_id}`);
             }

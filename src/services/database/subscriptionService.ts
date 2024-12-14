@@ -101,7 +101,37 @@ export const cancelUserSubscription = async (userId: string, endDate: string) =>
     if (updateUserError) throw updateUserError;
 };
 
-export const downgradeUserToFreePlan = async (userId: string) => {
+export const startFreePlan = async (userId: string) => {
+    try {
+        const adminSupabase = await createSupabasePowerUserClient();
+
+        const { error } = await adminSupabase.from("user_subscriptions").insert({
+            user_id: userId,
+            status: SubscriptionStatus.ACTIVE,
+            subscription_tier: SubscriptionTier.FREE,
+            stripe_price_id: FREE_PLAN_IDENTIFIER,
+            updated_at: moment().toISOString(),
+            created_at: moment().toISOString(),
+        });
+
+        await adminSupabase.auth.admin.updateUserById(userId, {
+            user_metadata: {
+                subscription_status: SubscriptionStatus.ACTIVE,
+                subscription_updated_at: moment().toISOString(),
+            },
+        });
+
+        if (error) throw error;
+        return { success: true, error: null };
+    } catch (error) {
+        return {
+            success: null,
+            error: handleSupabaseError(error, "startFreePlan"),
+        };
+    }
+};
+
+export const downgradeToFreePlan = async (userId: string) => {
     /**
      * this fn runs inside the cron jobs to downgrade the user to free plan
      * Thus, we need to use the admin supabase client
@@ -133,34 +163,4 @@ export const downgradeUserToFreePlan = async (userId: string) => {
     });
 
     if (updateUserError) throw updateUserError;
-};
-
-export const startFreePlan = async (userId: string) => {
-    try {
-        const adminSupabase = await createSupabasePowerUserClient();
-
-        const { error } = await adminSupabase.from("user_subscriptions").insert({
-            user_id: userId,
-            status: SubscriptionStatus.ACTIVE,
-            subscription_tier: SubscriptionTier.FREE,
-            stripe_price_id: FREE_PLAN_IDENTIFIER,
-            updated_at: moment().toISOString(),
-            created_at: moment().toISOString(),
-        });
-
-        await adminSupabase.auth.admin.updateUserById(userId, {
-            user_metadata: {
-                subscription_status: SubscriptionStatus.ACTIVE,
-                subscription_updated_at: moment().toISOString(),
-            },
-        });
-
-        if (error) throw error;
-        return { success: true, error: null };
-    } catch (error) {
-        return {
-            success: null,
-            error: handleSupabaseError(error, "startFreePlan"),
-        };
-    }
 };

@@ -1,5 +1,5 @@
 import { FreeTrialStatus } from "@/enums";
-import { downgradeUserToFreePlan } from "@/services/database/subscriptionService";
+import { downgradeToFreePlan } from "@/services/database/subscriptionService";
 import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { handleSupabaseError } from "@/utils/errors/supabaseError";
 import moment from "moment";
@@ -66,8 +66,7 @@ export const GET = async () => {
                 const freeTrialUpdateResponse = await _updateFreeTrialToExpired(trial.user_id);
                 if (freeTrialUpdateResponse.error) throw freeTrialUpdateResponse.error;
 
-                const downgradeResponse = await downgradeUserToFreePlan(trial.user_id);
-                if (downgradeResponse.error) throw downgradeResponse.error;
+                await downgradeToFreePlan(trial.user_id);
 
                 console.log(`[Cron] Processed trial for user: ${trial.user_id}`);
             }
