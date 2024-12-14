@@ -61,6 +61,8 @@ const CurrentSubscriptionPlan = ({
     const pricingPlan = getPricingPlan(currentPlanStripePriceId);
 
     useEffect(() => {
+        if (!stripeCustomerId) return;
+
         const fetchPaymentMethod = async () => {
             try {
                 const response = await getStripeCreditCardDetails(stripeCustomerId);
