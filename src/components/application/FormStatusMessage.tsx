@@ -19,12 +19,12 @@ const FormStatusMessage = ({ message, type = "error", action }: StatusMessage) =
         error: {
             background: "bg-red-50",
             text: "text-red-500",
-            icon: <OctagonX className="min-h-4 min-w-4" />,
+            icon: <OctagonX className="max-h-4 min-h-4 min-w-4 max-w-4" />,
         },
         info: {
             background: "bg-blue-50",
             text: "text-blue-500",
-            icon: <Info className="min-h-4 min-w-4" />,
+            icon: <Info className="max-h-4 min-h-4 min-w-4 max-w-4" />,
         },
     };
 
