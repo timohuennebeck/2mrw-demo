@@ -26,12 +26,20 @@ const Header = ({ navItems, logoSrc, loginOnClick, userIsLoggedIn }: HeaderParam
     return (
         <header>
             <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-8 sm:px-6 lg:px-8">
-                {/* Logo */}
-                <Link href="/" className="flex items-center">
-                    <Image src={logoSrc} alt="logo" width={32} height={32} className="h-8 w-auto" />
-                </Link>
+                {/* Logo - Fixed width, so that the nav buttons are centered */}
+                <div className="w-32">
+                    <Link href="/" className="flex items-center">
+                        <Image
+                            src={logoSrc}
+                            alt="logo"
+                            width={32}
+                            height={32}
+                            className="h-8 w-auto"
+                        />
+                    </Link>
+                </div>
 
-                {/* Navigation */}
+                {/* Navigation - Centered */}
                 <nav className="hidden items-center gap-8 md:flex">
                     {navItems.map((item) => (
                         <Link
@@ -49,13 +57,25 @@ const Header = ({ navItems, logoSrc, loginOnClick, userIsLoggedIn }: HeaderParam
                     ))}
                 </nav>
 
-                <Button
-                    variant="ghost"
-                    onClick={userIsLoggedIn ? () => router.push("/dashboard") : loginOnClick}
-                >
-                    Log in
-                    <ArrowRight size={16} className="text-gray-400" />
-                </Button>
+                {/* Button - Fixed width, so that the nav buttons are centered */}
+                <div className="w-32 text-right">
+                    <Button
+                        variant="ghost"
+                        onClick={userIsLoggedIn ? () => router.push("/dashboard") : loginOnClick}
+                    >
+                        {userIsLoggedIn ? (
+                            <>
+                                Dashboard
+                                <ArrowRight size={16} className="text-gray-400" />
+                            </>
+                        ) : (
+                            <>
+                                Log in
+                                <ArrowRight size={16} className="text-gray-400" />
+                            </>
+                        )}
+                    </Button>
+                </div>
             </div>
         </header>
     );
