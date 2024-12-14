@@ -56,12 +56,11 @@ export const DeleteProfileSection = () => {
                 // wait for a brief moment to ensure cookies are cleared
                 await new Promise((resolve) => setTimeout(resolve, 500));
 
-                router.replace("/auth/sign-up");
+                router.replace("/auth/sign-up?feedback=account-deleted");
 
                 // wait for a brief moment to create a smooth transition
                 setTimeout(() => {
                     setIsDeleting(false);
-                    toast.success("Your profile has been deleted");
                 }, 500);
             }
         } catch (error) {

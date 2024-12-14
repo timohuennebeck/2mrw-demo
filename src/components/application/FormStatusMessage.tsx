@@ -19,19 +19,19 @@ const FormStatusMessage = ({ message, type = "error", action }: StatusMessage) =
         error: {
             background: "bg-red-50",
             text: "text-red-500",
-            icon: <OctagonX className="h-5 w-5" />,
+            icon: <OctagonX className="min-h-4 min-w-4" />,
         },
         info: {
             background: "bg-blue-50",
             text: "text-blue-500",
-            icon: <Info className="h-5 w-5" />,
+            icon: <Info className="min-h-4 min-w-4" />,
         },
     };
 
     const { background, text, icon } = styles[type];
 
     return (
-        <div className={`flex items-center gap-2 rounded-md ${background} p-3 text-sm ${text}`}>
+        <div className={`flex items-center gap-4 rounded-md ${background} p-3 text-sm ${text}`}>
             {icon}
             <p>{message}</p>
             {action && (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import RegisterLoginForm from "@/components/application/RegisterLoginForm";
 import { resendConfirmationEmail, signUpUserToSupabase } from "./action";
 import { TextConstants } from "@/constants/TextConstants";
@@ -9,6 +9,7 @@ import { StatusMessage } from "@/interfaces";
 import { useSearchParams } from "next/navigation";
 import { AuthMethod } from "@/enums/user";
 import { sendMagicLink } from "@/services/domain/authService";
+import { appConfig } from "@/config";
 
 interface HandleSubmitParams {
     firstName: string;
@@ -26,6 +27,35 @@ const SignUpPage = () => {
     const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(null);
 
     const searchParams = useSearchParams();
+
+    useEffect(() => {
+        const isEnabled = appConfig.feedback.widgets.accountDeletion.isEnabled;
+
+        if (!isEnabled) return;
+
+        // Check if user came from account deletion
+        if (searchParams.get("feedback") === "account-deleted") {
+            setStatusMessage({
+                type: "info",
+                message:
+                    "Your account has been deleted! Tell us how we could do better next time.",
+                action: {
+                    label: "Share Feedback",
+                    onClick: () =>
+                        window.open(appConfig.feedback.widgets.accountDeletion.formUrl, "_blank"),
+                },
+            });
+
+            // clear the feedback parameter from URL without page reload
+            const newUrl = new URL(window.location.href);
+            newUrl.searchParams.delete("feedback");
+            window.history.replaceState({}, "", newUrl);
+
+            // remove the message after 10 seconds
+            const timer = setTimeout(() => setStatusMessage(null), 10000);
+            return () => clearTimeout(timer);
+        }
+    }, [searchParams]);
 
     const _handleResendConfirmationEmail = async (email: string) => {
         setIsLoading(true);

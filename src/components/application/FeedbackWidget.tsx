@@ -6,7 +6,7 @@ const FeedbackWidget = () => {
     return (
         <div className="fixed bottom-4 right-8">
             <Button
-                onClick={() => window.open(appConfig.feedback.formUrl, "_blank")}
+                onClick={() => window.open(appConfig.feedback.widgets.floatingButton.formUrl, "_blank")}
                 variant="default"
                 size="sm"
                 className="group"

@@ -81,7 +81,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 </SidebarInset>
             </div>
 
-            {appConfig.feedback.isEnabled && <FeedbackWidget />}
+            {appConfig.feedback.widgets.floatingButton.isEnabled && <FeedbackWidget />}
         </SidebarProvider>
     );
 };

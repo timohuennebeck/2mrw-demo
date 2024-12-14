@@ -17,13 +17,17 @@ export const appConfig = {
         isRequired: false,
     },
 
-    /**
-     * - isEnabled: Controls whether the feedback form is enabled. When enabled, users are redirected to the feedback form when they click the "Feedback" button in the bottom right corner of the screen
-     * - formUrl: The URL of the feedback form
-     */
     feedback: {
-        isEnabled: true,
-        formUrl: "https://tally.so/r/yourform",
+        widgets: {
+            floatingButton: {
+                isEnabled: true, // controls the FeedbackWidget.tsx in bottom right
+                formUrl: "https://tally.so/r/general-feedback",
+            },
+            accountDeletion: {
+                isEnabled: true, // controls whether to show feedback prompt after account deletion
+                formUrl: "https://tally.so/r/exit-survey",
+            },
+        },
     },
 
     companyInformation: {
