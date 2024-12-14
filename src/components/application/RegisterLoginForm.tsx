@@ -84,7 +84,8 @@ export interface RegisterLoginFormParams {
     }) => void;
     loginOrSignupWithMagicLink?: (email: string) => void;
     isLoading: boolean;
-    statusMessage?: StatusMessage | null;
+    statusMessage: StatusMessage | null;
+    setStatusMessage: (statusMessage: StatusMessage | null) => void;
 }
 
 const RegisterLoginForm = ({
@@ -93,6 +94,7 @@ const RegisterLoginForm = ({
     loginOrSignupWithMagicLink,
     isLoading,
     statusMessage,
+    setStatusMessage,
 }: RegisterLoginFormParams) => {
     const searchParams = useSearchParams();
 
@@ -306,15 +308,15 @@ const RegisterLoginForm = ({
                                     </Link>
                                 </p>
                             )}
-
-                            {!isPasswordFocused && (
-                                <>
-                                    <FormDivider />
-                                    <GoogleButton />
-                                </>
-                            )}
                         </form>
                     </Form>
+
+                    {!isPasswordFocused && (
+                        <>
+                            <FormDivider />
+                            <GoogleButton setStatusMessage={setStatusMessage} />
+                        </>
+                    )}
 
                     <div className="text-center text-sm">
                         {mode === "signup"

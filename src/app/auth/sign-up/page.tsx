@@ -160,6 +160,7 @@ const SignUpPage = () => {
             loginOrSignupWithMagicLink={handleSignUpWithMagicLink}
             isLoading={isLoading}
             statusMessage={statusMessage}
+            setStatusMessage={setStatusMessage}
         />
     );
 };

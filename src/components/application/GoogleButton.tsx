@@ -1,21 +1,37 @@
 import { signInUsingGoogle } from "@/app/auth/sign-in/action";
-import { TextConstants } from "@/constants/TextConstants";
-import { toast } from "sonner";
 import { Button } from "../ui/button";
+import { useState } from "react";
+import { StatusMessage } from "@/interfaces/common/form";
 
-const GoogleButton = () => {
+interface GoogleButtonParams {
+    setStatusMessage: (message: StatusMessage | null) => void;
+}
+
+const GoogleButton = ({ setStatusMessage }: GoogleButtonParams) => {
+    const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+
     const continueWithGoogle = async () => {
+        setIsGoogleLoading(true);
+
         const { success, error, redirect } = await signInUsingGoogle();
 
         if (error) {
-            toast.error(error);
+            setStatusMessage({
+                type: "error",
+                message: error,
+            });
+
+            setTimeout(() => {
+                setStatusMessage(null);
+            }, 5000);
         }
 
         if (success && redirect) {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
             window.location.href = redirect;
-
-            toast(TextConstants.TEXT__REDIRECTING_TO_GOOGLE);
         }
+
+        setIsGoogleLoading(false);
     };
 
     const GoogleIcon = () => (
@@ -40,7 +56,7 @@ const GoogleButton = () => {
     );
 
     return (
-        <Button variant="outline" onClick={continueWithGoogle}>
+        <Button variant="outline" onClick={continueWithGoogle} isLoading={isGoogleLoading}>
             <GoogleIcon />
             Continue with Google
         </Button>

@@ -78,6 +78,7 @@ const SignInPage = () => {
             loginOrSignupWithMagicLink={handleLoginWithMagicLink}
             isLoading={isLoading}
             statusMessage={statusMessage}
+            setStatusMessage={setStatusMessage}
         />
     );
 };

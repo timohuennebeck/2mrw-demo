@@ -25,18 +25,21 @@ export const signIn = async ({ email, password }: { email: string; password: str
 };
 
 export const signInUsingGoogle = async () => {
-    const supabase = await createClient();
+    try {
+        const supabase = await createClient();
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: "google",
+            options: {
+                redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+            },
+        });
 
-    const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-            redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
-        },
-    });
+        if (error) {
+            return { error: error.message };
+        }
 
-    if (error) {
-        return { error: error.message };
+        return { success: true, redirect: data.url };
+    } catch (error) {
+        return { error: "There has been an unexpected error signing in to Google" };
     }
-
-    return { success: true, redirect: data.url };
 };
