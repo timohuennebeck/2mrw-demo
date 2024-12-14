@@ -1,46 +1,57 @@
-import {
-    downgradeUserToFreePlan,
-    terminateUserSubscription,
-} from "@/services/database/subscriptionService";
-import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { SubscriptionStatus } from "@/enums";
+import { downgradeUserToFreePlan } from "@/services/database/subscriptionService";
+import { createSupabasePowerUserClient } from "@/services/integration/admin";
+import { handleSupabaseError } from "@/utils/errors/supabaseError";
 import moment from "moment";
-import { NextResponse as response } from "next/server";
+import { NextResponse as nextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-export const GET = async () => {
-    const adminSupabase = await createSupabasePowerUserClient();
-
+const _fetchOnGoingSubscriptions = async () => {
     try {
-        const { data: activeSubscriptions, error: fetchError } = await adminSupabase
+        const adminSupabase = await createSupabasePowerUserClient();
+
+        const { data, error } = await adminSupabase
             .from("user_subscriptions")
             .select("user_id, status, end_date")
             .in("status", [SubscriptionStatus.ACTIVE, SubscriptionStatus.CANCELLED]);
 
-        if (fetchError) throw fetchError;
+        if (error) return { data: null, error };
 
-        const updatePromise = activeSubscriptions.map(async (subscription) => {
+        return { data, error: null };
+    } catch (error) {
+        const supabaseError = handleSupabaseError(error, "_fetchOnGoingSubscriptions");
+        return { data: null, error: supabaseError };
+    }
+};
+
+export const GET = async () => {
+    console.log("[Cron] Starting subscription update job");
+
+    try {
+        const subscriptionsResponse = await _fetchOnGoingSubscriptions();
+        if (subscriptionsResponse.error) throw subscriptionsResponse.error;
+
+        console.log(`[Cron] Found ${subscriptionsResponse.data.length} subscriptions to process`);
+
+        const updatePromise = subscriptionsResponse.data.map(async (subscription) => {
             const now = moment();
             const endDate = moment(subscription.end_date);
 
             if (endDate.isBefore(now)) {
-                const { error } = await terminateUserSubscription(subscription.user_id);
-                if (error) throw error;
+                console.log(`[Cron] Processing expired subscription for : ${subscription.user_id}`);
 
-                const { error: updateUserError } = await downgradeUserToFreePlan(
-                    subscription.user_id,
-                ); // downgrade the user to the free plan as he has not renewed the subscription
-                if (updateUserError) throw updateUserError;
+                const downgradeResponse = await downgradeUserToFreePlan(subscription.user_id);
+                if (downgradeResponse.error) throw downgradeResponse.error;
+
+                console.log(`[Cron] Processed subscription for user: ${subscription.user_id}`);
             }
         });
 
-        if (updatePromise) {
-            await Promise.all(updatePromise);
-        }
+        await Promise.all(updatePromise);
 
-        return response.json({ success: true });
+        return nextResponse.json({ message: "Subscription update job completed", status: 200 });
     } catch (error) {
-        return response.json({ success: false, error: error });
+        return nextResponse.json({ message: "Subscription update cron job failed", status: 500 });
     }
 };
