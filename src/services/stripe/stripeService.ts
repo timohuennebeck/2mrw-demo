@@ -70,7 +70,7 @@ export const createStripeBillingPortal = async (stripeCustomerId: string) => {
 
         return { portalUrl: url, error: null };
     } catch (error) {
-        return { portalUrl: null, error };
+        return { portalUrl: null, error: "Error creating billing portal" };
     }
 };
 

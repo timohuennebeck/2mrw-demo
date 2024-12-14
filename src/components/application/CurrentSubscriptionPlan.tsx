@@ -164,6 +164,7 @@ const CurrentSubscriptionPlan = ({
                             const isOnFreeTrial = freeTrial?.status === FreeTrialStatus.ACTIVE;
                             if (subscription?.stripe_price_id === "price_free") {
                                 router.push("/choose-pricing-plan");
+                                return;
                             }
 
                             if (isOnFreeTrial) {
