@@ -27,7 +27,7 @@ const GoogleButton = ({ setStatusMessage }: GoogleButtonParams) => {
         }
 
         if (success && redirect) {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            await new Promise((resolve) => setTimeout(resolve, 250));
             window.location.href = redirect;
         }
 
