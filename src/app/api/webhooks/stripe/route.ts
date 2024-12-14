@@ -9,7 +9,7 @@ import {
     handleUpdateSubscription,
 } from "@/services/stripe/stripeWebhook";
 import { useQueryClient } from "@tanstack/react-query";
-import { NextRequest as request, NextResponse as response } from "next/server";
+import { NextRequest as nextRequest, NextResponse as nextResponse } from "next/server";
 import Stripe from "stripe";
 
 const _verifyStripeWebhook = async (body: string, signature: string) => {
@@ -42,7 +42,7 @@ const _getUserIdFromStripeCustomerId = async (customerId: string) => {
     return userData.id;
 };
 
-export const POST = async (req: request) => {
+export const POST = async (req: nextRequest) => {
     const queryClient = useQueryClient();
 
     try {
@@ -50,7 +50,7 @@ export const POST = async (req: request) => {
         const signature = req.headers.get("stripe-signature");
 
         if (!signature) {
-            return response.json({ error: "There was no signature provided" }, { status: 400 });
+            return nextResponse.json({ error: "There was no signature provided" }, { status: 400 });
         }
 
         // construct the event and check if the webhook is valid
@@ -96,9 +96,9 @@ export const POST = async (req: request) => {
                 break;
         }
 
-        return response.json({ received: true }, { status: 200 });
+        return nextResponse.json({ received: true }, { status: 200 });
     } catch (error) {
         console.error("Error processing webhook:", error);
-        return response.json({ error: "Webhook processing failed" }, { status: 500 });
+        return nextResponse.json({ error: "Webhook processing failed" }, { status: 500 });
     }
 };
