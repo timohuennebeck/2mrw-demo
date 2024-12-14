@@ -10,6 +10,7 @@ import { AuthMethod } from "@/enums/user";
 import { sendMagicLink } from "@/services/domain/authService";
 import { appConfig } from "@/config";
 import { useParamFeedback } from "@/hooks/useParamFeedback";
+import { useSearchParams } from "next/navigation";
 
 interface HandleSubmitParams {
     firstName: string;
@@ -25,6 +26,8 @@ const _getSignUpMethod = (searchParams: URLSearchParams) => {
 const SignUpPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(null);
+
+    const searchParams = useSearchParams();
 
     useParamFeedback(setStatusMessage, {
         param: "account-deleted",

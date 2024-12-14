@@ -74,13 +74,9 @@ export const GET = async (request: NextRequest) => {
             case "signup": {
                 const supabaseUser = await fetchUser(authUser?.id ?? "");
 
-                if (supabaseUser.user) {
-                    return redirect("/dashboard"); // user already exists in Supabase, redirect and don't create a new user
-                }
-
-                if (authUser) {
+                if (!supabaseUser.user && authUser) {
                     const authMethod = authUser.user_metadata.auth_method as AuthMethod;
-                    const { error } = await createUserTable(authUser, authMethod);
+                    const { error } = await createUserTable(authUser, authMethod); // if the user does not exist in the database, create a new user
 
                     if (error) {
                         console.error("Failed to create user:", error);
@@ -89,10 +85,12 @@ export const GET = async (request: NextRequest) => {
 
                     return redirect("/auth/email-confirmation");
                 }
+
+                return nextResponse.next();
             }
 
             case "magiclink": {
-                return redirect("/dashboard"); // no additional action needed and just redirect the user after verifying the magic link
+                return nextResponse.next(); // no additional action needed and just redirect the user after verifying the magic link
             }
 
             case "email_change": {
