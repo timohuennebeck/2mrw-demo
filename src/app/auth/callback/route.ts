@@ -1,7 +1,7 @@
 "use server";
 
 import { AuthMethod } from "@/enums/user";
-import { createUserTable } from "@/services/database/userService";
+import { createUserTable, fetchUser } from "@/services/database/userService";
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse as response } from "next/server";
@@ -9,7 +9,6 @@ import { NextResponse as response } from "next/server";
 export const GET = async (request: Request) => {
     const { searchParams, origin } = new URL(request.url);
     const code = searchParams.get("code");
-    const next = searchParams.get("next") ?? "/";
 
     /**
      * this route is used when the user logs in via Google
@@ -46,10 +45,14 @@ export const GET = async (request: Request) => {
         const { user: authUser } = data.session;
 
         try {
-            const { error } = await createUserTable(authUser, AuthMethod.GOOGLE);
-            if (error) throw error;
+            const { user: existingUser } = await fetchUser(authUser.id);
 
-            return response.redirect(`${origin}${next}`);
+            if (!existingUser) {
+                const { error } = await createUserTable(authUser, AuthMethod.GOOGLE);
+                if (error) throw error;
+            }
+
+            return response.redirect(origin);
         } catch (error) {
             console.error("Unexpected error during Google sign in:", error);
             return response.redirect(`${origin}/auth-error?type=google-auth`);
