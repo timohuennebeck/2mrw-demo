@@ -83,7 +83,7 @@ export const GET = async (request: NextRequest) => {
                         return redirect("/auth-error?type=create-user");
                     }
 
-                    return redirect("/auth/email-confirmation");
+                    return redirect("/auth/confirmation?type=email-confirmed");
                 }
 
                 return nextResponse.next();

@@ -13,6 +13,7 @@ const PUBLIC_ROUTES = [
     "/auth-error",
     "/user-profile",
     "/auth/password-confirmation",
+    "/auth/confirmation",
 ];
 
 const AUTH_ROUTES = ["/auth/confirm", "/auth/callback", "/auth/email-change"];
