@@ -37,8 +37,7 @@ const SignUpPage = () => {
         if (searchParams.get("feedback") === "account-deleted") {
             setStatusMessage({
                 type: "info",
-                message:
-                    "Your account has been deleted! Tell us how we could do better next time.",
+                message: "Your account has been deleted! Tell us how we could do better next time.",
                 action: {
                     label: "Share Feedback",
                     onClick: () =>
@@ -50,10 +49,6 @@ const SignUpPage = () => {
             const newUrl = new URL(window.location.href);
             newUrl.searchParams.delete("feedback");
             window.history.replaceState({}, "", newUrl);
-
-            // remove the message after 10 seconds
-            const timer = setTimeout(() => setStatusMessage(null), 10000);
-            return () => clearTimeout(timer);
         }
     }, [searchParams]);
 
