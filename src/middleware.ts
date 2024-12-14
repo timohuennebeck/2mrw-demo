@@ -14,6 +14,7 @@ const PUBLIC_ROUTES = [
     "/user-profile",
     "/auth/password-confirmation",
     "/auth/confirmation",
+    "/choose-pricing-plan",
 ];
 
 const AUTH_ROUTES = ["/auth/confirm", "/auth/callback", "/auth/email-change"];

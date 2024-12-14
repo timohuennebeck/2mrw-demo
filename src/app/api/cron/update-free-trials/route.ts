@@ -1,3 +1,5 @@
+"use server";
+
 import { FreeTrialStatus } from "@/enums";
 import { downgradeToFreePlan } from "@/services/database/subscriptionService";
 import { createSupabasePowerUserClient } from "@/services/integration/admin";

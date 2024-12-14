@@ -1,7 +1,8 @@
 "use server";
 
-import { StripeWebhookEvents } from "@/enums";
+import { EmailType, StripeWebhookEvents } from "@/enums";
 import { createSupabasePowerUserClient } from "@/services/integration/admin";
+import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
 import { stripe } from "@/services/stripe/client";
 import {
     handleCancelSubscription,
@@ -29,12 +30,12 @@ const _retrieveCheckoutSession = async (sessionId: string) => {
     }
 };
 
-const _getUserIdFromStripeCustomerId = async (customerId: string) => {
+const _getUserFromStripeCustomerId = async (customerId: string) => {
     const adminSupabase = await createSupabasePowerUserClient();
 
     const { data: userData, error: userError } = await adminSupabase
         .from("users")
-        .select("id")
+        .select("*")
         .eq("stripe_customer_id", customerId)
         .single();
 
@@ -60,28 +61,38 @@ export const POST = async (req: nextRequest) => {
         switch (event.type) {
             case StripeWebhookEvents.CHECKOUT_SESSION_COMPLETED: {
                 const customerId = subscription.customer as string;
-                const userId = await _getUserIdFromStripeCustomerId(customerId);
+                const user = await _getUserFromStripeCustomerId(customerId);
 
                 const session = await _retrieveCheckoutSession(event.data.object.id);
-                await handleCheckoutCompleted(session, userId ?? "");
+                await handleCheckoutCompleted(session, user.id);
                 break;
             }
             case StripeWebhookEvents.CUSTOMER_SUBSCRIPTION_UPDATED: {
                 const customerId = subscription.customer as string;
-                const userId = await _getUserIdFromStripeCustomerId(customerId);
+                const user = await _getUserFromStripeCustomerId(customerId);
 
                 if (subscription.cancel_at_period_end) {
                     /**
                      * checks if the subscription is set to cancel at the end of the current period
                      * if it is, cancel the subscripton
                      */
-                    await handleCancelSubscription(userId, subscription);
+                    await handleCancelSubscription(user.id, subscription);
                 } else {
-                    await handleUpdateSubscription(event.data.object, userId);
+                    await handleUpdateSubscription(event.data.object, user.id);
                 }
                 break;
             }
             case StripeWebhookEvents.CUSTOMER_SUBSCRIPTION_TRIAL_WILL_END: {
+                const customerId = subscription.customer as string;
+                const user = await _getUserFromStripeCustomerId(customerId);
+
+                sendLoopsTransactionalEmail({
+                    type: EmailType.FREE_TRIAL_EXPIRES_SOON,
+                    email: user.email,
+                    variables: {
+                        upgradeUrl: `${process.env.NEXT_PUBLIC_APP_URL}/choose-pricing-plan`,
+                    },
+                });
                 break; // notify user that their free trial is ending in three days
             }
             default:

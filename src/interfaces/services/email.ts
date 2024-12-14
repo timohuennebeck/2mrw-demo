@@ -29,7 +29,6 @@ interface CancelledSubscriptionVariables {
 }
 
 interface FreeTrialExpiresSoonVariables {
-    name: string;
     upgradeUrl: string;
 }
 
