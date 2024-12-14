@@ -1,15 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import RegisterLoginForm from "@/components/application/RegisterLoginForm";
 import { resendConfirmationEmail, signUpUserToSupabase } from "./action";
 import { TextConstants } from "@/constants/TextConstants";
 import { checkUserEmailExists } from "@/services/database/userService";
 import { StatusMessage } from "@/interfaces";
-import { useSearchParams } from "next/navigation";
 import { AuthMethod } from "@/enums/user";
 import { sendMagicLink } from "@/services/domain/authService";
 import { appConfig } from "@/config";
+import { useParamFeedback } from "@/hooks/useParamFeedback";
 
 interface HandleSubmitParams {
     firstName: string;
@@ -26,31 +26,18 @@ const SignUpPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(null);
 
-    const searchParams = useSearchParams();
-
-    useEffect(() => {
-        const isEnabled = appConfig.feedback.widgets.accountDeletion.isEnabled;
-
-        if (!isEnabled) return;
-
-        // Check if user came from account deletion
-        if (searchParams.get("feedback") === "account-deleted") {
-            setStatusMessage({
-                type: "info",
-                message: "Your account has been deleted! Tell us how we could do better next time.",
-                action: {
-                    label: "Share Feedback",
-                    onClick: () =>
-                        window.open(appConfig.feedback.widgets.accountDeletion.formUrl, "_blank"),
-                },
-            });
-
-            // clear the feedback parameter from URL without page reload
-            const newUrl = new URL(window.location.href);
-            newUrl.searchParams.delete("feedback");
-            window.history.replaceState({}, "", newUrl);
-        }
-    }, [searchParams]);
+    useParamFeedback(setStatusMessage, {
+        param: "account-deleted",
+        type: "info",
+        message: "Your account has been deleted! Tell us how we could do better next time.",
+        duration: 0, // won't auto-clear
+        action: {
+            label: "Share Feedback",
+            onClick: () =>
+                window.open(appConfig.feedback.widgets.accountDeletion.formUrl, "_blank"),
+        },
+        configKey: "accountDeletion",
+    });
 
     const _handleResendConfirmationEmail = async (email: string) => {
         setIsLoading(true);

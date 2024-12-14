@@ -7,12 +7,20 @@ import RegisterLoginForm from "@/components/application/RegisterLoginForm";
 import { TextConstants } from "@/constants/TextConstants";
 import { StatusMessage } from "@/interfaces";
 import { sendMagicLink } from "@/services/domain/authService";
+import { useParamFeedback } from "@/hooks/useParamFeedback";
 
 const SignInPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(null);
 
     const router = useRouter();
+
+    useParamFeedback(setStatusMessage, {
+        param: "logged-out",
+        type: "info",
+        message: TextConstants.TEXT__LOGOUT_SUCCESSFUL,
+        duration: 5000,
+    });
 
     const handleSubmit = async ({ email, password }: { email: string; password: string }) => {
         setIsLoading(true);

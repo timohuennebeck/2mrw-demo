@@ -53,11 +53,7 @@ const _handleSignOut = async (router: AppRouterInstance) => {
             await new Promise((resolve) => setTimeout(resolve, 100));
 
             // uses window.location.href to force a page reload to ensure cookies are cleared
-            router.replace("/auth/sign-in?method=magic-link");
-
-            setTimeout(() => {
-                toast.success(TextConstants.TEXT__LOGOUT_SUCCESSFUL);
-            }, 500);
+            router.replace("/auth/sign-in?method=magic-link&feedback=logged-out");
         }
     } catch (err) {
         toast.error(`${TextConstants.ERROR__UNEXPECTED_ERROR} ${err}`);
