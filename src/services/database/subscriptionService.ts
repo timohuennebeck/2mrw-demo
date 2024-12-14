@@ -1,16 +1,11 @@
 "use server";
 
-import { BillingPlan, SubscriptionStatus, SubscriptionTier } from "@/enums";
-import {
-    CreatePurchasedSubscriptionTableParams,
-    PurchasedSubscription,
-    UpdateUserSubscriptionStatusParams,
-} from "@/interfaces";
+import { SubscriptionStatus, SubscriptionTier } from "@/enums";
+import { PurchasedSubscription, UpdateUserSubscriptionParams } from "@/interfaces";
 import { handleSupabaseError } from "@/utils/errors/supabaseError";
 import moment from "moment";
 import { createSupabasePowerUserClient } from "../integration/admin";
 import { createClient } from "../integration/server";
-import { getSubscriptionEndDate } from "./baseService";
 
 const FREE_PLAN_IDENTIFIER = "price_free";
 
@@ -24,175 +19,120 @@ export const fetchUserSubscription = async (userId: string) => {
             .eq("user_id", userId)
             .single();
 
-        if (error) throw error;
+        if (error) return { data: null, error };
 
-        return {
-            data: data as PurchasedSubscription,
-            error: null,
-        };
+        return { data: data as PurchasedSubscription, error: null };
     } catch (error) {
-        return {
-            data: null,
-            error: handleSupabaseError(error, "fetchUserSubscription"),
-        };
-    }
-};
-
-export const startUserSubscription = async ({
-    userId,
-    stripePriceId,
-    subscriptionTier,
-    stripeSubscriptionId,
-    billingPlan,
-}: CreatePurchasedSubscriptionTableParams) => {
-    try {
-        const adminSupabase = await createSupabasePowerUserClient();
-
-        const endDate = await getSubscriptionEndDate(stripeSubscriptionId ?? "");
-
-        const { error } = await adminSupabase.from("user_subscriptions").insert({
-            user_id: userId,
-            stripe_price_id: stripePriceId,
-            status: SubscriptionStatus.ACTIVE,
-            subscription_tier: subscriptionTier,
-            stripe_subscription_id: stripeSubscriptionId,
-            billing_plan: billingPlan,
-            end_date: endDate,
-            updated_at: moment().toISOString(),
-            created_at: moment().toISOString(),
-        });
-
-        if (error) throw error;
-
-        await adminSupabase.auth.admin.updateUserById(userId, {
-            user_metadata: {
-                subscription_status: SubscriptionStatus.ACTIVE,
-                subscription_updated_at: moment().toISOString(),
-            },
-        });
-
-        return { success: true, error: null };
-    } catch (error) {
-        return {
-            success: null,
-            error: handleSupabaseError(error, "startUserSubscription"),
-        };
-    }
-};
-
-export const terminateUserSubscription = async (userId: string) => {
-    /**
-     * this function is used to terminate the users subscription
-     * its run inside the cron jobs to end the subscription and downgrade the user to the free plan
-     */
-
-    try {
-        const adminSupabase = await createSupabasePowerUserClient();
-
-        const { error } = await adminSupabase
-            .from("user_subscriptions")
-            .update({
-                updated_at: moment().toISOString(),
-                status: SubscriptionStatus.EXPIRED,
-            })
-            .eq("user_id", userId);
-
-        await adminSupabase.auth.admin.updateUserById(userId, {
-            user_metadata: {
-                subscription_status: SubscriptionStatus.EXPIRED,
-            },
-        });
-
-        if (error) throw error;
-
-        return { success: true, error: null };
-    } catch (error) {
-        return {
-            success: null,
-            error: handleSupabaseError(error, "terminateUserSubscription"),
-        };
+        const supabaseError = handleSupabaseError(error, "fetchUserSubscription");
+        return { data: null, error: supabaseError };
     }
 };
 
 export const updateUserSubscription = async ({
     userId,
     stripePriceId,
-    subscriptionTier,
     stripeSubscriptionId,
-    endDate,
+    status,
+    subscriptionTier,
+    billingPeriod,
     billingPlan,
-}: UpdateUserSubscriptionStatusParams) => {
-    try {
-        const adminSupabase = await createSupabasePowerUserClient();
+    endDate,
+}: UpdateUserSubscriptionParams) => {
+    /**
+     * this fn runs inside the stripe webhook to update the user subscription
+     * Thus, we need to use the admin supabase client
+     */
 
-        const isOneTimePayment = billingPlan === BillingPlan.ONE_TIME;
+    const adminSupabase = await createSupabasePowerUserClient();
 
-        const { error } = await adminSupabase
-            .from("user_subscriptions")
-            .update({
-                stripe_price_id: stripePriceId,
-                status: SubscriptionStatus.ACTIVE,
-                subscription_tier: subscriptionTier,
-                stripe_subscription_id: isOneTimePayment ? null : stripeSubscriptionId,
-                billing_plan: billingPlan,
-                end_date: isOneTimePayment ? null : endDate,
-                updated_at: moment().toISOString(),
-            })
-            .eq("user_id", userId);
+    const { error } = await adminSupabase
+        .from("user_subscriptions")
+        .update({
+            stripe_price_id: stripePriceId,
+            stripe_subscription_id: stripeSubscriptionId,
+            status: status ?? SubscriptionStatus.ACTIVE,
+            subscription_tier: subscriptionTier,
+            billing_plan: billingPlan,
+            billing_period: billingPeriod,
+            end_date: endDate,
+            updated_at: moment().toISOString(),
+            created_at: moment().toISOString(),
+        })
+        .eq("user_id", userId);
 
-        if (error) throw error;
+    if (error) throw error;
 
-        await adminSupabase.auth.admin.updateUserById(userId, {
-            user_metadata: {
-                subscription_status: SubscriptionStatus.ACTIVE,
-                subscription_updated_at: moment().toISOString(),
-            },
-        });
+    const { error: updateUserError } = await adminSupabase.auth.admin.updateUserById(userId, {
+        user_metadata: {
+            subscription_status: SubscriptionStatus.ACTIVE,
+            subscription_updated_at: moment().toISOString(),
+        },
+    });
 
-        return { success: true, error: null };
-    } catch (error) {
-        return {
-            success: null,
-            error: handleSupabaseError(error, "updateUserSubscription"),
-        };
-    }
+    if (updateUserError) throw updateUserError;
+};
+
+export const cancelUserSubscription = async (userId: string, endDate: string) => {
+    /**
+     * this fn runs inside the stripe webhook to cancel the user subscription
+     * Thus, we need to use the admin supabase client
+     */
+
+    const adminSupabase = await createSupabasePowerUserClient();
+
+    const { error } = await adminSupabase
+        .from("user_subscriptions")
+        .update({
+            status: SubscriptionStatus.CANCELLED,
+            end_date: endDate,
+            updated_at: moment().toISOString(),
+        })
+        .eq("user_id", userId);
+
+    if (error) throw error;
+
+    const { error: updateUserError } = await adminSupabase.auth.admin.updateUserById(userId, {
+        user_metadata: {
+            subscription_status: SubscriptionStatus.CANCELLED,
+            subscription_updated_at: moment().toISOString(),
+        },
+    });
+
+    if (updateUserError) throw updateUserError;
 };
 
 export const downgradeUserToFreePlan = async (userId: string) => {
-    try {
-        const adminSupabase = await createSupabasePowerUserClient();
+    /**
+     * this fn runs inside the cron jobs to downgrade the user to free plan
+     * Thus, we need to use the admin supabase client
+     */
 
-        const { error } = await adminSupabase
-            .from("user_subscriptions")
-            .update({
-                status: SubscriptionStatus.ACTIVE,
-                subscription_tier: SubscriptionTier.FREE,
-                stripe_price_id: FREE_PLAN_IDENTIFIER,
+    const adminSupabase = await createSupabasePowerUserClient();
 
-                // these should be null for free plans
-                billing_plan: null,
-                billing_period: null,
-                stripe_subscription_id: null,
-                end_date: null,
-                updated_at: moment().toISOString(),
-            })
-            .eq("user_id", userId);
+    const { error } = await adminSupabase
+        .from("user_subscriptions")
+        .update({
+            status: SubscriptionStatus.ACTIVE,
+            subscription_tier: SubscriptionTier.FREE,
+            stripe_price_id: FREE_PLAN_IDENTIFIER,
+            billing_plan: null,
+            billing_period: null,
+            stripe_subscription_id: null,
+            end_date: null,
+            updated_at: moment().toISOString(),
+        })
+        .eq("user_id", userId);
 
-        await adminSupabase.auth.admin.updateUserById(userId, {
-            user_metadata: {
-                subscription_status: SubscriptionStatus.ACTIVE,
-                subscription_updated_at: moment().toISOString(),
-            },
-        });
+    if (error) throw error;
 
-        if (error) throw error;
-        return { success: true, error: null };
-    } catch (error) {
-        return {
-            success: null,
-            error: handleSupabaseError(error, "startFreePlan"),
-        };
-    }
+    const { error: updateUserError } = await adminSupabase.auth.admin.updateUserById(userId, {
+        user_metadata: {
+            subscription_status: SubscriptionStatus.ACTIVE,
+            subscription_updated_at: moment().toISOString(),
+        },
+    });
+
+    if (updateUserError) throw updateUserError;
 };
 
 export const startFreePlan = async (userId: string) => {
@@ -204,12 +144,6 @@ export const startFreePlan = async (userId: string) => {
             status: SubscriptionStatus.ACTIVE,
             subscription_tier: SubscriptionTier.FREE,
             stripe_price_id: FREE_PLAN_IDENTIFIER,
-
-            // these should be null for free plans
-            billing_plan: null,
-            billing_period: null,
-            stripe_subscription_id: null,
-            end_date: null,
             updated_at: moment().toISOString(),
             created_at: moment().toISOString(),
         });
@@ -227,37 +161,6 @@ export const startFreePlan = async (userId: string) => {
         return {
             success: null,
             error: handleSupabaseError(error, "startFreePlan"),
-        };
-    }
-};
-
-export const cancelUserSubscription = async (userId: string, endDate: string) => {
-    try {
-        const adminSupabase = await createSupabasePowerUserClient();
-
-        const { error } = await adminSupabase
-            .from("user_subscriptions")
-            .update({
-                updated_at: moment().toISOString(),
-                status: SubscriptionStatus.CANCELLED,
-                end_date: endDate,
-            })
-            .eq("user_id", userId);
-
-        await adminSupabase.auth.admin.updateUserById(userId, {
-            user_metadata: {
-                subscription_status: SubscriptionStatus.CANCELLED,
-                subscription_updated_at: moment().toISOString(),
-            },
-        });
-
-        if (error) throw error;
-
-        return { success: true, error: null };
-    } catch (error) {
-        return {
-            success: null,
-            error: handleSupabaseError(error, "cancelUserSubscription"),
         };
     }
 };

@@ -1,4 +1,4 @@
-import { BillingPlan, SubscriptionTier } from "../../enums";
+import { BillingPeriod, BillingPlan, FreeTrialStatus, SubscriptionStatus, SubscriptionTier } from "../../enums";
 
 export interface CreatePurchasedSubscriptionTableParams {
     userId: string;
@@ -8,11 +8,13 @@ export interface CreatePurchasedSubscriptionTableParams {
     billingPlan: BillingPlan;
 }
 
-export interface UpdateUserSubscriptionStatusParams {
+export interface UpdateUserSubscriptionParams {
     userId: string;
     stripePriceId: string;
     subscriptionTier: SubscriptionTier;
-    stripeSubscriptionId?: string | null;
-    endDate: string | null;
+    stripeSubscriptionId: string | null;
+    status?: SubscriptionStatus;
+    billingPeriod: BillingPeriod;
     billingPlan: BillingPlan;
+    endDate: string | null;
 }

@@ -4,6 +4,13 @@ import moment from "moment";
 import { stripe } from "../stripe/client";
 
 export const getSubscriptionEndDate = async (stripeSubscriptionId: string) => {
+    if (!stripeSubscriptionId) return null;
+
+    /**
+     * - if the subscription is a one-time payment, return null
+     * - if the subscription is a recurring payment, return the end date of the current period
+     */
+
     try {
         const subscription = await stripe.subscriptions.retrieve(stripeSubscriptionId);
 

@@ -5,10 +5,9 @@ import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { stripe } from "@/services/stripe/client";
 import {
     handleCancelSubscription,
-    handleCheckoutSessionCompleted,
+    handleCheckoutCompleted,
     handleUpdateSubscription,
 } from "@/services/stripe/stripeWebhook";
-import { useQueryClient } from "@tanstack/react-query";
 import { NextRequest as nextRequest, NextResponse as nextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -21,9 +20,13 @@ const _verifyStripeWebhook = async (body: string, signature: string) => {
 };
 
 const _retrieveCheckoutSession = async (sessionId: string) => {
-    return await stripe.checkout.sessions.retrieve(sessionId, {
-        expand: ["line_items"],
-    });
+    try {
+        return await stripe.checkout.sessions.retrieve(sessionId, {
+            expand: ["line_items"],
+        });
+    } catch (error) {
+        throw new Error("Failed to retrieve checkout session");
+    }
 };
 
 const _getUserIdFromStripeCustomerId = async (customerId: string) => {
@@ -43,8 +46,6 @@ const _getUserIdFromStripeCustomerId = async (customerId: string) => {
 };
 
 export const POST = async (req: nextRequest) => {
-    const queryClient = useQueryClient();
-
     try {
         const body = await req.text();
         const signature = req.headers.get("stripe-signature");
@@ -53,7 +54,6 @@ export const POST = async (req: nextRequest) => {
             return nextResponse.json({ error: "There was no signature provided" }, { status: 400 });
         }
 
-        // construct the event and check if the webhook is valid
         const event = await _verifyStripeWebhook(body, signature);
         const subscription = event.data.object as Stripe.Subscription;
 
@@ -63,11 +63,7 @@ export const POST = async (req: nextRequest) => {
                 const userId = await _getUserIdFromStripeCustomerId(customerId);
 
                 const session = await _retrieveCheckoutSession(event.data.object.id);
-                await handleCheckoutSessionCompleted(session, userId ?? "");
-
-                if (userId) {
-                    await queryClient.invalidateQueries({ queryKey: ["subscription", userId] });
-                }
+                await handleCheckoutCompleted(session, userId ?? "");
                 break;
             }
             case StripeWebhookEvents.CUSTOMER_SUBSCRIPTION_UPDATED: {
@@ -83,10 +79,6 @@ export const POST = async (req: nextRequest) => {
                 } else {
                     await handleUpdateSubscription(event.data.object, userId);
                 }
-
-                if (userId) {
-                    await queryClient.invalidateQueries({ queryKey: ["subscription", userId] });
-                }
                 break;
             }
             case StripeWebhookEvents.CUSTOMER_SUBSCRIPTION_TRIAL_WILL_END: {
@@ -98,7 +90,7 @@ export const POST = async (req: nextRequest) => {
 
         return nextResponse.json({ received: true }, { status: 200 });
     } catch (error) {
-        console.error("Error processing webhook:", error);
-        return nextResponse.json({ error: "Webhook processing failed" }, { status: 500 });
+        console.error("Error processing stripe webhook:", error);
+        return nextResponse.json({ error: "Processing stripe webhook failed" }, { status: 500 });
     }
 };

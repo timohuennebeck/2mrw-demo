@@ -1,74 +1,76 @@
-import { defaultPricingPlans } from "@/data/marketing/pricing-data";
-import { BillingPlan, SubscriptionStatus } from "@/enums";
+import { FreeTrialStatus, SubscriptionStatus } from "@/enums";
+import { handleSupabaseError } from "@/utils/errors/supabaseError";
 import moment from "moment";
 import Stripe from "stripe";
 import { getSubscriptionEndDate } from "../database/baseService";
-import {
-    cancelUserSubscription,
-    fetchUserSubscription,
-    startUserSubscription,
-    updateUserSubscription,
-} from "../database/subscriptionService";
+import { cancelUserSubscription, updateUserSubscription } from "../database/subscriptionService";
 import { createSupabasePowerUserClient } from "../integration/admin";
-import { getBillingPlan, getSubscriptionTier } from "../domain/subscriptionService";
+import { getPricingPlan } from "../domain/pricingService";
 
-export const handleCheckoutSessionCompleted = async (
-    session: Stripe.Checkout.Session,
-    userId: string,
-) => {
+const _updateFreeTrialToConverted = async (userId: string) => {
+    try {
+        const adminSupabase = await createSupabasePowerUserClient();
+
+        const { error: updateError } = await adminSupabase
+            .from("free_trials")
+            .update({
+                status: FreeTrialStatus.CONVERTED,
+                end_date: moment().toISOString(),
+                updated_at: moment().toISOString(),
+            })
+            .eq("user_id", userId);
+
+        if (updateError) return { success: false, error: updateError };
+
+        return { success: true, error: null };
+    } catch (error) {
+        const supabaseError = handleSupabaseError(error, "_updateFreeTrialToConverted");
+        return { success: false, error: supabaseError };
+    }
+};
+
+export const handleCheckoutCompleted = async (session: Stripe.Checkout.Session, userId: string) => {
     const adminSupabase = await createSupabasePowerUserClient();
 
     const stripePriceId = session.line_items?.data[0].price?.id;
     if (!stripePriceId) throw new Error("Stripe price id is missing!");
 
-    // one-time payments don't have a subscription id
-    const stripeSubscriptionId =
-        session.mode === "subscription" ? session.subscription?.toString() : null;
+    const isSubscription = session.mode === "subscription";
+    const subscriptionId = isSubscription ? (session.subscription?.toString() ?? null) : null; // one-time payments don't have a subscription id
 
-    try {
-        const { data: subscription } = await fetchUserSubscription(userId);
+    const endDate = isSubscription ? await getSubscriptionEndDate(subscriptionId ?? "") : null;
 
-        // for one-time payments, end_date will be null
-        const endDate = await getSubscriptionEndDate(stripeSubscriptionId ?? "");
+    const pricingPlan = getPricingPlan(stripePriceId);
+    if (!pricingPlan) throw new Error("Pricing plan is missing!");
 
-        const { subscriptionTier } = getSubscriptionTier(stripePriceId);
-        const { billingPlan } = getBillingPlan(stripePriceId);
+    const { error: freeTrialError } = await _updateFreeTrialToConverted(userId);
+    if (freeTrialError) throw freeTrialError;
 
-        const dataToUpdate = {
-            userId,
-            stripePriceId,
-            subscriptionTier,
-            stripeSubscriptionId,
-            endDate,
-            billingPlan,
-        };
+    await updateUserSubscription({
+        userId,
+        stripePriceId,
+        stripeSubscriptionId: subscriptionId,
+        subscriptionTier: pricingPlan.subscription_tier,
+        billingPeriod: pricingPlan.billing_period,
+        billingPlan: pricingPlan.billing_plan,
+        endDate,
+    });
 
-        await (subscription
-            ? updateUserSubscription(dataToUpdate)
-            : startUserSubscription(dataToUpdate));
-
-        await adminSupabase.auth.admin.updateUserById(userId, {
-            user_metadata: {
-                subscription_status: SubscriptionStatus.ACTIVE,
-                subscription_updated_at: new Date().toISOString(),
-            },
-        });
-
-        return { success: true };
-    } catch (error) {
-        console.error("Error in handleCheckoutSessionCompleted:", error);
-        throw error;
-    }
+    const { error: updateUserError } = await adminSupabase.auth.admin.updateUserById(userId, {
+        user_metadata: {
+            subscription_status: SubscriptionStatus.ACTIVE,
+            subscription_updated_at: new Date().toISOString(),
+        },
+    });
+    if (updateUserError) throw updateUserError;
 };
 
 export const handleCancelSubscription = async (
     userId: string,
     subscription: Stripe.Subscription,
 ) => {
-    const endDateFromStripe = moment.unix(subscription.current_period_end).toISOString();
-    const { error: cancelError } = await cancelUserSubscription(userId, endDateFromStripe);
-
-    if (cancelError) throw cancelError;
+    const stripeEndDate = moment.unix(subscription.current_period_end).toISOString();
+    await cancelUserSubscription(userId, stripeEndDate);
 };
 
 export const handleUpdateSubscription = async (
@@ -78,20 +80,16 @@ export const handleUpdateSubscription = async (
     const stripePriceId = subscription.items.data[0].price.id;
     if (!stripePriceId) throw new Error("Stripe price id is missing!");
 
-    try {
-        const { subscriptionTier } = getSubscriptionTier(stripePriceId);
-        const { billingPlan } = getBillingPlan(stripePriceId);
+    const plan = getPricingPlan(stripePriceId);
+    if (!plan) throw new Error("Pricing plan is missing!");
 
-        await updateUserSubscription({
-            userId,
-            stripePriceId,
-            subscriptionTier,
-            stripeSubscriptionId: subscription.id,
-            endDate: moment.unix(subscription.current_period_end).toISOString(),
-            billingPlan,
-        });
-    } catch (error) {
-        console.error("Error in handleUpdateSubscription:", error);
-        throw error;
-    }
+    await updateUserSubscription({
+        userId,
+        stripePriceId,
+        stripeSubscriptionId: subscription.id,
+        subscriptionTier: plan.subscription_tier,
+        billingPeriod: plan.billing_period,
+        billingPlan: plan.billing_plan,
+        endDate: moment.unix(subscription.current_period_end).toISOString(),
+    });
 };

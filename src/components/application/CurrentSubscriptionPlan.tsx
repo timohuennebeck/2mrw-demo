@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BillingPeriod, FreeTrialStatus, SubscriptionStatus } from "@/enums";
 import { PurchasedSubscription } from "@/interfaces";
 import { FreeTrial } from "@/interfaces/models/freeTrial";
-import { getPricingPlan } from "@/services/domain/subscriptionService";
+import { getPricingPlan } from "@/services/domain/pricingService";
 import {
     createStripeBillingPortal,
     getStripeCreditCardDetails,
@@ -58,7 +58,7 @@ const CurrentSubscriptionPlan = ({
 
     const router = useRouter();
 
-    const { pricingPlan } = getPricingPlan(currentPlanStripePriceId);
+    const pricingPlan = getPricingPlan(currentPlanStripePriceId);
 
     useEffect(() => {
         const fetchPaymentMethod = async () => {
