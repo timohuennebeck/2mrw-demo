@@ -30,28 +30,6 @@ const _updateCustomerSubscription = async ({
     return { checkoutUrl: successUrl, error: null };
 };
 
-const _createStripeCheckoutSession = async ({
-    stripeCustomerId,
-    stripePriceId,
-    successUrl,
-    cancelUrl,
-}: {
-    stripeCustomerId: string;
-    stripePriceId: string;
-    successUrl: string;
-    cancelUrl: string;
-}) => {
-    const session = await stripe.checkout.sessions.create({
-        customer: stripeCustomerId,
-        line_items: [{ price: stripePriceId, quantity: 1 }],
-        mode: isOneTimePaymentEnabled() ? "payment" : "subscription",
-        success_url: successUrl,
-        cancel_url: cancelUrl,
-    });
-
-    return { checkoutUrl: session.url, error: null };
-};
-
 // export const cancelStripeSubscription = async (stripeSubscriptionId: string) => {
 //     try {
 //         await stripe.subscriptions.update(stripeSubscriptionId, {
@@ -72,7 +50,15 @@ export const initiateStripeCheckoutProcess = async ({
     const { stripeCustomerId, error } = await getStripeCustomerId();
     if (error) return { checkoutUrl: null, error };
 
-    return _createStripeCheckoutSession({ stripeCustomerId, stripePriceId, successUrl, cancelUrl });
+    const session = await stripe.checkout.sessions.create({
+        customer: stripeCustomerId,
+        line_items: [{ price: stripePriceId, quantity: 1 }],
+        mode: isOneTimePaymentEnabled() ? "payment" : "subscription",
+        success_url: successUrl,
+        cancel_url: cancelUrl,
+    });
+
+    return { checkoutUrl: session.url, error: null };
 };
 
 export const createStripeBillingPortal = async (stripeCustomerId: string) => {

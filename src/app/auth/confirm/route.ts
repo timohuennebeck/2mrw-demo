@@ -1,6 +1,8 @@
 "use server";
 
+import { billingConfig } from "@/config";
 import { AuthMethod } from "@/enums/user";
+import { startFreePlan } from "@/services/database/subscriptionService";
 import { createUserTable, fetchUser } from "@/services/database/userService";
 import { createClient } from "@/services/integration/server";
 import { stripe } from "@/services/stripe/client";
@@ -75,15 +77,15 @@ export const GET = async (request: NextRequest) => {
                 const supabaseUser = await fetchUser(authUser?.id ?? "");
 
                 if (!supabaseUser.user && authUser) {
-                    const authMethod = authUser.user_metadata.auth_method as AuthMethod;
+                    const authMethod = authUser.user_metadata.auth_method;
                     const { error } = await createUserTable(authUser, authMethod); // if the user does not exist in the database, create a new user
+                    if (error) return redirect("/auth-error?type=create-user");
 
-                    if (error) {
-                        console.error("Failed to create user:", error);
-                        return redirect("/auth-error?type=create-user");
+                    if (billingConfig.isFreePlanEnabled) {
+                        await startFreePlan(authUser.id);
                     }
 
-                    return redirect("/auth/confirmation?type=email-confirmed");
+                    return redirect("/auth/confirmation?mode=email-confirmed");
                 }
 
                 return nextResponse.next();

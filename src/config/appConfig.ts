@@ -24,7 +24,7 @@ export const appConfig = {
                 formUrl: "https://tally.so/r/general-feedback",
             },
             accountDeletion: {
-                isEnabled: false, // controls whether to show feedback prompt after account deletion
+                isEnabled: true, // controls whether to show feedback prompt after account deletion
                 formUrl: "https://tally.so/r/exit-survey",
             },
         },

@@ -1,10 +1,12 @@
 "use server";
 
+import { billingConfig } from "@/config";
 import { AuthMethod } from "@/enums/user";
+import { startFreePlan } from "@/services/database/subscriptionService";
 import { createUserTable, fetchUser } from "@/services/database/userService";
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
-import { NextResponse as response } from "next/server";
+import { redirect } from "next/navigation";
 
 export const GET = async (request: Request) => {
     const { searchParams, origin } = new URL(request.url);
@@ -37,25 +39,20 @@ export const GET = async (request: Request) => {
         );
 
         const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-
-        if (error) {
-            return response.redirect(`${origin}/auth-error?type=google-auth`);
-        }
+        if (error) return redirect(`${origin}/auth-error?type=google-auth`);
 
         const { user: authUser } = data.session;
+        const { user: existingUser } = await fetchUser(authUser.id);
 
-        try {
-            const { user: existingUser } = await fetchUser(authUser.id);
+        if (!existingUser) {
+            const { error } = await createUserTable(authUser, AuthMethod.GOOGLE);
+            if (error) return redirect(`${origin}/auth-error?type=create-user`);
 
-            if (!existingUser) {
-                const { error } = await createUserTable(authUser, AuthMethod.GOOGLE);
-                if (error) throw error;
+            if (billingConfig.isFreePlanEnabled) {
+                await startFreePlan(authUser.id);
             }
-
-            return response.redirect(origin);
-        } catch (error) {
-            console.error("Unexpected error during Google sign in:", error);
-            return response.redirect(`${origin}/auth-error?type=google-auth`);
         }
+
+        return redirect(origin);
     }
 };
