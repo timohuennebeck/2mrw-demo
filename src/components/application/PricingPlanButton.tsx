@@ -6,7 +6,7 @@ import { useUser } from "@/context/UserContext";
 import { DefaultPricingPlan } from "@/data/marketing/pricing-data";
 import { startFreeTrial } from "@/services/database/freeTrialService";
 import { startFreePlan } from "@/services/database/subscriptionService";
-import { initiateStripeCheckoutProcess } from "@/services/stripe/stripeService";
+import { createStripeCheckout } from "@/services/stripe/stripeService";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -72,7 +72,7 @@ const _getButtonColors = (currentPlanStripePriceId: string, plan: DefaultPricing
 
 const _handleStripeCheckout = async (plan: DefaultPricingPlan, router: AppRouterInstance) => {
     try {
-        const { checkoutUrl, error } = await initiateStripeCheckoutProcess({
+        const { checkoutUrl, error } = await createStripeCheckout({
             stripePriceId: plan.stripe_price_id,
             successUrl: `${window.location.origin}/plan-confirmation?mode=subscription`,
             cancelUrl: `${window.location.origin}/choose-pricing-plan`,
@@ -144,8 +144,6 @@ const PricingPlanButton = ({
             throw error;
         }
     };
-
-    // TO-DO: think about post-purchase subscription flow (where to redirect the user after the purchase - also for free plan)
 
     return (
         <Button

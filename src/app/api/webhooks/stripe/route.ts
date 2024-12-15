@@ -1,5 +1,3 @@
-"use server";
-
 import { EmailType, StripeWebhookEvents } from "@/enums";
 import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";

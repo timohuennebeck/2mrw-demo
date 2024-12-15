@@ -5,44 +5,7 @@ import { InitiateStripeCheckoutProcessParams } from "@/interfaces";
 import { stripe } from "./client";
 import { getStripeCustomerId } from "./stripeCustomer";
 
-const _updateCustomerSubscription = async ({
-    existingSubscriptionId,
-    stripePriceId,
-    successUrl,
-}: {
-    existingSubscriptionId: string;
-    stripePriceId: string;
-    successUrl: string;
-}) => {
-    const existingSubscription = await stripe.subscriptions.retrieve(existingSubscriptionId);
-    const subscriptionItemId = existingSubscription.items.data[0].id;
-
-    await stripe.subscriptions.update(existingSubscriptionId, {
-        items: [
-            {
-                id: subscriptionItemId,
-                price: stripePriceId,
-            },
-        ],
-        proration_behavior: "always_invoice",
-    });
-
-    return { checkoutUrl: successUrl, error: null };
-};
-
-// export const cancelStripeSubscription = async (stripeSubscriptionId: string) => {
-//     try {
-//         await stripe.subscriptions.update(stripeSubscriptionId, {
-//             cancel_at_period_end: true,
-//         });
-//         return { error: null };
-//     } catch (error) {
-//         console.error("Error canceling Stripe subscription:", error);
-//         return { error };
-//     }
-// };
-
-export const initiateStripeCheckoutProcess = async ({
+export const createStripeCheckout = async ({
     stripePriceId,
     successUrl,
     cancelUrl,

@@ -8,7 +8,7 @@ import { getPricingPlan } from "@/services/domain/pricingService";
 import {
     createStripeBillingPortal,
     getStripeCreditCardDetails,
-    initiateStripeCheckoutProcess,
+    createStripeCheckout,
 } from "@/services/stripe/stripeService";
 import { toTitleCase } from "@/utils/formatting/textHelper";
 import moment from "moment";
@@ -39,6 +39,21 @@ const _getExpirationDateText = (subscription: PurchasedSubscription, freeTrial: 
     }
 
     return "N/A";
+};
+
+const _getButtonText = (subscription: PurchasedSubscription, freeTrial: FreeTrial) => {
+    const isOnFreeTrial = freeTrial?.status === FreeTrialStatus.ACTIVE;
+    const isFreePlan = subscription?.stripe_price_id === "price_free";
+
+    if (isFreePlan) {
+        return "Choose a Plan";
+    }
+
+    if (isOnFreeTrial) {
+        return "Upgrade to Paid Plan";
+    }
+
+    return "Change Subscription";
 };
 
 const CurrentSubscriptionPlan = ({
@@ -86,7 +101,7 @@ const CurrentSubscriptionPlan = ({
             if (error) throw error;
 
             if (portalUrl) {
-                router.push(portalUrl);
+                window.open(portalUrl, "_blank");
             }
         } catch (error) {
             toast.error("There has been an error opening the billing portal");
@@ -99,7 +114,7 @@ const CurrentSubscriptionPlan = ({
         setIsLoading(true);
 
         try {
-            const { checkoutUrl, error } = await initiateStripeCheckoutProcess({
+            const { checkoutUrl, error } = await createStripeCheckout({
                 stripePriceId: stripePriceId,
                 successUrl: `${window.location.origin}/plan-confirmation?mode=subscription`,
                 cancelUrl: `${window.location.origin}/plan-confirmation?mode=free-trial`,
@@ -174,10 +189,7 @@ const CurrentSubscriptionPlan = ({
                             }
                         }}
                     >
-                        {subscription?.stripe_price_id === "price_free" ||
-                        freeTrial?.status === FreeTrialStatus.ACTIVE
-                            ? "Upgrade to Paid Plan"
-                            : "Change Subscription"}
+                        {_getButtonText(subscription, freeTrial)}
                     </Button>
 
                     {/* Payment Info */}
