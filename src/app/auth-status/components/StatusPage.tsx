@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Manrope } from "next/font/google";
 import { useRouter } from "next/navigation";
-import { StatusPageProps } from "../auth-status";
+import { StatusPageProps } from "../authStatus";
 import { useEffect, useState } from "react";
 
 const manrope = Manrope({
