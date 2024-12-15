@@ -39,20 +39,20 @@ export const GET = async (request: Request) => {
         );
 
         const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-        if (error) return redirect(`${origin}/auth-error?type=google-auth`);
+        if (error) return redirect(`${origin}/auth-status/error?mode=google-auth`);
 
         const { user: authUser } = data.session;
         const { user: existingUser } = await fetchUser(authUser.id);
 
         if (!existingUser) {
             const { error } = await createUserTable(authUser, AuthMethod.GOOGLE);
-            if (error) return redirect(`${origin}/auth-error?type=create-user`);
+            if (error) return redirect(`${origin}/auth-status/error?mode=create-user`);
 
             if (billingConfig.isFreePlanEnabled) {
                 await startFreePlan(authUser.id);
             }
 
-            return redirect(`${origin}/auth/confirmation?mode=google-connected`);
+            return redirect(`${origin}/auth-status/success?mode=google-connected`);
         }
 
         return redirect(origin);

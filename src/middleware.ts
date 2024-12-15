@@ -10,10 +10,8 @@ const PUBLIC_ROUTES = [
     "/auth/forgot-password",
     "/auth/update-password",
     "/auth/email-confirmation",
-    "/auth-error",
     "/user-profile",
     "/auth/password-confirmation",
-    "/auth/confirmation",
     "/choose-pricing-plan",
 ];
 

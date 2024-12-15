@@ -21,7 +21,7 @@ const _updateUserEmail = async (userId: string, email: string) => {
 
     if (supabaseError) {
         console.error("Failed to update user email:", supabaseError);
-        return redirect("/auth-error?type=email-update");
+        return redirect("/auth-status/error?mode=email-update");
     }
 
     await _updateUserEmailInStripe(email);
@@ -59,7 +59,7 @@ export const GET = async (request: NextRequest) => {
         });
 
         if (error) {
-            return redirect("/auth-error?type=token-expired");
+            return redirect("/auth-status/error?mode=token-expired");
         }
 
         const {
@@ -79,13 +79,13 @@ export const GET = async (request: NextRequest) => {
                 if (!supabaseUser.user && authUser) {
                     const authMethod = authUser.user_metadata.auth_method;
                     const { error } = await createUserTable(authUser, authMethod); // if the user does not exist in the database, create a new user
-                    if (error) return redirect("/auth-error?type=create-user");
+                    if (error) return redirect("/auth-status/error?mode=create-user");
 
                     if (billingConfig.isFreePlanEnabled) {
                         await startFreePlan(authUser.id);
                     }
 
-                    return redirect("/auth/confirmation?mode=email-confirmed");
+                    return redirect("/auth-status/success?mode=email-confirmed");
                 }
 
                 return nextResponse.next();
