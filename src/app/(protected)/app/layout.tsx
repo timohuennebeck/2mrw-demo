@@ -43,7 +43,7 @@ const TopBar = () => {
             <Breadcrumb>
                 <BreadcrumbList>
                     <BreadcrumbItem>
-                        <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
+                        <BreadcrumbLink href="/app">Home</BreadcrumbLink>
                     </BreadcrumbItem>
 
                     {breadcrumbs.map((breadcrumb, index) => (

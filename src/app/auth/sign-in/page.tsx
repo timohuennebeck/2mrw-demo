@@ -32,7 +32,7 @@ const SignInPage = () => {
                 message: TextConstants.TEXT__SIGN_IN_SUCCESSFUL,
             });
 
-            router.replace(result.redirect ?? "/dashboard");
+            router.replace(result.redirect ?? "/app");
         }
 
         if (result?.error) {

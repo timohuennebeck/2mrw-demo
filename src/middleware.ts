@@ -18,7 +18,7 @@ const PUBLIC_ROUTES = [
 const AUTH_ROUTES = ["/auth/confirm", "/auth/callback", "/auth/email-change"];
 
 const PROTECTED_ROUTES = [
-    "/dashboard",
+    "/app",
     "/onboarding",
     "/choose-pricing-plan",
     "/plan-confirmation",
@@ -30,7 +30,7 @@ const _handleOnboardingRedirection = (request: nextRequest, pathname: string, us
 
     // if trying to access onboarding when it's already completed
     if (pathname === "/onboarding" && onboardingCompleted) {
-        return nextResponse.redirect(new URL("/dashboard", request.url));
+        return nextResponse.redirect(new URL("/app", request.url));
     }
 
     const isProtectedRoute = PROTECTED_ROUTES.some((route) => pathname.startsWith(route));

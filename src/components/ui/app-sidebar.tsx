@@ -30,12 +30,12 @@ import {
 const items = [
     {
         title: "Dashboard",
-        url: "/dashboard",
+        url: "/app",
         icon: Building,
     },
     {
         title: "Billing",
-        url: "/dashboard/billing",
+        url: "/app/billing",
         icon: CreditCard,
     },
 ];
@@ -68,7 +68,7 @@ const AppSidebar = () => {
     const pathname = usePathname();
 
     const isSelected = (url: string) => {
-        if (url === "/dashboard") {
+        if (url === "/app") {
             return pathname === url;
         }
         return pathname.startsWith(url);
@@ -78,7 +78,7 @@ const AppSidebar = () => {
         <Sidebar collapsible="icon" className="pt-2">
             <SidebarHeader
                 className={`cursor-pointer bg-white ${open ? "flex flex-row items-center p-4" : "flex items-center justify-center"}`}
-                onClick={() => router.push("/dashboard")}
+                onClick={() => router.push("/app")}
             >
                 <Image
                     src="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
@@ -135,7 +135,7 @@ const AppSidebar = () => {
                             >
                                 <DropdownMenuItem
                                     className="cursor-pointer whitespace-nowrap"
-                                    onClick={() => router.push("/dashboard/user-profile")}
+                                    onClick={() => router.push("/app/user-profile")}
                                 >
                                     <User2 />
                                     Personal Information

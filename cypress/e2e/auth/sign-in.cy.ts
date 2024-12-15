@@ -47,7 +47,7 @@ describe("sign in", () => {
             cy.get('[data-testid="sign-in-button"]').should("be.visible").click();
 
             cy.contains(TextConstants.TEXT__SIGN_IN_SUCCESSFUL).should("be.visible");
-            cy.url().should("include", "/dashboard");
+            cy.url().should("include", "/app");
 
             // requires a small delay to wait for the auth state to be updated
             cy.visit("http://localhost:3000/user-profile", { timeout: 2000 });

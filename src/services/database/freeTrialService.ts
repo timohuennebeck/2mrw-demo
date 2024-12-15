@@ -8,7 +8,7 @@ import { getPricingPlan } from "../domain/pricingService";
 import { createClient } from "../integration/server";
 import { stripe } from "../stripe/client";
 import { getStripeCustomerId } from "../stripe/stripeCustomer";
-import { updateUserSubscription } from "./subscriptionService";
+import { updateDatabaseSubscription } from "./subscriptionService";
 
 export const fetchUserFreeTrial = async (userId: string) => {
     try {
@@ -52,7 +52,7 @@ export const startFreeTrial = async (userId: string, stripePriceId: string) => {
         const plan = getPricingPlan(stripePriceId);
         if (!plan) throw new Error("Pricing plan is missing!");
 
-        await updateUserSubscription({
+        await updateDatabaseSubscription({
             userId,
             stripePriceId,
             stripeSubscriptionId: stripeSubscription.id,

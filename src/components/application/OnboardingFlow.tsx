@@ -38,7 +38,7 @@ const OnboardingFlow = ({
         if (onSkip) {
             onSkip();
         } else {
-            router.push("/dashboard");
+            router.push("/app");
         }
     };
 

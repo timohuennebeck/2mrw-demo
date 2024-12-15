@@ -20,8 +20,8 @@ export const signIn = async ({ email, password }: { email: string; password: str
         return { error: error.message };
     }
 
-    revalidatePath("/dashboard", "layout");
-    return { success: true, redirect: "/dashboard" };
+    revalidatePath("/app", "layout");
+    return { success: true, redirect: "/app" };
 };
 
 export const signInUsingGoogle = async () => {

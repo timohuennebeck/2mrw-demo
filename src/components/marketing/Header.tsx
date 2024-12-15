@@ -61,7 +61,7 @@ const Header = ({ navItems, logoSrc, loginOnClick, userIsLoggedIn }: HeaderParam
                 <div className="w-32 text-right">
                     <Button
                         variant="ghost"
-                        onClick={userIsLoggedIn ? () => router.push("/dashboard") : loginOnClick}
+                        onClick={userIsLoggedIn ? () => router.push("/app") : loginOnClick}
                     >
                         {userIsLoggedIn ? (
                             <>

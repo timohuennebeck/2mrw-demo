@@ -38,7 +38,7 @@ export const ERROR_TYPES: { [K in ErrorType]: StatusConfig } = {
         description:
             "Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae expedita obcaecati modi, nisi reiciendis mollitia!",
         primaryButton: {
-            href: "/dashboard/user-profile",
+            href: "/app/user-profile",
             label: "Back to Profile",
         },
     },
@@ -94,7 +94,7 @@ export const SUCCESS_TYPES: { [K in SuccessType]: StatusConfig } = {
         highlight: "Connected",
         description: `Your Google account has been connected. You can now continue using ${TextConstants.TEXT__COMPANY_TITLE}.`,
         primaryButton: {
-            href: "/dashboard",
+            href: "/app",
             label: "Continue to Dashboard",
         },
     },
@@ -104,7 +104,7 @@ export const SUCCESS_TYPES: { [K in SuccessType]: StatusConfig } = {
         highlight: "Updated",
         description: `Your password has been updated. You can now continue using ${TextConstants.TEXT__COMPANY_TITLE}.`,
         primaryButton: {
-            href: "/dashboard",
+            href: "/app",
             label: "Continue to Dashboard",
         },
     },
@@ -114,7 +114,7 @@ export const SUCCESS_TYPES: { [K in SuccessType]: StatusConfig } = {
         highlight: "Updated",
         description: `Your email has been updated. You can now continue using ${TextConstants.TEXT__COMPANY_TITLE}.`,
         primaryButton: {
-            href: "/dashboard/user-profile",
+            href: "/app/user-profile",
             label: "Continue to Profile",
         },
     },

@@ -116,14 +116,14 @@ const PlanConfirmation = () => {
                                 size="sm"
                                 variant="ghost"
                                 className="w-full sm:w-auto"
-                                onClick={() => router.push("/dashboard")}
+                                onClick={() => router.push("/app")}
                             >
-                                Go to Dashboard
+                                Go to Home
                             </Button>
                             <Button
                                 size="sm"
                                 className="w-full sm:w-auto"
-                                onClick={() => router.push("/dashboard/billing")}
+                                onClick={() => router.push("/app/billing")}
                             >
                                 Manage Billing
                             </Button>

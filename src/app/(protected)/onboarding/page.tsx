@@ -118,8 +118,8 @@ const OnboardingPage = () => {
             await _updateOnboardingStatusDatabase(authUser as User);
             await _udpateOnboardingStatusMetadata();
 
-            // if it's the last step, redirect to dashboard
-            router.push("/dashboard");
+            // if it's the last step, redirect to app
+            router.push("/app");
         } else {
             // otherwise, go to next step
             continueStep(currentStep + 1);
