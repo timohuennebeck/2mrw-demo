@@ -1,7 +1,7 @@
 "use client";
 
 import { StatusPage } from "@/app/auth-status/components/StatusPage";
-import { ERROR_TYPES } from "@/config/authStatusConfig";
+import { ERROR_TYPES } from "@/config";
 import { useSearchParams } from "next/navigation";
 
 export default function StatusErrorPage() {

@@ -1,6 +1,6 @@
 "use server";
 
-import { emailConfig } from "@/config/emailConfig";
+import { emailConfig } from "@/config";
 import axios from "axios";
 
 export const loopsClient = axios.create({

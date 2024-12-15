@@ -3,7 +3,7 @@
 import { EmailType } from "@/enums/email";
 import { TextConstants } from "@/constants/TextConstants";
 import { loopsClient } from "./client";
-import { emailConfig } from "@/config/emailConfig";
+import { emailConfig } from "@/config";
 import { EmailVariablesMap } from "@/interfaces/services/email";
 
 interface SendEmailParams<T extends EmailType> {

@@ -1,7 +1,7 @@
 "use client";
 
 import { StatusPage } from "@/app/auth-status/components/StatusPage";
-import { SUCCESS_TYPES } from "@/config/authStatusConfig";
+import { SUCCESS_TYPES } from "@/config";
 import { redirect, useSearchParams } from "next/navigation";
 
 export default function StatusSuccessPage() {
