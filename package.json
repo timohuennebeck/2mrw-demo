@@ -8,7 +8,8 @@
         "start": "next start",
         "lint": "next lint",
         "email": "email dev --dir src/emails",
-        "cy:open": "cypress open"
+        "cy:open": "cypress open",
+        "stripe:listen": "stripe listen --forward-to localhost:3000/api/webhooks/stripe"
     },
     "dependencies": {
         "@heroicons/react": "^2.1.5",

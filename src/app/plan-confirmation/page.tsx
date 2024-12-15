@@ -11,11 +11,15 @@ import moment from "moment";
 import { Manrope } from "next/font/google";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
-import Confetti from "react-confetti";
+import dynamic from "next/dynamic";
 
 const manrope = Manrope({
     subsets: ["latin"],
     variable: "--font-manrope",
+});
+
+const Confetti = dynamic(() => import("react-confetti"), {
+    ssr: false, // only renders the component on client-side
 });
 
 const PlanConfirmation = () => {
@@ -72,12 +76,7 @@ const PlanConfirmation = () => {
             </div>
 
             {showConfetti && (
-                <Confetti
-                    width={window.innerWidth}
-                    recycle={false}
-                    numberOfPieces={200}
-                    style={{ zIndex: 999 }}
-                />
+                <Confetti recycle={false} numberOfPieces={200} style={{ zIndex: 999 }} />
             )}
 
             <div
