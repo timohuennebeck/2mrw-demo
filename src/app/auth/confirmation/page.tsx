@@ -21,6 +21,13 @@ const ConfirmationPage = () => {
                     redirectPath: "/choose-pricing-plan",
                     buttonText: "Continue",
                 };
+            case "google-connected":
+                return {
+                    title: "Google Has Been Connected!",
+                    description: `Your Google account has been connected. You can now continue using ${TextConstants.TEXT__COMPANY_TITLE}.`,
+                    redirectPath: "/dashboard",
+                    buttonText: "Continue to Dashboard",
+                };
             case "password-updated":
                 return {
                     title: "Password Updated!",

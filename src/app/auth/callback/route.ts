@@ -51,6 +51,8 @@ export const GET = async (request: Request) => {
             if (billingConfig.isFreePlanEnabled) {
                 await startFreePlan(authUser.id);
             }
+
+            return redirect(`${origin}/auth/confirmation?mode=google-connected`);
         }
 
         return redirect(origin);
