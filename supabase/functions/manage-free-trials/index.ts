@@ -1,0 +1,164 @@
+import { createClient } from "npm:@supabase/supabase-js";
+import moment from "npm:moment";
+
+export enum SubscriptionTier {
+  FREE = "FREE",
+  ESSENTIALS = "ESSENTIALS",
+  FOUNDERS = "FOUNDERS",
+}
+
+export enum FreeTrialStatus {
+  ACTIVE = "ACTIVE",
+  CONVERTED = "CONVERTED",
+  CANCELLED = "CANCELLED",
+  EXPIRED = "EXPIRED",
+}
+
+export enum SubscriptionStatus {
+  ACTIVE = "ACTIVE",
+  TRIALING = "TRIALING",
+  CANCELLED = "CANCELLED",
+  EXPIRED = "EXPIRED",
+}
+
+export interface FreeTrial {
+  id: string;
+  user_id: string;
+  subscription_tier: SubscriptionTier;
+  stripe_subscription_id: string;
+  status: FreeTrialStatus;
+  start_date: string;
+  end_date: string;
+  created_at: string;
+  updated_at: string;
+}
+
+const supabase = createClient(
+  Deno.env.get("SUPABASE_URL")! ?? "",
+  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")! ?? "",
+);
+
+const _fetchOnGoingFreeTrials = async () => {
+  try {
+    const { data, error } = await supabase
+      .from("free_trials")
+      .select("user_id, status, end_date")
+      .eq("status", "ACTIVE");
+
+    if (error) return { data: null, error };
+
+    return { data, error: null };
+  } catch (error) {
+    console.error("Error in _fetchOnGoingFreeTrials:", error);
+    return { data: null, error };
+  }
+};
+
+const _updateFreeTrialToExpired = async (userId: string) => {
+  try {
+    const { error: updateError } = await supabase
+      .from("free_trials")
+      .update({
+        status: "EXPIRED",
+        end_date: moment().toISOString(),
+        updated_at: moment().toISOString(),
+      })
+      .eq("user_id", userId);
+
+    if (updateError) return { success: false, error: updateError };
+
+    return { success: true, error: null };
+  } catch (error) {
+    console.error("Error in _updateFreeTrialToExpired:", error);
+    return { success: false, error };
+  }
+};
+
+const _downgradeToFreePlan = async (userId: string) => {
+  try {
+    const { error } = await supabase
+      .from("user_subscriptions")
+      .update({
+        status: "ACTIVE",
+        subscription_tier: "FREE",
+        stripe_price_id: "price_free",
+        billing_plan: null,
+        billing_period: null,
+        stripe_subscription_id: null,
+        end_date: null,
+        updated_at: moment().toISOString(),
+      })
+      .eq("user_id", userId);
+
+    console.log("→ [LOG] Triggered 01");
+    if (error) throw error;
+
+    const { error: updateUserError } = await supabase.auth.admin.updateUserById(
+      userId,
+      {
+        user_metadata: {
+          subscription_status: "ACTIVE",
+          subscription_updated_at: moment().toISOString(),
+        },
+      },
+    );
+
+    console.log("→ [LOG] Triggered 02");
+    if (updateUserError) throw updateUserError;
+  } catch (error) {
+    console.error("Error in _downgradeToFreePlan:", error);
+    throw error;
+  }
+};
+
+Deno.serve(async () => {
+  console.log("[Cron] Starting free trial update job");
+
+  try {
+    const trialsResponse = await _fetchOnGoingFreeTrials();
+    if (trialsResponse.error) throw trialsResponse.error;
+
+    console.log(`[Cron] Found ${trialsResponse.data.length} trials to process`);
+    console.log("→ [LOG] trialsResponse", trialsResponse);
+
+    const updatePromise = trialsResponse.data.map(async (trial: FreeTrial) => {
+      const now = moment();
+      console.log("→ [LOG] now", now);
+      const endDate = moment(trial.end_date);
+      console.log("→ [LOG] endDate", endDate);
+
+      if (endDate.isBefore(now)) {
+        console.log(`[Cron] Processing expired trial for: ${trial.user_id}`);
+
+        const freeTrialUpdateResponse = await _updateFreeTrialToExpired(
+          trial.user_id,
+        );
+
+        if (freeTrialUpdateResponse.error) throw freeTrialUpdateResponse.error;
+
+        await _downgradeToFreePlan(trial.user_id);
+
+        console.log(`[Cron] Processed trial for user: ${trial.user_id}`);
+      }
+    });
+
+    await Promise.all(updatePromise);
+
+    return new Response(
+      JSON.stringify({
+        message: "Free trial update job completed",
+        status: 200,
+      }),
+      { headers: { "Content-Type": "application/json" } },
+    );
+  } catch (error) {
+    console.error("Error in cron job:", error);
+    return new Response(
+      JSON.stringify({
+        message: "Free trial update cron job failed",
+        status: 500,
+      }),
+      { headers: { "Content-Type": "application/json" } },
+    );
+  }
+});

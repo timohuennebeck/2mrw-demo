@@ -20,7 +20,7 @@ CREATE TABLE
 CREATE TABLE
     user_subscriptions (
         id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid (),
-        user_id UNIQUE UUID REFERENCES public.users (id) ON DELETE CASCADE NOT NULL,
+        user_id UUID NOT NULL UNIQUE REFERENCES auth.users (id) ON DELETE CASCADE,
         stripe_price_id TEXT REFERENCES public.stripe_prices (stripe_price_id) ON DELETE CASCADE NOT NULL,
         stripe_subscription_id TEXT,
         status SubscriptionStatusEnums NOT NULL,
