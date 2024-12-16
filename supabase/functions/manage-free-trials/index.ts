@@ -90,21 +90,7 @@ const _downgradeToFreePlan = async (userId: string) => {
       })
       .eq("user_id", userId);
 
-    console.log("→ [LOG] Triggered 01");
     if (error) throw error;
-
-    const { error: updateUserError } = await supabase.auth.admin.updateUserById(
-      userId,
-      {
-        user_metadata: {
-          subscription_status: "ACTIVE",
-          subscription_updated_at: moment().toISOString(),
-        },
-      },
-    );
-
-    console.log("→ [LOG] Triggered 02");
-    if (updateUserError) throw updateUserError;
   } catch (error) {
     console.error("Error in _downgradeToFreePlan:", error);
     throw error;
@@ -119,13 +105,10 @@ Deno.serve(async () => {
     if (trialsResponse.error) throw trialsResponse.error;
 
     console.log(`[Cron] Found ${trialsResponse.data.length} trials to process`);
-    console.log("→ [LOG] trialsResponse", trialsResponse);
 
     const updatePromise = trialsResponse.data.map(async (trial: FreeTrial) => {
       const now = moment();
-      console.log("→ [LOG] now", now);
       const endDate = moment(trial.end_date);
-      console.log("→ [LOG] endDate", endDate);
 
       if (endDate.isBefore(now)) {
         console.log(`[Cron] Processing expired trial for: ${trial.user_id}`);

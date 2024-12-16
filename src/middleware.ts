@@ -1,7 +1,15 @@
 import { createServerClient } from "@supabase/ssr";
-import { NextRequest as nextRequest, NextResponse as nextResponse } from "next/server";
+import {
+    NextRequest as nextRequest,
+    NextResponse as nextResponse,
+} from "next/server";
 import { User } from "@supabase/supabase-js";
 import { appConfig } from "./config";
+import { createClient } from "./services/integration/server";
+import {
+    getCachedSubscription,
+    setCachedSubscription,
+} from "./services/redis/redisService";
 
 const PUBLIC_ROUTES = [
     "/",
@@ -24,7 +32,40 @@ const PROTECTED_ROUTES = [
     "/plan-confirmation",
 ];
 
-const _handleOnboardingRedirection = (request: nextRequest, pathname: string, user: User) => {
+const _getCachedSubscription = async (userId: string) => {
+    try {
+        const { data: cachedData } = await getCachedSubscription(userId);
+        if (cachedData) return { data: cachedData, error: null };
+
+        // cache miss - fetch from database
+        const supabase = await createClient();
+
+        const { data: subscription, error: dbError } = await supabase
+            .from("user_subscriptions")
+            .select("*")
+            .eq("user_id", userId)
+            .single();
+
+        if (dbError) return { data: null, error: dbError };
+
+        // cache the new subscription data
+        await setCachedSubscription(userId, subscription);
+
+        return { data: subscription, error: null };
+    } catch (error) {
+        console.error("Cache error:", error);
+        return { data: null, error };
+    }
+};
+
+const _handleOnboardingRedirection = async (
+    request: nextRequest,
+    pathname: string,
+    user: User,
+) => {
+    const { data: cachedSubscription } = await _getCachedSubscription(user.id);
+    // TO-DO: implement subscripton status check
+
     const onboardingCompleted = !!user.user_metadata?.onboarding_completed;
     const { isRequired } = appConfig.onboarding;
 
@@ -33,10 +74,15 @@ const _handleOnboardingRedirection = (request: nextRequest, pathname: string, us
         return nextResponse.redirect(new URL("/app", request.url));
     }
 
-    const isProtectedRoute = PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
+    const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
+        pathname.startsWith(route)
+    );
 
     // if onboarding is not completed and trying to access other protected routes
-    if (pathname !== "/onboarding" && !onboardingCompleted && isProtectedRoute && isRequired) {
+    if (
+        pathname !== "/onboarding" && !onboardingCompleted &&
+        isProtectedRoute && isRequired
+    ) {
         return nextResponse.redirect(new URL("/onboarding", request.url));
     }
 
@@ -105,12 +151,14 @@ export const middleware = async (request: nextRequest) => {
                     return request.cookies.getAll();
                 },
                 setAll(cookiesToSet) {
-                    cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+                    cookiesToSet.forEach(({ name, value }) =>
+                        request.cookies.set(name, value)
+                    );
                     supabaseResponse = nextResponse.next({
                         request,
                     });
                     cookiesToSet.forEach(({ name, value, options }) =>
-                        supabaseResponse.cookies.set(name, value, options),
+                        supabaseResponse.cookies.set(name, value, options)
                     );
                 },
             },

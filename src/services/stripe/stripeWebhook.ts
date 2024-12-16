@@ -3,7 +3,10 @@ import { handleSupabaseError } from "@/utils/errors/supabaseError";
 import moment from "moment";
 import Stripe from "stripe";
 import { getSubscriptionEndDate } from "../database/baseService";
-import { cancelUserSubscription, updateUserSubscription } from "../database/subscriptionService";
+import {
+    cancelUserSubscription,
+    updateUserSubscription,
+} from "../database/subscriptionService";
 import { createSupabasePowerUserClient } from "../integration/admin";
 import { getPricingPlan } from "../domain/pricingService";
 
@@ -24,21 +27,29 @@ const _updateFreeTrialToConverted = async (userId: string) => {
 
         return { success: true, error: null };
     } catch (error) {
-        const supabaseError = handleSupabaseError(error, "_updateFreeTrialToConverted");
+        const supabaseError = handleSupabaseError(
+            error,
+            "_updateFreeTrialToConverted",
+        );
         return { success: false, error: supabaseError };
     }
 };
 
-export const handleCheckoutCompleted = async (session: Stripe.Checkout.Session, userId: string) => {
-    const adminSupabase = await createSupabasePowerUserClient();
-
+export const handleCheckoutCompleted = async (
+    session: Stripe.Checkout.Session,
+    userId: string,
+) => {
     const stripePriceId = session.line_items?.data[0].price?.id;
     if (!stripePriceId) throw new Error("Stripe price id is missing!");
 
     const isSubscription = session.mode === "subscription";
-    const subscriptionId = isSubscription ? (session.subscription?.toString() ?? null) : null; // one-time payments don't have a subscription id
+    const subscriptionId = isSubscription
+        ? (session.subscription?.toString() ?? null)
+        : null; // one-time payments don't have a subscription id
 
-    const endDate = isSubscription ? await getSubscriptionEndDate(subscriptionId ?? "") : null;
+    const endDate = isSubscription
+        ? await getSubscriptionEndDate(subscriptionId ?? "")
+        : null;
 
     const pricingPlan = getPricingPlan(stripePriceId);
     if (!pricingPlan) throw new Error("Pricing plan is missing!");
@@ -55,21 +66,14 @@ export const handleCheckoutCompleted = async (session: Stripe.Checkout.Session, 
         billingPlan: pricingPlan.billing_plan,
         endDate,
     });
-
-    const { error: updateUserError } = await adminSupabase.auth.admin.updateUserById(userId, {
-        user_metadata: {
-            subscription_status: SubscriptionStatus.ACTIVE,
-            subscription_updated_at: new Date().toISOString(),
-        },
-    });
-    if (updateUserError) throw updateUserError;
 };
 
 export const handleCancelSubscription = async (
     userId: string,
     subscription: Stripe.Subscription,
 ) => {
-    const stripeEndDate = moment.unix(subscription.current_period_end).toISOString();
+    const stripeEndDate = moment.unix(subscription.current_period_end)
+        .toISOString();
     await cancelUserSubscription(userId, stripeEndDate);
 };
 

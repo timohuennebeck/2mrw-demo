@@ -1,11 +1,15 @@
 "use server";
 
 import { SubscriptionStatus, SubscriptionTier } from "@/enums";
-import { PurchasedSubscription, UpdateUserSubscriptionParams } from "@/interfaces";
+import {
+    PurchasedSubscription,
+    UpdateUserSubscriptionParams,
+} from "@/interfaces";
 import { handleSupabaseError } from "@/utils/errors/supabaseError";
 import moment from "moment";
 import { createSupabasePowerUserClient } from "../integration/admin";
 import { createClient } from "../integration/server";
+import { invalidateSubscriptionCache } from "../redis/redisService";
 
 const FREE_PLAN_IDENTIFIER = "price_free";
 
@@ -23,7 +27,10 @@ export const fetchUserSubscription = async (userId: string) => {
 
         return { data: data as PurchasedSubscription, error: null };
     } catch (error) {
-        const supabaseError = handleSupabaseError(error, "fetchUserSubscription");
+        const supabaseError = handleSupabaseError(
+            error,
+            "fetchUserSubscription",
+        );
         return { data: null, error: supabaseError };
     }
 };
@@ -62,17 +69,14 @@ export const updateUserSubscription = async ({
 
     if (error) throw error;
 
-    const { error: updateUserError } = await adminSupabase.auth.admin.updateUserById(userId, {
-        user_metadata: {
-            subscription_status: SubscriptionStatus.ACTIVE,
-            subscription_updated_at: moment().toISOString(),
-        },
-    });
-
-    if (updateUserError) throw updateUserError;
+    const { error: cacheError } = await invalidateSubscriptionCache(userId);
+    if (cacheError) throw cacheError;
 };
 
-export const cancelUserSubscription = async (userId: string, endDate: string) => {
+export const cancelUserSubscription = async (
+    userId: string,
+    endDate: string,
+) => {
     /**
      * this fn runs inside the stripe webhook to cancel the user subscription
      * Thus, we need to use the admin supabase client
@@ -91,37 +95,32 @@ export const cancelUserSubscription = async (userId: string, endDate: string) =>
 
     if (error) throw error;
 
-    const { error: updateUserError } = await adminSupabase.auth.admin.updateUserById(userId, {
-        user_metadata: {
-            subscription_status: SubscriptionStatus.CANCELLED,
-            subscription_updated_at: moment().toISOString(),
-        },
-    });
-
-    if (updateUserError) throw updateUserError;
+    const { error: cacheError } = await invalidateSubscriptionCache(userId);
+    if (cacheError) throw cacheError;
 };
 
 export const startFreePlan = async (userId: string) => {
     try {
         const adminSupabase = await createSupabasePowerUserClient();
 
-        const { error } = await adminSupabase.from("user_subscriptions").insert({
-            user_id: userId,
-            status: SubscriptionStatus.ACTIVE,
-            subscription_tier: SubscriptionTier.FREE,
-            stripe_price_id: FREE_PLAN_IDENTIFIER,
-            updated_at: moment().toISOString(),
-            created_at: moment().toISOString(),
-        });
-
-        await adminSupabase.auth.admin.updateUserById(userId, {
-            user_metadata: {
-                subscription_status: SubscriptionStatus.ACTIVE,
-                subscription_updated_at: moment().toISOString(),
+        const { error } = await adminSupabase.from("user_subscriptions").insert(
+            {
+                user_id: userId,
+                status: SubscriptionStatus.ACTIVE,
+                subscription_tier: SubscriptionTier.FREE,
+                stripe_price_id: FREE_PLAN_IDENTIFIER,
+                updated_at: moment().toISOString(),
+                created_at: moment().toISOString(),
             },
-        });
+        );
 
-        if (error) throw error;
+        if (error) {
+            return { success: false, error };
+        }
+
+        const { error: cacheError } = await invalidateSubscriptionCache(userId);
+        if (cacheError) return { success: false, error: cacheError };
+
         return { success: true, error: null };
     } catch (error) {
         return {
@@ -155,12 +154,6 @@ export const downgradeToFreePlan = async (userId: string) => {
 
     if (error) throw error;
 
-    const { error: updateUserError } = await adminSupabase.auth.admin.updateUserById(userId, {
-        user_metadata: {
-            subscription_status: SubscriptionStatus.ACTIVE,
-            subscription_updated_at: moment().toISOString(),
-        },
-    });
-
-    if (updateUserError) throw updateUserError;
+    const { error: cacheError } = await invalidateSubscriptionCache(userId);
+    if (cacheError) throw cacheError;
 };
