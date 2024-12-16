@@ -1,5 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js";
 import moment from "npm:moment";
+import { Redis } from "npm:@upstash/redis";
 
 export enum SubscriptionTier {
   FREE = "FREE",
@@ -33,10 +34,26 @@ export interface FreeTrial {
   updated_at: string;
 }
 
+const redis = new Redis({
+  url: Deno.env.get("UPSTASH_REDIS_REST_URL")!,
+  token: Deno.env.get("UPSTASH_REDIS_REST_TOKEN")!,
+});
+
 const supabase = createClient(
   Deno.env.get("SUPABASE_URL")! ?? "",
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")! ?? "",
 );
+
+const _invalidateSubscriptionCache = async (userId: string) => {
+  try {
+    const CACHE_PREFIX = "user_sub:";
+    const cacheKey = `${CACHE_PREFIX}${userId}`;
+
+    await redis.del(cacheKey);
+  } catch (error) {
+    console.error("Cache invalidation error:", error);
+  }
+};
 
 const _fetchOnGoingFreeTrials = async () => {
   try {
@@ -91,6 +108,8 @@ const _downgradeToFreePlan = async (userId: string) => {
       .eq("user_id", userId);
 
     if (error) throw error;
+
+    await _invalidateSubscriptionCache(userId);
   } catch (error) {
     console.error("Error in _downgradeToFreePlan:", error);
     throw error;
