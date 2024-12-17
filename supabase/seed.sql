@@ -70,39 +70,47 @@ VALUES
 INSERT INTO
     public.user_subscriptions (
         user_id,
-        subscription_tier,
         status,
+        subscription_tier,
         stripe_price_id,
         billing_plan,
-        billing_period
+        billing_period,
+        stripe_subscription_id,
+        end_date
     )
 VALUES
     -- active trial user on Essentials plan
     (
         '00000000-0000-0000-0000-000000000000',
-        'ESSENTIALS',
         'TRIALING',
+        'ESSENTIALS',
         'price_essentials_monthly',
         'RECURRING',
-        'MONTHLY'
+        'MONTHLY',
+        'sub_active_trial',
+        now () + interval '7 days'
     ),
-    -- expired trial user on Founders plan
+    -- expired trial and expired subscription user on Founders plan
     (
         '22222222-2222-2222-2222-222222222222',
-        'FOUNDERS',
         'ACTIVE',
+        'FOUNDERS',
         'price_founders_monthly',
         'RECURRING',
-        'MONTHLY'
+        'MONTHLY',
+        'sub_expired_trial',
+        now () - interval '1 day' -- subscription expired yesterday
     ),
     -- user with no trial on Free plan
     (
         '44444444-4444-4444-4444-444444444444',
-        'FREE',
         'ACTIVE',
+        'FREE',
         'price_free',
-        'RECURRING',
-        'MONTHLY'
+        null,
+        null,
+        null,
+        null
     );
 
 -- create free trials

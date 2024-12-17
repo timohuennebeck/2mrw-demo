@@ -1,7 +1,6 @@
 "use server";
 
 import { billingConfig } from "@/config";
-import { AuthMethod } from "@/enums/user";
 import { startFreePlan } from "@/services/database/subscriptionService";
 import { createUserTable, fetchUser } from "@/services/database/userService";
 import { createClient } from "@/services/integration/server";
