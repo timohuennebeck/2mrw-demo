@@ -7,7 +7,9 @@ import { User } from "@supabase/supabase-js";
 import { appConfig } from "./config";
 import { createClient } from "./services/integration/server";
 import {
+    getCachedFreeTrial,
     getCachedSubscription,
+    setCachedFreeTrial,
     setCachedSubscription,
 } from "./services/redis/redisService";
 
@@ -31,6 +33,32 @@ const PROTECTED_ROUTES = [
     "/choose-pricing-plan",
     "/plan-confirmation",
 ];
+
+const _getCachedFreeTrial = async (userId: string) => {
+    try {
+        const { data: cachedData } = await getCachedFreeTrial(userId);
+        if (cachedData) return { data: cachedData, error: null };
+
+        // cache miss - fetch from database
+        const supabase = await createClient();
+
+        const { data: freeTrial, error: dbError } = await supabase
+            .from("free_trials")
+            .select("*")
+            .eq("user_id", userId)
+            .single();
+
+        if (dbError) return { data: null, error: dbError };
+
+        // cache the new free trial data
+        await setCachedFreeTrial(userId, freeTrial);
+
+        return { data: freeTrial, error: null };
+    } catch (error) {
+        console.error("Cache error:", error);
+        return { data: null, error };
+    }
+};
 
 const _getCachedSubscription = async (userId: string) => {
     try {
@@ -63,9 +91,6 @@ const _handleOnboardingRedirection = async (
     pathname: string,
     user: User,
 ) => {
-    const { data: cachedSubscription } = await _getCachedSubscription(user.id);
-    // TO-DO: implement subscripton status check
-
     const onboardingCompleted = !!user.user_metadata?.onboarding_completed;
     const { isRequired } = appConfig.onboarding;
 

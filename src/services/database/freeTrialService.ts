@@ -8,7 +8,8 @@ import { getPricingPlan } from "../domain/pricingService";
 import { createClient } from "../integration/server";
 import { stripe } from "../stripe/client";
 import { getStripeCustomerId } from "../stripe/stripeCustomer";
-import { updateDatabaseSubscription } from "./subscriptionService";
+import { updateUserSubscription } from "./subscriptionService";
+import { setCachedFreeTrial } from "../redis/redisService";
 
 export const fetchUserFreeTrial = async (userId: string) => {
     try {
@@ -52,7 +53,7 @@ export const startFreeTrial = async (userId: string, stripePriceId: string) => {
         const plan = getPricingPlan(stripePriceId);
         if (!plan) throw new Error("Pricing plan is missing!");
 
-        await updateDatabaseSubscription({
+        await updateUserSubscription({
             userId,
             stripePriceId,
             stripeSubscriptionId: stripeSubscription.id,
@@ -60,19 +61,25 @@ export const startFreeTrial = async (userId: string, stripePriceId: string) => {
             subscriptionTier: plan.subscription_tier,
             billingPeriod: plan.billing_period,
             billingPlan: plan.billing_plan,
-            endDate: moment.unix(stripeSubscription.current_period_end).toISOString(),
+            endDate: moment.unix(stripeSubscription.current_period_end)
+                .toISOString(),
         });
 
-        await supabase.from("free_trials").insert({
-            user_id: userId,
-            subscription_tier: plan.subscription_tier,
-            stripe_subscription_id: stripeSubscription.id,
-            status: FreeTrialStatus.ACTIVE,
-            start_date: moment().toISOString(),
-            end_date: moment.unix(stripeSubscription.trial_end ?? 0).toISOString(),
-            created_at: moment().toISOString(),
-            updated_at: moment().toISOString(),
-        });
+        const { data: freeTrialData } = await supabase.from("free_trials")
+            .insert({
+                user_id: userId,
+                subscription_tier: plan.subscription_tier,
+                stripe_subscription_id: stripeSubscription.id,
+                status: FreeTrialStatus.ACTIVE,
+                start_date: moment().toISOString(),
+                end_date: moment.unix(stripeSubscription.trial_end ?? 0)
+                    .toISOString(),
+                created_at: moment().toISOString(),
+                updated_at: moment().toISOString(),
+            }).select().single();
+
+        const cacheResult = await setCachedFreeTrial(userId, freeTrialData);
+        if (cacheResult.error) throw cacheResult.error;
     } catch (error) {
         return {
             success: false,

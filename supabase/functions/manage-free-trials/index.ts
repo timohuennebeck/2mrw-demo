@@ -44,6 +44,17 @@ const supabase = createClient(
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")! ?? "",
 );
 
+const _invalidateFreeTrialCache = async (userId: string) => {
+  try {
+    const CACHE_PREFIX = "user_trial:";
+    const cacheKey = `${CACHE_PREFIX}${userId}`;
+
+    await redis.del(cacheKey);
+  } catch (error) {
+    console.error("Cache invalidation error:", error);
+  }
+};
+
 const _invalidateSubscriptionCache = async (userId: string) => {
   try {
     const CACHE_PREFIX = "user_sub:";
@@ -83,6 +94,8 @@ const _updateFreeTrialToExpired = async (userId: string) => {
       .eq("user_id", userId);
 
     if (updateError) return { success: false, error: updateError };
+
+    await _invalidateFreeTrialCache(userId);
 
     return { success: true, error: null };
   } catch (error) {

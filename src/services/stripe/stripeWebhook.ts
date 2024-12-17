@@ -9,6 +9,7 @@ import {
 } from "../database/subscriptionService";
 import { createSupabasePowerUserClient } from "../integration/admin";
 import { getPricingPlan } from "../domain/pricingService";
+import { invalidateFreeTrialCache } from "../redis/redisService";
 
 const _updateFreeTrialToConverted = async (userId: string) => {
     try {
@@ -24,6 +25,9 @@ const _updateFreeTrialToConverted = async (userId: string) => {
             .eq("user_id", userId);
 
         if (updateError) return { success: false, error: updateError };
+
+        const cacheResult = await invalidateFreeTrialCache(userId);
+        if (cacheResult.error) throw cacheResult.error;
 
         return { success: true, error: null };
     } catch (error) {
