@@ -1,4 +1,4 @@
-import { cacheConfig } from "@/config/cacheConfig";
+import { cacheConfig } from "@/config";
 import { redis } from "./client";
 import { PurchasedSubscription } from "@/interfaces";
 
