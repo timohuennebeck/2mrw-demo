@@ -10,7 +10,7 @@ export const getCachedSubscription = async (userId: string) => {
 
         return { data: cachedData as PurchasedSubscription, error: null };
     } catch (error) {
-        console.error("Cache error:", error);
+        console.error("Failed to get cached subscription:", error);
         return { data: null, error };
     }
 };
@@ -23,7 +23,7 @@ export const setCachedSubscription = async (userId: string, data: any) => {
 
         return { success: true, error: null };
     } catch (error) {
-        console.error("Cache error:", error);
+        console.error("Failed to set cached subscription:", error);
         return { success: false, error };
     }
 };
@@ -36,7 +36,7 @@ export const invalidateSubscriptionCache = async (userId: string) => {
 
         return { success: true, error: null };
     } catch (error) {
-        console.error("Cache invalidation error:", error);
+        console.error("Failed to invalidate subscription cache:", error);
         return { success: false, error };
     }
 };
