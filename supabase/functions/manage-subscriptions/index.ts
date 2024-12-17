@@ -82,8 +82,8 @@ const _downgradeToFreePlan = async (userId: string) => {
     const { error } = await supabase
       .from("user_subscriptions")
       .update({
-        status: "ACTIVE",
-        subscription_tier: "FREE",
+        status: SubscriptionStatus.ACTIVE,
+        subscription_tier: SubscriptionTier.FREE,
         stripe_price_id: "price_free",
         billing_plan: null,
         billing_period: null,

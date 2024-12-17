@@ -60,7 +60,7 @@ const _fetchOnGoingFreeTrials = async () => {
     const { data, error } = await supabase
       .from("free_trials")
       .select("user_id, status, end_date")
-      .eq("status", "ACTIVE");
+      .eq("status", FreeTrialStatus.ACTIVE);
 
     if (error) return { data: null, error };
 
@@ -76,7 +76,7 @@ const _updateFreeTrialToExpired = async (userId: string) => {
     const { error: updateError } = await supabase
       .from("free_trials")
       .update({
-        status: "EXPIRED",
+        status: FreeTrialStatus.EXPIRED,
         end_date: moment().toISOString(),
         updated_at: moment().toISOString(),
       })
@@ -96,8 +96,8 @@ const _downgradeToFreePlan = async (userId: string) => {
     const { error } = await supabase
       .from("user_subscriptions")
       .update({
-        status: "ACTIVE",
-        subscription_tier: "FREE",
+        status: SubscriptionStatus.ACTIVE,
+        subscription_tier: SubscriptionTier.FREE,
         stripe_price_id: "price_free",
         billing_plan: null,
         billing_period: null,
