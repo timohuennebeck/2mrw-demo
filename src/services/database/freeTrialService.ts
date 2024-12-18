@@ -9,7 +9,6 @@ import { createClient } from "../integration/server";
 import { stripe } from "../stripe/client";
 import { getStripeCustomerId } from "../stripe/stripeCustomer";
 import { updateUserSubscription } from "./subscriptionService";
-import { setCachedFreeTrial } from "../redis/redisService";
 
 export const fetchUserFreeTrial = async (userId: string) => {
     try {
@@ -65,7 +64,7 @@ export const startFreeTrial = async (userId: string, stripePriceId: string) => {
                 .toISOString(),
         });
 
-        const { data: freeTrialData } = await supabase.from("free_trials")
+        await supabase.from("free_trials")
             .insert({
                 user_id: userId,
                 subscription_tier: plan.subscription_tier,
@@ -76,10 +75,7 @@ export const startFreeTrial = async (userId: string, stripePriceId: string) => {
                     .toISOString(),
                 created_at: moment().toISOString(),
                 updated_at: moment().toISOString(),
-            }).select().single();
-
-        const cacheResult = await setCachedFreeTrial(userId, freeTrialData);
-        if (cacheResult.error) throw cacheResult.error;
+            });
     } catch (error) {
         return {
             success: false,

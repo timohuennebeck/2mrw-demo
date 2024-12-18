@@ -1,5 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
-import { User } from "@supabase/supabase-js";
+import { User as SupabaseUser } from "@supabase/supabase-js";
 import {
     NextRequest as nextRequest,
     NextResponse as nextResponse,
@@ -10,12 +10,12 @@ import {
     isPublicRoute,
     ROUTES_CONFIG,
 } from "./config/routesConfig";
+import { SubscriptionStatus, SubscriptionTier } from "./enums";
+import { PurchasedSubscription, User } from "./interfaces";
 import { createClient } from "./services/integration/server";
 import {
-    getCachedFreeTrial,
     getCachedSubscription,
     getCachedUser,
-    setCachedFreeTrial,
     setCachedSubscription,
     setCachedUser,
 } from "./services/redis/redisService";
@@ -39,33 +39,7 @@ const _getCachedUser = async (userId: string) => {
         // cache the new subscription data
         await setCachedUser(userId, user);
 
-        return { data: user, error: null };
-    } catch (error) {
-        console.error("Cache error:", error);
-        return { data: null, error };
-    }
-};
-
-const _getCachedFreeTrial = async (userId: string) => {
-    try {
-        const { data: cachedData } = await getCachedFreeTrial(userId);
-        if (cachedData) return { data: cachedData, error: null };
-
-        // cache miss - fetch from database
-        const supabase = await createClient();
-
-        const { data: freeTrial, error: dbError } = await supabase
-            .from("free_trials")
-            .select("*")
-            .eq("user_id", userId)
-            .single();
-
-        if (dbError) return { data: null, error: dbError };
-
-        // cache the new free trial data
-        await setCachedFreeTrial(userId, freeTrial);
-
-        return { data: freeTrial, error: null };
+        return { data: user as User, error: null };
     } catch (error) {
         console.error("Cache error:", error);
         return { data: null, error };
@@ -91,7 +65,7 @@ const _getCachedSubscription = async (userId: string) => {
         // cache the new subscription data
         await setCachedSubscription(userId, subscription);
 
-        return { data: subscription, error: null };
+        return { data: subscription as PurchasedSubscription, error: null };
     } catch (error) {
         console.error("Cache error:", error);
         return { data: null, error };
@@ -108,8 +82,8 @@ export const _shouldBypassMiddleware = (pathname: string) => {
 
 export const _handleOnboarding = async (
     pathname: string,
-    user: User,
     request: nextRequest,
+    user: SupabaseUser,
 ) => {
     const { data: userData } = await _getCachedUser(user.id);
     const isOnboardingCompleted = userData?.onboarding_completed;
@@ -133,17 +107,37 @@ export const _handleOnboarding = async (
     return nextResponse.next({ request });
 };
 
-export const _handleBilling = (pathname: string, request: nextRequest) => {
+export const _handleBilling = async (
+    pathname: string,
+    request: nextRequest,
+    user: SupabaseUser,
+) => {
     const { isFreePlanEnabled } = billingConfig;
 
+    const dashboardRoute = ROUTES_CONFIG.PROTECTED.USER_DASHBOARD;
     const pricingPlanRoute = ROUTES_CONFIG.PROTECTED.CHOOSE_PRICING_PLAN;
+
     const isPricingPlanPage = pathname === pricingPlanRoute;
 
-    // TODO: if user has free plan, redirect to dashboard
+    const { data: subscriptionData } = await _getCachedSubscription(user.id);
+    const userPlan = subscriptionData?.subscription_tier;
 
-    // TODO: check if user has a subscription or free trial
-    if (!isFreePlanEnabled && !isPricingPlanPage) {
-        return _redirectTo(request, pricingPlanRoute); // force user to pricing page if free plan is disabled
+    const hasPaidPlan = userPlan && userPlan !== SubscriptionTier.FREE;
+    const hasFreePlan = userPlan === SubscriptionTier.FREE;
+    const isTrialing = subscriptionData?.status === SubscriptionStatus.TRIALING;
+
+    if (isPricingPlanPage && (hasPaidPlan || isTrialing)) {
+        return _redirectTo(request, dashboardRoute); // redirect away from pricing page if user has active subscription (not free plan) or active trial
+    }
+
+    if (!isPricingPlanPage && !hasPaidPlan && !isTrialing) {
+        if (isFreePlanEnabled && !hasFreePlan) {
+            return _redirectTo(request, pricingPlanRoute); // force users to pricing page if free plan is enabled and user does not have a free plan
+        }
+
+        if (!isFreePlanEnabled) {
+            return _redirectTo(request, pricingPlanRoute); // force users to pricing page if they don't have a paid plan or trial
+        }
     }
 
     return nextResponse.next({ request });
@@ -162,23 +156,23 @@ export const _handleUnauthenticatedRedirect = (
 
 export const _handleLoggedInRedirect = async (
     pathname: string,
-    user: User,
     request: nextRequest,
+    user: SupabaseUser,
 ) => {
     if (pathname.startsWith("/auth")) {
         return _redirectTo(request, ROUTES_CONFIG.PROTECTED.USER_DASHBOARD); // force user to dashboard if they go to an auth page
     }
 
-    const onboardingResponse = await _handleOnboarding(pathname, user, request);
+    const onboardingResponse = await _handleOnboarding(pathname, request, user);
     if (onboardingResponse.status !== 200) return onboardingResponse;
 
-    const billingResponse = _handleBilling(pathname, request);
+    const billingResponse = await _handleBilling(pathname, request, user);
     if (billingResponse.status !== 200) return billingResponse;
 
     return nextResponse.next({ request }); // allow access to all other routes
 };
 
-const _handleRouting = async (request: nextRequest, user: User) => {
+const _handleRouting = async (request: nextRequest, user: SupabaseUser) => {
     const { pathname } = request.nextUrl;
 
     if (_shouldBypassMiddleware(pathname)) {
@@ -193,7 +187,7 @@ const _handleRouting = async (request: nextRequest, user: User) => {
         return _handleUnauthenticatedRedirect(request, pathname);
     }
 
-    return _handleLoggedInRedirect(pathname, user, request);
+    return _handleLoggedInRedirect(pathname, request, user);
 };
 
 export const middleware = async (request: nextRequest) => {
@@ -231,7 +225,10 @@ export const middleware = async (request: nextRequest) => {
 
     const { data: { user } } = await supabaseClient.auth.getUser();
 
-    const redirectResponse = await _handleRouting(request, user as User);
+    const redirectResponse = await _handleRouting(
+        request,
+        user as SupabaseUser,
+    );
     if (redirectResponse) return redirectResponse;
 
     /**

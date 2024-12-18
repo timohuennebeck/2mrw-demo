@@ -95,8 +95,6 @@ const _updateFreeTrialToExpired = async (userId: string) => {
 
     if (updateError) return { success: false, error: updateError };
 
-    await _invalidateFreeTrialCache(userId);
-
     return { success: true, error: null };
   } catch (error) {
     console.error("Error in _updateFreeTrialToExpired:", error);

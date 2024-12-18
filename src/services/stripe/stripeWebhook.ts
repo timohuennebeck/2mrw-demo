@@ -1,4 +1,4 @@
-import { FreeTrialStatus, SubscriptionStatus } from "@/enums";
+import { FreeTrialStatus } from "@/enums";
 import { handleSupabaseError } from "@/utils/errors/supabaseError";
 import moment from "moment";
 import Stripe from "stripe";
@@ -7,9 +7,8 @@ import {
     cancelUserSubscription,
     updateUserSubscription,
 } from "../database/subscriptionService";
-import { createSupabasePowerUserClient } from "../integration/admin";
 import { getPricingPlan } from "../domain/pricingService";
-import { invalidateFreeTrialCache } from "../redis/redisService";
+import { createSupabasePowerUserClient } from "../integration/admin";
 
 const _updateFreeTrialToConverted = async (userId: string) => {
     try {
@@ -25,9 +24,6 @@ const _updateFreeTrialToConverted = async (userId: string) => {
             .eq("user_id", userId);
 
         if (updateError) return { success: false, error: updateError };
-
-        const cacheResult = await invalidateFreeTrialCache(userId);
-        if (cacheResult.error) throw cacheResult.error;
 
         return { success: true, error: null };
     } catch (error) {
