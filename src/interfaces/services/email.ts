@@ -14,9 +14,7 @@ export interface EmailConfig {
     };
 }
 
-interface ThankYouForSigningUpVariables {
-    name: string;
-}
+interface ThankYouForSigningUpVariables {}
 
 interface PurchasedSubscriptionVariables {
     name: string;

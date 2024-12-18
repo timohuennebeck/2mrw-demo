@@ -2,9 +2,11 @@
 
 import { billingConfig } from "@/config";
 import { ROUTES_CONFIG } from "@/config/routesConfig";
+import { EmailType } from "@/enums";
 import { AuthMethod } from "@/enums/user";
 import { startFreePlan } from "@/services/database/subscriptionService";
 import { createUserTable, fetchUser } from "@/services/database/userService";
+import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -52,6 +54,12 @@ export const GET = async (request: Request) => {
             if (billingConfig.isFreePlanEnabled) {
                 await startFreePlan(authUser.id);
             }
+
+            sendLoopsTransactionalEmail({
+                type: EmailType.THANK_YOU_FOR_SIGNING_UP,
+                email: authUser.email!,
+                variables: {},
+            });
 
             return redirect(`${origin}${ROUTES_CONFIG.PUBLIC.STATUS_SUCCESS}?mode=google-connected`);
         }

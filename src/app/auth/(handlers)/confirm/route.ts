@@ -1,8 +1,10 @@
 "use server";
 
 import { billingConfig } from "@/config";
+import { EmailType } from "@/enums";
 import { startFreePlan } from "@/services/database/subscriptionService";
 import { createUserTable, fetchUser } from "@/services/database/userService";
+import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
 import { createClient } from "@/services/integration/server";
 import { invalidateUserCache } from "@/services/redis/redisService";
 import { stripe } from "@/services/stripe/client";
@@ -25,7 +27,9 @@ const _updateUserEmail = async (userId: string, email: string) => {
     }
 
     const { error: cacheError } = await invalidateUserCache(userId);
-    if (cacheError) console.error("Failed to invalidate user cache:", cacheError);
+    if (cacheError) {
+        console.error("Failed to invalidate user cache:", cacheError);
+    }
 
     await _updateUserEmailInStripe(email);
 };
@@ -93,6 +97,12 @@ export const GET = async (request: NextRequest) => {
                     if (billingConfig.isFreePlanEnabled) {
                         await startFreePlan(authUser.id);
                     }
+
+                    sendLoopsTransactionalEmail({
+                        type: EmailType.THANK_YOU_FOR_SIGNING_UP,
+                        email: authUser.email!,
+                        variables: {},
+                    });
 
                     return redirect(
                         "/auth-status/success?mode=email-confirmed",

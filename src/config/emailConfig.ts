@@ -6,9 +6,9 @@ export const emailConfig: EmailConfig = {
     baseUrl: "https://app.loops.so/api/v1",
     templates: {
         [EmailType.THANK_YOU_FOR_SIGNING_UP]: {
-            transactionalId: "clhz2d4x3005abc123def456",
+            transactionalId: "cm4u5kfkr01ndtne19byktd2p",
             enabled: true,
-            variables: ["name"],
+            variables: [],
         },
 
         [EmailType.PURCHASED_SUBSCRIPTION]: {
