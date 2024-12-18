@@ -14,9 +14,37 @@ import { createClient } from "./services/integration/server";
 import {
     getCachedFreeTrial,
     getCachedSubscription,
+    getCachedUser,
     setCachedFreeTrial,
     setCachedSubscription,
+    setCachedUser,
 } from "./services/redis/redisService";
+
+const _getCachedUser = async (userId: string) => {
+    try {
+        const { data: cachedData } = await getCachedUser(userId);
+        if (cachedData) return { data: cachedData, error: null };
+
+        // cache miss - fetch from database
+        const supabase = await createClient();
+
+        const { data: user, error: dbError } = await supabase
+            .from("users")
+            .select("*")
+            .eq("id", userId)
+            .single();
+
+        if (dbError) return { data: null, error: dbError };
+
+        // cache the new subscription data
+        await setCachedUser(userId, user);
+
+        return { data: user, error: null };
+    } catch (error) {
+        console.error("Cache error:", error);
+        return { data: null, error };
+    }
+};
 
 const _getCachedFreeTrial = async (userId: string) => {
     try {
@@ -78,13 +106,14 @@ export const _shouldBypassMiddleware = (pathname: string) => {
     return pathname.startsWith("/api");
 };
 
-export const _handleOnboarding = (
+export const _handleOnboarding = async (
     pathname: string,
     user: User,
     request: nextRequest,
 ) => {
-    // TO-DO: USE FROM CACHE
-    const onboardingCompleted = !!user.user_metadata?.onboarding_completed;
+    const { data: userData } = await _getCachedUser(user.id);
+    const isOnboardingCompleted = userData?.onboarding_completed;
+
     const { isEnabled, isRequired } = appConfig.onboarding;
 
     // hide onboarding if disabled
@@ -93,11 +122,11 @@ export const _handleOnboarding = (
     const onboardingRoute = ROUTES_CONFIG.PROTECTED.ONBOARDING;
     const isOnboardingPage = pathname === onboardingRoute;
 
-    if (onboardingCompleted && isOnboardingPage) {
+    if (isOnboardingCompleted && isOnboardingPage) {
         return _redirectTo(request, ROUTES_CONFIG.PROTECTED.USER_DASHBOARD); // redirect user away from onboarding if completed
     }
 
-    if (!onboardingCompleted && isRequired && isProtectedRoute(pathname)) {
+    if (!isOnboardingCompleted && isRequired && isProtectedRoute(pathname)) {
         return _redirectTo(request, onboardingRoute); // force onboarding if required
     }
 
