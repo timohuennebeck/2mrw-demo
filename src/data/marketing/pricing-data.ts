@@ -1,11 +1,13 @@
 import { isFreePlanEnabled } from "@/config/billingConfig";
-import { BillingPlan, BillingPeriod, SubscriptionTier } from "@/enums";
+import { BillingPeriod, BillingPlan, SubscriptionTier } from "@/enums";
 
 export const getFilteredPricingPlans = () => {
     const showFreePlan = isFreePlanEnabled();
 
     const filterPlans = (plans: DefaultPricingPlan[]) => {
-        return showFreePlan ? plans : plans.filter((plan) => plan.name !== "Free");
+        return showFreePlan
+            ? plans
+            : plans.filter((plan) => plan.subscription_tier !== SubscriptionTier.FREE);
     };
 
     const filterFeatures = (sections: PricingFeatureSection[]) => {
@@ -62,7 +64,8 @@ export const defaultPricingPlans: {
     monthly: [
         {
             name: SubscriptionTier.FREE,
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            description:
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$0",
             billing_period: BillingPeriod.MONTHLY,
             billing_plan: BillingPlan.RECURRING,
@@ -72,7 +75,8 @@ export const defaultPricingPlans: {
         },
         {
             name: SubscriptionTier.ESSENTIALS,
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            description:
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$49",
             billing_period: BillingPeriod.MONTHLY,
             billing_plan: BillingPlan.RECURRING,
@@ -82,7 +86,8 @@ export const defaultPricingPlans: {
         },
         {
             name: SubscriptionTier.FOUNDERS,
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            description:
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$99",
             billing_period: BillingPeriod.MONTHLY,
             billing_plan: BillingPlan.RECURRING,
@@ -94,7 +99,8 @@ export const defaultPricingPlans: {
     annual: [
         {
             name: SubscriptionTier.FREE,
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            description:
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$0",
             billing_period: BillingPeriod.YEARLY,
             billing_plan: BillingPlan.RECURRING,
@@ -104,7 +110,8 @@ export const defaultPricingPlans: {
         },
         {
             name: SubscriptionTier.ESSENTIALS,
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            description:
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$490",
             billing_period: BillingPeriod.YEARLY,
             billing_plan: BillingPlan.RECURRING,
@@ -114,7 +121,8 @@ export const defaultPricingPlans: {
         },
         {
             name: SubscriptionTier.FOUNDERS,
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            description:
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$990",
             billing_period: BillingPeriod.YEARLY,
             billing_plan: BillingPlan.RECURRING,
@@ -126,7 +134,8 @@ export const defaultPricingPlans: {
     oneTime: [
         {
             name: SubscriptionTier.ESSENTIALS,
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            description:
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$999",
             billing_period: BillingPeriod.LIFETIME,
             billing_plan: BillingPlan.ONE_TIME,
@@ -136,7 +145,8 @@ export const defaultPricingPlans: {
         },
         {
             name: SubscriptionTier.FOUNDERS,
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            description:
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             price: "$1,999",
             billing_period: BillingPeriod.LIFETIME,
             billing_plan: BillingPlan.ONE_TIME,

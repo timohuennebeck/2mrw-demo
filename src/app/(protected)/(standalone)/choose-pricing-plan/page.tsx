@@ -16,11 +16,10 @@ const ChoosePricingPlanPage = () => {
     const { authUser } = useSession();
     const { subscription } = useSubscription();
 
-    const filteredPlans = getFilteredPricingPlans();
-
     const showFreePlan = isFreePlanEnabled();
     const isOneTimePayment = isOneTimePaymentEnabled();
 
+    const filteredPlans = getFilteredPricingPlans();
     const plansToShow = isOneTimePayment ? filteredPlans.oneTime : filteredPlans.monthly;
 
     return (
