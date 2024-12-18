@@ -14,41 +14,39 @@ export interface EmailConfig {
     };
 }
 
-interface ThankYouForSigningUpVariables {}
+interface ThankYouForSigningUpEmail {}
 
-interface PurchasedSubscriptionVariables {
+interface PurchasedSubscriptionEmail {
     name: string;
     subscriptionDetails: string;
 }
 
-interface CancelledSubscriptionVariables {
+interface CancelledSubscriptionEmail {
     name: string;
     cancellationDetails: string;
 }
 
-interface FreeTrialStartedVariables {
+interface FreeTrialStartedEmail {
     freeTrialEndDate: string;
 }
 
-interface FreeTrialExpiresSoonVariables {
+interface FreeTrialExpiresSoonEmail {
     upgradeUrl: string;
 }
 
-interface FreeTrialExpiredVariables {
+interface FreeTrialExpiredEmail {
     name: string;
     upgradeUrl: string;
 }
 
-interface DeletedUserVariables {
-    name: string;
-}
+interface DeletedProfileEmail {}
 
 export type EmailVariablesMap = {
-    [EmailType.THANK_YOU_FOR_SIGNING_UP]: ThankYouForSigningUpVariables;
-    [EmailType.PURCHASED_SUBSCRIPTION]: PurchasedSubscriptionVariables;
-    [EmailType.CANCELLED_SUBSCRIPTION]: CancelledSubscriptionVariables;
-    [EmailType.FREE_TRIAL_STARTED]: FreeTrialStartedVariables;
-    [EmailType.FREE_TRIAL_EXPIRES_SOON]: FreeTrialExpiresSoonVariables;
-    [EmailType.FREE_TRIAL_EXPIRED]: FreeTrialExpiredVariables;
-    [EmailType.DELETED_USER]: DeletedUserVariables;
+    [EmailType.THANK_YOU_FOR_SIGNING_UP]: ThankYouForSigningUpEmail;
+    [EmailType.PURCHASED_SUBSCRIPTION]: PurchasedSubscriptionEmail;
+    [EmailType.CANCELLED_SUBSCRIPTION]: CancelledSubscriptionEmail;
+    [EmailType.FREE_TRIAL_STARTED]: FreeTrialStartedEmail;
+    [EmailType.FREE_TRIAL_EXPIRES_SOON]: FreeTrialExpiresSoonEmail;
+    [EmailType.FREE_TRIAL_EXPIRED]: FreeTrialExpiredEmail;
+    [EmailType.DELETED_PROFILE]: DeletedProfileEmail;
 };

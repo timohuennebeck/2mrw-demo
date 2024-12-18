@@ -21,6 +21,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ProfileSection } from "./ProfileSection";
+import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
+import { EmailType } from "@/enums/email";
 
 const _invalidateCaches = async (userId: string) => {
     const { error: userCacheError } = await invalidateUserCache(userId);
@@ -55,6 +57,12 @@ export const DeleteProfileSection = () => {
         setIsDeleting(true);
 
         try {
+            sendLoopsTransactionalEmail({
+                type: EmailType.DELETED_PROFILE,
+                email: authUser?.email ?? "",
+                variables: {},
+            });
+
             const result = await _deleteUserProfile(authUser as User);
 
             if (result.error) {

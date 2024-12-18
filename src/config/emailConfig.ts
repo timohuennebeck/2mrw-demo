@@ -38,10 +38,10 @@ export const emailConfig: EmailConfig = {
             variables: ["name", "upgradeUrl"],
         },
 
-        [EmailType.DELETED_USER]: {
-            transactionalId: "clhz2d4x3008abc123def456",
+        [EmailType.DELETED_PROFILE]: {
+            transactionalId: "cm4u5viv401s082jmhwmlrln1",
             enabled: true,
-            variables: ["name"],
+            variables: [],
         },
     },
 };
