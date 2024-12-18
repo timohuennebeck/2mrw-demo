@@ -1,6 +1,7 @@
 "use server";
 
 import { billingConfig } from "@/config";
+import { ROUTES_CONFIG } from "@/config/routesConfig";
 import { AuthMethod } from "@/enums/user";
 import { startFreePlan } from "@/services/database/subscriptionService";
 import { createUserTable, fetchUser } from "@/services/database/userService";
@@ -39,7 +40,7 @@ export const GET = async (request: Request) => {
         );
 
         const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-        if (error) return redirect(`${origin}/auth-status/error?mode=google-auth`);
+        if (error) return redirect(`${origin}${ROUTES_CONFIG.STATUS.ERROR}?mode=google-auth`);
 
         const { user: authUser } = data.session;
         const { user: existingUser } = await fetchUser(authUser.id);
