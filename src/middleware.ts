@@ -1,10 +1,15 @@
 import { createServerClient } from "@supabase/ssr";
+import { User } from "@supabase/supabase-js";
 import {
     NextRequest as nextRequest,
     NextResponse as nextResponse,
 } from "next/server";
-import { User } from "@supabase/supabase-js";
-import { appConfig } from "./config";
+import { appConfig, billingConfig } from "./config";
+import {
+    isProtectedRoute,
+    isPublicRoute,
+    ROUTES_CONFIG,
+} from "./config/routesConfig";
 import { createClient } from "./services/integration/server";
 import {
     getCachedFreeTrial,
@@ -12,27 +17,6 @@ import {
     setCachedFreeTrial,
     setCachedSubscription,
 } from "./services/redis/redisService";
-
-const PUBLIC_ROUTES = [
-    "/",
-    "/auth/sign-in",
-    "/auth/sign-up",
-    "/auth/forgot-password",
-    "/auth/update-password",
-    "/auth/email-confirmation",
-    "/user-profile",
-    "/auth/password-confirmation",
-    "/choose-pricing-plan",
-];
-
-const AUTH_ROUTES = ["/auth/confirm", "/auth/callback", "/auth/email-change"];
-
-const PROTECTED_ROUTES = [
-    "/app",
-    "/onboarding",
-    "/choose-pricing-plan",
-    "/plan-confirmation",
-];
 
 const _getCachedFreeTrial = async (userId: string) => {
     try {
@@ -86,80 +70,101 @@ const _getCachedSubscription = async (userId: string) => {
     }
 };
 
-const _handleOnboardingRedirection = async (
-    request: nextRequest,
-    pathname: string,
-    user: User,
-) => {
-    const onboardingCompleted = !!user.user_metadata?.onboarding_completed;
-    const { isRequired } = appConfig.onboarding;
-
-    // if trying to access onboarding when it's already completed
-    if (pathname === "/onboarding" && onboardingCompleted) {
-        return nextResponse.redirect(new URL("/app", request.url));
-    }
-
-    const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
-        pathname.startsWith(route)
-    );
-
-    // if onboarding is not completed and trying to access other protected routes
-    if (
-        pathname !== "/onboarding" && !onboardingCompleted &&
-        isProtectedRoute && isRequired
-    ) {
-        return nextResponse.redirect(new URL("/onboarding", request.url));
-    }
-
-    return nextResponse.next();
+export const _redirectTo = (request: nextRequest, path: string) => {
+    return nextResponse.redirect(new URL(path, request.url));
 };
 
-const _handleRedirection = async (request: nextRequest, user: User | null) => {
+export const _shouldBypassMiddleware = (pathname: string) => {
+    return pathname.startsWith("/api");
+};
+
+export const _handleOnboarding = (
+    pathname: string,
+    user: User,
+    request: nextRequest,
+) => {
+    // TO-DO: USE FROM CACHE
+    const onboardingCompleted = !!user.user_metadata?.onboarding_completed;
+    const { isEnabled, isRequired } = appConfig.onboarding;
+
+    // hide onboarding if disabled
+    if (!isEnabled) return nextResponse.next({ request });
+
+    const onboardingRoute = ROUTES_CONFIG.PROTECTED.ONBOARDING;
+    const isOnboardingPage = pathname === onboardingRoute;
+
+    if (onboardingCompleted && isOnboardingPage) {
+        return _redirectTo(request, ROUTES_CONFIG.PROTECTED.USER_DASHBOARD); // redirect user away from onboarding if completed
+    }
+
+    if (!onboardingCompleted && isRequired && isProtectedRoute(pathname)) {
+        return _redirectTo(request, onboardingRoute); // force onboarding if required
+    }
+
+    return nextResponse.next({ request });
+};
+
+export const _handleBilling = (pathname: string, request: nextRequest) => {
+    const { isFreePlanEnabled } = billingConfig;
+
+    const pricingPlanRoute = ROUTES_CONFIG.PROTECTED.CHOOSE_PRICING_PLAN;
+    const isPricingPlanPage = pathname === pricingPlanRoute;
+
+    // TODO: if user has free plan, redirect to dashboard
+
+    // TODO: check if user has a subscription or free trial
+    if (!isFreePlanEnabled && !isPricingPlanPage) {
+        return _redirectTo(request, pricingPlanRoute); // force user to pricing page if free plan is disabled
+    }
+
+    return nextResponse.next({ request });
+};
+
+export const _handleUnauthenticatedRedirect = (
+    request: nextRequest,
+    pathname: string,
+) => {
+    if (isProtectedRoute(pathname)) {
+        return _redirectTo(request, ROUTES_CONFIG.PUBLIC.LANDING_PAGE); // force user to landing page if not authenticated
+    }
+
+    return nextResponse.next({ request });
+};
+
+export const _handleLoggedInRedirect = (
+    pathname: string,
+    user: User,
+    request: nextRequest,
+) => {
+    if (pathname.startsWith("/auth")) {
+        return _redirectTo(request, ROUTES_CONFIG.PROTECTED.USER_DASHBOARD); // force user to dashboard if they go to an auth page
+    }
+
+    const onboardingResponse = _handleOnboarding(pathname, user, request);
+    if (onboardingResponse.status !== 200) return onboardingResponse;
+
+    const billingResponse = _handleBilling(pathname, request);
+    if (billingResponse.status !== 200) return billingResponse;
+
+    return nextResponse.next({ request }); // allow access to all other routes
+};
+
+const _handleRouting = async (request: nextRequest, user: User) => {
     const { pathname } = request.nextUrl;
 
-    // allow all api routes to pass through without additional checks, otherwise the api calls would be blocked
-    if (pathname.startsWith("/api")) {
+    if (_shouldBypassMiddleware(pathname)) {
         return nextResponse.next({ request });
     }
 
-    // allow access to public routes
-    if (PUBLIC_ROUTES.includes(pathname)) {
+    if (isPublicRoute(pathname)) {
         return nextResponse.next({ request });
     }
 
-    // allow special auth routes needed for email confirmation etc.
-    if (AUTH_ROUTES.includes(pathname)) {
-        return nextResponse.next({ request });
-    }
-
-    // if user is not logged in
     if (!user) {
-        // if trying to access protected routes, redirect to landing page
-        if (PROTECTED_ROUTES.includes(pathname)) {
-            return nextResponse.redirect(new URL("/", request.url));
-        }
-
-        // allow access to auth routes
-        if (AUTH_ROUTES.includes(pathname)) {
-            return nextResponse.next({ request });
-        }
-
-        // for any other routes, redirect to landing page
-        return nextResponse.redirect(new URL("/", request.url));
+        return _handleUnauthenticatedRedirect(request, pathname);
     }
 
-    if (user) {
-        const { isEnabled } = appConfig.onboarding;
-
-        // skip onboarding checks if it's disabled
-        if (!isEnabled) {
-            return nextResponse.next();
-        }
-
-        return _handleOnboardingRedirection(request, pathname, user);
-    }
-
-    return nextResponse.next();
+    return _handleLoggedInRedirect(pathname, user, request);
 };
 
 export const middleware = async (request: nextRequest) => {
@@ -195,11 +200,9 @@ export const middleware = async (request: nextRequest) => {
      * because a simple mistake could make it hard to debug and cause issues with users being randomly logged out
      */
 
-    const {
-        data: { user },
-    } = await supabaseClient.auth.getUser();
+    const { data: { user } } = await supabaseClient.auth.getUser();
 
-    const redirectResponse = await _handleRedirection(request, user);
+    const redirectResponse = await _handleRouting(request, user as User);
     if (redirectResponse) return redirectResponse;
 
     /**
