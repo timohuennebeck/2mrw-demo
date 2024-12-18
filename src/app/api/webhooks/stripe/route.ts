@@ -88,7 +88,7 @@ export const POST = async (req: nextRequest) => {
                     type: EmailType.FREE_TRIAL_EXPIRES_SOON,
                     email: user.email,
                     variables: {
-                        upgradeUrl: `${process.env.NEXT_PUBLIC_APP_URL}/choose-pricing-plan`,
+                        upgradeUrl: `${process.env.NEXT_PUBLIC_APP_URL}/app/billing`,
                     },
                 });
                 break; // notify user that their free trial is ending in three days
