@@ -22,6 +22,11 @@ export const emailConfig: EmailConfig = {
             variables: ["name", "cancellationDetails"],
         },
 
+        [EmailType.FREE_TRIAL_STARTED]: {
+            transactionalId: "cm4tj86wt04nr1wqrf4yc0lew",
+            enabled: true,
+            variables: ["freeTrialEndDate"],
+        },
         [EmailType.FREE_TRIAL_EXPIRES_SOON]: {
             transactionalId: "clhz2d4x3007abc123def456",
             enabled: true,

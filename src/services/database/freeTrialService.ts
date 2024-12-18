@@ -64,21 +64,40 @@ export const startFreeTrial = async (userId: string, stripePriceId: string) => {
                 .toISOString(),
         });
 
-        await supabase.from("free_trials")
+        const freeTrialEndDate = moment.unix(stripeSubscription.trial_end ?? 0)
+            .toISOString();
+
+        const { error } = await supabase.from("free_trials")
             .insert({
                 user_id: userId,
                 subscription_tier: plan.subscription_tier,
                 stripe_subscription_id: stripeSubscription.id,
                 status: FreeTrialStatus.ACTIVE,
                 start_date: moment().toISOString(),
-                end_date: moment.unix(stripeSubscription.trial_end ?? 0)
-                    .toISOString(),
+                end_date: freeTrialEndDate,
                 created_at: moment().toISOString(),
                 updated_at: moment().toISOString(),
             });
+
+        if (error) {
+            return {
+                success: false,
+                freeTrialEndDate: null,
+                error: error,
+            };
+        }
+
+        return {
+            success: true,
+            freeTrialEndDate: moment(freeTrialEndDate).format(
+                "Do [of] MMMM, YYYY",
+            ),
+            error: null,
+        };
     } catch (error) {
         return {
             success: false,
+            freeTrialEndDate: null,
             error: handleSupabaseError(error, "startFreeTrial"),
         };
     }

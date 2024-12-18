@@ -28,6 +28,10 @@ interface CancelledSubscriptionVariables {
     cancellationDetails: string;
 }
 
+interface FreeTrialStartedVariables {
+    freeTrialEndDate: string;
+}
+
 interface FreeTrialExpiresSoonVariables {
     upgradeUrl: string;
 }
@@ -45,6 +49,7 @@ export type EmailVariablesMap = {
     [EmailType.THANK_YOU_FOR_SIGNING_UP]: ThankYouForSigningUpVariables;
     [EmailType.PURCHASED_SUBSCRIPTION]: PurchasedSubscriptionVariables;
     [EmailType.CANCELLED_SUBSCRIPTION]: CancelledSubscriptionVariables;
+    [EmailType.FREE_TRIAL_STARTED]: FreeTrialStartedVariables;
     [EmailType.FREE_TRIAL_EXPIRES_SOON]: FreeTrialExpiresSoonVariables;
     [EmailType.FREE_TRIAL_EXPIRED]: FreeTrialExpiredVariables;
     [EmailType.DELETED_USER]: DeletedUserVariables;

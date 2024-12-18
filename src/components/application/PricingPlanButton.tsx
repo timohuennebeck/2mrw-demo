@@ -12,6 +12,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
+import { ROUTES_CONFIG } from "@/config/routesConfig";
+import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
+import { EmailType } from "@/enums";
 
 const _getButtonText = ({
     currentPlanStripePriceId,
@@ -130,9 +133,17 @@ const PricingPlanButton = ({
                 const response = await startFreeTrial(dbUser?.id ?? "", plan.stripe_price_id);
                 if (response?.error) throw response.error;
 
+                sendLoopsTransactionalEmail({
+                    type: EmailType.FREE_TRIAL_STARTED,
+                    email: dbUser?.email ?? "",
+                    variables: {
+                        freeTrialEndDate: response.freeTrialEndDate ?? "",
+                    },
+                });
+
                 await Promise.all([invalidateFreeTrial(), invalidateSubscription()]);
 
-                router.push("/plan-confirmation?mode=free-trial");
+                router.push(`${ROUTES_CONFIG.PROTECTED.PLAN_CONFIRMATION}?mode=free-trial`);
                 setIsLoading(false);
                 return;
             }
