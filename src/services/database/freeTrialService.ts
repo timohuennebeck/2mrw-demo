@@ -52,17 +52,43 @@ export const startFreeTrial = async (userId: string, stripePriceId: string) => {
         const plan = getPricingPlan(stripePriceId);
         if (!plan) throw new Error("Pricing plan is missing!");
 
-        await updateUserSubscription({
-            userId,
-            stripePriceId,
-            stripeSubscriptionId: stripeSubscription.id,
-            status: SubscriptionStatus.TRIALING,
-            subscriptionTier: plan.subscription_tier,
-            billingPeriod: plan.billing_period,
-            billingPlan: plan.billing_plan,
-            endDate: moment.unix(stripeSubscription.current_period_end)
-                .toISOString(),
-        });
+        const { data: existingSubscription } = await supabase
+            .from("user_subscriptions")
+            .select("*")
+            .eq("user_id", userId)
+            .single();
+
+        if (!existingSubscription) {
+            const { error: insertError } = await supabase
+                .from("user_subscriptions")
+                .insert({
+                    user_id: userId,
+                    stripe_price_id: stripePriceId,
+                    stripe_subscription_id: stripeSubscription.id,
+                    status: SubscriptionStatus.TRIALING,
+                    subscription_tier: plan.subscription_tier,
+                    billing_period: plan.billing_period,
+                    billing_plan: plan.billing_plan,
+                    end_date: moment.unix(stripeSubscription.current_period_end)
+                        .toISOString(),
+                    created_at: moment().toISOString(),
+                    updated_at: moment().toISOString(),
+                });
+
+            if (insertError) throw insertError;
+        } else {
+            await updateUserSubscription({
+                userId,
+                stripePriceId,
+                stripeSubscriptionId: stripeSubscription.id,
+                status: SubscriptionStatus.TRIALING,
+                subscriptionTier: plan.subscription_tier,
+                billingPeriod: plan.billing_period,
+                billingPlan: plan.billing_plan,
+                endDate: moment.unix(stripeSubscription.current_period_end)
+                    .toISOString(),
+            });
+        }
 
         const freeTrialEndDate = moment.unix(stripeSubscription.trial_end ?? 0)
             .toISOString();
