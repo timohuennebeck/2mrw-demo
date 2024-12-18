@@ -44,14 +44,33 @@ const supabase = createClient(
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")! ?? "",
 );
 
-const _invalidateFreeTrialCache = async (userId: string) => {
+const _sendLoopsEmail = async (
+  email: string,
+  transactionalId: string,
+  variables: { upgradeUrl: string },
+) => {
   try {
-    const CACHE_PREFIX = "user_trial:";
-    const cacheKey = `${CACHE_PREFIX}${userId}`;
+    const response = await fetch("https://app.loops.so/api/v1/transactional", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${Deno.env.get("LOOPS_API_KEY")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        transactionalId,
+        email,
+        dataVariables: variables,
+      }),
+    });
 
-    await redis.del(cacheKey);
+    if (!response.ok) {
+      throw new Error(`Failed to send email: ${response.statusText}`);
+    }
+
+    return { success: true, error: null };
   } catch (error) {
-    console.error("Cache invalidation error:", error);
+    console.error("Error sending Loops email:", error);
+    return { success: false, error };
   }
 };
 
@@ -64,6 +83,15 @@ const _invalidateSubscriptionCache = async (userId: string) => {
   } catch (error) {
     console.error("Cache invalidation error:", error);
   }
+};
+
+const _fetchUserEmail = async (userId: string) => {
+  const { data, error } = await supabase
+    .from("users")
+    .select("email")
+    .eq("id", userId);
+
+  return { email: data?.[0]?.email, error };
 };
 
 const _fetchOnGoingFreeTrials = async () => {
@@ -119,8 +147,6 @@ const _downgradeToFreePlan = async (userId: string) => {
       .eq("user_id", userId);
 
     if (error) throw error;
-
-    await _invalidateSubscriptionCache(userId);
   } catch (error) {
     console.error("Error in _downgradeToFreePlan:", error);
     throw error;
@@ -150,6 +176,13 @@ Deno.serve(async () => {
         if (freeTrialUpdateResponse.error) throw freeTrialUpdateResponse.error;
 
         await _downgradeToFreePlan(trial.user_id);
+        await _invalidateSubscriptionCache(trial.user_id);
+
+        const { email } = await _fetchUserEmail(trial.user_id);
+
+        await _sendLoopsEmail(email, "cm4u80j0y03d9147zvineoz6x", {
+          upgradeUrl: `${Deno.env.get("NEXT_PUBLIC_SITE_URL")}/choose-pricing-plan`,
+        }); // sends user has been downgraded to free plan email
 
         console.log(`[Cron] Processed trial for user: ${trial.user_id}`);
       }

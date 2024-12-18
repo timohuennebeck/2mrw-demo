@@ -50,6 +50,36 @@ const supabase = createClient(
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")! ?? "",
 );
 
+const _sendLoopsEmail = async (
+  email: string,
+  transactionalId: string,
+  variables: { upgradeUrl: string },
+) => {
+  try {
+    const response = await fetch("https://app.loops.so/api/v1/transactional", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${Deno.env.get("LOOPS_API_KEY")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        transactionalId,
+        email,
+        dataVariables: variables,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to send email: ${response.statusText}`);
+    }
+
+    return { success: true, error: null };
+  } catch (error) {
+    console.error("Error sending Loops email:", error);
+    return { success: false, error };
+  }
+};
+
 const _invalidateSubscriptionCache = async (userId: string) => {
   try {
     const CACHE_PREFIX = "user_sub:";
@@ -59,6 +89,15 @@ const _invalidateSubscriptionCache = async (userId: string) => {
   } catch (error) {
     console.error("Cache invalidation error:", error);
   }
+};
+
+const _fetchUserEmail = async (userId: string) => {
+  const { data, error } = await supabase
+    .from("users")
+    .select("email")
+    .eq("id", userId);
+
+  return { email: data?.[0]?.email, error };
 };
 
 const _fetchOnGoingSubscriptions = async () => {
@@ -94,7 +133,6 @@ const _downgradeToFreePlan = async (userId: string) => {
       .eq("user_id", userId);
 
     if (error) throw error;
-    await _invalidateSubscriptionCache(userId);
   } catch (error) {
     console.error("Error in _downgradeToFreePlan:", error);
     throw error;
@@ -116,17 +154,20 @@ Deno.serve(async () => {
       async (subscription: PurchasedSubscription) => {
         const now = moment();
         const endDate = moment(subscription.end_date);
-        console.log("Comparing dates:", {
-          now: now.format(),
-          endDate: endDate.format(),
-          isBefore: endDate.isBefore(now),
-        });
 
         if (endDate.isBefore(now)) {
           console.log(
             `[Cron] Processing expired subscription for: ${subscription.user_id}`,
           );
           await _downgradeToFreePlan(subscription.user_id);
+          await _invalidateSubscriptionCache(subscription.user_id);
+
+          const { email } = await _fetchUserEmail(subscription.user_id);
+
+          await _sendLoopsEmail(email, "cm4u8hrjp03c9tv164dc8jy4r", {
+            upgradeUrl: `${Deno.env.get("NEXT_PUBLIC_SITE_URL")}/choose-pricing-plan`,
+          }); // sends user has been downgraded to free plan email
+
           console.log(
             `[Cron] Processed subscription for user: ${subscription.user_id}`,
           );
