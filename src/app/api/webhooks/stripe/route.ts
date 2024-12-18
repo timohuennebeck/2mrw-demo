@@ -1,4 +1,5 @@
 import { EmailType, StripeWebhookEvents } from "@/enums";
+import { User } from "@/interfaces";
 import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
 import { stripe } from "@/services/stripe/client";
@@ -7,8 +8,15 @@ import {
     handleCheckoutCompleted,
     handleUpdateSubscription,
 } from "@/services/stripe/stripeWebhook";
-import { NextRequest as nextRequest, NextResponse as nextResponse } from "next/server";
+import {
+    NextRequest as nextRequest,
+    NextResponse as nextResponse,
+} from "next/server";
 import Stripe from "stripe";
+
+const _getPurchasedPackage = (session: Stripe.Checkout.Session) => {
+    return session.line_items?.data[0]?.price?.product as Stripe.Product;
+};
 
 const _verifyStripeWebhook = async (body: string, signature: string) => {
     try {
@@ -21,7 +29,7 @@ const _verifyStripeWebhook = async (body: string, signature: string) => {
 const _retrieveCheckoutSession = async (sessionId: string) => {
     try {
         return await stripe.checkout.sessions.retrieve(sessionId, {
-            expand: ["line_items"],
+            expand: ["line_items", "line_items.data.price.product"],
         });
     } catch (error) {
         throw new Error("Failed to retrieve checkout session");
@@ -41,7 +49,7 @@ const _getUserFromStripeCustomerId = async (customerId: string) => {
         throw new Error("User not found for stripe customer id: " + customerId);
     }
 
-    return userData.id;
+    return userData as User;
 };
 
 export const POST = async (req: nextRequest) => {
@@ -63,6 +71,15 @@ export const POST = async (req: nextRequest) => {
 
                 const session = await _retrieveCheckoutSession(event.data.object.id);
                 await handleCheckoutCompleted(session, user.id);
+
+                sendLoopsTransactionalEmail({
+                    type: EmailType.PURCHASED_SUBSCRIPTION,
+                    email: user.email,
+                    variables: {
+                        purchasedPackage: _getPurchasedPackage(session).name,
+                    },
+                });
+
                 break;
             }
             case StripeWebhookEvents.CUSTOMER_SUBSCRIPTION_UPDATED: {

@@ -12,9 +12,9 @@ export const emailConfig: EmailConfig = {
         },
 
         [EmailType.PURCHASED_SUBSCRIPTION]: {
-            transactionalId: "clhz2d4x3002abc123def456",
+            transactionalId: "cm4u658xd00avivr51wgdetn2",
             enabled: true,
-            variables: ["name", "subscriptionDetails"],
+            variables: ["purchasedPackage"],
         },
         [EmailType.CANCELLED_SUBSCRIPTION]: {
             transactionalId: "clhz2d4x3006abc123def456",

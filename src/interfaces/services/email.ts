@@ -17,8 +17,7 @@ export interface EmailConfig {
 interface ThankYouForSigningUpEmail {}
 
 interface PurchasedSubscriptionEmail {
-    name: string;
-    subscriptionDetails: string;
+    purchasedPackage: string;
 }
 
 interface CancelledSubscriptionEmail {
