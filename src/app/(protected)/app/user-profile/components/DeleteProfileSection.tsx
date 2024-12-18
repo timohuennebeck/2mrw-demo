@@ -20,6 +20,20 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ProfileSection } from "./ProfileSection";
+import { invalidateFreeTrialCache } from "@/services/redis/redisService";
+import { invalidateUserCache } from "@/services/redis/redisService";
+import { invalidateSubscriptionCache } from "@/services/redis/redisService";
+
+const _invalidateCaches = async (userId: string) => {
+    const { error: userCacheError } = await invalidateUserCache(userId);
+    if (userCacheError) return { error: "Error invalidating user cache" };
+
+    const { error: subCacheError } = await invalidateSubscriptionCache(userId);
+    if (subCacheError) return { error: "Error invalidating subscription cache" };
+
+    const { error: trialCacheError } = await invalidateFreeTrialCache(userId);
+    if (trialCacheError) return { error: "Error invalidating free trial cache" };
+};
 
 const _deleteUserProfile = async (authUser: User) => {
     const adminSupabase = await createSupabasePowerUserClient();
@@ -29,6 +43,9 @@ const _deleteUserProfile = async (authUser: User) => {
 
     const { error: authError } = await adminSupabase.auth.admin.deleteUser(authUser?.id ?? "");
     if (authError) return { error: "Error deleting user profile from auth" };
+
+    const error = await _invalidateCaches(authUser.id);
+    if (error?.error) return { error: "Error invalidating caches" };
 
     return { success: true };
 };

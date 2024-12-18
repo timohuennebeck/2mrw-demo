@@ -4,6 +4,7 @@ import { createClient } from "@/services/integration/server";
 import moment from "moment";
 import { stripe } from "./client";
 import { handleSupabaseError } from "@/utils/errors/supabaseError";
+import { invalidateUserCache } from "../redis/redisService";
 
 const _getStripeCustomerIdFromSupabase = async (userId: string) => {
     const supabase = await createClient();
@@ -17,7 +18,10 @@ const _getStripeCustomerIdFromSupabase = async (userId: string) => {
     if (error) {
         return {
             stripeCustomerId: null,
-            error: handleSupabaseError(error, "_getStripeCustomerIdFromSupabase"),
+            error: handleSupabaseError(
+                error,
+                "_getStripeCustomerIdFromSupabase",
+            ),
         };
     }
 
@@ -40,7 +44,10 @@ const _getStripeCustomerIdFromStripe = async (email: string) => {
     }
 };
 
-const _updateUserStripeCustomerId = async (userId: string, stripeCustomerId: string) => {
+const _updateUserStripeCustomerId = async (
+    userId: string,
+    stripeCustomerId: string,
+) => {
     const supabase = await createClient();
 
     try {
@@ -53,6 +60,11 @@ const _updateUserStripeCustomerId = async (userId: string, stripeCustomerId: str
             .eq("id", userId);
 
         if (error) throw error;
+
+        const { error: cacheError } = await invalidateUserCache(userId);
+        if (cacheError) {
+            console.error("Failed to invalidate user cache:", cacheError);
+        }
 
         return { error: null };
     } catch (error) {
@@ -90,26 +102,35 @@ export const getStripeCustomerId = async () => {
          * if not, create a new stripe customer and update supabase user with it
          */
 
-        if (!userId) return { stripeCustomerId: null, error: "UserId is missing!" };
+        if (!userId) {
+            return { stripeCustomerId: null, error: "UserId is missing!" };
+        }
 
-        const { stripeCustomerId: existingId } = await _getStripeCustomerIdFromSupabase(userId);
+        const { stripeCustomerId: existingId } =
+            await _getStripeCustomerIdFromSupabase(userId);
         if (existingId) {
             return { stripeCustomerId: existingId, error: null };
         }
 
-        const { stripeCustomerId: stripeId } = await _getStripeCustomerIdFromStripe(userEmail);
+        const { stripeCustomerId: stripeId } =
+            await _getStripeCustomerIdFromStripe(userEmail);
         if (stripeId) {
             await _updateUserStripeCustomerId(userId, stripeId);
             return { stripeCustomerId: stripeId, error: null };
         }
 
-        const { stripeCustomerId: newId } = await _createStripeCustomer(userEmail);
+        const { stripeCustomerId: newId } = await _createStripeCustomer(
+            userEmail,
+        );
         if (newId) {
             await _updateUserStripeCustomerId(userId, newId ?? "");
             return { stripeCustomerId: newId, error: null };
         }
 
-        return { stripeCustomerId: null, error: "Error finding or creating a stripe customer id!" };
+        return {
+            stripeCustomerId: null,
+            error: "Error finding or creating a stripe customer id!",
+        };
     } catch (error) {
         return {
             stripeCustomerId: null,

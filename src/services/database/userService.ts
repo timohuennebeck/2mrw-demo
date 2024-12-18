@@ -7,6 +7,7 @@ import { handleSupabaseError } from "@/utils/errors/supabaseError";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import moment from "moment";
 import { createClient } from "../integration/server";
+import { setCachedUser } from "../redis/redisService";
 
 export const checkUserEmailExists = async (userEmail: string) => {
     try {
@@ -69,6 +70,9 @@ export const createUserTable = async (authUser: SupabaseUser, authMethod: AuthMe
         });
 
         if (error) throw error;
+
+        const { error: cacheError } = await setCachedUser(authUser.id, authUser);
+        if (cacheError) console.error("Failed to set user cache:", cacheError);
 
         return { data: TextConstants.TEXT__SUCCESS_USER_CREATED, error: null };
     } catch (error) {
