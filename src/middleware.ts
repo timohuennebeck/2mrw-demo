@@ -96,11 +96,11 @@ export const _handleOnboarding = async (
     const onboardingRoute = ROUTES_CONFIG.PROTECTED.ONBOARDING;
     const isOnboardingPage = pathname === onboardingRoute;
 
-    if (isOnboardingCompleted && isOnboardingPage) {
+    if (!isOnboardingPage && isOnboardingCompleted) {
         return _redirectTo(request, ROUTES_CONFIG.PROTECTED.USER_DASHBOARD); // redirect user away from onboarding if completed
     }
 
-    if (!isOnboardingCompleted && isRequired && isProtectedRoute(pathname)) {
+    if (!isOnboardingPage && !isOnboardingCompleted && isRequired) {
         return _redirectTo(request, onboardingRoute); // force onboarding if required
     }
 

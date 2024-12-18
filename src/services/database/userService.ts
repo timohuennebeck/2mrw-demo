@@ -67,6 +67,7 @@ export const createUserTable = async (authUser: SupabaseUser, authMethod: AuthMe
             updated_at: moment().toISOString(),
             created_at: moment().toISOString(),
             auth_method: authMethod,
+            onboarding_completed: false,
         });
 
         if (error) throw error;
