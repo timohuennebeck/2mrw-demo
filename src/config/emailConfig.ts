@@ -17,9 +17,9 @@ export const emailConfig: EmailConfig = {
             variables: ["purchasedPackage"],
         },
         [EmailType.CANCELLED_SUBSCRIPTION]: {
-            transactionalId: "clhz2d4x3006abc123def456",
+            transactionalId: "cm4u7eojd037wtne1t1tcavc9",
             enabled: true,
-            variables: ["name", "cancellationDetails"],
+            variables: ["endDate"],
         },
 
         [EmailType.FREE_TRIAL_STARTED]: {

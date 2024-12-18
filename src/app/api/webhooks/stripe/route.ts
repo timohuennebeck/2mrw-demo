@@ -8,6 +8,7 @@ import {
     handleCheckoutCompleted,
     handleUpdateSubscription,
 } from "@/services/stripe/stripeWebhook";
+import moment from "moment";
 import {
     NextRequest as nextRequest,
     NextResponse as nextResponse,
@@ -20,7 +21,11 @@ const _getPurchasedPackage = (session: Stripe.Checkout.Session) => {
 
 const _verifyStripeWebhook = async (body: string, signature: string) => {
     try {
-        return stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!);
+        return stripe.webhooks.constructEvent(
+            body,
+            signature,
+            process.env.STRIPE_WEBHOOK_SECRET!,
+        );
     } catch (err: unknown) {
         throw new Error("Invalid signature");
     }
@@ -58,7 +63,9 @@ export const POST = async (req: nextRequest) => {
         const signature = req.headers.get("stripe-signature");
 
         if (!signature) {
-            return nextResponse.json({ error: "There was no signature provided" }, { status: 400 });
+            return nextResponse.json({
+                error: "There was no signature provided",
+            }, { status: 400 });
         }
 
         const event = await _verifyStripeWebhook(body, signature);
@@ -69,7 +76,9 @@ export const POST = async (req: nextRequest) => {
                 const customerId = subscription.customer as string;
                 const user = await _getUserFromStripeCustomerId(customerId);
 
-                const session = await _retrieveCheckoutSession(event.data.object.id);
+                const session = await _retrieveCheckoutSession(
+                    event.data.object.id,
+                );
                 await handleCheckoutCompleted(session, user.id);
 
                 sendLoopsTransactionalEmail({
@@ -91,6 +100,19 @@ export const POST = async (req: nextRequest) => {
                      * checks if the subscription is set to cancel at the end of the current period
                      * if it is, cancel the subscripton
                      */
+
+                    const subscriptionEndDate = moment.unix(
+                        subscription.current_period_end,
+                    ).format("Do [of] MMMM, YYYY");
+
+                    sendLoopsTransactionalEmail({
+                        type: EmailType.CANCELLED_SUBSCRIPTION,
+                        email: user.email,
+                        variables: {
+                            endDate: subscriptionEndDate,
+                        },
+                    });
+
                     await handleCancelSubscription(user.id, subscription);
                 } else {
                     await handleUpdateSubscription(event.data.object, user.id);
@@ -105,7 +127,8 @@ export const POST = async (req: nextRequest) => {
                     type: EmailType.FREE_TRIAL_EXPIRES_SOON,
                     email: user.email,
                     variables: {
-                        upgradeUrl: `${process.env.NEXT_PUBLIC_APP_URL}/app/billing`,
+                        upgradeUrl:
+                            `${process.env.NEXT_PUBLIC_APP_URL}/app/billing`,
                     },
                 });
                 break; // notify user that their free trial is ending in three days
@@ -117,6 +140,9 @@ export const POST = async (req: nextRequest) => {
         return nextResponse.json({ received: true }, { status: 200 });
     } catch (error) {
         console.error("Error processing stripe webhook:", error);
-        return nextResponse.json({ error: "Processing stripe webhook failed" }, { status: 500 });
+        return nextResponse.json(
+            { error: "Processing stripe webhook failed" },
+            { status: 500 },
+        );
     }
 };

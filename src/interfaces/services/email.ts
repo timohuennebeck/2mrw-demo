@@ -21,8 +21,7 @@ interface PurchasedSubscriptionEmail {
 }
 
 interface CancelledSubscriptionEmail {
-    name: string;
-    cancellationDetails: string;
+    endDate: string;
 }
 
 interface FreeTrialStartedEmail {
