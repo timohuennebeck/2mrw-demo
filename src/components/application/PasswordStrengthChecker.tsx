@@ -1,5 +1,5 @@
 import { TextConstants } from "@/constants/TextConstants";
-import { CheckCircleIcon } from "@heroicons/react/24/solid";
+import { CircleCheck } from "lucide-react";
 
 export interface PasswordStrengthCheckerParams {
     password: string;
@@ -34,7 +34,7 @@ const PasswordStrengthChecker = ({ password }: PasswordStrengthCheckerParams) =>
         <div className="flex flex-col gap-2" data-testid="password-strength-checker">
             {passwordRequirements.map((requirement, index) => (
                 <div key={index} className="flex flex-row items-center gap-2">
-                    <CheckCircleIcon
+                    <CircleCheck
                         className={`w-4 ${requirement.condition ? "text-gray-800" : "text-gray-300"}`}
                     />
                     <p className="text-xs">{requirement.text}</p>

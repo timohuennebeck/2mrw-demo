@@ -6,7 +6,6 @@ import { startFreePlan } from "@/services/database/subscriptionService";
 import { createUserTable, fetchUser } from "@/services/database/userService";
 import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
 import { createClient } from "@/services/integration/server";
-import { invalidateUserCache } from "@/services/redis/redisService";
 import { stripe } from "@/services/stripe/client";
 import { getStripeCustomerId } from "@/services/stripe/stripeCustomer";
 import { type EmailOtpType } from "@supabase/supabase-js";
@@ -24,11 +23,6 @@ const _updateUserEmail = async (userId: string, email: string) => {
     if (supabaseError) {
         console.error("Failed to update user email:", supabaseError);
         return redirect("/auth-status/error?mode=email-update");
-    }
-
-    const { error: cacheError } = await invalidateUserCache(userId);
-    if (cacheError) {
-        console.error("Failed to invalidate user cache:", cacheError);
     }
 
     await _updateUserEmailInStripe(email);
@@ -82,9 +76,9 @@ export const GET = async (request: NextRequest) => {
             }
             case "email":
             case "signup": {
-                const supabaseUser = await fetchUser(authUser?.id ?? "");
+                const { data: userData } = await fetchUser(authUser?.id ?? "");
 
-                if (!supabaseUser.user && authUser) {
+                if (!userData && authUser) {
                     const authMethod = authUser.user_metadata.auth_method;
                     const { error } = await createUserTable(
                         authUser,

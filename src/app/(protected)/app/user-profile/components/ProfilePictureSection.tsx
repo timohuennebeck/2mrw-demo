@@ -8,7 +8,6 @@ import { useUser } from "@/context/UserContext";
 import { createClient } from "@/services/integration/client";
 import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
-import { invalidateUserCache } from "@/services/redis/redisService";
 
 const _updateProfilePicture = async (userId: string, file: File) => {
     const supabase = createClient();
@@ -33,9 +32,6 @@ const _updateProfilePicture = async (userId: string, file: File) => {
 
     if (updateError) return { error: "Error updating profile picture" };
 
-    const { error: cacheError } = await invalidateUserCache(userId);
-    if (cacheError) return { error: "Error invalidating user cache" };
-
     return { publicUrl };
 };
 
@@ -59,9 +55,6 @@ const _deleteProfilePicture = async (userId: string, imageUrl: string | null) =>
         .eq("id", userId);
 
     if (updateError) return { error: "Error updating profile" };
-
-    const { error: cacheError } = await invalidateUserCache(userId);
-    if (cacheError) return { error: "Error invalidating user cache" };
 
     return { success: true };
 };

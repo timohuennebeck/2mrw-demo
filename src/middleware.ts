@@ -11,66 +11,8 @@ import {
     ROUTES_CONFIG,
 } from "./config/routesConfig";
 import { SubscriptionStatus, SubscriptionTier } from "./enums";
-import { PurchasedSubscription, User } from "./interfaces";
-import { createClient } from "./services/integration/server";
-import {
-    getCachedSubscription,
-    getCachedUser,
-    setCachedSubscription,
-    setCachedUser,
-} from "./services/redis/redisService";
-
-const _getCachedUser = async (userId: string) => {
-    try {
-        const { data: cachedData } = await getCachedUser(userId);
-        if (cachedData) return { data: cachedData, error: null };
-
-        // cache miss - fetch from database
-        const supabase = await createClient();
-
-        const { data: user, error: dbError } = await supabase
-            .from("users")
-            .select("*")
-            .eq("id", userId)
-            .single();
-
-        if (dbError) return { data: null, error: dbError };
-
-        // cache the new subscription data
-        await setCachedUser(userId, user);
-
-        return { data: user as User, error: null };
-    } catch (error) {
-        console.error("Cache error:", error);
-        return { data: null, error };
-    }
-};
-
-const _getCachedSubscription = async (userId: string) => {
-    try {
-        const { data: cachedData } = await getCachedSubscription(userId);
-        if (cachedData) return { data: cachedData, error: null };
-
-        // cache miss - fetch from database
-        const supabase = await createClient();
-
-        const { data: subscription, error: dbError } = await supabase
-            .from("user_subscriptions")
-            .select("*")
-            .eq("user_id", userId)
-            .single();
-
-        if (dbError) return { data: null, error: dbError };
-
-        // cache the new subscription data
-        await setCachedSubscription(userId, subscription);
-
-        return { data: subscription as PurchasedSubscription, error: null };
-    } catch (error) {
-        console.error("Cache error:", error);
-        return { data: null, error };
-    }
-};
+import { fetchUserSubscription } from "./services/database/subscriptionService";
+import { fetchUser } from "./services/database/userService";
 
 export const _redirectTo = (request: nextRequest, path: string) => {
     return nextResponse.redirect(new URL(path, request.url));
@@ -85,7 +27,7 @@ export const _handleOnboarding = async (
     request: nextRequest,
     user: SupabaseUser,
 ) => {
-    const { data: userData } = await _getCachedUser(user.id);
+    const { data: userData } = await fetchUser(user.id);
     const isOnboardingCompleted = userData?.onboarding_completed;
 
     const { isEnabled, isRequired } = appConfig.onboarding;
@@ -119,12 +61,12 @@ export const _handleBilling = async (
 
     const isPricingPlanPage = pathname === pricingPlanRoute;
 
-    const { data: subscriptionData } = await _getCachedSubscription(user.id);
-    const userPlan = subscriptionData?.subscription_tier;
+    const { data: subscription } = await fetchUserSubscription(user.id);
+    const userPlan = subscription?.subscription_tier;
 
     const hasPaidPlan = userPlan && userPlan !== SubscriptionTier.FREE;
     const hasFreePlan = userPlan === SubscriptionTier.FREE;
-    const isTrialing = subscriptionData?.status === SubscriptionStatus.TRIALING;
+    const isTrialing = subscription?.status === SubscriptionStatus.TRIALING;
 
     if (isPricingPlanPage && (hasPaidPlan || isTrialing)) {
         return _redirectTo(request, dashboardRoute); // redirect away from pricing page if user has active subscription (not free plan) or active trial

@@ -4,7 +4,6 @@ import { createClient } from "@/services/integration/server";
 import moment from "moment";
 import { stripe } from "./client";
 import { handleSupabaseError } from "@/utils/errors/supabaseError";
-import { invalidateUserCache } from "../redis/redisService";
 
 const _getStripeCustomerIdFromSupabase = async (userId: string) => {
     const supabase = await createClient();
@@ -60,11 +59,6 @@ const _updateUserStripeCustomerId = async (
             .eq("id", userId);
 
         if (error) throw error;
-
-        const { error: cacheError } = await invalidateUserCache(userId);
-        if (cacheError) {
-            console.error("Failed to invalidate user cache:", cacheError);
-        }
 
         return { error: null };
     } catch (error) {

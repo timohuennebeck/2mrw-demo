@@ -1,12 +1,10 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import OnboardingFlow from "@/components/application/OnboardingFlow";
 import { createClient } from "@/services/integration/client";
 import { User } from "@supabase/supabase-js";
 import { useSession } from "@/context/SessionContext";
-import { invalidateUserCache } from "@/services/redis/redisService";
 
 const _updateOnboardingStatusDatabase = async (authUser: User) => {
     const supabase = createClient();
@@ -17,9 +15,6 @@ const _updateOnboardingStatusDatabase = async (authUser: User) => {
         .eq("id", authUser?.id);
 
     if (error) return { data: null, error };
-
-    const { error: cacheError } = await invalidateUserCache(authUser.id);
-    if (cacheError) return { data: null, error: cacheError };
 
     return { data, error: null };
 };

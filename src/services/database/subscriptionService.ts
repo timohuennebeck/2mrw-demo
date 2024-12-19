@@ -9,7 +9,6 @@ import { handleSupabaseError } from "@/utils/errors/supabaseError";
 import moment from "moment";
 import { createSupabasePowerUserClient } from "../integration/admin";
 import { createClient } from "../integration/server";
-import { invalidateSubscriptionCache } from "../redis/redisService";
 
 const FREE_PLAN_IDENTIFIER = "price_free";
 
@@ -68,9 +67,6 @@ export const updateUserSubscription = async ({
         .eq("user_id", userId);
 
     if (error) throw error;
-
-    const { error: cacheError } = await invalidateSubscriptionCache(userId);
-    if (cacheError) throw cacheError;
 };
 
 export const cancelUserSubscription = async (
@@ -94,9 +90,6 @@ export const cancelUserSubscription = async (
         .eq("user_id", userId);
 
     if (error) throw error;
-
-    const { error: cacheError } = await invalidateSubscriptionCache(userId);
-    if (cacheError) throw cacheError;
 };
 
 export const startFreePlan = async (userId: string) => {
@@ -121,9 +114,6 @@ export const startFreePlan = async (userId: string) => {
         if (error) {
             return { success: false, error };
         }
-
-        const { error: cacheError } = await invalidateSubscriptionCache(userId);
-        if (cacheError) return { success: false, error: cacheError };
 
         return { success: true, error: null };
     } catch (error) {
@@ -157,7 +147,4 @@ export const downgradeToFreePlan = async (userId: string) => {
         .eq("user_id", userId);
 
     if (error) throw error;
-
-    const { error: cacheError } = await invalidateSubscriptionCache(userId);
-    if (cacheError) throw cacheError;
 };

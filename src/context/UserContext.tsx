@@ -30,7 +30,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <UserContext.Provider value={{ dbUser: data?.user ?? null, invalidateUser }}>
+        <UserContext.Provider value={{ dbUser: data?.data ?? null, invalidateUser }}>
             {children}
         </UserContext.Provider>
     );

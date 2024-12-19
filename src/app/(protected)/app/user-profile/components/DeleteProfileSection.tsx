@@ -15,7 +15,6 @@ import { Button } from "@/components/ui/button";
 import { useSession } from "@/context/SessionContext";
 import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { createClient } from "@/services/integration/client";
-import { invalidateSubscriptionCache, invalidateUserCache } from "@/services/redis/redisService";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -24,21 +23,11 @@ import { ProfileSection } from "./ProfileSection";
 import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
 import { EmailType } from "@/enums/email";
 
-const _invalidateCaches = async (userId: string) => {
-    const { error: userCacheError } = await invalidateUserCache(userId);
-    if (userCacheError) console.error(userCacheError);
-
-    const { error: subCacheError } = await invalidateSubscriptionCache(userId);
-    if (subCacheError) console.error(subCacheError);
-};
-
 const _deleteUserProfile = async (authUser: User) => {
     const adminSupabase = await createSupabasePowerUserClient();
 
     const { error: dbError } = await adminSupabase.from("users").delete().eq("id", authUser?.id);
     if (dbError) return { error: "Error deleting user profile from database" };
-
-    await _invalidateCaches(authUser.id);
 
     const { error: authError } = await adminSupabase.auth.admin.deleteUser(authUser?.id ?? "");
     if (authError) return { error: "Error deleting user profile from auth" };

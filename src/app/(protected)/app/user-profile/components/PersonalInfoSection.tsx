@@ -20,7 +20,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { ProfileSection } from "./ProfileSection";
-import { invalidateUserCache } from "@/services/redis/redisService";
 
 const _profileFormSchema = z.object({
     first_name: z.string().min(2, {
@@ -44,9 +43,6 @@ const _updateUserProfile = async (userId: string, updates: UserProfileUpdate) =>
     const supabase = createClient();
 
     const { error } = await supabase.from("users").update(updates).eq("id", userId);
-
-    const { error: cacheError } = await invalidateUserCache(userId);
-    if (cacheError) return { error: "Error invalidating user cache" };
 
     return { error };
 };

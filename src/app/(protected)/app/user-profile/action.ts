@@ -1,7 +1,6 @@
 "use server";
 
 import { createClient } from "@/services/integration/server";
-import { invalidateUserCache } from "@/services/redis/redisService";
 import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
 
@@ -59,9 +58,6 @@ export const updateUserProfileImage = async ({
             .eq("id", userId);
 
         if (updateError) throw updateError;
-
-        const { error: cacheError } = await invalidateUserCache(userId);
-        if (cacheError) return { success: false, error: cacheError };
 
         return { success: true, publicUrl };
     } catch (error) {

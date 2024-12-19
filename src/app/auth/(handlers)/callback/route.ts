@@ -45,7 +45,7 @@ export const GET = async (request: Request) => {
         if (error) return redirect(`${origin}${ROUTES_CONFIG.PUBLIC.STATUS_ERROR}?mode=google-auth`);
 
         const { user: authUser } = data.session;
-        const { user: existingUser } = await fetchUser(authUser.id);
+        const { data: existingUser } = await fetchUser(authUser.id);
 
         if (!existingUser) {
             const { error } = await createUserTable(authUser, AuthMethod.GOOGLE);
