@@ -90,10 +90,6 @@ export const _handleLoggedInRedirect = async (
     request: nextRequest,
     user: SupabaseUser,
 ) => {
-    if (pathname.startsWith("/auth")) {
-        return _redirectTo(request, ROUTES_CONFIG.PROTECTED.USER_DASHBOARD); // force user to dashboard if they go to an auth page
-    }
-
     const onboardingResponse = await _handleOnboarding(pathname, request, user);
     if (onboardingResponse.status !== 200) return onboardingResponse;
 
@@ -144,6 +140,10 @@ export const middleware = async (request: nextRequest) => {
 
     if (!session && isProtectedRoute(request.nextUrl.pathname)) {
         return _redirectTo(request, ROUTES_CONFIG.PUBLIC.LANDING_PAGE); // force user to landing page if not authenticated
+    }
+
+    if (session && request.nextUrl.pathname.startsWith("/auth")) {
+        return _redirectTo(request, ROUTES_CONFIG.PROTECTED.USER_DASHBOARD); // force user to dashboard if they go to an auth page
     }
 
     /**
