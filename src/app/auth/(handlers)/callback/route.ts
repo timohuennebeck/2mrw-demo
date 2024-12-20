@@ -20,7 +20,7 @@ export const GET = async (request: Request) => {
      */
 
     if (code) {
-        const cookieStore = cookies();
+        const cookieStore = await cookies();
 
         const supabase = createServerClient(
             process.env.NEXT_PUBLIC_SUPABASE_URL!,
