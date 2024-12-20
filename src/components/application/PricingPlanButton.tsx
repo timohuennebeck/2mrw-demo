@@ -1,20 +1,19 @@
-import { billingConfig } from "@/config";
+import { billingConfig, ROUTES_CONFIG } from "@/config";
 import { TextConstants } from "@/constants/TextConstants";
 import { useFreeTrial } from "@/context/FreeTrialContext";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { useUser } from "@/context/UserContext";
 import { DefaultPricingPlan } from "@/data/marketing/pricing-data";
+import { EmailType } from "@/enums";
 import { startFreeTrial } from "@/services/database/freeTrialService";
 import { startFreePlan } from "@/services/database/subscriptionService";
+import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
 import { createStripeCheckout } from "@/services/stripe/stripeService";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
-import { ROUTES_CONFIG } from "@/config/routesConfig";
-import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
-import { EmailType } from "@/enums";
 
 const _getButtonText = ({
     currentPlanStripePriceId,

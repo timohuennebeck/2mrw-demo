@@ -1,5 +1,4 @@
-import { billingConfig } from "@/config";
-import { ROUTES_CONFIG } from "@/config/routesConfig";
+import { billingConfig, ROUTES_CONFIG } from "@/config";
 import { SubscriptionStatus, SubscriptionTier } from "@/enums";
 import { fetchUserSubscription } from "@/services/database/subscriptionService";
 import { User as SupabaseUser } from "@supabase/supabase-js";

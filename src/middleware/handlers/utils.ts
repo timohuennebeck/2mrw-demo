@@ -1,4 +1,4 @@
-import { isProtectedRoute, ROUTES_CONFIG } from "@/config/routesConfig";
+import { isProtectedRoute, ROUTES_CONFIG } from "@/config";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import {
     NextRequest as nextRequest,

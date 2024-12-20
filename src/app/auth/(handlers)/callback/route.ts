@@ -1,7 +1,6 @@
 "use server";
 
-import { billingConfig } from "@/config";
-import { ROUTES_CONFIG } from "@/config/routesConfig";
+import { billingConfig, ROUTES_CONFIG } from "@/config";
 import { EmailType } from "@/enums";
 import { AuthMethod } from "@/enums/user";
 import { startFreePlan } from "@/services/database/subscriptionService";

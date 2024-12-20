@@ -1,14 +1,12 @@
-import { isProtectedRoute, isPublicRoute } from "@/config/routesConfig";
-
-import { ROUTES_CONFIG } from "@/config/routesConfig";
+import { isPublicRoute, ROUTES_CONFIG } from "@/config";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import {
     NextRequest as nextRequest,
     NextResponse as nextResponse,
 } from "next/server";
-import { redirectTo } from "./utils";
-import { handleOnboarding } from "./onboardingHandlers";
 import { handleBilling } from "./billingHandlers";
+import { handleOnboarding } from "./onboardingHandlers";
+import { redirectTo } from "./utils";
 
 export const handleLoggedInRedirect = async (request: nextRequest, user: SupabaseUser) => {
     const { pathname } = request.nextUrl;

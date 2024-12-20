@@ -1,5 +1,4 @@
-import { appConfig } from "@/config";
-import { ROUTES_CONFIG } from "@/config/routesConfig";
+import { appConfig, ROUTES_CONFIG } from "@/config";
 import { fetchUser } from "@/services/database/userService";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import {
