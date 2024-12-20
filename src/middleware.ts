@@ -85,17 +85,6 @@ export const _handleBilling = async (
     return nextResponse.next({ request });
 };
 
-export const _handleUnauthenticatedRedirect = (
-    request: nextRequest,
-    pathname: string,
-) => {
-    if (isProtectedRoute(pathname)) {
-        return _redirectTo(request, ROUTES_CONFIG.PUBLIC.LANDING_PAGE); // force user to landing page if not authenticated
-    }
-
-    return nextResponse.next({ request });
-};
-
 export const _handleLoggedInRedirect = async (
     pathname: string,
     request: nextRequest,
@@ -112,24 +101,6 @@ export const _handleLoggedInRedirect = async (
     if (billingResponse.status !== 200) return billingResponse;
 
     return nextResponse.next({ request }); // allow access to all other routes
-};
-
-const _handleRouting = async (request: nextRequest, user: SupabaseUser) => {
-    const { pathname } = request.nextUrl;
-
-    if (_shouldBypassMiddleware(pathname)) {
-        return nextResponse.next({ request });
-    }
-
-    if (isPublicRoute(pathname)) {
-        return nextResponse.next({ request });
-    }
-
-    if (!user) {
-        return _handleUnauthenticatedRedirect(request, pathname);
-    }
-
-    return _handleLoggedInRedirect(pathname, request, user);
 };
 
 export const middleware = async (request: nextRequest) => {
@@ -161,17 +132,19 @@ export const middleware = async (request: nextRequest) => {
     );
 
     /**
-     * IMPORTANT: Don't write any logic between createServerClient and supabase.auth.getUser()
+     * IMPORTANT: Don't write any logic between createServerClient and supabase.auth.getSession()
      * because a simple mistake could make it hard to debug and cause issues with users being randomly logged out
      */
 
-    const { data: { user } } = await supabaseClient.auth.getUser();
+    const { data: { session } } = await supabaseClient.auth.getSession();
 
-    const redirectResponse = await _handleRouting(
-        request,
-        user as SupabaseUser,
-    );
-    if (redirectResponse) return redirectResponse;
+    if (_shouldBypassMiddleware(request.nextUrl.pathname)) {
+        return nextResponse.next({ request });
+    }
+
+    if (!session && isProtectedRoute(request.nextUrl.pathname)) {
+        return _redirectTo(request, ROUTES_CONFIG.PUBLIC.LANDING_PAGE); // force user to landing page if not authenticated
+    }
 
     /**
      * IMPORTANT: When creating a new response, always:
