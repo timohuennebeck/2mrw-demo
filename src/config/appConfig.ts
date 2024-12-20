@@ -14,7 +14,7 @@ export const appConfig = {
      */
     onboarding: {
         isEnabled: true,
-        isRequired: false,
+        isRequired: true,
     },
 
     feedback: {
@@ -34,7 +34,8 @@ export const appConfig = {
         name: "2mrw",
         supportEmail: "contact@joinforj.com",
         senderEmail: "info@updates.joinforj.com",
-        logoUrl: "https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg",
+        logoUrl:
+            "https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg",
     },
 
     socialLinks: {

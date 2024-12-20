@@ -1,6 +1,5 @@
 type PublicRoute =
     typeof ROUTES_CONFIG.PUBLIC[keyof typeof ROUTES_CONFIG.PUBLIC];
-type AuthRoute = typeof ROUTES_CONFIG.AUTH[keyof typeof ROUTES_CONFIG.AUTH];
 
 export const ROUTES_CONFIG = {
     PUBLIC: {
@@ -9,26 +8,24 @@ export const ROUTES_CONFIG = {
         STATUS_SUCCESS: "/auth-status/success",
     },
 
-    AUTH: {
-        SIGN_IN: "/auth/sign-in",
-        SIGN_UP: "/auth/sign-up",
+    SIGN_IN: "/auth/sign-in",
+    SIGN_UP: "/auth/sign-up",
 
-        /**
-         * the following routes are (password-management) routes
-         * these are used for password management flows such as forgot password and update password
-         */
+    /**
+     * the following routes are (password-management) routes
+     * these are used for password management flows such as forgot password and update password
+     */
 
-        FORGOT_PASSWORD: "/auth/forgot-password",
-        UPDATE_PASSWORD: "/auth/update-password",
+    FORGOT_PASSWORD: "/auth/forgot-password",
+    UPDATE_PASSWORD: "/auth/update-password",
 
-        /**
-         * the following routes are (handlers) routes
-         * these are used for handling authentication flows such as email and google login
-         */
+    /**
+     * the following routes are (handlers) routes
+     * these are used for handling authentication flows such as email and google login
+     */
 
-        CONFIRM: "/auth/confirm",
-        CALLBACK: "/auth/callback",
-    },
+    CONFIRM: "/auth/confirm",
+    CALLBACK: "/auth/callback",
 
     PROTECTED: {
         USER_DASHBOARD: "/app",

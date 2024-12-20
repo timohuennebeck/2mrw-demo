@@ -18,6 +18,7 @@ import { createClient } from "@/services/integration/client";
 import { Building, ChevronUp, CreditCard, Power, Settings, User2 } from "lucide-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
@@ -103,13 +104,10 @@ const AppSidebar = () => {
                                                 : "hover:bg-slate-100"
                                         }
                                     >
-                                        <div
-                                            onClick={() => router.push(item.url)}
-                                            className="cursor-pointer"
-                                        >
+                                        <Link href={item.url} className="cursor-pointer">
                                             <item.icon />
                                             <span className="font-medium">{item.title}</span>
-                                        </div>
+                                        </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             ))}
