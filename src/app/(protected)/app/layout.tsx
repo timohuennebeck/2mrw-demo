@@ -11,10 +11,12 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { appConfig } from "@/config";
+import { ChevronLeft, X } from "lucide-react";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const TopBar = () => {
     const pathname = usePathname();
@@ -68,6 +70,23 @@ const TopBar = () => {
 };
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
+    const [widgetsVisible, setWidgetsVisible] = useState(true);
+    const [showToggle, setShowToggle] = useState(false);
+
+    useEffect(() => {
+        // Load preference from localStorage
+        const stored = localStorage.getItem("feedbackWidgetsVisible");
+        if (stored !== null) {
+            setWidgetsVisible(stored === "true");
+        }
+    }, []);
+
+    const toggleWidgets = () => {
+        const newValue = !widgetsVisible;
+        setWidgetsVisible(newValue);
+        localStorage.setItem("feedbackWidgetsVisible", String(newValue));
+    };
+
     return (
         <SidebarProvider defaultOpen={false}>
             <div className="flex h-screen w-full overflow-hidden">
@@ -82,9 +101,42 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 </SidebarInset>
             </div>
 
-            <div className="fixed bottom-4 right-4 flex gap-2">
-                {appConfig.feedback.widgets.reportBug.isEnabled && <BugReportWidget />}
-                {appConfig.feedback.widgets.shareFeedback.isEnabled && <FeedbackWidget />}
+            {/* Feedback Widgets */}
+            <div className="fixed bottom-4 right-8 flex items-center gap-2">
+                {widgetsVisible ? (
+                    <>
+                        <div
+                            className="flex items-center gap-2"
+                            onMouseEnter={() => setShowToggle(true)}
+                            onMouseLeave={() => setShowToggle(false)}
+                        >
+                            {showToggle && (
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={toggleWidgets}
+                                    className="h-8 w-8 bg-white shadow-sm"
+                                >
+                                    <X className="h-4 w-4" />
+                                </Button>
+                            )}
+                            {appConfig.feedback.widgets.reportBug.isEnabled && <BugReportWidget />}
+                            {appConfig.feedback.widgets.shareFeedback.isEnabled && (
+                                <FeedbackWidget />
+                            )}
+                        </div>
+                    </>
+                ) : (
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={toggleWidgets}
+                        className="h-8 w-8 bg-white shadow-sm"
+                        title="Show feedback widgets"
+                    >
+                        <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                )}
             </div>
         </SidebarProvider>
     );
