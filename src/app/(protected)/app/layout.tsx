@@ -1,5 +1,6 @@
 "use client";
 
+import BugReportWidget from "@/components/application/BugReportWidget";
 import FeedbackWidget from "@/components/application/FeedbackWidget";
 import AppSidebar from "@/components/ui/app-sidebar";
 import {
@@ -81,7 +82,10 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 </SidebarInset>
             </div>
 
-            {appConfig.feedback.widgets.floatingButton.isEnabled && <FeedbackWidget />}
+            <div className="fixed bottom-4 right-4 flex gap-2">
+                {appConfig.feedback.widgets.reportBug.isEnabled && <BugReportWidget />}
+                {appConfig.feedback.widgets.shareFeedback.isEnabled && <FeedbackWidget />}
+            </div>
         </SidebarProvider>
     );
 };

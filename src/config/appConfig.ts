@@ -19,7 +19,11 @@ export const appConfig = {
 
     feedback: {
         widgets: {
-            floatingButton: {
+            reportBug: {
+                isEnabled: true,
+                formUrl: "https://tally.so/r/bug-report",
+            },
+            shareFeedback: {
                 isEnabled: true, // controls the FeedbackWidget.tsx in bottom right
                 formUrl: "https://tally.so/r/general-feedback",
             },
