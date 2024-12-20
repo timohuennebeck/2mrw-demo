@@ -43,6 +43,11 @@ export const ROUTES_CONFIG = {
     },
 } as const;
 
+export const isPublicRoute = (pathname: string) => {
+    const publicRoutes = Object.values(ROUTES_CONFIG.PUBLIC);
+    return publicRoutes.some((route) => pathname.startsWith(route));
+};
+
 // for protected routes, we want to match ANY route that STARTS with the base path
 export const isProtectedRoute = (pathname: string) => {
     const protectedRoutes = Object.values(ROUTES_CONFIG.PROTECTED);

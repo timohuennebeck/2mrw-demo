@@ -1,4 +1,4 @@
-import { isProtectedRoute } from "@/config/routesConfig";
+import { isProtectedRoute, isPublicRoute } from "@/config/routesConfig";
 
 import { ROUTES_CONFIG } from "@/config/routesConfig";
 import { User as SupabaseUser } from "@supabase/supabase-js";
@@ -12,6 +12,10 @@ import { handleBilling } from "./billingHandlers";
 
 export const handleLoggedInRedirect = async (request: nextRequest, user: SupabaseUser) => {
     const { pathname } = request.nextUrl;
+
+    if (isPublicRoute(pathname)) {
+        return nextResponse.next({ request });
+    }
 
     if (pathname.startsWith("/auth")) {
         return redirectTo(request, ROUTES_CONFIG.PROTECTED.USER_DASHBOARD); // force user to dashboard if they go to an auth page
