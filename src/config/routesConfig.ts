@@ -43,12 +43,6 @@ export const ROUTES_CONFIG = {
     },
 } as const;
 
-// for public routes, we want EXACT matches
-export const isPublicRoute = (pathname: string) => {
-    const publicRoutes = Object.values(ROUTES_CONFIG.PUBLIC);
-    return publicRoutes.includes(pathname as PublicRoute);
-};
-
 // for protected routes, we want to match ANY route that STARTS with the base path
 export const isProtectedRoute = (pathname: string) => {
     const protectedRoutes = Object.values(ROUTES_CONFIG.PROTECTED);
