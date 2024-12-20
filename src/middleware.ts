@@ -39,11 +39,11 @@ export const middleware = async (request: nextRequest) => {
      * because a simple mistake could make it hard to debug and cause issues with users being randomly logged out
      */
 
-    const { data: { session } } = await supabaseClient.auth.getSession();
+    const { data: { user } } = await supabaseClient.auth.getUser();
 
     const redirectResponse = await handleRouting(
         request,
-        session?.user as SupabaseUser,
+        user as SupabaseUser,
     );
 
     if (redirectResponse) return redirectResponse;
