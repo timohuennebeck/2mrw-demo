@@ -4,33 +4,6 @@ import { EmailTester } from "@/components/application/EmailTester";
 import { Card } from "@/components/ui/card";
 import { Bug, CreditCard, Rocket, Shield, Users } from "lucide-react";
 
-const FeatureCard = ({
-    title,
-    description,
-    icon: Icon,
-    onClick,
-}: {
-    title: string;
-    description: string;
-    icon: any;
-    onClick: () => void;
-}) => (
-    <Card
-        className="group relative cursor-pointer border-gray-200 p-6 shadow-none hover:shadow-sm"
-        onClick={onClick}
-    >
-        <div className="flex items-start gap-4">
-            <div className="rounded-lg bg-gray-100 p-2">
-                <Icon className="h-6 w-6 text-gray-600" />
-            </div>
-            <div>
-                <h3 className="mb-1 font-medium">{title}</h3>
-                <p className="text-sm text-muted-foreground">{description}</p>
-            </div>
-        </div>
-    </Card>
-);
-
 const DemoPage = () => {
     const navigationItems = {
         "auth-success": [
@@ -95,30 +68,6 @@ const DemoPage = () => {
         ],
     };
 
-    const features = [
-        {
-            title: "Lorem ipsum dolor sit amet",
-            description:
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque non fugit assumenda porro! Soluta, vel?",
-            icon: Shield,
-            onClick: () => window.open("/auth-status/success?mode=email-confirmed", "_blank"),
-        },
-        {
-            title: "Lorem ipsum dolor sit amet",
-            description:
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque non fugit assumenda porro! Soluta, vel?",
-            icon: CreditCard,
-            onClick: () => window.open("/choose-pricing-plan", "_blank"),
-        },
-        {
-            title: "Lorem ipsum dolor sit amet",
-            description:
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque non fugit assumenda porro! Soluta, vel?",
-            icon: Users,
-            onClick: () => window.open("/onboarding?step=1", "_blank"),
-        },
-    ];
-
     return (
         <div className="flex h-full flex-col">
             <div className="flex-1 space-y-8 p-8 pt-6">
@@ -138,12 +87,7 @@ const DemoPage = () => {
                     </div>
                 </div>
 
-                {/* Feature Grid */}
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    {features.map((feature) => (
-                        <FeatureCard key={feature.title} {...feature} />
-                    ))}
-                </div>
+                <EmailTester />
 
                 {/* Project Explorer */}
                 <div>
@@ -224,8 +168,6 @@ const DemoPage = () => {
                         </div>
                     </Card>
                 </div>
-
-                <EmailTester />
             </div>
         </div>
     );
