@@ -15,7 +15,6 @@ import ProductDemo from "@/components/marketing/ProductDemo";
 import PromoBanner from "@/components/marketing/PromoBanner";
 import Stats from "@/components/marketing/Stats";
 import TestimonialsGrid from "@/components/marketing/TestimonialsGrid";
-import Section from "@/components/ui/Section";
 import { useSession } from "@/context/SessionContext";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { faq } from "@/data/marketing/faq-data";
@@ -102,7 +101,7 @@ const LandingPage = () => {
                 <div className="mx-auto mb-8 mt-28 flex w-full max-w-7xl flex-col gap-36">
                     {/* COPY TIP: Social proof should be specific and results-focused.
                         Include numbers, achievements, or concrete benefits the customer experienced. */}
-                    <Section>
+                    <section>
                         <FeaturedTestimonial
                             quote="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Asperiores amet possimus praesentium ea deleniti recusandae?"
                             author={{
@@ -111,9 +110,9 @@ const LandingPage = () => {
                                 imageUrl: "https://i.imgur.com/E6nCVLy.jpeg",
                             }}
                         />
-                    </Section>
+                    </section>
 
-                    <Section>
+                    <section>
                         <HowItWorks
                             eyebrow="Lorem, ipsum dolor."
                             title={
@@ -155,11 +154,11 @@ const LandingPage = () => {
                                 "https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4",
                             ]}
                         />
-                    </Section>
+                    </section>
 
                     {/* COPY TIP: When comparing with competitors, focus on your unique advantages.
                         Use concrete examples and avoid generic claims. */}
-                    <Section>
+                    <section>
                         <BeforeAfterComparison
                             heading={{
                                 eyebrow: "Lorem, ipsum dolor.",
@@ -212,9 +211,9 @@ const LandingPage = () => {
                                     "https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4",
                             }}
                         />
-                    </Section>
+                    </section>
 
-                    <Section>
+                    <section>
                         <Stats
                             eyebrow="Lorem, ipsum dolor."
                             title={
@@ -229,9 +228,9 @@ const LandingPage = () => {
                             description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
                             stats={exampleStats}
                         />
-                    </Section>
+                    </section>
 
-                    <Section>
+                    <section>
                         <FeaturedTestimonial
                             quote="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Asperiores amet possimus praesentium ea deleniti recusandae?"
                             author={{
@@ -240,11 +239,11 @@ const LandingPage = () => {
                                 imageUrl: "https://i.imgur.com/E6nCVLy.jpeg",
                             }}
                         />
-                    </Section>
+                    </section>
 
                     {/* COPY TIP: Features should focus on benefits, not just functionality.
                         Format: "Feature Name: What it does + Why it matters to the customer" */}
-                    <Section id="features" className="flex flex-col gap-36">
+                    <section id="features" className="flex flex-col gap-36">
                         <Features
                             features={authFeatures}
                             title="Lorem, ipsum."
@@ -280,9 +279,9 @@ const LandingPage = () => {
                             }}
                             videoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
                         />
-                    </Section>
+                    </section>
 
-                    <Section>
+                    <section>
                         <FeaturedTestimonial
                             quote="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Asperiores amet possimus praesentium ea deleniti recusandae?"
                             author={{
@@ -291,9 +290,9 @@ const LandingPage = () => {
                                 imageUrl: "https://i.imgur.com/E6nCVLy.jpeg",
                             }}
                         />
-                    </Section>
+                    </section>
 
-                    <Section id="product-demo">
+                    <section id="product-demo">
                         <ProductDemo
                             title={
                                 <>
@@ -307,20 +306,20 @@ const LandingPage = () => {
                             subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit."
                             videoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
                         />
-                    </Section>
+                    </section>
 
-                    <Section>
+                    <section>
                         <FeaturesList
                             heading="Lorem ipsum dolor sit amet"
                             description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
                             features={featuresList}
                             sectionTitle="Lorem, ipsum dolor."
                         />
-                    </Section>
+                    </section>
 
                     {/* COPY TIP: Pricing sections should emphasize value over cost.
                         Highlight what makes each tier unique and who it's best for. */}
-                    <Section id="pricing">
+                    <section id="pricing">
                         <PricingComparison
                             title={
                                 <>
@@ -338,20 +337,20 @@ const LandingPage = () => {
                             isUserLoggedIn={!!authUser}
                             currentPlanStripePriceId={subscription?.stripe_price_id ?? ""}
                         />
-                    </Section>
+                    </section>
 
                     {/* COPY TIP: FAQs should address real customer objections.
                         Use actual customer questions and mirror their language. */}
-                    <Section id="faq">
+                    <section id="faq">
                         <FAQ
                             eyebrow="Lorem, ipsum dolor."
                             title="Lorem ipsum dolor sit amet"
                             tagline="Lorem ipsum dolor sit amet, consectetur adipisicing elit."
                             items={faq}
                         />
-                    </Section>
+                    </section>
 
-                    <Section id="testimonials">
+                    <section id="testimonials">
                         <TestimonialsGrid
                             title={{
                                 badge: "CUSTOM BADGE TITLE",
@@ -371,11 +370,11 @@ const LandingPage = () => {
                             testimonialsPerPage={8}
                             className="my-12"
                         />
-                    </Section>
+                    </section>
 
                     {/* COPY TIP: CTAs should be action-oriented and create urgency.
                         Focus on what the customer gets, not what they have to do. */}
-                    <Section>
+                    <section>
                         <CTA
                             eyebrow="Lorem, ipsum dolor."
                             title={
@@ -397,11 +396,11 @@ const LandingPage = () => {
                                 onClick: (e) => handleSmoothScroll(e, "#features"),
                             }}
                         />
-                    </Section>
+                    </section>
 
                     {/* COPY TIP: Footer copy should build trust.
                         Include social proof, guarantees, or security certifications. */}
-                    <Section>
+                    <section>
                         <Footer
                             links={footerLinks}
                             logo={{
@@ -415,7 +414,7 @@ const LandingPage = () => {
                                 { name: "Changelog", href: "/changelog" },
                             ]}
                         />
-                    </Section>
+                    </section>
                 </div>
             </div>
         </>
