@@ -15,7 +15,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <html className="h-full" lang="en" suppressHydrationWarning>
             <body className={`h-full ${inter.className}`}>
-                <Providers>{children}</Providers>
+                <Providers>
+                    {children}
+                </Providers>
 
                 <Toaster position="top-right" expand closeButton />
             </body>
