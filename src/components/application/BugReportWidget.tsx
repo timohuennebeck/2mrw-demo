@@ -8,7 +8,7 @@ const BugReportWidget = () => {
             onClick={() => window.open(appConfig.feedback.widgets.reportBug.formUrl, "_blank")}
             variant="outline"
             size="sm"
-            className="group bg-white shadow-md hover:bg-gray-100"
+            className="group"
         >
             <Bug className="h-4 w-4 transition-transform group-hover:rotate-12" />
             Report Bug
