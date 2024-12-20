@@ -192,7 +192,6 @@ const RegisterLoginForm = ({
                                                 <Input
                                                     {...field}
                                                     id="firstName"
-                                                    data-test-id="first-name-input"
                                                     name="firstName"
                                                     type="text"
                                                     placeholder={
@@ -216,7 +215,6 @@ const RegisterLoginForm = ({
                                             <Input
                                                 {...field}
                                                 id="email"
-                                                data-test-id="email-input"
                                                 name="email"
                                                 type="email"
                                                 placeholder={TextConstants.TEXT__EMAIL_PLACEHOLDER}
@@ -238,7 +236,6 @@ const RegisterLoginForm = ({
                                                 <Input
                                                     {...field}
                                                     id="password"
-                                                    data-test-id="password-input"
                                                     name="password"
                                                     type="password"
                                                     placeholder="••••••••"
@@ -276,7 +273,6 @@ const RegisterLoginForm = ({
                             <Button
                                 variant="default"
                                 type="submit"
-                                data-test-id={`${mode === "signup" ? "sign-up" : "sign-in"}-button`}
                                 disabled={isLoading}
                                 isLoading={isLoading}
                             >
@@ -289,7 +285,6 @@ const RegisterLoginForm = ({
                                     <Link
                                         href="/auth/sign-in?method=password"
                                         className="underline"
-                                        data-testid="password-sign-in-toggle"
                                     >
                                         sign in with password instead
                                     </Link>
@@ -302,7 +297,6 @@ const RegisterLoginForm = ({
                                     <Link
                                         href="/auth/sign-up?method=password"
                                         className="underline"
-                                        data-testid="password-sign-up-toggle"
                                     >
                                         sign up with password instead
                                     </Link>
@@ -329,7 +323,6 @@ const RegisterLoginForm = ({
                                     : "/auth/sign-up?method=magic-link"
                             }
                             className="underline"
-                            data-testid={`${mode === "signup" ? "signup" : "signin"}-toggle`}
                         >
                             {mode === "signup"
                                 ? TextConstants.TEXT__SIGN_IN

@@ -31,7 +31,7 @@ const PasswordStrengthChecker = ({ password }: PasswordStrengthCheckerParams) =>
     ];
 
     return (
-        <div className="flex flex-col gap-2" data-testid="password-strength-checker">
+        <div className="flex flex-col gap-2">
             {passwordRequirements.map((requirement, index) => (
                 <div key={index} className="flex flex-row items-center gap-2">
                     <CircleCheck
