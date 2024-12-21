@@ -1,5 +1,5 @@
 import Image from "next/image";
-import QuoteImg from "@/assets/quotes.svg";
+import QuoteImg from "@/assets/quotes-black.svg";
 
 interface FeaturedTestimonialParams {
     quote: string;

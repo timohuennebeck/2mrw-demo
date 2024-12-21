@@ -3,13 +3,11 @@ import { Toaster } from "sonner";
 import "./globals.css";
 import { Providers } from "./providers";
 import { Inter } from "next/font/google";
+import { generateSEOTags } from "@/lib/seo";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-    title: "Lightweight Boilerplate • 2mrw",
-    description: "Created by Timo Huennebeck",
-};
+export const metadata: Metadata = generateSEOTags({});
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
     return (
