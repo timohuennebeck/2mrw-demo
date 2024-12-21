@@ -1,4 +1,4 @@
-import { isFreePlanEnabled } from "@/config/billingConfig";
+import { isFreePlanEnabled } from "@/config";
 import { BillingPeriod, BillingPlan, SubscriptionTier } from "@/enums";
 
 export const getFilteredPricingPlans = () => {
