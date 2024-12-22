@@ -47,7 +47,10 @@ export const EmailTester = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
     const [pendingValues, setPendingValues] = useState<z.infer<typeof formSchema> | null>(null);
-    const remainingEmails = 2; // This should come from your backend/config
+    const [remainingEmails, setRemainingEmails] = useState(() => {
+        const stored = localStorage.getItem("remainingEmails");
+        return stored ? parseInt(stored, 10) : 2;
+    });
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -76,6 +79,11 @@ export const EmailTester = () => {
                 email: pendingValues.email,
                 variables: dummyVariables,
             });
+
+            // Update remaining emails in state and localStorage
+            const newCount = remainingEmails - 1;
+            setRemainingEmails(newCount);
+            localStorage.setItem("remainingEmails", newCount.toString());
 
             toast.success("Email sent successfully!");
             form.reset();
