@@ -385,7 +385,6 @@ const LandingPage = () => {
                             }}
                             testimonials={testimonials}
                             testimonialsPerPage={8}
-                            className="my-12"
                         />
                     </SectionContainer>
 
