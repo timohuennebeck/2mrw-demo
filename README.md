@@ -15,6 +15,6 @@ This project is licensed under a commercial license. See the [LICENSE](LICENSE.m
 
 For inquiries or support, please contact:
 
--   Email: hello@2mrw.com
+-   Email: hello@2mrw.dev
 -   Twitter: [@timohuennebeck](https://twitter.com/timohuennebeck)
--   Website: [https://2mrw.com](https://2mrw.com)
+-   Website: [https://2mrw.dev](https://2mrw.dev)
