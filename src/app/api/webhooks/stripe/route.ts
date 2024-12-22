@@ -57,6 +57,26 @@ const _getUserFromStripeCustomerId = async (customerId: string) => {
     return userData as User;
 };
 
+const _cancelExistingFreeTrialsInStripe = async (userId: string) => {
+    const adminSupabase = await createSupabasePowerUserClient();
+
+    const { data: existingTrial } = await adminSupabase
+        .from("free_trials")
+        .select("stripe_subscription_id")
+        .eq("user_id", userId)
+        .single();
+
+    if (existingTrial?.stripe_subscription_id) {
+        try {
+            await stripe.subscriptions.cancel(
+                existingTrial.stripe_subscription_id,
+            );
+        } catch (cancelError) {
+            console.error("Error cancelling trial subscription:", cancelError); // continue even if cancellation fails
+        }
+    }
+};
+
 export const POST = async (req: nextRequest) => {
     try {
         const body = await req.text();
@@ -78,6 +98,11 @@ export const POST = async (req: nextRequest) => {
 
                 const sessionId = event.data.object.id;
                 const session = await _retrieveCheckoutSession(sessionId);
+
+                const isRecurringPayment = session.mode === "subscription";
+                if (isRecurringPayment) {
+                    await _cancelExistingFreeTrialsInStripe(user.id);
+                }
 
                 const checkoutResult = await handleCheckoutCompleted(
                     session,

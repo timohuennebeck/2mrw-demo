@@ -29,3 +29,9 @@ export const isFreePlanEnabled = () => {
 
     return billingConfig.isFreePlanEnabled;
 };
+
+export const isFreeTrialEnabled = () => {
+    if (isOneTimePaymentEnabled()) return false; // free trial is forced to be disabled when ONE_TIME billing is enabled
+
+    return billingConfig.freeTrial.isEnabled;
+};

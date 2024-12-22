@@ -112,25 +112,14 @@ const PricingPlanButton = ({
                 return;
             }
 
-            if (currentPlanStripePriceId) {
-                if (plan.stripe_price_id === currentPlanStripePriceId) {
-                    return; // current plan - no action needed
+            if (!currentPlanStripePriceId) {
+                if (plan.stripe_price_id === "price_free") {
+                    await startFreePlan(dbUser?.id ?? "");
+                    invalidateSubscription();
+                    return;
                 }
 
-                const result = await createStripeBillingPortal(dbUser?.stripe_customer_id ?? "");
-                if (result.error) throw result.error;
-
-                if (result.portalUrl) {
-                    window.open(result.portalUrl, "_blank");
-                }
-                setIsLoading(false);
-                return;
-            }
-
-            if (!currentPlanStripePriceId && plan.stripe_price_id === "price_free") {
-                await startFreePlan(dbUser?.id ?? "");
-                invalidateSubscription();
-                setIsLoading(false);
+                await _handleStripeCheckout(plan, router);
                 return;
             }
 
@@ -149,15 +138,20 @@ const PricingPlanButton = ({
                 await Promise.all([invalidateFreeTrial(), invalidateSubscription()]);
 
                 router.push(`${ROUTES_CONFIG.PROTECTED.PLAN_CONFIRMATION}?mode=free-trial`);
-                setIsLoading(false);
                 return;
             }
 
-            await _handleStripeCheckout(plan, router);
-            setIsLoading(false);
+            const result = await createStripeBillingPortal(dbUser?.stripe_customer_id ?? "");
+            if (result.error) throw result.error;
+
+            if (result.portalUrl) {
+                window.open(result.portalUrl, "_blank");
+            }
         } catch (error) {
             toast.error("There has been an error creating the checkout session");
             throw error;
+        } finally {
+            setIsLoading(false);
         }
     };
 

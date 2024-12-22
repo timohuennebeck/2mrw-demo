@@ -4,7 +4,6 @@ import { isOneTimePaymentEnabled } from "@/config";
 import { InitiateStripeCheckoutProcessParams } from "@/interfaces";
 import { stripe } from "./client";
 import { getStripeCustomerId } from "./stripeCustomer";
-import { handleError } from "@/utils/errors/error";
 
 export const createStripeCheckout = async ({
     stripePriceId,
