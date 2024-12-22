@@ -8,7 +8,7 @@ import { EmailType } from "@/enums";
 import { startFreeTrial } from "@/services/database/freeTrialService";
 import { startFreePlan } from "@/services/database/subscriptionService";
 import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
-import { createStripeCheckout } from "@/services/stripe/stripeService";
+import { createStripeBillingPortal, createStripeCheckout } from "@/services/stripe/stripeService";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -42,11 +42,6 @@ const _getButtonText = ({
         return "Current Plan";
     }
 
-    // check if the user has an active subscription that is not the free plan
-    if (currentPlanStripePriceId && plan.stripe_price_id === "price_free") {
-        return "Downgrade to Free";
-    }
-
     if (!currentPlanStripePriceId && plan.stripe_price_id === "price_free") {
         return "Unlock Plan - It's Free";
     }
@@ -55,7 +50,7 @@ const _getButtonText = ({
         return TextConstants.TEXT__START_FREE_TRIAL(billingConfig.freeTrial.duration);
     }
 
-    return "Unlock Plan";
+    return "Change Plan";
 };
 
 const _getButtonColors = (currentPlanStripePriceId: string, plan: DefaultPricingPlan) => {
@@ -117,11 +112,22 @@ const PricingPlanButton = ({
                 return;
             }
 
-            if (currentPlanStripePriceId && plan.stripe_price_id === currentPlanStripePriceId) {
-                return; // current plan - no action needed
+            if (currentPlanStripePriceId) {
+                if (plan.stripe_price_id === currentPlanStripePriceId) {
+                    return; // current plan - no action needed
+                }
+
+                const result = await createStripeBillingPortal(dbUser?.stripe_customer_id ?? "");
+                if (result.error) throw result.error;
+
+                if (result.portalUrl) {
+                    window.open(result.portalUrl, "_blank");
+                }
+                setIsLoading(false);
+                return;
             }
 
-            if (plan.stripe_price_id === "price_free") {
+            if (!currentPlanStripePriceId && plan.stripe_price_id === "price_free") {
                 await startFreePlan(dbUser?.id ?? "");
                 invalidateSubscription();
                 setIsLoading(false);
