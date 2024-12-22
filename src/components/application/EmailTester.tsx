@@ -48,8 +48,11 @@ export const EmailTester = () => {
     const [showDialog, setShowDialog] = useState(false);
     const [pendingValues, setPendingValues] = useState<z.infer<typeof formSchema> | null>(null);
     const [remainingEmails, setRemainingEmails] = useState(() => {
-        const stored = localStorage.getItem("remainingEmails");
-        return stored ? parseInt(stored, 10) : 2;
+        if (typeof window !== "undefined") {
+            const stored = localStorage.getItem("remainingEmails");
+            return stored ? parseInt(stored, 10) : 2;
+        }
+        return 2;
     });
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -83,7 +86,9 @@ export const EmailTester = () => {
             // Update remaining emails in state and localStorage
             const newCount = remainingEmails - 1;
             setRemainingEmails(newCount);
-            localStorage.setItem("remainingEmails", newCount.toString());
+            if (typeof window !== "undefined") {
+                localStorage.setItem("remainingEmails", newCount.toString());
+            }
 
             toast.success("Email sent successfully!");
             form.reset();
@@ -135,7 +140,7 @@ export const EmailTester = () => {
                     </div>
                     <div className="inline-flex w-fit items-center gap-2 rounded-md bg-orange-50 px-4 py-2 text-sm text-orange-600">
                         <MailWarning className="h-4 w-4" />
-                        <span>You have {remainingEmails} emails remaining</span>
+                        {/* <span>You have {remainingEmails} emails remaining</span> */}
                     </div>
                 </div>
 
@@ -192,7 +197,7 @@ export const EmailTester = () => {
                         <Button
                             type="submit"
                             className="w-full"
-                            disabled={isLoading || remainingEmails === 0}
+                            // disabled={isLoading || remainingEmails === 0}
                             isLoading={isLoading}
                         >
                             Send Test Email

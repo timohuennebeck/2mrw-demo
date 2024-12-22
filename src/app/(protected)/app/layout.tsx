@@ -74,17 +74,20 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     const [showToggle, setShowToggle] = useState(false);
 
     useEffect(() => {
-        // Load preference from localStorage
-        const stored = localStorage.getItem("feedbackWidgetsVisible");
-        if (stored !== null) {
-            setWidgetsVisible(stored === "true");
+        if (typeof window !== "undefined") {
+            const stored = localStorage.getItem("feedbackWidgetsVisible");
+            if (stored !== null) {
+                setWidgetsVisible(stored === "true");
+            }
         }
     }, []);
 
     const toggleWidgets = () => {
         const newValue = !widgetsVisible;
         setWidgetsVisible(newValue);
-        localStorage.setItem("feedbackWidgetsVisible", String(newValue));
+        if (typeof window !== "undefined") {
+            localStorage.setItem("feedbackWidgetsVisible", String(newValue));
+        }
     };
 
     return (
