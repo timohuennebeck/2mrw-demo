@@ -1,5 +1,5 @@
 import { FreeTrialStatus } from "@/enums";
-import { handleSupabaseError } from "@/utils/errors/supabaseError";
+import { handleError } from "@/utils/errors/error";
 import moment from "moment";
 import Stripe from "stripe";
 import { getSubscriptionEndDate } from "../database/baseService";
@@ -27,7 +27,7 @@ const _updateFreeTrialToConverted = async (userId: string) => {
 
         return { success: true, error: null };
     } catch (error) {
-        const supabaseError = handleSupabaseError(
+        const supabaseError = handleError(
             error,
             "_updateFreeTrialToConverted",
         );

@@ -3,7 +3,7 @@
 import { TextConstants } from "@/constants/TextConstants";
 import { AuthMethod } from "@/enums/user";
 import { User } from "@/interfaces";
-import { handleSupabaseError } from "@/utils/errors/supabaseError";
+import { handleError } from "@/utils/errors/error";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import moment from "moment";
 import { createClient } from "../integration/server";
@@ -29,7 +29,7 @@ export const checkUserEmailExists = async (userEmail: string) => {
     } catch (error) {
         return {
             data: null,
-            error: handleSupabaseError(error, "checkUserEmailExists"),
+            error: handleError(error, "checkUserEmailExists"),
         };
     }
 };
@@ -50,7 +50,7 @@ export const fetchUser = async (userId: string) => {
     } catch (error) {
         return {
             data: null,
-            error: handleSupabaseError(error, "fetchUser"),
+            error: handleError(error, "fetchUser"),
         };
     }
 };
@@ -75,7 +75,7 @@ export const createUserTable = async (authUser: SupabaseUser, authMethod: AuthMe
     } catch (error) {
         return {
             data: null,
-            error: handleSupabaseError(error, "createUserTable"),
+            error: handleError(error, "createUserTable"),
         };
     }
 };

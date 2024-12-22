@@ -5,7 +5,7 @@ import {
     PurchasedSubscription,
     UpdateUserSubscriptionParams,
 } from "@/interfaces";
-import { handleSupabaseError } from "@/utils/errors/supabaseError";
+import { handleError } from "@/utils/errors/error";
 import moment from "moment";
 import { createSupabasePowerUserClient } from "../integration/admin";
 import { createClient } from "../integration/server";
@@ -26,7 +26,7 @@ export const fetchUserSubscription = async (userId: string) => {
 
         return { data: data as PurchasedSubscription, error: null };
     } catch (error) {
-        const supabaseError = handleSupabaseError(
+        const supabaseError = handleError(
             error,
             "fetchUserSubscription",
         );
@@ -49,24 +49,31 @@ export const updateUserSubscription = async ({
      * Thus, we need to use the admin supabase client
      */
 
-    const adminSupabase = await createSupabasePowerUserClient();
+    try {
+        const adminSupabase = await createSupabasePowerUserClient();
 
-    const { error } = await adminSupabase
-        .from("user_subscriptions")
-        .update({
-            stripe_price_id: stripePriceId,
-            stripe_subscription_id: stripeSubscriptionId,
-            status: status ?? SubscriptionStatus.ACTIVE,
-            subscription_tier: subscriptionTier,
-            billing_plan: billingPlan,
-            billing_period: billingPeriod,
-            end_date: endDate,
-            updated_at: moment().toISOString(),
-            created_at: moment().toISOString(),
-        })
-        .eq("user_id", userId);
+        const { error } = await adminSupabase
+            .from("user_subscriptions")
+            .update({
+                stripe_price_id: stripePriceId,
+                stripe_subscription_id: stripeSubscriptionId,
+                status: status ?? SubscriptionStatus.ACTIVE,
+                subscription_tier: subscriptionTier,
+                billing_plan: billingPlan,
+                billing_period: billingPeriod,
+                end_date: endDate,
+                updated_at: moment().toISOString(),
+                created_at: moment().toISOString(),
+            })
+            .eq("user_id", userId);
 
-    if (error) throw error;
+        if (error) return { success: false, error };
+
+        return { success: true, error: null };
+    } catch (error) {
+        const uncaughtError = handleError(error, "updateUserSubscription");
+        return { success: false, error: uncaughtError };
+    }
 };
 
 export const cancelUserSubscription = async (
@@ -119,7 +126,7 @@ export const startFreePlan = async (userId: string) => {
     } catch (error) {
         return {
             success: null,
-            error: handleSupabaseError(error, "startFreePlan"),
+            error: handleError(error, "startFreePlan"),
         };
     }
 };

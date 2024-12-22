@@ -3,7 +3,7 @@
 import { createClient } from "@/services/integration/server";
 import moment from "moment";
 import { stripe } from "./client";
-import { handleSupabaseError } from "@/utils/errors/supabaseError";
+import { handleError } from "@/utils/errors/error";
 
 const _getStripeCustomerIdFromSupabase = async (userId: string) => {
     const supabase = await createClient();
@@ -17,7 +17,7 @@ const _getStripeCustomerIdFromSupabase = async (userId: string) => {
     if (error) {
         return {
             stripeCustomerId: null,
-            error: handleSupabaseError(
+            error: handleError(
                 error,
                 "_getStripeCustomerIdFromSupabase",
             ),
@@ -38,7 +38,7 @@ const _getStripeCustomerIdFromStripe = async (email: string) => {
     } catch (error) {
         return {
             stripeCustomerId: null,
-            error: handleSupabaseError(error, "_getStripeCustomerIdFromStripe"),
+            error: handleError(error, "_getStripeCustomerIdFromStripe"),
         };
     }
 };
@@ -63,7 +63,7 @@ const _updateUserStripeCustomerId = async (
         return { error: null };
     } catch (error) {
         return {
-            error: handleSupabaseError(error, "_updateUserStripeCustomerId"),
+            error: handleError(error, "_updateUserStripeCustomerId"),
         };
     }
 };
@@ -75,7 +75,7 @@ const _createStripeCustomer = async (email: string) => {
     } catch (error) {
         return {
             stripeCustomerId: null,
-            error: handleSupabaseError(error, "_createStripeCustomer"),
+            error: handleError(error, "_createStripeCustomer"),
         };
     }
 };
@@ -128,7 +128,7 @@ export const getStripeCustomerId = async () => {
     } catch (error) {
         return {
             stripeCustomerId: null,
-            error: handleSupabaseError(error, "getStripeCustomerId"),
+            error: handleError(error, "getStripeCustomerId"),
         };
     }
 };

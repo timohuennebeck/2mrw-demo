@@ -2,7 +2,7 @@
 
 import { billingConfig } from "@/config";
 import { FreeTrialStatus, SubscriptionStatus } from "@/enums";
-import { handleSupabaseError } from "@/utils/errors/supabaseError";
+import { handleError } from "@/utils/errors/error";
 import moment from "moment";
 import { getPricingPlan } from "../domain/pricingService";
 import { createClient } from "../integration/server";
@@ -26,7 +26,7 @@ export const fetchUserFreeTrial = async (userId: string) => {
     } catch (error) {
         return {
             data: null,
-            error: handleSupabaseError(error, "fetchUserFreeTrial"),
+            error: handleError(error, "fetchUserFreeTrial"),
         };
     }
 };
@@ -124,7 +124,7 @@ export const startFreeTrial = async (userId: string, stripePriceId: string) => {
         return {
             success: false,
             freeTrialEndDate: null,
-            error: handleSupabaseError(error, "startFreeTrial"),
+            error: handleError(error, "startFreeTrial"),
         };
     }
 };
