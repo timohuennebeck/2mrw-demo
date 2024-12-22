@@ -1,6 +1,7 @@
 import { createClient } from "npm:@supabase/supabase-js";
 import moment from "npm:moment";
-import { Redis } from "npm:@upstash/redis";
+import express, { Request, Response } from "npm:express";
+import process from "node:process";
 
 export enum SubscriptionTier {
   FREE = "FREE",
@@ -34,14 +35,9 @@ export interface FreeTrial {
   updated_at: string;
 }
 
-const redis = new Redis({
-  url: Deno.env.get("UPSTASH_REDIS_REST_URL")!,
-  token: Deno.env.get("UPSTASH_REDIS_REST_TOKEN")!,
-});
-
 const supabase = createClient(
-  Deno.env.get("SUPABASE_URL")! ?? "",
-  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")! ?? "",
+  process.env.SUPABASE_URL! ?? "",
+  process.env.SUPABASE_SERVICE_ROLE_KEY! ?? "",
 );
 
 const _sendLoopsEmail = async (
@@ -53,7 +49,7 @@ const _sendLoopsEmail = async (
     const response = await fetch("https://app.loops.so/api/v1/transactional", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${Deno.env.get("LOOPS_API_KEY")}`,
+        "Authorization": `Bearer ${process.env.LOOPS_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -74,17 +70,6 @@ const _sendLoopsEmail = async (
   }
 };
 
-const _invalidateSubscriptionCache = async (userId: string) => {
-  try {
-    const CACHE_PREFIX = "user_sub:";
-    const cacheKey = `${CACHE_PREFIX}${userId}`;
-
-    await redis.del(cacheKey);
-  } catch (error) {
-    console.error("Cache invalidation error:", error);
-  }
-};
-
 const _fetchUserEmail = async (userId: string) => {
   const { data, error } = await supabase
     .from("users")
@@ -98,7 +83,7 @@ const _fetchOnGoingFreeTrials = async () => {
   try {
     const { data, error } = await supabase
       .from("free_trials")
-      .select("user_id, status, end_date")
+      .select("*")
       .eq("status", FreeTrialStatus.ACTIVE);
 
     if (error) return { data: null, error };
@@ -153,12 +138,22 @@ const _downgradeToFreePlan = async (userId: string) => {
   }
 };
 
-Deno.serve(async () => {
+const app = express();
+app.use(express.json());
+
+app.post("/manage-free-trials", async (_req: Request, res: Response) => {
   console.log("[Cron] Starting free trial update job");
 
   try {
     const trialsResponse = await _fetchOnGoingFreeTrials();
     if (trialsResponse.error) throw trialsResponse.error;
+
+    if (!trialsResponse.data) {
+      return res.status(200).json({
+        message: "There are no free trials to process",
+        status: 200,
+      });
+    }
 
     console.log(`[Cron] Found ${trialsResponse.data.length} trials to process`);
 
@@ -176,12 +171,11 @@ Deno.serve(async () => {
         if (freeTrialUpdateResponse.error) throw freeTrialUpdateResponse.error;
 
         await _downgradeToFreePlan(trial.user_id);
-        await _invalidateSubscriptionCache(trial.user_id);
 
         const { email } = await _fetchUserEmail(trial.user_id);
 
         await _sendLoopsEmail(email, "cm4u80j0y03d9147zvineoz6x", {
-          upgradeUrl: `${Deno.env.get("NEXT_PUBLIC_SITE_URL")}/choose-pricing-plan`,
+          upgradeUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan`,
         }); // sends user has been downgraded to free plan email
 
         console.log(`[Cron] Processed trial for user: ${trial.user_id}`);
@@ -190,21 +184,16 @@ Deno.serve(async () => {
 
     await Promise.all(updatePromise);
 
-    return new Response(
-      JSON.stringify({
-        message: "Free trial update job completed",
-        status: 200,
-      }),
-      { headers: { "Content-Type": "application/json" } },
-    );
+    res.status(200).json({
+      message: "Free trial update job completed",
+      status: 200,
+    });
   } catch (error) {
     console.error("Error in cron job:", error);
-    return new Response(
-      JSON.stringify({
-        message: "Free trial update cron job failed",
-        status: 500,
-      }),
-      { headers: { "Content-Type": "application/json" } },
-    );
+
+    res.status(500).json({
+      message: "Free trial update cron job failed",
+      status: 500,
+    });
   }
 });

@@ -1,6 +1,7 @@
 import { createClient } from "npm:@supabase/supabase-js";
 import moment from "npm:moment";
-import { Redis } from "npm:@upstash/redis";
+import express, { Request, Response } from "npm:express";
+import process from "node:process";
 
 export enum SubscriptionStatus {
   ACTIVE = "ACTIVE",
@@ -40,14 +41,9 @@ export interface PurchasedSubscription {
   updated_at: string;
 }
 
-const redis = new Redis({
-  url: Deno.env.get("UPSTASH_REDIS_REST_URL")!,
-  token: Deno.env.get("UPSTASH_REDIS_REST_TOKEN")!,
-});
-
 const supabase = createClient(
-  Deno.env.get("SUPABASE_URL")! ?? "",
-  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")! ?? "",
+  process.env.SUPABASE_URL! ?? "",
+  process.env.SUPABASE_SERVICE_ROLE_KEY! ?? "",
 );
 
 const _sendLoopsEmail = async (
@@ -59,7 +55,7 @@ const _sendLoopsEmail = async (
     const response = await fetch("https://app.loops.so/api/v1/transactional", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${Deno.env.get("LOOPS_API_KEY")}`,
+        "Authorization": `Bearer ${process.env.LOOPS_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -80,17 +76,6 @@ const _sendLoopsEmail = async (
   }
 };
 
-const _invalidateSubscriptionCache = async (userId: string) => {
-  try {
-    const CACHE_PREFIX = "user_sub:";
-    const cacheKey = `${CACHE_PREFIX}${userId}`;
-
-    await redis.del(cacheKey);
-  } catch (error) {
-    console.error("Cache invalidation error:", error);
-  }
-};
-
 const _fetchUserEmail = async (userId: string) => {
   const { data, error } = await supabase
     .from("users")
@@ -104,7 +89,7 @@ const _fetchOnGoingSubscriptions = async () => {
   try {
     const { data, error } = await supabase
       .from("user_subscriptions")
-      .select("user_id, status, end_date")
+      .select("*")
       .in("status", [SubscriptionStatus.ACTIVE, SubscriptionStatus.CANCELLED])
       .neq("stripe_price_id", "price_free"); // exclude free plan
 
@@ -139,15 +124,25 @@ const _downgradeToFreePlan = async (userId: string) => {
   }
 };
 
-Deno.serve(async () => {
+const app = express();
+app.use(express.json());
+
+app.post("/manage-subscriptions", async (_req: Request, res: Response) => {
   console.log("[Cron] Starting subscription update job");
 
   try {
     const subscriptionsResponse = await _fetchOnGoingSubscriptions();
     if (subscriptionsResponse.error) throw subscriptionsResponse.error;
 
+    if (!subscriptionsResponse.data) {
+      return res.status(200).json({
+        message: "There are no subscriptions to process",
+        status: 200,
+      });
+    }
+
     console.log(
-      `[Cron] Found ${subscriptionsResponse.data.length} subscriptions to process`,
+      `[Cron] Found ${subscriptionsResponse?.data?.length} subscriptions to process`,
     );
 
     const updatePromise = subscriptionsResponse.data.map(
@@ -160,12 +155,12 @@ Deno.serve(async () => {
             `[Cron] Processing expired subscription for: ${subscription.user_id}`,
           );
           await _downgradeToFreePlan(subscription.user_id);
-          await _invalidateSubscriptionCache(subscription.user_id);
 
           const { email } = await _fetchUserEmail(subscription.user_id);
 
           await _sendLoopsEmail(email, "cm4u8hrjp03c9tv164dc8jy4r", {
-            upgradeUrl: `${Deno.env.get("NEXT_PUBLIC_SITE_URL")}/choose-pricing-plan`,
+            upgradeUrl:
+              `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan`,
           }); // sends user has been downgraded to free plan email
 
           console.log(
@@ -177,21 +172,16 @@ Deno.serve(async () => {
 
     await Promise.all(updatePromise);
 
-    return new Response(
-      JSON.stringify({
-        message: "Subscription update job completed",
-        status: 200,
-      }),
-      { headers: { "Content-Type": "application/json" } },
-    );
+    res.status(200).json({
+      message: "Subscription update job completed",
+      status: 200,
+    });
   } catch (error) {
     console.error("Error in cron job:", error);
-    return new Response(
-      JSON.stringify({
-        message: "Subscription update cron job failed",
-        status: 500,
-      }),
-      { headers: { "Content-Type": "application/json" } },
-    );
+
+    res.status(500).json({
+      message: "Subscription update cron job failed",
+      status: 500,
+    });
   }
 });
