@@ -21,7 +21,7 @@ export const sendLoopsTransactionalEmail = async <T extends EmailType>({
 
     if (!template?.enabled) {
         console.log("Email type is disabled:", type);
-        return { data: null, error: "Email template is disabled" };
+        return { success: false, error: "Email template is disabled" };
     }
 
     try {
@@ -31,13 +31,15 @@ export const sendLoopsTransactionalEmail = async <T extends EmailType>({
             dataVariables: variables,
         });
 
-        return { data: TextConstants.TEXT__EMAIL_HAS_BEEN_SENT, error: null };
+        return { success: true, error: null };
     } catch (error) {
         console.error("Error sending email:", error);
 
         return {
-            data: null,
-            error: error instanceof Error ? error.message : TextConstants.ERROR__UNEXPECTED_ERROR,
+            success: false,
+            error: error instanceof Error
+                ? error.message
+                : TextConstants.ERROR__UNEXPECTED_ERROR,
         };
     }
 };

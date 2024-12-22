@@ -20,15 +20,15 @@ export const checkUserEmailExists = async (userEmail: string) => {
 
         if (error?.code === "PGRST116") {
             // no matching email found (single row not found) - this is good for registration
-            return { data: null, error: null };
+            return { emailExists: false, error: null };
         }
 
-        if (error) throw error;
+        if (error) return { emailExists: false, error };
 
-        return { data: TextConstants.ERROR__EMAIL_ALREADY_IN_USE, error: null };
+        return { emailExists: true, error: null };
     } catch (error) {
         return {
-            data: null,
+            emailExists: false,
             error: handleError(error, "checkUserEmailExists"),
         };
     }
@@ -44,7 +44,7 @@ export const fetchUser = async (userId: string) => {
             .eq("id", userId)
             .single();
 
-        if (error) throw error;
+        if (error) return { data: null, error };
 
         return { data: user as User, error: null };
     } catch (error) {
@@ -55,7 +55,10 @@ export const fetchUser = async (userId: string) => {
     }
 };
 
-export const createUserTable = async (authUser: SupabaseUser, authMethod: AuthMethod) => {
+export const createUserTable = async (
+    authUser: SupabaseUser,
+    authMethod: AuthMethod,
+) => {
     try {
         const supabase = await createClient();
 
@@ -69,12 +72,12 @@ export const createUserTable = async (authUser: SupabaseUser, authMethod: AuthMe
             onboarding_completed: false,
         });
 
-        if (error) throw error;
+        if (error) return { success: false, error };
 
-        return { data: TextConstants.TEXT__SUCCESS_USER_CREATED, error: null };
+        return { success: true, error: null };
     } catch (error) {
         return {
-            data: null,
+            success: false,
             error: handleError(error, "createUserTable"),
         };
     }

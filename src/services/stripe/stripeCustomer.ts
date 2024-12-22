@@ -6,25 +6,22 @@ import { stripe } from "./client";
 import { handleError } from "@/utils/errors/error";
 
 const _getStripeCustomerIdFromSupabase = async (userId: string) => {
-    const supabase = await createClient();
+    try {
+        const supabase = await createClient();
 
-    const { data, error } = await supabase
-        .from("users")
-        .select("stripe_customer_id")
-        .eq("id", userId)
-        .single();
+        const { data } = await supabase
+            .from("users")
+            .select("stripe_customer_id")
+            .eq("id", userId)
+            .single();
 
-    if (error) {
+        return { stripeCustomerId: data?.stripe_customer_id, error: null };
+    } catch (error) {
         return {
             stripeCustomerId: null,
-            error: handleError(
-                error,
-                "_getStripeCustomerIdFromSupabase",
-            ),
+            error: handleError(error, "_getStripeCustomerIdFromSupabase"),
         };
     }
-
-    return { stripeCustomerId: data?.stripe_customer_id, error: null };
 };
 
 const _getStripeCustomerIdFromStripe = async (email: string) => {
@@ -58,11 +55,12 @@ const _updateUserStripeCustomerId = async (
             })
             .eq("id", userId);
 
-        if (error) throw error;
+        if (error) return { success: false, error };
 
-        return { error: null };
+        return { success: true, error: null };
     } catch (error) {
         return {
+            success: false,
             error: handleError(error, "_updateUserStripeCustomerId"),
         };
     }
@@ -100,25 +98,30 @@ export const getStripeCustomerId = async () => {
             return { stripeCustomerId: null, error: "UserId is missing!" };
         }
 
-        const { stripeCustomerId: existingId } =
-            await _getStripeCustomerIdFromSupabase(userId);
-        if (existingId) {
-            return { stripeCustomerId: existingId, error: null };
+        const existingId = await _getStripeCustomerIdFromSupabase(userId);
+        if (existingId.stripeCustomerId) {
+            return {
+                stripeCustomerId: existingId.stripeCustomerId,
+                error: null,
+            };
         }
 
-        const { stripeCustomerId: stripeId } =
-            await _getStripeCustomerIdFromStripe(userEmail);
-        if (stripeId) {
-            await _updateUserStripeCustomerId(userId, stripeId);
-            return { stripeCustomerId: stripeId, error: null };
+        const stripeId = await _getStripeCustomerIdFromStripe(userEmail);
+        if (stripeId.stripeCustomerId) {
+            await _updateUserStripeCustomerId(
+                userId,
+                stripeId.stripeCustomerId,
+            );
+            return { stripeCustomerId: stripeId.stripeCustomerId, error: null };
         }
 
-        const { stripeCustomerId: newId } = await _createStripeCustomer(
-            userEmail,
-        );
-        if (newId) {
-            await _updateUserStripeCustomerId(userId, newId ?? "");
-            return { stripeCustomerId: newId, error: null };
+        const newId = await _createStripeCustomer(userEmail);
+        if (newId.stripeCustomerId) {
+            await _updateUserStripeCustomerId(
+                userId,
+                newId.stripeCustomerId,
+            );
+            return { stripeCustomerId: newId.stripeCustomerId, error: null };
         }
 
         return {

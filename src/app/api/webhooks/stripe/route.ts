@@ -76,10 +76,14 @@ export const POST = async (req: nextRequest) => {
                 const customerId = subscription.customer as string;
                 const user = await _getUserFromStripeCustomerId(customerId);
 
-                const session = await _retrieveCheckoutSession(
-                    event.data.object.id,
+                const sessionId = event.data.object.id;
+                const session = await _retrieveCheckoutSession(sessionId);
+
+                const checkoutResult = await handleCheckoutCompleted(
+                    session,
+                    user.id,
                 );
-                await handleCheckoutCompleted(session, user.id);
+                if (checkoutResult.error) throw checkoutResult.error;
 
                 sendLoopsTransactionalEmail({
                     type: EmailType.PURCHASED_SUBSCRIPTION,
@@ -113,9 +117,17 @@ export const POST = async (req: nextRequest) => {
                         },
                     });
 
-                    await handleCancelSubscription(user.id, subscription);
+                    const cancelResult = await handleCancelSubscription(
+                        user.id,
+                        subscription,
+                    );
+                    if (cancelResult.error) throw cancelResult.error;
                 } else {
-                    await handleUpdateSubscription(event.data.object, user.id);
+                    const updateResult = await handleUpdateSubscription(
+                        event.data.object,
+                        user.id,
+                    );
+                    if (updateResult.error) throw updateResult.error;
                 }
                 break;
             }
@@ -131,6 +143,7 @@ export const POST = async (req: nextRequest) => {
                             `${process.env.NEXT_PUBLIC_APP_URL}/app/billing`,
                     },
                 });
+
                 break; // notify user that their free trial is ending in three days
             }
             default:

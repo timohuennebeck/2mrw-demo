@@ -47,7 +47,7 @@ const ForgotPasswordPage = () => {
 
     const handleFormSubmit = async (values: { email: string }) => {
         setIsLoading(true);
-        const { data: emailExists } = await checkUserEmailExists(values.email);
+        const { emailExists } = await checkUserEmailExists(values.email);
 
         if (!emailExists) {
             setIsLoading(false);

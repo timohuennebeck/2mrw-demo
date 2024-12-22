@@ -31,6 +31,7 @@ export const fetchUserFreeTrial = async (userId: string) => {
     }
 };
 
+// TODO: make smaller
 export const startFreeTrial = async (userId: string, stripePriceId: string) => {
     const supabase = await createClient();
 

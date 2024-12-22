@@ -92,8 +92,8 @@ const SignUpPage = () => {
         setIsLoading(true);
 
         try {
-            const { data } = await checkUserEmailExists(email);
-            if (data) throw new Error(data); // throws an error because the email exists
+            const { emailExists } = await checkUserEmailExists(email);
+            if (emailExists) throw new Error(TextConstants.ERROR__EMAIL_ALREADY_IN_USE); // throws an error because the email exists
 
             const dataToUpdate = {
                 firstName,
@@ -129,7 +129,7 @@ const SignUpPage = () => {
             if (result.error) throw result.error;
 
             _handleEmailConfirmation({
-                message: result.data ?? "",
+                message: TextConstants.TEXT__MAGIC_LINK_SENT,
                 onClick: async () => await _handleResendConfirmationEmail(email),
             });
         } catch (error) {

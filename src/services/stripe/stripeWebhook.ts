@@ -27,11 +27,12 @@ const _updateFreeTrialToConverted = async (userId: string) => {
 
         return { success: true, error: null };
     } catch (error) {
-        const supabaseError = handleError(
+        const unexpectedError = handleError(
             error,
             "_updateFreeTrialToConverted",
         );
-        return { success: false, error: supabaseError };
+
+        return { success: false, error: unexpectedError };
     }
 };
 
@@ -40,7 +41,9 @@ export const handleCheckoutCompleted = async (
     userId: string,
 ) => {
     const stripePriceId = session.line_items?.data[0].price?.id;
-    if (!stripePriceId) throw new Error("Stripe price id is missing!");
+    if (!stripePriceId) {
+        return { success: false, error: "Stripe price id is missing!" };
+    }
 
     const isSubscription = session.mode === "subscription";
     const subscriptionId = isSubscription
@@ -52,12 +55,14 @@ export const handleCheckoutCompleted = async (
         : null;
 
     const pricingPlan = getPricingPlan(stripePriceId);
-    if (!pricingPlan) throw new Error("Pricing plan is missing!");
+    if (!pricingPlan) {
+        return { success: false, error: "Pricing plan is missing!" };
+    }
 
     const { error: freeTrialError } = await _updateFreeTrialToConverted(userId);
-    if (freeTrialError) throw freeTrialError;
+    if (freeTrialError) return { success: false, error: freeTrialError };
 
-    await updateUserSubscription({
+    const { error: updateError } = await updateUserSubscription({
         userId,
         stripePriceId,
         stripeSubscriptionId: subscriptionId,
@@ -66,15 +71,24 @@ export const handleCheckoutCompleted = async (
         billingPlan: pricingPlan.billing_plan,
         endDate,
     });
+
+    if (updateError) return { success: false, error: updateError };
+
+    return { success: true, error: null };
 };
 
 export const handleCancelSubscription = async (
     userId: string,
     subscription: Stripe.Subscription,
 ) => {
-    const stripeEndDate = moment.unix(subscription.current_period_end)
-        .toISOString();
-    await cancelUserSubscription(userId, stripeEndDate);
+    const endDate = subscription.current_period_end;
+    const stripeEndDate = moment.unix(endDate).toISOString();
+
+    const { error } = await cancelUserSubscription(userId, stripeEndDate);
+
+    if (error) return { success: false, error };
+
+    return { success: true, error: null };
 };
 
 export const handleUpdateSubscription = async (
@@ -82,12 +96,14 @@ export const handleUpdateSubscription = async (
     userId: string,
 ) => {
     const stripePriceId = subscription.items.data[0].price.id;
-    if (!stripePriceId) throw new Error("Stripe price id is missing!");
+    if (!stripePriceId) {
+        return { success: false, error: "Stripe price id is missing!" };
+    }
 
     const plan = getPricingPlan(stripePriceId);
-    if (!plan) throw new Error("Pricing plan is missing!");
+    if (!plan) return { success: false, error: "Pricing plan is missing!" };
 
-    await updateUserSubscription({
+    const { error } = await updateUserSubscription({
         userId,
         stripePriceId,
         stripeSubscriptionId: subscription.id,
@@ -96,4 +112,8 @@ export const handleUpdateSubscription = async (
         billingPlan: plan.billing_plan,
         endDate: moment.unix(subscription.current_period_end).toISOString(),
     });
+
+    if (error) return { success: false, error };
+
+    return { success: true, error: null };
 };

@@ -17,11 +17,11 @@ export const sendMagicLink = async (email: string) => {
             },
         });
 
-        if (error) return { data: null, error };
+        if (error) return { success: false, error };
 
-        return { data: TextConstants.TEXT__MAGIC_LINK_SENT, error: null };
+        return { success: true, error: null };
     } catch (error) {
         console.error("Error sending magic link:", error);
-        return { data: null, error: TextConstants.ERROR__UNEXPECTED_ERROR };
+        return { success: false, error: TextConstants.ERROR__UNEXPECTED_ERROR };
     }
 };

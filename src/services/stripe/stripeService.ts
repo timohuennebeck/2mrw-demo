@@ -4,6 +4,7 @@ import { isOneTimePaymentEnabled } from "@/config";
 import { InitiateStripeCheckoutProcessParams } from "@/interfaces";
 import { stripe } from "./client";
 import { getStripeCustomerId } from "./stripeCustomer";
+import { handleError } from "@/utils/errors/error";
 
 export const createStripeCheckout = async ({
     stripePriceId,
@@ -13,15 +14,22 @@ export const createStripeCheckout = async ({
     const { stripeCustomerId, error } = await getStripeCustomerId();
     if (error) return { checkoutUrl: null, error };
 
-    const session = await stripe.checkout.sessions.create({
-        customer: stripeCustomerId,
-        line_items: [{ price: stripePriceId, quantity: 1 }],
-        mode: isOneTimePaymentEnabled() ? "payment" : "subscription",
-        success_url: successUrl,
-        cancel_url: cancelUrl,
-    });
+    try {
+        const session = await stripe.checkout.sessions.create({
+            customer: stripeCustomerId,
+            line_items: [{ price: stripePriceId, quantity: 1 }],
+            mode: isOneTimePaymentEnabled() ? "payment" : "subscription",
+            success_url: successUrl,
+            cancel_url: cancelUrl,
+        });
 
-    return { checkoutUrl: session.url, error: null };
+        return { checkoutUrl: session.url, error: null };
+    } catch (error) {
+        return {
+            checkoutUrl: null,
+            error: "Error creating checkout session",
+        };
+    }
 };
 
 export const createStripeBillingPortal = async (stripeCustomerId: string) => {
@@ -52,6 +60,10 @@ export const getStripeCreditCardDetails = async (stripeCustomerId: string) => {
             error: null,
         };
     } catch (error) {
-        return { lastFourDigits: null, brand: null, error: "Error fetching credit card details" };
+        return {
+            lastFourDigits: null,
+            brand: null,
+            error: "Error fetching credit card details",
+        };
     }
 };
