@@ -2,7 +2,7 @@
 
 import { EmailTester } from "@/components/application/EmailTester";
 import { Card } from "@/components/ui/card";
-import { Bug, CreditCard, Rocket, Shield, Users } from "lucide-react";
+import { Bug, Rocket } from "lucide-react";
 
 const DemoPage = () => {
     const navigationItems = {

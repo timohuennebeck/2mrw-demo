@@ -1,0 +1,7 @@
+{
+    "imports": {
+        "@supabase/supabase-js": "npm:@supabase/supabase-js@2.47.8",
+        "moment": "npm:moment@2.30.1",
+        "express": "npm:express@4.21.2"
+    }
+}

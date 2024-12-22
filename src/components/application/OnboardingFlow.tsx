@@ -1,8 +1,8 @@
-import React from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Manrope } from "next/font/google";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import React from "react";
 
 const manrope = Manrope({
     subsets: ["latin"],

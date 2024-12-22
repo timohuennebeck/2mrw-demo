@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "./action";
 import RegisterLoginForm from "@/components/application/RegisterLoginForm";
@@ -9,7 +9,13 @@ import { StatusMessage } from "@/interfaces";
 import { sendMagicLink } from "@/services/domain/authService";
 import { useParamFeedback } from "@/hooks/useParamFeedback";
 
-const SignInPage = () => {
+const SignInPage = () => (
+    <Suspense fallback={null}>
+        <SignInPageContent />
+    </Suspense>
+);
+
+const SignInPageContent = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(null);
 

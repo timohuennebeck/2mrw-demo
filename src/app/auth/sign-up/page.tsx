@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import RegisterLoginForm from "@/components/application/RegisterLoginForm";
 import { resendConfirmationEmail, signUpUserToSupabase } from "./action";
 import { TextConstants } from "@/constants/TextConstants";
@@ -23,7 +23,13 @@ const _getSignUpMethod = (searchParams: URLSearchParams) => {
     return signUpMethod === "magic-link" ? AuthMethod.MAGIC_LINK : AuthMethod.PASSWORD;
 };
 
-const SignUpPage = () => {
+const SignUpPage = () => (
+    <Suspense fallback={null}>
+        <SignUpPageContent />
+    </Suspense>
+);
+
+const SignUpPageContent = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(null);
 

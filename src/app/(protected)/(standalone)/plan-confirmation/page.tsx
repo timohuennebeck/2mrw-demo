@@ -10,7 +10,7 @@ import { FreeTrial } from "@/interfaces/models/freeTrial";
 import moment from "moment";
 import { Manrope } from "next/font/google";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import dynamic from "next/dynamic";
 
 const manrope = Manrope({
@@ -22,7 +22,13 @@ const Confetti = dynamic(() => import("react-confetti"), {
     ssr: false, // only renders the component on client-side
 });
 
-const PlanConfirmation = () => {
+const PlanConfirmationPage = () => (
+    <Suspense fallback={null}>
+        <PlanConfirmationPageContent />
+    </Suspense>
+);
+
+const PlanConfirmationPageContent = () => {
     const { subscription } = useSubscription();
     const { dbUser } = useUser();
     const { freeTrial } = useFreeTrial();
@@ -135,4 +141,4 @@ const PlanConfirmation = () => {
     );
 };
 
-export default PlanConfirmation;
+export default PlanConfirmationPage;

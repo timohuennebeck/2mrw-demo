@@ -37,19 +37,19 @@ const updatePasswordFormSchema = z
         path: ["confirmPassword"],
     });
 
-const SearchParamsHandler = () => {
-    const searchParams = useSearchParams();
-    return {
-        accessToken: searchParams.get("access_token") ?? "",
-        refreshToken: searchParams.get("refresh_token") ?? "",
-    };
-};
+const UpdatePasswordPage = () => (
+    <Suspense fallback={null}>
+        <UpdatePasswordPageContent />
+    </Suspense>
+);
 
-const UpdatePassword = () => {
+const UpdatePasswordPageContent = () => {
     const [isUpdating, setIsUpdating] = useState(false);
     const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(null);
 
-    let tokens = { accessToken: "", refreshToken: "" };
+    const searchParams = useSearchParams();
+    const accessToken = searchParams.get("access_token") ?? "";
+    const refreshToken = searchParams.get("refresh_token") ?? "";
 
     const updatePasswordForm = useForm({
         resolver: zodResolver(updatePasswordFormSchema),
@@ -63,8 +63,8 @@ const UpdatePassword = () => {
         setIsUpdating(true);
         const result = await updatePassword({
             password: values.password,
-            accessToken: tokens.accessToken ?? "",
-            refreshToken: tokens.refreshToken ?? "",
+            accessToken,
+            refreshToken,
         });
         setIsUpdating(false);
 
@@ -85,13 +85,6 @@ const UpdatePassword = () => {
 
     return (
         <div className="flex h-full items-center">
-            <Suspense>
-                {(() => {
-                    tokens = SearchParamsHandler();
-                    return null;
-                })()}
-            </Suspense>
-
             <div className="flex w-full flex-col gap-4">
                 <div className="mb-4 flex items-center gap-2">
                     <Image
@@ -169,14 +162,6 @@ const UpdatePassword = () => {
                 </p>
             </div>
         </div>
-    );
-};
-
-const UpdatePasswordPage = () => {
-    return (
-        <Suspense>
-            <UpdatePassword />
-        </Suspense>
     );
 };
 

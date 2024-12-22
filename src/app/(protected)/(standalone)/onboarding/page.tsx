@@ -5,6 +5,7 @@ import OnboardingFlow from "@/components/application/OnboardingFlow";
 import { createClient } from "@/services/integration/client";
 import { User } from "@supabase/supabase-js";
 import { useSession } from "@/context/SessionContext";
+import { Suspense } from "react";
 
 const _updateOnboardingStatusDatabase = async (authUser: User) => {
     const supabase = createClient();
@@ -83,7 +84,13 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
     },
 ];
 
-const OnboardingPage = () => {
+const OnboardingPage = () => (
+    <Suspense fallback={null}>
+        <OnboardingPageContent />
+    </Suspense>
+);
+
+const OnboardingPageContent = () => {
     const router = useRouter();
     const { authUser } = useSession();
 

@@ -3,8 +3,15 @@
 import { StatusPage } from "@/app/auth-status/components/StatusPage";
 import { SUCCESS_TYPES } from "@/config";
 import { redirect, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function StatusSuccessPage() {
+const StatusSuccessPage = () => (
+    <Suspense fallback={null}>
+        <StatusSuccessPageContent />
+    </Suspense>
+);
+
+const StatusSuccessPageContent = () => {
     const searchParams = useSearchParams();
 
     const successType = searchParams.get("mode");
@@ -13,4 +20,6 @@ export default function StatusSuccessPage() {
     const config = SUCCESS_TYPES[successType as keyof typeof SUCCESS_TYPES];
 
     return <StatusPage type="success" config={config} />;
-}
+};
+
+export default StatusSuccessPage;
