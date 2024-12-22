@@ -40,7 +40,7 @@ const PricingPlanHeader = ({
         : null;
 
     return (
-        <div className="col-span-1 flex flex-col gap-6">
+        <div className="col-span-1 flex flex-col justify-between gap-6">
             <h3 className="text-lg font-medium">{plan.name}</h3>
             <div>
                 <span className="text-4xl font-medium">{plan.price}</span>
