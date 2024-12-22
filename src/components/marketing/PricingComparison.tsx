@@ -40,7 +40,7 @@ const PricingPlanHeader = ({
         : null;
 
     return (
-        <div className="col-span-1 flex flex-col justify-between gap-6">
+        <div className="col-span-1 flex flex-col justify-between gap-6 md:gap-4">
             <h3 className="text-lg font-medium">{plan.name}</h3>
             <div>
                 <span className="text-4xl font-medium">{plan.price}</span>
@@ -78,18 +78,31 @@ const FeatureRow = ({
     item: PricingFeatureItem;
     showFreePlan: boolean;
 }) => (
-    <div className={`grid gap-8 py-6 ${showFreePlan ? "grid-cols-4" : "grid-cols-3"}`}>
-        <div className="col-span-1 text-sm text-gray-600">{item.name}</div>
+    <div
+        className={`grid gap-8 py-6 ${
+            showFreePlan ? "grid-cols-1 md:grid-cols-4" : "grid-cols-1 md:grid-cols-3"
+        }`}
+    >
+        <div className="flex items-center text-sm text-gray-600">{item.name}</div>
         {showFreePlan && (
-            <div className="col-span-1 text-center">
-                <FeatureCell value={item.free ?? false} />
+            <div className="flex items-center md:justify-center">
+                <span className="flex-1 text-sm text-gray-500 md:hidden">Free</span>
+                <div className="ml-auto md:ml-0">
+                    <FeatureCell value={item.free ?? false} />
+                </div>
             </div>
         )}
-        <div className="col-span-1 text-center">
-            <FeatureCell value={item.pro} />
+        <div className="flex items-center md:justify-center">
+            <span className="flex-1 text-sm text-gray-500 md:hidden">Pro</span>
+            <div className="ml-auto md:ml-0">
+                <FeatureCell value={item.pro} />
+            </div>
         </div>
-        <div className="col-span-1 text-center">
-            <FeatureCell value={item.enterprise} />
+        <div className="flex items-center md:justify-center">
+            <span className="flex-1 text-sm text-gray-500 md:hidden">Enterprise</span>
+            <div className="ml-auto md:ml-0">
+                <FeatureCell value={item.enterprise} />
+            </div>
         </div>
     </div>
 );
@@ -109,9 +122,9 @@ const PricingComparison = ({
     const plansToShow = isOneTimePayment ? plans.oneTime : plans.monthly;
 
     return (
-        <div className="flex flex-col gap-16">
+        <div className="flex flex-col gap-8 md:gap-16">
             {/* Header Section */}
-            <div className="flex flex-col gap-6 text-start">
+            <div className="flex flex-col gap-4 text-start md:gap-6">
                 <p className="text-sm font-medium text-blue-600">{subtitle}</p>
                 <h2 className="max-w-4xl text-4xl font-medium leading-tight tracking-tight md:text-5xl">
                     {title}
@@ -120,8 +133,12 @@ const PricingComparison = ({
             </div>
 
             {/* Plan Headers */}
-            <div className={`grid gap-8 ${showFreePlan ? "grid-cols-4" : "grid-cols-3"}`}>
-                <div className="col-span-1" />
+            <div
+                className={`grid gap-8 ${
+                    showFreePlan ? "grid-cols-1 md:grid-cols-4" : "grid-cols-1 md:grid-cols-3"
+                }`}
+            >
+                <div className="col-span-1 hidden md:block" />
                 {plansToShow.map((plan) => (
                     <PricingPlanHeader
                         key={plan.name}
