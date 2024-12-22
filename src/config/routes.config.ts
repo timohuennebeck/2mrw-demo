@@ -1,6 +1,3 @@
-type PublicRoute =
-    typeof ROUTES_CONFIG.PUBLIC[keyof typeof ROUTES_CONFIG.PUBLIC];
-
 export const ROUTES_CONFIG = {
     PUBLIC: {
         LANDING_PAGE: "/",

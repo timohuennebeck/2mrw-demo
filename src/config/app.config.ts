@@ -1,4 +1,27 @@
-export const appConfig = {
+interface WidgetConfig {
+    isEnabled: boolean;
+    formUrl: string;
+}
+
+interface GeneralConfig {
+    testimonialSidePanel: {
+        isEnabled: boolean;
+        direction: "left" | "right";
+    };
+    onboarding: {
+        isEnabled: boolean;
+        isRequired: boolean;
+    };
+    feedback: {
+        widgets: {
+            reportBug: WidgetConfig;
+            shareFeedback: WidgetConfig;
+            accountDeletion: WidgetConfig;
+        };
+    };
+}
+
+export const appConfig: GeneralConfig = {
     /**
      * - isEnabled: Controls whether the testimonial side panel on the auth pages is enabled. When enabled, the side panel is displayed on the right side of the screen
      * - direction: Controls the direction of the side panel. Can be "left" or "right"
