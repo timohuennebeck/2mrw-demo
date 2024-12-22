@@ -26,7 +26,7 @@ import { exampleStats } from "@/data/marketing/stats-data";
 import { testimonials } from "@/data/marketing/testimonials-data";
 import { cn } from "@/lib/utils";
 import { handleSmoothScroll } from "@/utils/navigation";
-import { Settings } from "lucide-react";
+import { Shield } from "lucide-react";
 import { Manrope } from "next/font/google";
 import { useRouter } from "next/navigation";
 
@@ -88,32 +88,34 @@ const LandingPage = () => {
                     loginOnClick={() => router.push("/auth/sign-in")}
                     userIsLoggedIn={!!authUser}
                 />
-                {/* COPY TIP: Hero sections need a clear, compelling value proposition.
+                <div className="mx-auto my-12 flex w-full max-w-7xl flex-col gap-36">
+                    {/* COPY TIP: Hero sections need a clear, compelling value proposition.
                     Focus on the customer's main pain point and how you solve it.
                     Keep it concise - aim for 6-12 words. */}
-                <Hero
-                    promoText="LOREM IPSUM DOLOR SIT AMET"
-                    title={
-                        <>
-                            Lorem ipsum dolor, sit amet consectetur adipisicing elit.{" "}
-                            <span className="relative mt-4 inline-block rotate-2 whitespace-nowrap bg-blue-600 p-2 text-white">
-                                Lorem, ipsum.
-                            </span>
-                        </>
-                    }
-                    subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, saepe dicta eligendi praesentium accusamus cupiditate?"
-                    primaryCTA={{
-                        text: "Get Started Now",
-                        onClick: (e) => handleSmoothScroll(e, "#pricing"),
-                    }}
-                    secondaryCTA={{
-                        text: "Watch Demo",
-                        onClick: (e) => handleSmoothScroll(e, "#product-demo"),
-                    }}
-                    demoVideoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
-                />
+                    <SectionContainer>
+                        <Hero
+                            promoText="LOREM IPSUM DOLOR SIT AMET"
+                            title={
+                                <>
+                                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.{" "}
+                                    <span className="relative mt-4 inline-block rotate-2 whitespace-nowrap bg-blue-600 p-2 text-white">
+                                        Lorem, ipsum.
+                                    </span>
+                                </>
+                            }
+                            subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, saepe dicta eligendi praesentium accusamus cupiditate?"
+                            primaryCTA={{
+                                text: "Get Started Now",
+                                onClick: (e) => handleSmoothScroll(e, "#pricing"),
+                            }}
+                            secondaryCTA={{
+                                text: "Watch Demo",
+                                onClick: (e) => handleSmoothScroll(e, "#product-demo"),
+                            }}
+                            demoVideoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
+                        />
+                    </SectionContainer>
 
-                <div className="mx-auto mb-8 mt-28 flex w-full max-w-7xl flex-col gap-36">
                     {/* COPY TIP: Social proof should be specific and results-focused.
                         Include numbers, achievements, or concrete benefits the customer experienced. */}
                     <SectionContainer>
@@ -146,21 +148,21 @@ const LandingPage = () => {
                                     title: "Lorem ipsum dolor sit amet.",
                                     description:
                                         "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore.",
-                                    icon: Settings,
+                                    icon: Shield,
                                 },
                                 {
                                     number: 2,
                                     title: "Lorem ipsum dolor sit amet.",
                                     description:
                                         "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore.",
-                                    icon: Settings,
+                                    icon: Shield,
                                 },
                                 {
                                     number: 3,
                                     title: "Lorem ipsum dolor sit amet.",
                                     description:
                                         "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore.",
-                                    icon: Settings,
+                                    icon: Shield,
                                 },
                             ]}
                             videoPaths={[

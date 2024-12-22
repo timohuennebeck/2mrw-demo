@@ -30,7 +30,7 @@ const Hero = ({
     showTestimonials,
 }: HeroParams) => {
     return (
-        <section className="relative flex flex-col items-center justify-center gap-8 px-4 py-10 text-center">
+        <section className="relative flex flex-col items-center justify-center gap-8 text-center">
             {/* Promotional Banner */}
             {promoText && (
                 <div className="rounded-lg bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600">
