@@ -1,6 +1,6 @@
-import { createClient } from "npm:@supabase/supabase-js";
-import moment from "npm:moment";
-import express, { Request, Response } from "npm:express";
+import { createClient } from "npm:@supabase/supabase-js@2.47.8";
+import moment from "npm:moment@2.30.1";
+import express, { Request, Response } from "npm:express@4.18.2";
 import process from "node:process";
 
 export enum SubscriptionStatus {
@@ -91,7 +91,8 @@ const _fetchOnGoingSubscriptions = async () => {
       .from("user_subscriptions")
       .select("*")
       .in("status", [SubscriptionStatus.ACTIVE, SubscriptionStatus.CANCELLED])
-      .neq("stripe_price_id", "price_free"); // exclude free plan
+      .neq("stripe_price_id", "price_free") // exclude free plan
+      .lt("end_date", moment().toISOString());
 
     if (error) return { data: null, error };
     return { data, error: null };
@@ -138,6 +139,7 @@ app.post("/manage-subscriptions", async (_req: Request, res: Response) => {
       return res.status(200).json({
         message: "There are no subscriptions to process",
         status: 200,
+        processedUsers: [],
       });
     }
 
@@ -145,28 +147,26 @@ app.post("/manage-subscriptions", async (_req: Request, res: Response) => {
       `[Cron] Found ${subscriptionsResponse?.data?.length} subscriptions to process`,
     );
 
+    const processedUsers: string[] = [];
+
     const updatePromise = subscriptionsResponse.data.map(
       async (subscription: PurchasedSubscription) => {
-        const now = moment();
-        const endDate = moment(subscription.end_date);
+        console.log(
+          `[Cron] Processing expired subscription for: ${subscription.user_id}`,
+        );
+        await _downgradeToFreePlan(subscription.user_id);
 
-        if (endDate.isBefore(now)) {
-          console.log(
-            `[Cron] Processing expired subscription for: ${subscription.user_id}`,
-          );
-          await _downgradeToFreePlan(subscription.user_id);
+        const { email } = await _fetchUserEmail(subscription.user_id);
 
-          const { email } = await _fetchUserEmail(subscription.user_id);
+        await _sendLoopsEmail(email, "cm4u8hrjp03c9tv164dc8jy4r", {
+          upgradeUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan`,
+        }); // sends user has been downgraded to free plan email
 
-          await _sendLoopsEmail(email, "cm4u8hrjp03c9tv164dc8jy4r", {
-            upgradeUrl:
-              `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan`,
-          }); // sends user has been downgraded to free plan email
+        processedUsers.push(subscription.user_id);
 
-          console.log(
-            `[Cron] Processed subscription for user: ${subscription.user_id}`,
-          );
-        }
+        console.log(
+          `[Cron] Processed subscription for user: ${subscription.user_id}`,
+        );
       },
     );
 
@@ -175,6 +175,7 @@ app.post("/manage-subscriptions", async (_req: Request, res: Response) => {
     res.status(200).json({
       message: "Subscription update job completed",
       status: 200,
+      processedUsers,
     });
   } catch (error) {
     console.error("Error in cron job:", error);
@@ -182,6 +183,11 @@ app.post("/manage-subscriptions", async (_req: Request, res: Response) => {
     res.status(500).json({
       message: "Subscription update cron job failed",
       status: 500,
+      processedUsers: [],
     });
   }
+});
+
+app.listen(8000, () => {
+  console.log("Server is running on port 8000");
 });

@@ -1,6 +1,6 @@
-import { createClient } from "npm:@supabase/supabase-js";
-import moment from "npm:moment";
-import express, { Request, Response } from "npm:express";
+import { createClient } from "npm:@supabase/supabase-js@2.47.8";
+import moment from "npm:moment@2.30.1";
+import express, { Request, Response } from "npm:express@4.18.2";
 import process from "node:process";
 
 export enum SubscriptionTier {
@@ -84,7 +84,8 @@ const _fetchOnGoingFreeTrials = async () => {
     const { data, error } = await supabase
       .from("free_trials")
       .select("*")
-      .eq("status", FreeTrialStatus.ACTIVE);
+      .eq("status", FreeTrialStatus.ACTIVE)
+      .lt("end_date", moment().toISOString());
 
     if (error) return { data: null, error };
 
@@ -97,6 +98,8 @@ const _fetchOnGoingFreeTrials = async () => {
 
 const _updateFreeTrialToExpired = async (userId: string) => {
   try {
+    console.log("→ [LOG] Downgrading to free plan for user:", userId);
+
     const { error: updateError } = await supabase
       .from("free_trials")
       .update({
@@ -157,29 +160,28 @@ app.post("/manage-free-trials", async (_req: Request, res: Response) => {
 
     console.log(`[Cron] Found ${trialsResponse.data.length} trials to process`);
 
+    const processedUsers: string[] = [];
+
     const updatePromise = trialsResponse.data.map(async (trial: FreeTrial) => {
-      const now = moment();
-      const endDate = moment(trial.end_date);
+      console.log(`[Cron] Processing expired trial for: ${trial.user_id}`);
 
-      if (endDate.isBefore(now)) {
-        console.log(`[Cron] Processing expired trial for: ${trial.user_id}`);
+      const freeTrialUpdateResponse = await _updateFreeTrialToExpired(
+        trial.user_id,
+      );
 
-        const freeTrialUpdateResponse = await _updateFreeTrialToExpired(
-          trial.user_id,
-        );
+      if (freeTrialUpdateResponse.error) throw freeTrialUpdateResponse.error;
 
-        if (freeTrialUpdateResponse.error) throw freeTrialUpdateResponse.error;
+      await _downgradeToFreePlan(trial.user_id);
 
-        await _downgradeToFreePlan(trial.user_id);
+      const { email } = await _fetchUserEmail(trial.user_id);
 
-        const { email } = await _fetchUserEmail(trial.user_id);
+      await _sendLoopsEmail(email, "cm4u80j0y03d9147zvineoz6x", {
+        upgradeUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan`,
+      }); // sends user has been downgraded to free plan email
 
-        await _sendLoopsEmail(email, "cm4u80j0y03d9147zvineoz6x", {
-          upgradeUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan`,
-        }); // sends user has been downgraded to free plan email
+      processedUsers.push(trial.user_id);
 
-        console.log(`[Cron] Processed trial for user: ${trial.user_id}`);
-      }
+      console.log(`[Cron] Processed trial for user: ${trial.user_id}`);
     });
 
     await Promise.all(updatePromise);
@@ -187,6 +189,7 @@ app.post("/manage-free-trials", async (_req: Request, res: Response) => {
     res.status(200).json({
       message: "Free trial update job completed",
       status: 200,
+      processedUsers,
     });
   } catch (error) {
     console.error("Error in cron job:", error);
@@ -194,6 +197,11 @@ app.post("/manage-free-trials", async (_req: Request, res: Response) => {
     res.status(500).json({
       message: "Free trial update cron job failed",
       status: 500,
+      processedUsers: [],
     });
   }
+});
+
+app.listen(8000, () => {
+  console.log("Server is running on port 8000");
 });

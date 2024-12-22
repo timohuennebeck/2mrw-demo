@@ -2,7 +2,7 @@ import { EmailType } from "@/enums";
 import { EmailConfig } from "@/interfaces";
 
 export const emailConfig: EmailConfig = {
-    apiKey: process.env.NEXT_PUBLIC_LOOPS_API_KEY ?? "",
+    apiKey: process.env.LOOPS_API_KEY ?? "",
     baseUrl: "https://app.loops.so/api/v1",
     templates: {
         [EmailType.THANK_YOU_FOR_SIGNING_UP]: {
