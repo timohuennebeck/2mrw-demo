@@ -5,6 +5,11 @@ import {
     NextResponse as nextResponse,
 } from "next/server";
 import { handleRouting } from "./middleware/handlers/utils";
+import { isPublicRoute } from "./config";
+
+const _isPathExcludedFromRouting = (pathname: string) => {
+    return pathname.startsWith("/api");
+};
 
 export const middleware = async (request: nextRequest) => {
     let supabaseResponse = nextResponse.next({
@@ -41,12 +46,16 @@ export const middleware = async (request: nextRequest) => {
 
     const { data: { user } } = await supabaseClient.auth.getUser();
 
-    const redirectResponse = await handleRouting(
-        request,
-        user as SupabaseUser,
-    );
+    if (_isPathExcludedFromRouting(request.nextUrl.pathname)) {
+        return nextResponse.next({ request }); // exclude api routes from routing
+    }
 
-    if (redirectResponse) return redirectResponse;
+    if (isPublicRoute(request.nextUrl.pathname)) {
+        return nextResponse.next({ request }); // exclude public routes from routing
+    }
+
+    const response = await handleRouting(request, user as SupabaseUser);
+    if (response) return response;
 
     /**
      * IMPORTANT: When creating a new response, always:
