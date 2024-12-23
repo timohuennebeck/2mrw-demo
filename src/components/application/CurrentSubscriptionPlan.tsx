@@ -131,7 +131,7 @@ const CurrentSubscriptionPlan = ({
             const { checkoutUrl, error } = await createStripeCheckout({
                 stripePriceId: stripePriceId,
                 successUrl: `${window.location.origin}/plan-confirmation?mode=subscription`,
-                cancelUrl: `${window.location.origin}/plan-confirmation?mode=free-trial`,
+                cancelUrl: `${window.location.origin}/choose-pricing-plan`,
             });
 
             if (error) throw error;
