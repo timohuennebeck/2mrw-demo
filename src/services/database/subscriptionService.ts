@@ -52,9 +52,11 @@ export const updateUserSubscription = async ({
     try {
         const adminSupabase = await createSupabasePowerUserClient();
 
-        const { error } = await adminSupabase
+        // uses upsert in case the user_subscriptions table doesn't yet exist such as when isOneTimePaymentEnabled is enabled
+        const { data, error } = await adminSupabase
             .from("user_subscriptions")
-            .update({
+            .upsert({
+                user_id: userId,
                 stripe_price_id: stripePriceId,
                 stripe_subscription_id: stripeSubscriptionId,
                 status: status ?? SubscriptionStatus.ACTIVE,
@@ -64,8 +66,7 @@ export const updateUserSubscription = async ({
                 end_date: endDate,
                 updated_at: moment().toISOString(),
                 created_at: moment().toISOString(),
-            })
-            .eq("user_id", userId);
+            }, { onConflict: "user_id" });
 
         if (error) return { success: false, error };
 

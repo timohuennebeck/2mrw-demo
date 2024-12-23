@@ -101,7 +101,7 @@ export const POST = async (req: nextRequest) => {
 
                 const isRecurringPayment = session.mode === "subscription";
                 if (isRecurringPayment) {
-                    await _cancelExistingFreeTrialsInStripe(user.id);
+                    await _cancelExistingFreeTrialsInStripe(user.id); // cancels user's existing free trial when a user purchases a subscription
                 }
 
                 const checkoutResult = await handleCheckoutCompleted(

@@ -35,7 +35,7 @@ export const createStripeBillingPortal = async (stripeCustomerId: string) => {
     try {
         const { url } = await stripe.billingPortal.sessions.create({
             customer: stripeCustomerId,
-            return_url: `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard/billing`,
+            return_url: `${process.env.NEXT_PUBLIC_SITE_URL}/app/billing`,
         });
 
         return { portalUrl: url, error: null };

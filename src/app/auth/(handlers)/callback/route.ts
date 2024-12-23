@@ -4,7 +4,7 @@ import { isFreePlanEnabled, ROUTES_CONFIG } from "@/config";
 import { EmailType } from "@/enums";
 import { AuthMethod } from "@/enums/user";
 import { startFreePlan } from "@/services/database/subscriptionService";
-import { createUserTable, fetchUser } from "@/services/database/userService";
+import { checkUserEmailExists, createUserTable } from "@/services/database/userService";
 import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
@@ -44,9 +44,9 @@ export const GET = async (request: Request) => {
         if (error) return redirect(`${origin}${ROUTES_CONFIG.PUBLIC.STATUS_ERROR}?mode=google-auth`);
 
         const { user: authUser } = data.session;
-        const { data: existingUser } = await fetchUser(authUser.id);
+        const { emailExists } = await checkUserEmailExists(authUser.email!);
 
-        if (!existingUser) {
+        if (!emailExists) {
             const { error } = await createUserTable(authUser, AuthMethod.GOOGLE);
             if (error) return redirect(`${origin}${ROUTES_CONFIG.PUBLIC.STATUS_ERROR}?mode=create-user`);
 

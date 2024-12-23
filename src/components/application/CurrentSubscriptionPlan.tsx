@@ -7,8 +7,8 @@ import { FreeTrial } from "@/interfaces/models/freeTrial";
 import { getPricingPlan } from "@/services/domain/pricingService";
 import {
     createStripeBillingPortal,
-    getStripeCreditCardDetails,
     createStripeCheckout,
+    getStripeCreditCardDetails,
 } from "@/services/stripe/stripeService";
 import { toTitleCase } from "@/utils/formatting/textHelper";
 import moment from "moment";
@@ -20,7 +20,11 @@ const _getExpirationDateText = (subscription: PurchasedSubscription, freeTrial: 
     const isFreePlan = subscription?.stripe_price_id === "price_free";
     const isOnFreeTrial = subscription?.status === SubscriptionStatus.TRIALING;
     const isSubscriptionCancelled = subscription?.status === SubscriptionStatus.CANCELLED;
-    const subscriptionRenews = subscription?.status === SubscriptionStatus.ACTIVE;
+
+    const isRecurringPayment = subscription?.billing_period === BillingPeriod.MONTHLY;
+    const subscriptionRenews = !isSubscriptionCancelled && isRecurringPayment;
+
+    const isOneTimePayment = subscription?.billing_period === BillingPeriod.LIFETIME;
 
     if (isFreePlan) {
         return "Free Forever";
@@ -38,12 +42,17 @@ const _getExpirationDateText = (subscription: PurchasedSubscription, freeTrial: 
         return `Renews on ${moment(subscription?.end_date).format("DD-MM-YYYY")}`;
     }
 
+    if (isOneTimePayment) {
+        return "This is a OTP. It will never renew.";
+    }
+
     return "N/A";
 };
 
-const _getButtonText = (subscription: PurchasedSubscription, freeTrial: FreeTrial) => {
-    const isOnFreeTrial = freeTrial?.status === FreeTrialStatus.ACTIVE;
+const _getButtonText = (subscription: PurchasedSubscription) => {
+    const isOnFreeTrial = subscription?.status === SubscriptionStatus.TRIALING;
     const isFreePlan = subscription?.stripe_price_id === "price_free";
+    const isOneTimePayment = subscription?.billing_period === BillingPeriod.LIFETIME;
 
     if (isFreePlan) {
         return "Choose a Plan";
@@ -51,6 +60,10 @@ const _getButtonText = (subscription: PurchasedSubscription, freeTrial: FreeTria
 
     if (isOnFreeTrial) {
         return "Upgrade to Paid Plan";
+    }
+
+    if (isOneTimePayment) {
+        return "Manage Billing Details";
     }
 
     return "Change Subscription";
@@ -189,7 +202,7 @@ const CurrentSubscriptionPlan = ({
                             }
                         }}
                     >
-                        {_getButtonText(subscription, freeTrial)}
+                        {_getButtonText(subscription)}
                     </Button>
 
                     {/* Payment Info */}

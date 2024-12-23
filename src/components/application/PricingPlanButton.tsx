@@ -46,6 +46,10 @@ const _getButtonText = ({
         return "Unlock Plan - It's Free";
     }
 
+    if (!currentPlanStripePriceId) {
+        return "Unlock Plan";
+    }
+
     if (canStartFreeTrial && !isOnFreeTrial && plan.stripe_price_id !== "price_free") {
         return TextConstants.TEXT__START_FREE_TRIAL(billingConfig.freeTrial.duration);
     }

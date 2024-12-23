@@ -140,7 +140,7 @@ export const defaultPricingPlans: {
             billing_period: BillingPeriod.LIFETIME,
             billing_plan: BillingPlan.ONE_TIME,
             is_highlighted: false,
-            stripe_price_id: "price_lifetime_pro",
+            stripe_price_id: "price_1QZDDyK9e7MkYDNkC91qiQl4",
             subscription_tier: SubscriptionTier.ESSENTIALS,
         },
         {
@@ -151,7 +151,7 @@ export const defaultPricingPlans: {
             billing_period: BillingPeriod.LIFETIME,
             billing_plan: BillingPlan.ONE_TIME,
             is_highlighted: true,
-            stripe_price_id: "price_lifetime_ent",
+            stripe_price_id: "price_1QZDEKK9e7MkYDNkb6N3GHrf",
             subscription_tier: SubscriptionTier.FOUNDERS,
         },
     ],

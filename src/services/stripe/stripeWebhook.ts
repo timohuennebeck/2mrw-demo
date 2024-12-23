@@ -1,3 +1,4 @@
+import { isOneTimePaymentEnabled } from "@/config";
 import { FreeTrialStatus } from "@/enums";
 import { handleError } from "@/utils/errors/error";
 import moment from "moment";
@@ -59,8 +60,10 @@ export const handleCheckoutCompleted = async (
         return { success: false, error: "Pricing plan is missing!" };
     }
 
-    const { error: freeTrialError } = await _updateFreeTrialToConverted(userId);
-    if (freeTrialError) return { success: false, error: freeTrialError };
+    if (!isOneTimePaymentEnabled()) {
+        const result = await _updateFreeTrialToConverted(userId);
+        if (result.error) return { success: false, error: result.error };
+    }
 
     const { error: updateError } = await updateUserSubscription({
         userId,
