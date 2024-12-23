@@ -1,4 +1,4 @@
-import { billingConfig, ROUTES_CONFIG } from "@/config";
+import { billingConfig, isOneTimePaymentEnabled, ROUTES_CONFIG } from "@/config";
 import { TextConstants } from "@/constants/TextConstants";
 import { useFreeTrial } from "@/context/FreeTrialContext";
 import { useSubscription } from "@/context/SubscriptionContext";
@@ -46,12 +46,12 @@ const _getButtonText = ({
         return "Unlock Plan - It's Free";
     }
 
-    if (!currentPlanStripePriceId) {
-        return "Unlock Plan";
-    }
-
     if (canStartFreeTrial && !isOnFreeTrial && plan.stripe_price_id !== "price_free") {
         return TextConstants.TEXT__START_FREE_TRIAL(billingConfig.freeTrial.duration);
+    }
+
+    if (!currentPlanStripePriceId) {
+        return "Unlock Plan";
     }
 
     return "Change Plan";
@@ -116,18 +116,7 @@ const PricingPlanButton = ({
                 return;
             }
 
-            if (!currentPlanStripePriceId) {
-                if (plan.stripe_price_id === "price_free") {
-                    await startFreePlan(dbUser?.id ?? "");
-                    invalidateSubscription();
-                    return;
-                }
-
-                await _handleStripeCheckout(plan, router);
-                return;
-            }
-
-            if (canStartFreeTrial && !isOnFreeTrial) {
+            if (canStartFreeTrial && !isOnFreeTrial && !isOneTimePaymentEnabled()) {
                 const response = await startFreeTrial(dbUser?.id ?? "", plan.stripe_price_id);
                 if (response?.error) throw response.error;
 
@@ -142,6 +131,11 @@ const PricingPlanButton = ({
                 await Promise.all([invalidateFreeTrial(), invalidateSubscription()]);
 
                 router.push(`${ROUTES_CONFIG.PROTECTED.PLAN_CONFIRMATION}?mode=free-trial`);
+                return;
+            }
+
+            if (!currentPlanStripePriceId) {
+                await _handleStripeCheckout(plan, router);
                 return;
             }
 
