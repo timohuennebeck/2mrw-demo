@@ -12,19 +12,36 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { isOneTimePaymentEnabled } from "@/config";
 import { useSession } from "@/context/SessionContext";
+import { EmailType } from "@/enums/email";
 import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { createClient } from "@/services/integration/client";
+import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { cancelStripeSubscription } from "./actions";
 import { ProfileSection } from "./ProfileSection";
-import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
-import { EmailType } from "@/enums/email";
+
+const _cancelExistingSubscriptionInStripe = async (userId: string) => {
+    try {
+        const result = await cancelStripeSubscription(userId);
+        if (!result.success) {
+            console.error("Error cancelling subscription:", result.error);
+        }
+    } catch (error) {
+        console.error("Error cancelling subscription:", error);
+    }
+};
 
 const _deleteUserProfile = async (authUser: User) => {
     const adminSupabase = await createSupabasePowerUserClient();
+
+    if (!isOneTimePaymentEnabled()) {
+        await _cancelExistingSubscriptionInStripe(authUser?.id ?? "");
+    }
 
     const { error: dbError } = await adminSupabase.from("users").delete().eq("id", authUser?.id);
     if (dbError) return { error: "Error deleting user profile from database" };
