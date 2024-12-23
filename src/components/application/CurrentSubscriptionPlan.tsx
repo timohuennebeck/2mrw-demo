@@ -145,7 +145,7 @@ const CurrentSubscriptionPlan = ({
         }
     };
 
-    if (!subscription || !freeTrial || !stripeCustomerId || !currentPlanStripePriceId) {
+    if (!subscription || !stripeCustomerId || !currentPlanStripePriceId) {
         return (
             <div className="flex h-[224px] w-full items-center justify-center">
                 <Loader className="h-4 w-4 animate-spin" />

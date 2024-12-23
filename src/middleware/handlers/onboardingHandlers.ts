@@ -2,7 +2,14 @@ import { appConfig, ROUTES_CONFIG } from "@/config";
 import { fetchUser } from "@/services/database/userService";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import { redirectTo } from "./utils";
-import { NextRequest as nextRequest } from "next/server";
+import {
+    NextRequest as nextRequest,
+    NextResponse as nextResponse,
+} from "next/server";
+
+const _isPlanConfirmationPage = (pathname: string) => {
+    return pathname.startsWith("/plan-confirmation");
+};
 
 export const handleOnboarding = async (
     request: nextRequest,
@@ -17,6 +24,10 @@ export const handleOnboarding = async (
 
     const isOnboardingPage = request.nextUrl.pathname === onboardingRoute;
     const hasCompletedOnboarding = dbUser?.onboarding_completed;
+
+    if (_isPlanConfirmationPage(request.nextUrl.pathname)) {
+        return nextResponse.next({ request }); // exclude plan-confirmation routes from routing
+    }
 
     if (isOnboardingPage && (hasCompletedOnboarding || !isEnabled)) {
         return redirectTo(request, dashboardRoute); // redirect user away from onboarding if completed or disabled

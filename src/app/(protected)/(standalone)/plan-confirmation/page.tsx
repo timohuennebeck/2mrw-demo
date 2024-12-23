@@ -120,14 +120,14 @@ const PlanConfirmationPageContent = () => {
                         <div className="flex flex-col justify-center gap-4 sm:flex-row sm:gap-4">
                             <Button
                                 size="sm"
-                                variant="ghost"
                                 className="w-full sm:w-auto"
                                 onClick={() => router.push("/app")}
                             >
-                                Go to Home
+                                Continue
                             </Button>
                             <Button
                                 size="sm"
+                                variant="ghost"
                                 className="w-full sm:w-auto"
                                 onClick={() => router.push("/app/billing")}
                             >
