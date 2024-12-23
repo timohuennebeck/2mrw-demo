@@ -94,7 +94,7 @@ const CurrentSubscriptionPlan = ({
         const fetchPaymentMethod = async () => {
             try {
                 const response = await getStripeCreditCardDetails(stripeCustomerId);
-                if (response.error) throw response.error;
+                if (response.error) return;
 
                 setLastFourDigits(response.lastFourDigits ?? "");
                 setCardBrand(response.brand ?? "");
