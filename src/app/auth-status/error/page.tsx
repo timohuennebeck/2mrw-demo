@@ -2,7 +2,7 @@
 
 import { StatusPage } from "@/app/auth-status/components/StatusPage";
 import { ERROR_TYPES } from "@/config";
-import { useSearchParams } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
 const StatusErrorPage = () => (
@@ -16,6 +16,8 @@ const StatusErrorPageContent = () => {
 
     const errorType = searchParams.get("mode") ?? "unexpected-error";
     const config = ERROR_TYPES[errorType as keyof typeof ERROR_TYPES];
+
+    if (!config) return redirect("/auth-status/error?mode=unexpected-error");
 
     return <StatusPage type="error" config={config} />;
 };

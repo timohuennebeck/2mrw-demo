@@ -19,6 +19,8 @@ const StatusSuccessPageContent = () => {
 
     const config = SUCCESS_TYPES[successType as keyof typeof SUCCESS_TYPES];
 
+    if (!config) return redirect("/auth-status/error?mode=unexpected-error");
+
     return <StatusPage type="success" config={config} />;
 };
 

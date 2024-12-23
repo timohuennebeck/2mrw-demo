@@ -11,6 +11,7 @@ import {
     getStripeCreditCardDetails,
 } from "@/services/stripe/stripeService";
 import { toTitleCase } from "@/utils/formatting/textHelper";
+import { Loader } from "lucide-react";
 import moment from "moment";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -143,6 +144,14 @@ const CurrentSubscriptionPlan = ({
             setIsLoading(false);
         }
     };
+
+    if (!subscription || !freeTrial || !stripeCustomerId || !currentPlanStripePriceId) {
+        return (
+            <div className="flex h-[224px] w-full items-center justify-center">
+                <Loader className="h-4 w-4 animate-spin" />
+            </div>
+        );
+    }
 
     return (
         <Card className="w-full border-none bg-transparent shadow-none">
