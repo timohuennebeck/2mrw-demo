@@ -21,8 +21,12 @@ export const handleRouting = async (request: nextRequest, user: SupabaseUser) =>
         return nextResponse.next({ request }); // exclude api routes from routing
     }
 
-    if (!user && isProtectedRoute(pathname)) {
-        return redirectTo(request, ROUTES_CONFIG.PUBLIC.LANDING_PAGE); // force user to landing page if not authenticated
+    if (!user) {
+        if (isProtectedRoute(pathname)) {
+            return redirectTo(request, ROUTES_CONFIG.PUBLIC.LANDING_PAGE); // force user to landing page if not authenticated
+        }
+
+        return nextResponse.next({ request }); // allow access to all other routes
     }
 
     return handleLoggedInRedirect(request, user);

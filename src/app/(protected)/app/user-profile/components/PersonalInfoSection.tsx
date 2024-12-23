@@ -68,10 +68,10 @@ export const PersonalInfoSection = () => {
 
     useEffect(() => {
         if (dbUser) {
-            form.setValue("first_name", dbUser.first_name);
-            form.setValue("email", dbUser.email);
-            form.setValue("position", dbUser.position);
-            form.setValue("bio", dbUser.bio);
+            form.setValue("first_name", dbUser.first_name ?? "");
+            form.setValue("email", dbUser.email ?? "");
+            form.setValue("position", dbUser.position ?? "");
+            form.setValue("bio", dbUser.bio ?? "");
         }
     }, [dbUser, form]);
 

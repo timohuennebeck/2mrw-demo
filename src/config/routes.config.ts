@@ -42,7 +42,11 @@ export const ROUTES_CONFIG = {
 
 export const isPublicRoute = (pathname: string) => {
     const publicRoutes = Object.values(ROUTES_CONFIG.PUBLIC);
-    return publicRoutes.some((route) => pathname.startsWith(route));
+    return publicRoutes.some((route) => {
+        // exact match for root path, otherwise it would also return true for pages like /onboarding, etc. - which we don't want
+        if (route === "/") return pathname === "/";
+        return pathname.startsWith(route);
+    });
 };
 
 // for protected routes, we want to match ANY route that STARTS with the base path

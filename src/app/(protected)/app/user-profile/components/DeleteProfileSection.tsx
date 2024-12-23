@@ -22,31 +22,19 @@ import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { cancelStripeSubscription } from "./actions";
 import { ProfileSection } from "./ProfileSection";
+import { useUser } from "@/context/UserContext";
+import { deleteUserInStripe } from "./actions";
 
-const _cancelExistingSubscriptionInStripe = async (userId: string) => {
-    try {
-        const result = await cancelStripeSubscription(userId);
-        if (!result.success) {
-            console.error("Error cancelling subscription:", result.error);
-        }
-    } catch (error) {
-        console.error("Error cancelling subscription:", error);
-    }
-};
-
-const _deleteUserProfile = async (authUser: User) => {
+const _deleteUserProfile = async (userId: string, stripeCustomerId: string) => {
     const adminSupabase = await createSupabasePowerUserClient();
 
-    if (!isOneTimePaymentEnabled()) {
-        await _cancelExistingSubscriptionInStripe(authUser?.id ?? "");
-    }
+    await deleteUserInStripe(stripeCustomerId);
 
-    const { error: dbError } = await adminSupabase.from("users").delete().eq("id", authUser?.id);
+    const { error: dbError } = await adminSupabase.from("users").delete().eq("id", userId);
     if (dbError) return { error: "Error deleting user profile from database" };
 
-    const { error: authError } = await adminSupabase.auth.admin.deleteUser(authUser?.id ?? "");
+    const { error: authError } = await adminSupabase.auth.admin.deleteUser(userId);
     if (authError) return { error: "Error deleting user profile from auth" };
 
     return { success: true };
@@ -54,6 +42,7 @@ const _deleteUserProfile = async (authUser: User) => {
 
 export const DeleteProfileSection = () => {
     const { authUser } = useSession();
+    const { dbUser } = useUser();
 
     const router = useRouter();
 
@@ -69,7 +58,10 @@ export const DeleteProfileSection = () => {
                 variables: {},
             });
 
-            const result = await _deleteUserProfile(authUser as User);
+            const result = await _deleteUserProfile(
+                dbUser?.id ?? "",
+                dbUser?.stripe_customer_id ?? "",
+            );
 
             if (result.error) {
                 toast.error(result.error);

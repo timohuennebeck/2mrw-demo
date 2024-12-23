@@ -174,7 +174,9 @@ const CurrentSubscriptionPlan = ({
                             <span className="text-sm text-muted-foreground">
                                 {pricingPlan?.billing_period === BillingPeriod.LIFETIME
                                     ? ""
-                                    : `/${pricingPlan?.billing_period.slice(0, 5)}`}
+                                    : pricingPlan?.billing_period === BillingPeriod.MONTHLY
+                                      ? `/ MONTH`
+                                      : `/ YEAR`}
                             </span>
                         </div>
                         <p className="text-sm text-muted-foreground">

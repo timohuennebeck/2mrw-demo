@@ -1,13 +1,11 @@
 import { appConfig, ROUTES_CONFIG } from "@/config";
 import { fetchUser } from "@/services/database/userService";
 import { User as SupabaseUser } from "@supabase/supabase-js";
-import {
-    NextRequest as nextRequest,
-    NextResponse as nextResponse,
-} from "next/server";
-import { redirectTo } from "./utils";
 
-export const handleOnboarding = async (pathname: string, request: nextRequest, user: SupabaseUser) => {
+export const handleOnboarding = async (
+    pathname: string,
+    user: SupabaseUser,
+) => {
     const { data: dbUser } = await fetchUser(user.id);
 
     const { isEnabled, isRequired } = appConfig.onboarding;
@@ -19,12 +17,12 @@ export const handleOnboarding = async (pathname: string, request: nextRequest, u
     const hasCompletedOnboarding = dbUser?.onboarding_completed;
 
     if (isOnboardingPage && (hasCompletedOnboarding || !isEnabled)) {
-        return redirectTo(request, dashboardRoute); // redirect user away from onboarding if completed or disabled
+        return dashboardRoute; // redirect user away from onboarding if completed or disabled
     }
 
     if (!isOnboardingPage && !hasCompletedOnboarding && isRequired) {
-        return redirectTo(request, onboardingRoute); // force onboarding if required
+        return onboardingRoute; // force onboarding if required
     }
 
-    return nextResponse.next({ request });
+    return null;
 };
