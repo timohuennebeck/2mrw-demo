@@ -1,10 +1,10 @@
-import { createContext, useContext } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSession } from "./SessionContext";
+import { isFreeTrialEnabled } from "@/config";
 import { FreeTrialStatus } from "@/enums";
-import { billingConfig } from "@/config";
-import { fetchUserFreeTrial } from "@/services/database/freeTrialService";
 import { FreeTrial } from "@/interfaces/models/freeTrial";
+import { fetchUserFreeTrial } from "@/services/database/freeTrialService";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { createContext, useContext } from "react";
+import { useSession } from "./SessionContext";
 
 interface FreeTrialContextType {
     freeTrial: FreeTrial | null;
@@ -42,7 +42,7 @@ export const FreeTrialProvider = ({ children }: { children: React.ReactNode }) =
 
     const freeTrial = data?.data;
     const isOnFreeTrial = freeTrial?.status === FreeTrialStatus.ACTIVE;
-    const canStartFreeTrial = billingConfig.freeTrial.isEnabled && !freeTrial;
+    const canStartFreeTrial = isFreeTrialEnabled() && !freeTrial;
 
     return (
         <FreeTrialContext.Provider

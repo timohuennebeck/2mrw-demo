@@ -1,4 +1,4 @@
-import { billingConfig, ROUTES_CONFIG } from "@/config";
+import { isFreePlanEnabled, ROUTES_CONFIG } from "@/config";
 import { SubscriptionStatus, SubscriptionTier } from "@/enums";
 import { fetchUserSubscription } from "@/services/database/subscriptionService";
 import { User as SupabaseUser } from "@supabase/supabase-js";
@@ -10,8 +10,6 @@ import { redirectTo } from "./utils";
 
 export const handleBilling = async (pathname: string, request: nextRequest, user: SupabaseUser) => {
     const { data: subscription } = await fetchUserSubscription(user.id);
-
-    const { isFreePlanEnabled } = billingConfig;
 
     const dashboardRoute = ROUTES_CONFIG.PROTECTED.USER_DASHBOARD;
     const pricingPlanRoute = ROUTES_CONFIG.PROTECTED.CHOOSE_PRICING_PLAN;
@@ -29,11 +27,11 @@ export const handleBilling = async (pathname: string, request: nextRequest, user
     }
 
     if (!isPricingPlanPage && !hasSubscription && !isTrialing) {
-        if (isFreePlanEnabled && !hasFreePlan) {
+        if (isFreePlanEnabled() && !hasFreePlan) {
             return redirectTo(request, pricingPlanRoute); // force users to pricing page if free plan is enabled and user does not have a free plan
         }
 
-        if (!isFreePlanEnabled) {
+        if (!isFreePlanEnabled()) {
             return redirectTo(request, pricingPlanRoute); // force users to pricing page if they don't have a paid plan or trial
         }
     }

@@ -9,9 +9,14 @@ interface CompletePaymentConfig {
     };
 }
 
+/**
+ * always only use isFreePlanEnabled() and isOneTimePaymentEnabled() when checking the statuses
+ * simply accessing freeTrial.isEnabled could lead to issues if the BillingPlan.ONE_TIME is enabled
+ */
+
 export const billingConfig: CompletePaymentConfig = {
     isFreePlanEnabled: true, // this will be overridden when ONE_TIME is enabled
-    billingPlan: BillingPlan.RECURRING,
+    billingPlan: BillingPlan.ONE_TIME,
 
     // only used when RECURRING billing is enabled
     freeTrial: {

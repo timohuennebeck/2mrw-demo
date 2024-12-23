@@ -1,6 +1,6 @@
 "use server";
 
-import { billingConfig, ROUTES_CONFIG } from "@/config";
+import { isFreePlanEnabled, ROUTES_CONFIG } from "@/config";
 import { EmailType } from "@/enums";
 import { AuthMethod } from "@/enums/user";
 import { startFreePlan } from "@/services/database/subscriptionService";
@@ -50,7 +50,7 @@ export const GET = async (request: Request) => {
             const { error } = await createUserTable(authUser, AuthMethod.GOOGLE);
             if (error) return redirect(`${origin}${ROUTES_CONFIG.PUBLIC.STATUS_ERROR}?mode=create-user`);
 
-            if (billingConfig.isFreePlanEnabled) {
+            if (isFreePlanEnabled()) {
                 await startFreePlan(authUser.id);
             }
 
