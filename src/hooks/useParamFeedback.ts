@@ -9,7 +9,9 @@ interface FeedbackConfig {
     message: string;
     duration?: number;
     action?: StatusMessage["action"];
-    configKey?: keyof typeof appConfig.feedback.widgets;
+    configKey?:
+        | keyof typeof appConfig.feedback.widgets
+        | keyof typeof appConfig.feedback.forms;
 }
 
 /**
@@ -22,7 +24,6 @@ interface FeedbackConfig {
  * - automatically clears URL parameters without page reload
  * - specific features can be enabled / disabled via appConfig
  * - supports action buttons within messages (e.g. "Share Feedback")
- *
  */
 
 export const useParamFeedback = (
@@ -40,7 +41,8 @@ export const useParamFeedback = (
 
             if (config.configKey) {
                 // if the widget is disabled, don't show the message
-                const widgetConfig = appConfig.feedback.widgets[config.configKey];
+                const widgetConfig =
+                    appConfig.feedback.widgets[config.configKey];
                 if (!widgetConfig.isEnabled) return;
             }
 

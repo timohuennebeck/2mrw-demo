@@ -8,6 +8,10 @@ interface GeneralConfig {
         isEnabled: boolean;
         direction: "left" | "right";
     };
+    customerSupport: {
+        isEnabled: boolean;
+        websiteId: string;
+    };
     onboarding: {
         isEnabled: boolean;
         isRequired: boolean;
@@ -16,6 +20,8 @@ interface GeneralConfig {
         widgets: {
             reportBug: WidgetConfig;
             shareFeedback: WidgetConfig;
+        };
+        forms: {
             accountDeletion: WidgetConfig;
         };
     };
@@ -29,6 +35,11 @@ export const appConfig: GeneralConfig = {
     testimonialSidePanel: {
         isEnabled: true,
         direction: "right",
+    },
+
+    customerSupport: {
+        isEnabled: true,
+        websiteId: "YOUR_CRISP_WEBSITE_ID",
     },
 
     /**
@@ -50,6 +61,8 @@ export const appConfig: GeneralConfig = {
                 isEnabled: true, // controls the FeedbackWidget.tsx in bottom right
                 formUrl: "https://tally.so/r/general-feedback",
             },
+        },
+        forms: {
             accountDeletion: {
                 isEnabled: true, // controls whether to show feedback prompt after account deletion
                 formUrl: "https://tally.so/r/exit-survey",

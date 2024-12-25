@@ -43,7 +43,7 @@ const SignUpPageContent = () => {
         action: {
             label: "Share Feedback",
             onClick: () =>
-                window.open(appConfig.feedback.widgets.accountDeletion.formUrl, "_blank"),
+                window.open(appConfig.feedback.forms.accountDeletion.formUrl, "_blank"),
         },
         configKey: "accountDeletion",
     });
