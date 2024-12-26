@@ -1,33 +1,54 @@
-CREATE TYPE SubscriptionStatusEnums AS ENUM ('ACTIVE', 'TRIALING', 'CANCELLED', 'EXPIRED');
-
-CREATE TYPE SubscriptionTierEnums AS ENUM ('FREE', 'ESSENTIALS', 'FOUNDERS');
-
-CREATE TYPE BillingPlanEnums AS ENUM ('RECURRING', 'ONE_TIME');
-
-CREATE TYPE BillingPeriodEnums AS ENUM ('MONTHLY', 'YEARLY', 'LIFETIME');
-
 CREATE TABLE
     users (
         id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid (),
-        stripe_customer_id TEXT,
         email TEXT NOT NULL,
         first_name TEXT,
+        stripe_customer_id TEXT,
         profile_image_url TEXT,
-        created_at TIMESTAMPTZ,
-        updated_at TIMESTAMPTZ
+        position TEXT,
+        bio TEXT,
+        auth_method TEXT NOT NULL CHECK (
+            auth_method IN ('password', 'magicLink', 'google')
+        ),
+        onboarding_completed BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
 
 CREATE TABLE
     user_subscriptions (
-        id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid (),
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
         user_id UUID NOT NULL UNIQUE REFERENCES auth.users (id) ON DELETE CASCADE,
-        stripe_price_id TEXT REFERENCES public.stripe_prices (stripe_price_id) ON DELETE CASCADE NOT NULL,
         stripe_subscription_id TEXT,
-        status SubscriptionStatusEnums NOT NULL,
-        subscription_tier SubscriptionTierEnums NOT NULL,
-        billing_plan BillingPlanEnums NOT NULL,
-        billing_period BillingPeriodEnums NOT NULL,
+        stripe_price_id TEXT,
+        status TEXT NOT NULL CHECK (
+            status IN ('ACTIVE', 'TRIALING', 'CANCELLED', 'EXPIRED')
+        ),
+        subscription_tier TEXT NOT NULL CHECK (
+            subscription_tier IN ('FREE', 'ESSENTIALS', 'FOUNDERS')
+        ),
+        billing_period TEXT CHECK (
+            billing_period IN ('MONTHLY', 'YEARLY', 'LIFETIME')
+        ),
+        billing_plan TEXT CHECK (billing_plan IN ('RECURRING', 'ONE_TIME')),
         end_date TIMESTAMPTZ,
-        created_at TIMESTAMPTZ,
-        updated_at TIMESTAMPTZ
+        created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+
+CREATE TABLE
+    free_trials (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
+        user_id UUID NOT NULL UNIQUE REFERENCES auth.users (id) ON DELETE CASCADE,
+        stripe_subscription_id TEXT NOT NULL,
+        subscription_tier TEXT NOT NULL CHECK (
+            subscription_tier IN ('FREE', 'ESSENTIALS', 'FOUNDERS')
+        ),
+        status TEXT NOT NULL CHECK (
+            status IN ('ACTIVE', 'CONVERTED', 'CANCELLED', 'EXPIRED')
+        ),
+        start_date TIMESTAMPTZ NOT NULL,
+        end_date TIMESTAMPTZ NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
