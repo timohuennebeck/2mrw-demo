@@ -38,7 +38,7 @@ export const appConfig: GeneralConfig = {
     },
 
     customerSupport: {
-        isEnabled: true,
+        isEnabled: false,
         websiteId: "YOUR_CRISP_WEBSITE_ID",
     },
 

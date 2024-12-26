@@ -81,12 +81,12 @@ export const seoConfig: SEOConfig = {
                 priority: SitemapPriority.HIGHEST, // how important the page is relative to other pages on the site
             },
             {
-                path: ROUTES_CONFIG.SIGN_IN,
+                path: ROUTES_CONFIG.AUTH.SIGN_IN,
                 changefreq: ChangeFrequency.YEARLY,
                 priority: SitemapPriority.LOW,
             },
             {
-                path: ROUTES_CONFIG.SIGN_UP,
+                path: ROUTES_CONFIG.AUTH.SIGN_UP,
                 changefreq: ChangeFrequency.YEARLY,
                 priority: SitemapPriority.LOW,
             },
@@ -101,12 +101,12 @@ export const seoConfig: SEOConfig = {
             ...Object.values(ROUTES_CONFIG.PROTECTED),
 
             // auth handlers
-            ROUTES_CONFIG.CONFIRM,
-            ROUTES_CONFIG.CALLBACK,
+            ROUTES_CONFIG.AUTH.CONFIRM,
+            ROUTES_CONFIG.AUTH.CALLBACK,
 
             // utility auth routes
-            ROUTES_CONFIG.FORGOT_PASSWORD,
-            ROUTES_CONFIG.UPDATE_PASSWORD,
+            ROUTES_CONFIG.AUTH.FORGOT_PASSWORD,
+            ROUTES_CONFIG.AUTH.UPDATE_PASSWORD,
 
             // status pages
             ROUTES_CONFIG.PUBLIC.STATUS_ERROR,
