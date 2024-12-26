@@ -39,10 +39,14 @@ export const useParamFeedback = (
             newUrl.searchParams.delete("feedback");
             window.history.replaceState({}, "", newUrl);
 
-            if (config.configKey) {
+            if (config.configKey === "accountDeletion") {
                 // if the widget is disabled, don't show the message
-                const widgetConfig =
-                    appConfig.feedback.widgets[config.configKey];
+                const widgetConfig = appConfig.feedback
+                    .forms[config.configKey as keyof typeof appConfig.feedback.forms];
+                if (!widgetConfig.isEnabled) return;
+            } else {
+                const widgetConfig = appConfig.feedback
+                    .widgets[config.configKey as keyof typeof appConfig.feedback.widgets];
                 if (!widgetConfig.isEnabled) return;
             }
 
