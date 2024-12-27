@@ -158,7 +158,7 @@ app.post("/manage-subscriptions", async (_req: Request, res: Response) => {
 
         const { email } = await _fetchUserEmail(subscription.user_id);
 
-        await _sendLoopsEmail(email, "[replace_with_transactionalId]", {
+        await _sendLoopsEmail(email, "YOUR_TRANSACTIONAL_ID", {
           upgradeUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan`,
         }); // sends user has been downgraded to free plan email
 

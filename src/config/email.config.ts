@@ -6,30 +6,30 @@ export const emailConfig: EmailConfig = {
     baseUrl: "https://app.loops.so/api/v1",
     templates: {
         [EmailType.WELCOME_TO_SAAS_NAME]: {
-            transactionalId: "[replace_with_transactionalId]",
+            transactionalId: "YOUR_TRANSACTIONAL_ID",
             enabled: false,
             variables: [],
         },
 
         [EmailType.FREE_TRIAL_STARTED]: {
-            transactionalId: "[replace_with_transactionalId]",
+            transactionalId: "YOUR_TRANSACTIONAL_ID",
             enabled: false,
             variables: ["freeTrialEndDate"],
         },
         [EmailType.FREE_TRIAL_EXPIRES_SOON]: {
-            transactionalId: "[replace_with_transactionalId]",
+            transactionalId: "YOUR_TRANSACTIONAL_ID",
             enabled: false,
             variables: ["upgradeUrl"],
         },
 
         [EmailType.CANCELLED_SUBSCRIPTION]: {
-            transactionalId: "[replace_with_transactionalId]",
+            transactionalId: "YOUR_TRANSACTIONAL_ID",
             enabled: false,
             variables: ["endDate, feedbackFormUrl"],
         },
 
         [EmailType.DOWNGRADED_TO_FREE_PLAN]: {
-            transactionalId: "[replace_with_transactionalId]",
+            transactionalId: "YOUR_TRANSACTIONAL_ID",
             enabled: false,
             variables: ["upgradeUrl"],
         },
