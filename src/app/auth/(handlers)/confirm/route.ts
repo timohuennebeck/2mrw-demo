@@ -10,7 +10,7 @@ import { stripe } from "@/services/stripe/client";
 import { getStripeCustomerId } from "@/services/stripe/stripeCustomer";
 import { type EmailOtpType } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
-import { type NextRequest, NextResponse as nextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 const _updateUserEmail = async (userId: string, email: string) => {
     const supabase = await createClient();
@@ -103,11 +103,11 @@ export const GET = async (request: NextRequest) => {
                     );
                 }
 
-                return nextResponse.next();
+                return NextResponse.next();
             }
 
             case "magiclink": {
-                return nextResponse.next(); // no additional action needed and just redirect the user after verifying the magic link
+                return NextResponse.next(); // no additional action needed and just redirect the user after verifying the magic link
             }
 
             case "email_change": {
@@ -119,7 +119,7 @@ export const GET = async (request: NextRequest) => {
             }
 
             default:
-                return nextResponse.json({ error: "Invalid type" }, {
+                return NextResponse.json({ error: "Invalid type" }, {
                     status: 400,
                 });
         }

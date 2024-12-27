@@ -1,17 +1,14 @@
 import { isProtectedRoute, ROUTES_CONFIG } from "@/config";
 import { User as SupabaseUser } from "@supabase/supabase-js";
-import {
-    NextRequest as nextRequest,
-    NextResponse as nextResponse,
-} from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { handleLoggedInRedirect } from "./authHandlers";
 
-export const redirectTo = (request: nextRequest, path: string) => {
-    return nextResponse.redirect(new URL(path, request.url));
+export const redirectTo = (request: NextRequest, path: string) => {
+    return NextResponse.redirect(new URL(path, request.url));
 };
 
 export const handleRouting = async (
-    request: nextRequest,
+    request: NextRequest,
     user: SupabaseUser,
 ) => {
     if (!user && isProtectedRoute(request.nextUrl.pathname)) {

@@ -1,9 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { User as SupabaseUser } from "@supabase/supabase-js";
-import {
-    NextRequest as nextRequest,
-    NextResponse as nextResponse,
-} from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { handleRouting } from "./middleware/handlers/utils";
 import { isPublicRoute } from "./config";
 
@@ -11,8 +8,8 @@ const _isPathExcludedFromRouting = (pathname: string) => {
     return pathname.startsWith("/api");
 };
 
-export const middleware = async (request: nextRequest) => {
-    let supabaseResponse = nextResponse.next({
+export const middleware = async (request: NextRequest) => {
+    let supabaseResponse = NextResponse.next({
         request,
     });
 
@@ -28,7 +25,7 @@ export const middleware = async (request: nextRequest) => {
                     cookiesToSet.forEach(({ name, value }) =>
                         request.cookies.set(name, value)
                     );
-                    supabaseResponse = nextResponse.next({
+                    supabaseResponse = NextResponse.next({
                         request,
                     });
                     cookiesToSet.forEach(({ name, value, options }) =>
@@ -47,11 +44,11 @@ export const middleware = async (request: nextRequest) => {
     const { data: { user } } = await supabaseClient.auth.getUser();
 
     if (_isPathExcludedFromRouting(request.nextUrl.pathname)) {
-        return nextResponse.next({ request }); // exclude api routes from routing
+        return NextResponse.next({ request }); // exclude api routes from routing
     }
 
     if (isPublicRoute(request.nextUrl.pathname)) {
-        return nextResponse.next({ request }); // exclude public routes from routing
+        return NextResponse.next({ request }); // exclude public routes from routing
     }
 
     const response = await handleRouting(request, user as SupabaseUser);
@@ -59,7 +56,7 @@ export const middleware = async (request: nextRequest) => {
 
     /**
      * IMPORTANT: When creating a new response, always:
-     * 1. Include the request: nextResponse.next({ request })
+     * 1. Include the request: NextResponse.next({ request })
      * 2. Copy all cookies: newResponse.cookies.setAll(supabaseResponse.cookies.getAll())
      * 3. Return the supabaseResponse object with unchanged cookies to maintain session sync between browser and server
      */

@@ -2,17 +2,14 @@ import { appConfig, ROUTES_CONFIG } from "@/config";
 import { fetchUser } from "@/services/database/userService";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import { redirectTo } from "./utils";
-import {
-    NextRequest as nextRequest,
-    NextResponse as nextResponse,
-} from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const _isPlanConfirmationPage = (pathname: string) => {
     return pathname.startsWith("/plan-confirmation");
 };
 
 export const handleOnboarding = async (
-    request: nextRequest,
+    request: NextRequest,
     user: SupabaseUser,
 ) => {
     const { data: dbUser } = await fetchUser(user.id);
@@ -26,7 +23,7 @@ export const handleOnboarding = async (
     const hasCompletedOnboarding = dbUser?.onboarding_completed;
 
     if (_isPlanConfirmationPage(request.nextUrl.pathname)) {
-        return nextResponse.next({ request }); // exclude plan-confirmation routes from routing
+        return NextResponse.next({ request }); // exclude plan-confirmation routes from routing
     }
 
     if (isOnboardingPage && (hasCompletedOnboarding || !isEnabled)) {
