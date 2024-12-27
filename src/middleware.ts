@@ -1,11 +1,12 @@
 import { createServerClient } from "@supabase/ssr";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
-import { handleRouting } from "./middleware/handlers/utils";
-import { isPublicRoute } from "./config";
+import { isProtectedRoute, isPublicRoute, ROUTES_CONFIG } from "./config";
+import { handleLoggedInRedirect } from "./middleware/handlers/authHandlers";
+import { redirectTo } from "./middleware/handlers/utils";
 
 const _isPathExcludedFromRouting = (pathname: string) => {
-    return pathname.startsWith("/api");
+    return pathname.startsWith("/api") || isPublicRoute(pathname);
 };
 
 export const middleware = async (request: NextRequest) => {
@@ -44,14 +45,17 @@ export const middleware = async (request: NextRequest) => {
     const { data: { user } } = await supabaseClient.auth.getUser();
 
     if (_isPathExcludedFromRouting(request.nextUrl.pathname)) {
-        return NextResponse.next({ request }); // exclude api routes from routing
+        return NextResponse.next({ request }); // exclude api and public routes from routing
     }
 
-    if (isPublicRoute(request.nextUrl.pathname)) {
-        return NextResponse.next({ request }); // exclude public routes from routing
+    if (!user && isProtectedRoute(request.nextUrl.pathname)) {
+        return redirectTo(request, ROUTES_CONFIG.PUBLIC.LANDING_PAGE); // force user to landing page if not authenticated
     }
 
-    const response = await handleRouting(request, user as SupabaseUser);
+    const response = await handleLoggedInRedirect(
+        request,
+        user as SupabaseUser,
+    );
     if (response) return response;
 
     /**
