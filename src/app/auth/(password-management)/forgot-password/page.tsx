@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/images/logo.svg"
+import logo from "@/assets/images/logo.svg";
 
 const forgotPasswordFormSchema = z.object({
     email: z.string().email({
@@ -93,12 +93,7 @@ const ForgotPasswordPage = () => {
         <div className="flex h-full items-center justify-center">
             <div className="mx-auto flex flex-col gap-4">
                 <div className="mb-4 flex items-center gap-2">
-                    <Image
-                        src={logo}
-                        alt="logo"
-                        width={40}
-                        height={40}
-                    />
+                    <Image src={logo} alt="logo" width={40} height={40} />
                 </div>
 
                 <div className="grid gap-2">
@@ -134,7 +129,7 @@ const ForgotPasswordPage = () => {
                             )}
                         />
 
-                        <Button type="submit" disabled={isLoading}>
+                        <Button type="submit" disabled={isLoading} isLoading={isLoading}>
                             {TextConstants.TEXT__SEND_RESET_LINK}
                         </Button>
                     </form>
