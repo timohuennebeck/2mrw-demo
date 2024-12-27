@@ -27,17 +27,13 @@ const _getButtonText = ({
     isOnFreeTrial: boolean;
     canStartFreeTrial: boolean;
 }) => {
-    if (!isUserLoggedIn && plan.stripe_price_id === "price_free") {
-        return "Sign Up - It's Free";
-    }
-
     if (!isUserLoggedIn) {
+        if (plan.stripe_price_id === "price_free") return "Sign Up - It's Free";
+
         return "Unlock Plan";
     }
 
-    const isCurrentPlan = plan.stripe_price_id === currentPlanStripePriceId;
-
-    if (isCurrentPlan) {
+    if (plan.stripe_price_id === currentPlanStripePriceId) {
         return "Current Plan";
     }
 
@@ -49,7 +45,7 @@ const _getButtonText = ({
         return TextConstants.TEXT__START_FREE_TRIAL(billingConfig.freeTrial.duration);
     }
 
-    if (!currentPlanStripePriceId) {
+    if (!currentPlanStripePriceId || currentPlanStripePriceId === "price_free") {
         return "Unlock Plan";
     }
 
@@ -57,9 +53,7 @@ const _getButtonText = ({
 };
 
 const _getButtonColors = (currentPlanStripePriceId: string, plan: DefaultPricingPlan) => {
-    const isCurrentPlan = plan.stripe_price_id === currentPlanStripePriceId;
-
-    if (isCurrentPlan) {
+    if (plan.stripe_price_id === currentPlanStripePriceId) {
         return "default";
     }
 
@@ -133,7 +127,7 @@ const PricingPlanButton = ({
                 return;
             }
 
-            if (!currentPlanStripePriceId) {
+            if (!currentPlanStripePriceId || plan.stripe_price_id === "price_free") {
                 await _handleStripeCheckout(plan, router);
                 return;
             }
