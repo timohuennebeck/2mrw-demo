@@ -12,7 +12,6 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { useSession } from "@/context/SessionContext";
 import { useUser } from "@/context/UserContext";
 import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { createClient } from "@/services/integration/client";
@@ -37,7 +36,6 @@ const _deleteUserProfile = async (userId: string, stripeCustomerId: string) => {
 };
 
 export const DeleteProfileSection = () => {
-    const { authUser } = useSession();
     const { dbUser } = useUser();
 
     const router = useRouter();
