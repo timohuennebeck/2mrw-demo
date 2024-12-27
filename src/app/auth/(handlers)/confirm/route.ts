@@ -1,11 +1,11 @@
 "use server";
 
-import { billingConfig } from "@/config";
+import { isFreePlanEnabled } from "@/config";
 import { EmailType } from "@/enums";
 import { startFreePlan } from "@/services/database/subscriptionService";
 import { createUserTable, fetchUser } from "@/services/database/userService";
-import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
 import { createClient } from "@/services/integration/server";
+import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
 import { stripe } from "@/services/stripe/client";
 import { getStripeCustomerId } from "@/services/stripe/stripeCustomer";
 import { type EmailOtpType } from "@supabase/supabase-js";
@@ -88,7 +88,7 @@ export const GET = async (request: NextRequest) => {
                         return redirect("/auth-status/error?mode=create-user");
                     }
 
-                    if (billingConfig.isFreePlanEnabled) {
+                    if (isFreePlanEnabled()) {
                         await startFreePlan(authUser.id);
                     }
 
