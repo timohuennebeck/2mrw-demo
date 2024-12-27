@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/images/logo.svg"
 
 const forgotPasswordFormSchema = z.object({
     email: z.string().email({
@@ -93,7 +94,7 @@ const ForgotPasswordPage = () => {
             <div className="mx-auto flex flex-col gap-4">
                 <div className="mb-4 flex items-center gap-2">
                     <Image
-                        src="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
+                        src={logo}
                         alt="logo"
                         width={40}
                         height={40}

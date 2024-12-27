@@ -22,6 +22,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import logo from "@/assets/images/logo.svg"
 
 const updatePasswordFormSchema = z
     .object({
@@ -88,7 +89,7 @@ const UpdatePasswordPageContent = () => {
             <div className="flex w-full flex-col gap-4">
                 <div className="mb-4 flex items-center gap-2">
                     <Image
-                        src="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
+                        src={logo}
                         alt="logo"
                         width={40}
                         height={40}

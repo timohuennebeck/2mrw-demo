@@ -3,6 +3,7 @@ import { Manrope } from "next/font/google";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
+import logo from "@/assets/images/logo.svg";
 
 const manrope = Manrope({
     subsets: ["latin"],
@@ -56,7 +57,7 @@ const OnboardingFlow = ({
                     {/* Logo - centered */}
                     <div className="mb-8 flex items-center justify-center">
                         <Image
-                            src="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
+                            src={logo}
                             alt="logo"
                             width={40}
                             height={40}

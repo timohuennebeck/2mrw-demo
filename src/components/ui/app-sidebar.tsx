@@ -27,6 +27,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "./dropdown-menu";
+import logo from "@/assets/images/logo.svg";
 
 const items = [
     {
@@ -82,7 +83,7 @@ const AppSidebar = () => {
                 onClick={() => router.push("/app")}
             >
                 <Image
-                    src="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
+                    src={logo}
                     alt="Logo"
                     width={24}
                     height={24}

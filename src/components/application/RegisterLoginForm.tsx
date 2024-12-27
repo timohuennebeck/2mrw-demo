@@ -23,6 +23,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import FormStatusMessage from "./FormStatusMessage";
 import PasswordStrengthChecker from "./PasswordStrengthChecker";
+import logo from "@/assets/images/logo.svg";
 
 const _getButtontext = (mode: string, authMethod: string) => {
     if (authMethod === "magic-link" && mode === "signin") {
@@ -144,7 +145,7 @@ const RegisterLoginForm = ({
             <div className="flex w-full flex-col gap-4">
                 <div className="mb-4 flex items-center gap-2">
                     <Image
-                        src="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
+                        src={logo}
                         alt="logo"
                         width={40}
                         height={40}

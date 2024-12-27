@@ -29,6 +29,7 @@ import { handleSmoothScroll } from "@/utils/navigation";
 import { Shield } from "lucide-react";
 import { Manrope } from "next/font/google";
 import { useRouter } from "next/navigation";
+import logo from "@/assets/images/logo.svg"
 
 const manrope = Manrope({
     subsets: ["latin"],
@@ -84,7 +85,7 @@ const LandingPage = () => {
                         { href: "#faq", label: "FAQ" },
                         { href: "https://docs.2mrw.dev", label: "Documentation", isExternal: true },
                     ]}
-                    logoSrc="https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg"
+                    logoSrc={logo}
                     loginOnClick={() => router.push("/auth/sign-in")}
                     userIsLoggedIn={!!authUser}
                 />
@@ -420,7 +421,7 @@ const LandingPage = () => {
                         <Footer
                             links={footerLinks}
                             logo={{
-                                src: "https://framerusercontent.com/images/XmxX3Fws7IH91jzhxBjAhC9CrPM.svg",
+                                src: logo,
                                 alt: "Logo",
                             }}
                             description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique optio molestiae exercitationem! Porro doloribus molestias rerum error inventore."
