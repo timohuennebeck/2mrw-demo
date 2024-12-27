@@ -76,33 +76,48 @@ export const POST = async (req: NextRequest) => {
         const signature = req.headers.get("stripe-signature");
 
         if (!signature) {
+            console.error("Webhook Error: Missing stripe signature");
             return NextResponse.json({
                 error: "There was no signature provided",
             }, { status: 400 });
         }
 
-        const event = await _verifyStripeWebhook(body, signature);
+        let event;
+        try {
+            event = await _verifyStripeWebhook(body, signature);
+        } catch (err) {
+            console.error("Webhook Error: Signature verification failed", err);
+            return NextResponse.json({
+                error: `Webhook signature verification failed: ${(err as Error).message}`,
+            }, { status: 400 });
+        }
+
         const subscription = event.data.object as Stripe.Subscription;
+        console.log("Webhook Event Type:", event.type);
 
         switch (event.type) {
             case StripeWebhookEvents.CHECKOUT_SESSION_COMPLETED: {
-                const customerId = subscription.customer as string;
-                const user = await _getUserFromStripeCustomerId(customerId);
+                try {
+                    const customerId = subscription.customer as string;
+                    const user = await _getUserFromStripeCustomerId(customerId);
 
-                const sessionId = event.data.object.id;
-                const session = await _retrieveCheckoutSession(sessionId);
+                    const sessionId = event.data.object.id;
+                    const session = await _retrieveCheckoutSession(sessionId);
 
-                const isRecurringPayment = session.mode === "subscription";
-                if (isRecurringPayment) {
-                    await _cancelExistingFreeTrialsInStripe(user.id); // cancels user's existing free trial when a user purchases a subscription
+                    const isRecurringPayment = session.mode === "subscription";
+                    if (isRecurringPayment) {
+                        await _cancelExistingFreeTrialsInStripe(user.id); // cancels user's existing free trial when a user purchases a subscription
+                    }
+
+                    const checkoutResult = await handleCheckoutCompleted(
+                        session,
+                        user.id,
+                    );
+                    if (checkoutResult.error) throw checkoutResult.error;
+                } catch (err) {
+                    console.error("Webhook Error: Checkout session handling failed", err);
+                    throw new Error(`Checkout session handling failed: ${(err as Error).message}`);
                 }
-
-                const checkoutResult = await handleCheckoutCompleted(
-                    session,
-                    user.id,
-                );
-                if (checkoutResult.error) throw checkoutResult.error;
-
                 break;
             }
             case StripeWebhookEvents.CUSTOMER_SUBSCRIPTION_UPDATED: {
@@ -163,10 +178,15 @@ export const POST = async (req: NextRequest) => {
         }
 
         return NextResponse.json({ received: true }, { status: 200 });
-    } catch (error) {
-        console.error("Error processing stripe webhook:", error);
+    } catch (error: unknown) {
+        console.error("Webhook Error:", {
+            message: (error as Error).message,
+            stack: (error as Error).stack,
+            type: (error as Error).constructor.name
+        });
+        
         return NextResponse.json(
-            { error: "Processing stripe webhook failed" },
+            { error: `Webhook failed: ${(error as Error).message}` },
             { status: 500 },
         );
     }
