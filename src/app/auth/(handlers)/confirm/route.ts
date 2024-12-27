@@ -93,7 +93,7 @@ export const GET = async (request: NextRequest) => {
                     }
 
                     sendLoopsTransactionalEmail({
-                        type: EmailType.THANK_YOU_FOR_SIGNING_UP,
+                        type: EmailType.WELCOME_TO_COMPANY_NAME,
                         email: authUser.email!,
                         variables: {},
                     });

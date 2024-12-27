@@ -110,14 +110,6 @@ export const POST = async (req: nextRequest) => {
                 );
                 if (checkoutResult.error) throw checkoutResult.error;
 
-                sendLoopsTransactionalEmail({
-                    type: EmailType.PURCHASED_SUBSCRIPTION,
-                    email: user.email,
-                    variables: {
-                        purchasedPackage: _getPurchasedPackage(session).name,
-                    },
-                });
-
                 break;
             }
             case StripeWebhookEvents.CUSTOMER_SUBSCRIPTION_UPDATED: {
@@ -139,6 +131,8 @@ export const POST = async (req: nextRequest) => {
                         email: user.email,
                         variables: {
                             endDate: subscriptionEndDate,
+                            feedbackFormUrl:
+                                `${process.env.NEXT_PUBLIC_APP_URL}/app/feedback`,
                         },
                     });
 

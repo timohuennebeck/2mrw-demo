@@ -12,19 +12,15 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { isOneTimePaymentEnabled } from "@/config";
 import { useSession } from "@/context/SessionContext";
-import { EmailType } from "@/enums/email";
+import { useUser } from "@/context/UserContext";
 import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { createClient } from "@/services/integration/client";
-import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
-import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { ProfileSection } from "./ProfileSection";
-import { useUser } from "@/context/UserContext";
 import { deleteUserInStripe } from "./actions";
+import { ProfileSection } from "./ProfileSection";
 
 const _deleteUserProfile = async (userId: string, stripeCustomerId: string) => {
     const adminSupabase = await createSupabasePowerUserClient();
@@ -52,12 +48,6 @@ export const DeleteProfileSection = () => {
         setIsDeleting(true);
 
         try {
-            sendLoopsTransactionalEmail({
-                type: EmailType.DELETED_PROFILE,
-                email: authUser?.email ?? "",
-                variables: {},
-            });
-
             const result = await _deleteUserProfile(
                 dbUser?.id ?? "",
                 dbUser?.stripe_customer_id ?? "",

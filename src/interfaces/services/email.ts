@@ -14,15 +14,7 @@ export interface EmailConfig {
     };
 }
 
-interface ThankYouForSigningUpEmail {}
-
-interface PurchasedSubscriptionEmail {
-    purchasedPackage: string;
-}
-
-interface CancelledSubscriptionEmail {
-    endDate: string;
-}
+interface WelcomeToEmail {}
 
 interface FreeTrialStartedEmail {
     freeTrialEndDate: string;
@@ -32,19 +24,19 @@ interface FreeTrialExpiresSoonEmail {
     upgradeUrl: string;
 }
 
-interface FreeTrialExpiredEmail {
-    name: string;
+interface CancelledSubscriptionEmail {
+    endDate: string;
+    feedbackFormUrl: string;
+}
+
+interface DowngradedToFreePlanEmail {
     upgradeUrl: string;
 }
 
-interface DeletedProfileEmail {}
-
 export type EmailVariablesMap = {
-    [EmailType.THANK_YOU_FOR_SIGNING_UP]: ThankYouForSigningUpEmail;
-    [EmailType.PURCHASED_SUBSCRIPTION]: PurchasedSubscriptionEmail;
-    [EmailType.CANCELLED_SUBSCRIPTION]: CancelledSubscriptionEmail;
+    [EmailType.WELCOME_TO_COMPANY_NAME]: WelcomeToEmail;
     [EmailType.FREE_TRIAL_STARTED]: FreeTrialStartedEmail;
     [EmailType.FREE_TRIAL_EXPIRES_SOON]: FreeTrialExpiresSoonEmail;
-    [EmailType.FREE_TRIAL_EXPIRED]: FreeTrialExpiredEmail;
-    [EmailType.DELETED_PROFILE]: DeletedProfileEmail;
+    [EmailType.CANCELLED_SUBSCRIPTION]: CancelledSubscriptionEmail;
+    [EmailType.DOWNGRADED_TO_FREE_PLAN]: DowngradedToFreePlanEmail;
 };
