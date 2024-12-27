@@ -34,7 +34,7 @@ interface DowngradedToFreePlanEmail {
 }
 
 export type EmailVariablesMap = {
-    [EmailType.WELCOME_TO_COMPANY_NAME]: WelcomeToEmail;
+    [EmailType.WELCOME_TO_SAAS_NAME]: WelcomeToEmail;
     [EmailType.FREE_TRIAL_STARTED]: FreeTrialStartedEmail;
     [EmailType.FREE_TRIAL_EXPIRES_SOON]: FreeTrialExpiresSoonEmail;
     [EmailType.CANCELLED_SUBSCRIPTION]: CancelledSubscriptionEmail;

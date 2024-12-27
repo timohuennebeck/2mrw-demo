@@ -55,7 +55,7 @@ export const GET = async (request: Request) => {
             }
 
             sendLoopsTransactionalEmail({
-                type: EmailType.WELCOME_TO_COMPANY_NAME,
+                type: EmailType.WELCOME_TO_SAAS_NAME,
                 email: authUser.email!,
                 variables: {},
             });
