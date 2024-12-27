@@ -1,12 +1,11 @@
 import { billingConfig, isOneTimePaymentEnabled, ROUTES_CONFIG } from "@/config";
+import { DefaultPricingPlan } from "@/config/pricing.config";
 import { TextConstants } from "@/constants/TextConstants";
 import { useFreeTrial } from "@/context/FreeTrialContext";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { useUser } from "@/context/UserContext";
-import { DefaultPricingPlan } from "@/data/marketing/pricing-data";
 import { EmailType } from "@/enums";
 import { startFreeTrial } from "@/services/database/freeTrialService";
-import { startFreePlan } from "@/services/database/subscriptionService";
 import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
 import { createStripeBillingPortal, createStripeCheckout } from "@/services/stripe/stripeService";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";

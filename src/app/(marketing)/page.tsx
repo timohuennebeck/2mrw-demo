@@ -21,7 +21,6 @@ import { faq } from "@/data/marketing/faq-data";
 import { authFeatures, databaseFeatures, emailFeatures } from "@/data/marketing/features-data";
 import { featuresList } from "@/data/marketing/features-list-data";
 import { footerLinks } from "@/data/marketing/footer-data";
-import { getFilteredPricingPlans } from "@/data/marketing/pricing-data";
 import { exampleStats } from "@/data/marketing/stats-data";
 import { testimonials } from "@/data/marketing/testimonials-data";
 import { cn } from "@/lib/utils";
@@ -30,6 +29,7 @@ import { Shield } from "lucide-react";
 import { Manrope } from "next/font/google";
 import { useRouter } from "next/navigation";
 import logo from "@/assets/images/logo.svg"
+import { getFilteredPricingPlans } from "@/services/domain/pricingService";
 
 const manrope = Manrope({
     subsets: ["latin"],

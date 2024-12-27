@@ -1,37 +1,4 @@
-import { isFreePlanEnabled } from "@/config";
 import { BillingPeriod, BillingPlan, SubscriptionTier } from "@/enums";
-
-export const getFilteredPricingPlans = () => {
-    const showFreePlan = isFreePlanEnabled();
-
-    const filterPlans = (plans: DefaultPricingPlan[]) => {
-        return showFreePlan
-            ? plans
-            : plans.filter((plan) => plan.subscription_tier !== SubscriptionTier.FREE);
-    };
-
-    const filterFeatures = (sections: PricingFeatureSection[]) => {
-        if (showFreePlan) return sections;
-
-        // omit the 'free' property when free plan is disabled
-        return sections.map((section) => ({
-            ...section,
-            items: section.items.map((item) => ({
-                name: item.name,
-                pro: item.pro,
-                enterprise: item.enterprise,
-            })),
-        }));
-    };
-
-    return {
-        monthly: filterPlans(defaultPricingPlans.monthly),
-        annual: filterPlans(defaultPricingPlans.annual),
-        oneTime: defaultPricingPlans.oneTime,
-        pricingCardFeatures: filterFeatures(pricingCardFeatures),
-        defaultPricingFeatures: filterFeatures(defaultPricingFeatures),
-    };
-};
 
 export interface DefaultPricingPlan {
     name: string;

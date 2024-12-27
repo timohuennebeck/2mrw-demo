@@ -1,5 +1,5 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { DefaultPricingPlan, PricingFeatureSection } from "@/data/marketing/pricing-data";
+import { DefaultPricingPlan, PricingFeatureSection } from "@/config/pricing.config";
 import { getBillingPeriodText, getPlanPriceDescription } from "@/utils/pricing/pricingHelper";
 import { Check, X } from "lucide-react";
 import PricingPlanButton from "../application/PricingPlanButton";

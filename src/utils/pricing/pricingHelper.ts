@@ -1,4 +1,4 @@
-import { DefaultPricingPlan } from "@/data/marketing/pricing-data";
+import { DefaultPricingPlan } from "@/config/pricing.config";
 import { BillingPeriod } from "@/enums";
 
 export const getBillingPeriodText = (billingPeriod: BillingPeriod) => {

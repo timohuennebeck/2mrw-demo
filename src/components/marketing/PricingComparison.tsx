@@ -3,7 +3,7 @@ import {
     DefaultPricingPlan,
     PricingFeatureItem,
     PricingFeatureSection,
-} from "@/data/marketing/pricing-data";
+} from "@/config/pricing.config";
 import { getBillingPeriodText, getPlanPriceDescription } from "@/utils/pricing/pricingHelper";
 import { Check, X } from "lucide-react";
 import React from "react";

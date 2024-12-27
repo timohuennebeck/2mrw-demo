@@ -1,4 +1,12 @@
-import { defaultPricingPlans } from "@/data/marketing/pricing-data";
+import { defaultPricingFeatures } from "@/config/pricing.config";
+import { pricingCardFeatures } from "@/config/pricing.config";
+import { defaultPricingPlans } from "@/config/pricing.config";
+import { isFreePlanEnabled } from "@/config";
+import {
+    DefaultPricingPlan,
+    PricingFeatureSection,
+} from "@/config/pricing.config";
+import { SubscriptionTier } from "@/enums";
 
 const allPlans = [
     ...defaultPricingPlans.monthly,
@@ -8,4 +16,38 @@ const allPlans = [
 
 export const getPricingPlan = (stripePriceId: string) => {
     return allPlans.find((p) => p.stripe_price_id === stripePriceId);
+};
+
+export const getFilteredPricingPlans = () => {
+    const showFreePlan = isFreePlanEnabled();
+
+    const filterPlans = (plans: DefaultPricingPlan[]) => {
+        return showFreePlan
+            ? plans
+            : plans.filter((plan) =>
+                plan.subscription_tier !== SubscriptionTier.FREE
+            );
+    };
+
+    const filterFeatures = (sections: PricingFeatureSection[]) => {
+        if (showFreePlan) return sections;
+
+        // omit the 'free' property when free plan is disabled
+        return sections.map((section) => ({
+            ...section,
+            items: section.items.map((item) => ({
+                name: item.name,
+                pro: item.pro,
+                enterprise: item.enterprise,
+            })),
+        }));
+    };
+
+    return {
+        monthly: filterPlans(defaultPricingPlans.monthly),
+        annual: filterPlans(defaultPricingPlans.annual),
+        oneTime: defaultPricingPlans.oneTime,
+        pricingCardFeatures: filterFeatures(pricingCardFeatures),
+        defaultPricingFeatures: filterFeatures(defaultPricingFeatures),
+    };
 };
