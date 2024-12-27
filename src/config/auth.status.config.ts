@@ -95,7 +95,7 @@ export const SUCCESS_TYPES: { [K in SuccessType]: StatusConfig } = {
         description: `Your Google account has been connected. You can now continue using ${TextConstants.TEXT__COMPANY_TITLE}.`,
         primaryButton: {
             href: "/app",
-            label: "Continue to Dashboard",
+            label: "Continue",
         },
     },
     "password-updated": {
@@ -105,7 +105,7 @@ export const SUCCESS_TYPES: { [K in SuccessType]: StatusConfig } = {
         description: `Your password has been updated. You can now continue using ${TextConstants.TEXT__COMPANY_TITLE}.`,
         primaryButton: {
             href: "/app",
-            label: "Continue to Dashboard",
+            label: "Continue",
         },
     },
     "email-updated": {
