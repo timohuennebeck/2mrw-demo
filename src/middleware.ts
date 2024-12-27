@@ -52,11 +52,13 @@ export const middleware = async (request: NextRequest) => {
         return redirectTo(request, ROUTES_CONFIG.PUBLIC.LANDING_PAGE); // force user to landing page if not authenticated
     }
 
-    const response = await handleLoggedInRedirect(
-        request,
-        user as SupabaseUser,
-    );
-    if (response) return response;
+    if (user) {
+        const response = await handleLoggedInRedirect(
+            request,
+            user as SupabaseUser,
+        );
+        if (response) return response;
+    }
 
     /**
      * IMPORTANT: When creating a new response, always:
