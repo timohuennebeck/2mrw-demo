@@ -91,7 +91,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <SidebarProvider defaultOpen={false}>
+        <SidebarProvider defaultOpen>
             <div className="flex h-screen w-full overflow-hidden">
                 <AppSidebar />
 
