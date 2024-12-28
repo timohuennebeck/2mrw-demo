@@ -26,10 +26,8 @@ const _deleteUserProfile = async (userId: string, stripeCustomerId: string) => {
 
     await deleteUserInStripe(stripeCustomerId);
 
-    const { error: dbError } = await adminSupabase.from("users").delete().eq("id", userId);
-    if (dbError) return { error: "Error deleting user profile from database" };
-
-    await adminSupabase.auth.admin.deleteUser(userId);
+    const { error: authError } = await adminSupabase.auth.admin.deleteUser(userId);
+    if (authError) return { error: "Error deleting auth user" };
 
     return { success: true };
 };
