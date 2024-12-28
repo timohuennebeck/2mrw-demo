@@ -14,7 +14,6 @@ interface GeneralConfig {
     };
     onboarding: {
         isEnabled: boolean;
-        isRequired: boolean;
     };
     feedback: {
         widgets: {
@@ -48,7 +47,6 @@ export const appConfig: GeneralConfig = {
      */
     onboarding: {
         isEnabled: true,
-        isRequired: true,
     },
 
     feedback: {
