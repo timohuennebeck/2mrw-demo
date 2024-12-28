@@ -113,7 +113,7 @@ const LandingPage = () => {
                                 text: "Watch Demo",
                                 onClick: (e) => handleSmoothScroll(e, "#product-demo"),
                             }}
-                            demoVideoUrl="https://uc166f6f69fcb82bfebd1fa0152f.dl.dropboxusercontent.com/cd/0/inline/ChGKgbuU00dqKupSXiqBbTN92HS1Tp4VdBXL0E7V5kxf_7t4_81-UlOF18cXOAApU7w_dxF9heVclCiLsNPwKP0UFw6y4UjSKYmgl9p3PB_1gFHfn7h39qlXEQBIAq-SlanPRr0ATLw_7oelbDB4v06n/file#"
+                            demoVideoUrl="https://www.dropbox.com/scl/fi/crcmzz58px8rro2i5axv2/main-demo.mp4?rlkey=duxmf3k5wyss2wtt2trq9q7qo&st=z8p7y1tv&raw=1"
                         />
                     </SectionContainer>
 
@@ -167,9 +167,9 @@ const LandingPage = () => {
                                 },
                             ]}
                             videoPaths={[
-                                "https://framerusercontent.com/assets/impzjczRdzEPQh2ezMYGWzGe3Y.mp4",
-                                "https://uc166f6f69fcb82bfebd1fa0152f.dl.dropboxusercontent.com/cd/0/inline/ChGKgbuU00dqKupSXiqBbTN92HS1Tp4VdBXL0E7V5kxf_7t4_81-UlOF18cXOAApU7w_dxF9heVclCiLsNPwKP0UFw6y4UjSKYmgl9p3PB_1gFHfn7h39qlXEQBIAq-SlanPRr0ATLw_7oelbDB4v06n/file#",
-                                "https://framerusercontent.com/assets/impzjczRdzEPQh2ezMYGWzGe3Y.mp4",
+                                "https://www.dropbox.com/scl/fi/crcmzz58px8rro2i5axv2/main-demo.mp4?rlkey=duxmf3k5wyss2wtt2trq9q7qo&st=z8p7y1tv&raw=1",
+                                "https://www.dropbox.com/scl/fi/gnskt6it1i6xtqh3b75yw/user-authentication.mp4?rlkey=dpfc9wrj035ulagzg59noifyb&st=wh5j07zu&raw=1",
+                                "https://www.dropbox.com/scl/fi/crcmzz58px8rro2i5axv2/main-demo.mp4?rlkey=duxmf3k5wyss2wtt2trq9q7qo&st=z8p7y1tv&raw=1",
                             ]}
                         />
                     </SectionContainer>
@@ -208,7 +208,7 @@ const LandingPage = () => {
                                     },
                                 ],
                                 videoUrl:
-                                    "https://uce42edb8d56678c41cb44762ca0.dl.dropboxusercontent.com/cd/0/inline/ChGIL7s4av6RBWRXTl4jQ3F8tDW9k26fr1xt7U9rUqNPSESEVXUEdvy-SwcD5DXJRhkPNU_iMfwRu7EDWcCmt74OTKN08WnwjP_rZ2wUPg6nNTpv8YSDLk6wLRpTsfxTv4Z9Ov7bx3wY5VfbXnufbEM_/file#",
+                                    "https://www.dropbox.com/scl/fi/crcmzz58px8rro2i5axv2/main-demo.mp4?rlkey=duxmf3k5wyss2wtt2trq9q7qo&st=z8p7y1tv&raw=1",
                             }}
                             after={{
                                 bulletPoints: [
@@ -226,7 +226,7 @@ const LandingPage = () => {
                                     },
                                 ],
                                 videoUrl:
-                                    "https://framerusercontent.com/assets/impzjczRdzEPQh2ezMYGWzGe3Y.mp4",
+                                    "https://www.dropbox.com/scl/fi/gnskt6it1i6xtqh3b75yw/user-authentication.mp4?rlkey=dpfc9wrj035ulagzg59noifyb&st=wh5j07zu&raw=1",
                             }}
                         />
                     </SectionContainer>
@@ -271,7 +271,7 @@ const LandingPage = () => {
                                 bgColor: "bg-purple-50",
                                 textColor: "text-purple-600",
                             }}
-                            videoUrl="https://uc078816ea745b3bf95fa0bac20a.dl.dropboxusercontent.com/cd/0/inline/ChE0ib2_IOUiBnIYzVt2ETsop7smfs4LU4kyTWRn8kMjEp8ji_AFuIe9hscMo4rHL2od1s427VI-kjs2I7lx1mLoWUWWrdqMRp0ezF8Y3yl5XDSEUro0grak8MyDdKRss1pYbBBKFkvpqNES1skMB55R/file#"
+                            videoUrl="https://www.dropbox.com/scl/fi/crcmzz58px8rro2i5axv2/main-demo.mp4?rlkey=duxmf3k5wyss2wtt2trq9q7qo&st=z8p7y1tv&raw=1"
                         />
                         <Features
                             videoOnLeft
@@ -283,7 +283,7 @@ const LandingPage = () => {
                                 bgColor: "bg-blue-50",
                                 textColor: "text-blue-600",
                             }}
-                            videoUrl="https://uce42edb8d56678c41cb44762ca0.dl.dropboxusercontent.com/cd/0/inline/ChGIL7s4av6RBWRXTl4jQ3F8tDW9k26fr1xt7U9rUqNPSESEVXUEdvy-SwcD5DXJRhkPNU_iMfwRu7EDWcCmt74OTKN08WnwjP_rZ2wUPg6nNTpv8YSDLk6wLRpTsfxTv4Z9Ov7bx3wY5VfbXnufbEM_/file#"
+                            videoUrl="https://www.dropbox.com/scl/fi/gnskt6it1i6xtqh3b75yw/user-authentication.mp4?rlkey=dpfc9wrj035ulagzg59noifyb&st=wh5j07zu&raw=1"
                         />
 
                         <Features
@@ -295,7 +295,7 @@ const LandingPage = () => {
                                 bgColor: "bg-orange-50",
                                 textColor: "text-orange-600",
                             }}
-                            videoUrl="https://uc078816ea745b3bf95fa0bac20a.dl.dropboxusercontent.com/cd/0/inline/ChE0ib2_IOUiBnIYzVt2ETsop7smfs4LU4kyTWRn8kMjEp8ji_AFuIe9hscMo4rHL2od1s427VI-kjs2I7lx1mLoWUWWrdqMRp0ezF8Y3yl5XDSEUro0grak8MyDdKRss1pYbBBKFkvpqNES1skMB55R/file#"
+                            videoUrl="https://www.dropbox.com/scl/fi/crcmzz58px8rro2i5axv2/main-demo.mp4?rlkey=duxmf3k5wyss2wtt2trq9q7qo&st=z8p7y1tv&raw=1"
                         />
                     </SectionContainer>
 
@@ -322,7 +322,7 @@ const LandingPage = () => {
                                 </>
                             }
                             subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-                            videoUrl="https://framerusercontent.com/assets/impzjczRdzEPQh2ezMYGWzGe3Y.mp4"
+                            videoUrl="https://www.dropbox.com/scl/fi/crcmzz58px8rro2i5axv2/main-demo.mp4?rlkey=duxmf3k5wyss2wtt2trq9q7qo&st=z8p7y1tv&raw=1"
                         />
                     </SectionContainer>
 
