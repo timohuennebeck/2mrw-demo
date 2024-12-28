@@ -1,9 +1,9 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { DefaultPricingPlan, PricingFeatureSection } from "@/config/pricing.config";
+import { DefaultPricingPlan, PricingFeatureSection } from "@/config";
+import { toTitleCase } from "@/utils/formatting/textHelper";
 import { getBillingPeriodText, getPlanPriceDescription } from "@/utils/pricing/pricingHelper";
 import { Check, X } from "lucide-react";
 import PricingPlanButton from "../application/PricingPlanButton";
-import { toTitleCase } from "@/utils/formatting/textHelper";
 
 const PricingCard = ({
     plan,
@@ -26,7 +26,7 @@ const PricingCard = ({
     return (
         <Card className="shadow-none">
             <CardHeader>
-                <CardTitle className="mb-4 font-medium text-lg">{toTitleCase(plan.name)}</CardTitle>
+                <CardTitle className="mb-4 text-lg font-medium">{toTitleCase(plan.name)}</CardTitle>
                 <div>
                     <span className="text-4xl font-medium">{plan.price}</span>
                     <span className="text-sm text-gray-500">
