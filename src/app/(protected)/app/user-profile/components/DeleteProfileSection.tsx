@@ -29,6 +29,9 @@ const _deleteUserProfile = async (userId: string, stripeCustomerId: string) => {
     const { error: authError } = await adminSupabase.auth.admin.deleteUser(userId);
     if (authError) return { error: "Error deleting auth user" };
 
+    const { error: userError } = await adminSupabase.from("users").delete().eq("id", userId);
+    if (userError) return { error: "Error deleting user record" };
+
     return { success: true };
 };
 
