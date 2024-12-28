@@ -37,7 +37,7 @@ export const defaultPricingPlans: {
             billing_period: BillingPeriod.MONTHLY,
             billing_plan: BillingPlan.RECURRING,
             is_highlighted: false,
-            stripe_price_id: "price_free",
+            stripe_price_id: "price_free", // Important! Do not change this!!
             subscription_tier: SubscriptionTier.FREE,
         },
         {
@@ -72,7 +72,7 @@ export const defaultPricingPlans: {
             billing_period: BillingPeriod.YEARLY,
             billing_plan: BillingPlan.RECURRING,
             is_highlighted: false,
-            stripe_price_id: "price_free",
+            stripe_price_id: "price_free", // Important! Do not change this!!
             subscription_tier: SubscriptionTier.FREE,
         },
         {

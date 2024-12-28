@@ -12,7 +12,7 @@ import { Manrope } from "next/font/google";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { Suspense, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { appConfig } from "@/config/app.config";
+import { appConfig } from "@/config";
 
 const manrope = Manrope({
     subsets: ["latin"],

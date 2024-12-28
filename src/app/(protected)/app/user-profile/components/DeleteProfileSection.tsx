@@ -12,7 +12,6 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { useSession } from "@/context/SessionContext";
 import { useUser } from "@/context/UserContext";
 import { createSupabasePowerUserClient } from "@/services/integration/admin";
 import { createClient } from "@/services/integration/client";
@@ -30,14 +29,12 @@ const _deleteUserProfile = async (userId: string, stripeCustomerId: string) => {
     const { error: dbError } = await adminSupabase.from("users").delete().eq("id", userId);
     if (dbError) return { error: "Error deleting user profile from database" };
 
-    const { error: authError } = await adminSupabase.auth.admin.deleteUser(userId);
-    if (authError) return { error: "Error deleting user profile from auth" };
+    await adminSupabase.auth.admin.deleteUser(userId);
 
     return { success: true };
 };
 
 export const DeleteProfileSection = () => {
-    const { authUser } = useSession();
     const { dbUser } = useUser();
 
     const router = useRouter();
