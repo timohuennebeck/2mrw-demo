@@ -1,6 +1,6 @@
 CREATE TABLE
     users (
-        id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid (),
+        id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid () REFERENCES auth.users (id) ON DELETE CASCADE,
         email TEXT NOT NULL,
         first_name TEXT,
         stripe_customer_id TEXT,
