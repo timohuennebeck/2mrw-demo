@@ -1,11 +1,11 @@
-import { defaultPricingFeatures } from "@/config/pricing.config";
-import { pricingCardFeatures } from "@/config/pricing.config";
-import { defaultPricingPlans } from "@/config/pricing.config";
-import { isFreePlanEnabled } from "@/config";
 import {
+    defaultPricingFeatures,
     DefaultPricingPlan,
+    defaultPricingPlans,
+    isFreePlanEnabled,
+    pricingCardFeatures,
     PricingFeatureSection,
-} from "@/config/pricing.config";
+} from "@/config";
 import { SubscriptionTier } from "@/enums";
 
 const allPlans = [

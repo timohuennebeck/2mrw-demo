@@ -1,9 +1,4 @@
-import { isFreePlanEnabled, isOneTimePaymentEnabled } from "@/config";
-import {
-    DefaultPricingPlan,
-    PricingFeatureItem,
-    PricingFeatureSection,
-} from "@/config/pricing.config";
+import { DefaultPricingPlan, isFreePlanEnabled, isOneTimePaymentEnabled, PricingFeatureItem, PricingFeatureSection } from "@/config";
 import { getBillingPeriodText, getPlanPriceDescription } from "@/utils/pricing/pricingHelper";
 import { Check, X } from "lucide-react";
 import React from "react";

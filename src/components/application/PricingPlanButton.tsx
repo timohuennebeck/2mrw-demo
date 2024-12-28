@@ -1,5 +1,5 @@
 import { billingConfig, isOneTimePaymentEnabled, ROUTES_CONFIG } from "@/config";
-import { DefaultPricingPlan } from "@/config/pricing.config";
+import { DefaultPricingPlan } from "@/config";
 import { TextConstants } from "@/constants/TextConstants";
 import { useFreeTrial } from "@/context/FreeTrialContext";
 import { useSubscription } from "@/context/SubscriptionContext";
