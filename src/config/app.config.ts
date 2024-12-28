@@ -43,7 +43,6 @@ export const appConfig: GeneralConfig = {
 
     /**
      * - isEnabled: Controls whether the onboarding flow is active. When enabled, users are directed to "/onboarding"; when disabled, they go to "/app"
-     * - isRequired: If true, users must complete onboarding before accessing any protected routes in the application
      */
     onboarding: {
         isEnabled: true,
