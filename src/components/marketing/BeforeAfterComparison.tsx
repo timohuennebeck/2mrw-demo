@@ -5,7 +5,7 @@ interface BeforeAfterComparisonItem {
     bulletPoints: {
         text: string;
     }[];
-    imagePath: string;
+    videoUrl: string;
 }
 
 interface BeforeAfterComparisonParams {
@@ -43,13 +43,13 @@ const BeforeAfterComparison = ({ heading, before, after }: BeforeAfterComparison
                     type="before"
                     title={before.title}
                     bulletPoints={before.bulletPoints}
-                    imagePath={before.imagePath}
+                    videoUrl={before.videoUrl}
                 />
                 <ComparisonItem
                     type="after"
                     title={after.title}
                     bulletPoints={after.bulletPoints}
-                    imagePath={after.imagePath}
+                    videoUrl={after.videoUrl}
                 />
             </div>
         </div>

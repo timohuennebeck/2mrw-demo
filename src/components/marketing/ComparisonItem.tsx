@@ -6,10 +6,10 @@ interface ComparisonItemParams {
     bulletPoints: {
         text: string;
     }[];
-    imagePath: string;
+    videoUrl: string;
 }
 
-const ComparisonItem = ({ type, title, bulletPoints, imagePath }: ComparisonItemParams) => {
+const ComparisonItem = ({ type, title, bulletPoints, videoUrl }: ComparisonItemParams) => {
     const styles = {
         before: {
             bg: "bg-red-100",
@@ -49,7 +49,7 @@ const ComparisonItem = ({ type, title, bulletPoints, imagePath }: ComparisonItem
             </div>
             <div className="relative aspect-video w-full overflow-hidden rounded-lg border shadow-lg">
                 <video
-                    src={imagePath}
+                    src={videoUrl}
                     width={1200}
                     height={675}
                     className="rounded-lg shadow-2xl"
