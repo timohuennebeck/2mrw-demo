@@ -12,6 +12,7 @@ import { Manrope } from "next/font/google";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { Suspense, useEffect } from "react";
 import dynamic from "next/dynamic";
+import { appConfig } from "@/config/app.config";
 
 const manrope = Manrope({
     subsets: ["latin"],
@@ -121,7 +122,11 @@ const PlanConfirmationPageContent = () => {
                             <Button
                                 size="sm"
                                 className="w-full sm:w-auto"
-                                onClick={() => router.push("/app")}
+                                onClick={() =>
+                                    appConfig.onboarding.isEnabled
+                                        ? router.push("/onboarding")
+                                        : router.push("/app")
+                                }
                             >
                                 Continue
                             </Button>
