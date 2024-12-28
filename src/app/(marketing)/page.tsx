@@ -28,7 +28,7 @@ import { handleSmoothScroll } from "@/utils/navigation";
 import { Shield } from "lucide-react";
 import { Manrope } from "next/font/google";
 import { useRouter } from "next/navigation";
-import logo from "@/assets/images/logo.svg"
+import logo from "@/assets/images/logo.svg";
 import { getFilteredPricingPlans } from "@/services/domain/pricingService";
 
 const manrope = Manrope({
@@ -113,7 +113,7 @@ const LandingPage = () => {
                                 text: "Watch Demo",
                                 onClick: (e) => handleSmoothScroll(e, "#product-demo"),
                             }}
-                            demoVideoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
+                            demoVideoUrl="https://uc166f6f69fcb82bfebd1fa0152f.dl.dropboxusercontent.com/cd/0/inline/ChGKgbuU00dqKupSXiqBbTN92HS1Tp4VdBXL0E7V5kxf_7t4_81-UlOF18cXOAApU7w_dxF9heVclCiLsNPwKP0UFw6y4UjSKYmgl9p3PB_1gFHfn7h39qlXEQBIAq-SlanPRr0ATLw_7oelbDB4v06n/file#"
                         />
                     </SectionContainer>
 
@@ -167,9 +167,9 @@ const LandingPage = () => {
                                 },
                             ]}
                             videoPaths={[
-                                "https://framerusercontent.com/assets/NmYVFvasmFfIhZND3qZbQkMNE.mp4",
                                 "https://framerusercontent.com/assets/impzjczRdzEPQh2ezMYGWzGe3Y.mp4",
-                                "https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4",
+                                "https://uc166f6f69fcb82bfebd1fa0152f.dl.dropboxusercontent.com/cd/0/inline/ChGKgbuU00dqKupSXiqBbTN92HS1Tp4VdBXL0E7V5kxf_7t4_81-UlOF18cXOAApU7w_dxF9heVclCiLsNPwKP0UFw6y4UjSKYmgl9p3PB_1gFHfn7h39qlXEQBIAq-SlanPRr0ATLw_7oelbDB4v06n/file#",
+                                "https://framerusercontent.com/assets/impzjczRdzEPQh2ezMYGWzGe3Y.mp4",
                             ]}
                         />
                     </SectionContainer>
@@ -207,8 +207,8 @@ const LandingPage = () => {
                                         text: "Quis autem vel eum iure reprehenderit qui in ea voluptate velit.",
                                     },
                                 ],
-                                imagePath:
-                                    "https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4",
+                                videoUrl:
+                                    "https://uce42edb8d56678c41cb44762ca0.dl.dropboxusercontent.com/cd/0/inline/ChGIL7s4av6RBWRXTl4jQ3F8tDW9k26fr1xt7U9rUqNPSESEVXUEdvy-SwcD5DXJRhkPNU_iMfwRu7EDWcCmt74OTKN08WnwjP_rZ2wUPg6nNTpv8YSDLk6wLRpTsfxTv4Z9Ov7bx3wY5VfbXnufbEM_/file#",
                             }}
                             after={{
                                 bulletPoints: [
@@ -225,8 +225,8 @@ const LandingPage = () => {
                                         text: "Itaque earum rerum hic tenetur a sapiente delectus ut aut.",
                                     },
                                 ],
-                                imagePath:
-                                    "https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4",
+                                videoUrl:
+                                    "https://framerusercontent.com/assets/impzjczRdzEPQh2ezMYGWzGe3Y.mp4",
                             }}
                         />
                     </SectionContainer>
@@ -271,7 +271,7 @@ const LandingPage = () => {
                                 bgColor: "bg-purple-50",
                                 textColor: "text-purple-600",
                             }}
-                            videoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
+                            videoUrl="https://uc078816ea745b3bf95fa0bac20a.dl.dropboxusercontent.com/cd/0/inline/ChE0ib2_IOUiBnIYzVt2ETsop7smfs4LU4kyTWRn8kMjEp8ji_AFuIe9hscMo4rHL2od1s427VI-kjs2I7lx1mLoWUWWrdqMRp0ezF8Y3yl5XDSEUro0grak8MyDdKRss1pYbBBKFkvpqNES1skMB55R/file#"
                         />
                         <Features
                             videoOnLeft
@@ -283,7 +283,7 @@ const LandingPage = () => {
                                 bgColor: "bg-blue-50",
                                 textColor: "text-blue-600",
                             }}
-                            videoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
+                            videoUrl="https://uce42edb8d56678c41cb44762ca0.dl.dropboxusercontent.com/cd/0/inline/ChGIL7s4av6RBWRXTl4jQ3F8tDW9k26fr1xt7U9rUqNPSESEVXUEdvy-SwcD5DXJRhkPNU_iMfwRu7EDWcCmt74OTKN08WnwjP_rZ2wUPg6nNTpv8YSDLk6wLRpTsfxTv4Z9Ov7bx3wY5VfbXnufbEM_/file#"
                         />
 
                         <Features
@@ -295,7 +295,7 @@ const LandingPage = () => {
                                 bgColor: "bg-orange-50",
                                 textColor: "text-orange-600",
                             }}
-                            videoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
+                            videoUrl="https://uc078816ea745b3bf95fa0bac20a.dl.dropboxusercontent.com/cd/0/inline/ChE0ib2_IOUiBnIYzVt2ETsop7smfs4LU4kyTWRn8kMjEp8ji_AFuIe9hscMo4rHL2od1s427VI-kjs2I7lx1mLoWUWWrdqMRp0ezF8Y3yl5XDSEUro0grak8MyDdKRss1pYbBBKFkvpqNES1skMB55R/file#"
                         />
                     </SectionContainer>
 
@@ -322,7 +322,7 @@ const LandingPage = () => {
                                 </>
                             }
                             subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-                            videoUrl="https://framerusercontent.com/assets/hABzjRMXjNw1XA1si9W04jXifs.mp4"
+                            videoUrl="https://framerusercontent.com/assets/impzjczRdzEPQh2ezMYGWzGe3Y.mp4"
                         />
                     </SectionContainer>
 
