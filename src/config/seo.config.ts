@@ -44,12 +44,11 @@ export enum ChangeFrequency {
 
 export const seoConfig: SEOConfig = {
     default: {
-        title: "Lightweight SaaS Boilerplate • 2mrw",
-        template: "%s • 2mrw", // used for page-specific titles: "Sign In • 2mrw"
-        description:
-            "Launch your SaaS faster with our Next.js and Supabase boilerplate.",
-        keywords: ["SaaS boilerplate", "Next.js template", "Supabase starter"],
-        url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://2mrw.dev",
+        title: "YOUR_TITLE • YOUR_COMPANY_NAME",
+        template: "%s • YOUR_COMPANY_NAME", // used for page-specific titles: "Sign In • 2mrw"
+        description: "YOUR_DESCRIPTION",
+        keywords: ["YOUR_KEYWORDS"],
+        url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://YOUR_COMPANY_NAME.com",
         locale: "en-US",
 
         // open graph image (used by Facebook, LinkedIn, etc.)
@@ -57,13 +56,13 @@ export const seoConfig: SEOConfig = {
             url: "/og-image.jpg",
             width: 1200,
             height: 630,
-            alt: "2mrw SaaS Boilerplate",
+            alt: "YOUR_COMPANY_NAME",
         },
 
         // twitter config (used by Twitter)
         twitter: {
-            handle: "@timohuennebeck",
-            site: "@joinforj",
+            handle: "@YOUR_TWITTER_HANDLE",
+            site: "@YOUR_COMPANY_TWITTER_HANDLE",
             cardType: CardType.SUMMARY_LARGE_IMAGE,
         },
     },
