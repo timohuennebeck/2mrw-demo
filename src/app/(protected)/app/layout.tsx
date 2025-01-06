@@ -1,7 +1,7 @@
 "use client";
 
-import BugReportWidget from "@/components/application/BugReportWidget";
-import FeedbackWidget from "@/components/application/FeedbackWidget";
+import BugReportWidget from "@/components/application/bug-report-widget";
+import FeedbackWidget from "@/components/application/feedback-widget";
 import AppSidebar from "@/components/ui/app-sidebar";
 import {
     Breadcrumb,

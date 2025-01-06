@@ -1,4 +1,4 @@
-import TestimonialPanel from "@/components/application/TestimonialPanel";
+import TestimonialPanel from "@/components/application/testimonials-panel";
 import { appConfig } from "@/config";
 import { Manrope } from "next/font/google";
 import { ReactNode } from "react";

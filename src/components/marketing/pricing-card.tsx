@@ -3,7 +3,7 @@ import { DefaultPricingPlan, PricingFeatureSection } from "@/config";
 import { toTitleCase } from "@/utils/formatting/textHelper";
 import { getBillingPeriodText, getPlanPriceDescription } from "@/utils/pricing/pricingHelper";
 import { Check, X } from "lucide-react";
-import PricingPlanButton from "../application/PricingPlanButton";
+import PricingPlanButton from "../application/pricing-plan-button";
 
 const PricingCard = ({
     plan,

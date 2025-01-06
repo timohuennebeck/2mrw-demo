@@ -1,7 +1,7 @@
 "use client";
 
-import FormDivider from "@/components/application/FormDivider";
-import GoogleButton from "@/components/application/GoogleButton";
+import FormDivider from "@/components/application/form-divider";
+import GoogleButton from "@/components/application/google-button";
 import {
     Form,
     FormControl,
@@ -21,8 +21,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import FormStatusMessage from "./FormStatusMessage";
-import PasswordStrengthChecker from "./PasswordStrengthChecker";
+import FormStatusMessage from "./form-status-message";
+import PasswordStrengthChecker from "./password-strength-checker";
 import logo from "@/assets/images/logo.svg";
 
 const _getButtontext = (mode: string, authMethod: string) => {

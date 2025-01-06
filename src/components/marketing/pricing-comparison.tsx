@@ -2,7 +2,7 @@ import { DefaultPricingPlan, isFreePlanEnabled, isOneTimePaymentEnabled, Pricing
 import { getBillingPeriodText, getPlanPriceDescription } from "@/utils/pricing/pricingHelper";
 import { Check, X } from "lucide-react";
 import React from "react";
-import PricingPlanButton from "../application/PricingPlanButton";
+import PricingPlanButton from "../application/pricing-plan-button";
 
 interface PricingComparisonParams {
     title: React.ReactNode;

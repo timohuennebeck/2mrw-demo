@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import OnboardingFlow from "@/components/application/OnboardingFlow";
+import OnboardingFlow from "@/components/application/onboarding-flow";
 import { createClient } from "@/services/integration/client";
 import { User } from "@supabase/supabase-js";
 import { useSession } from "@/context/SessionContext";

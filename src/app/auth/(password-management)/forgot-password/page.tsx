@@ -7,7 +7,7 @@ import { TextConstants } from "@/constants/TextConstants";
 import { checkUserEmailExists } from "@/services/database/userService";
 import { createClient } from "@/services/integration/client";
 import { StatusMessage } from "@/interfaces";
-import FormStatusMessage from "@/components/application/FormStatusMessage";
+import FormStatusMessage from "@/components/application/form-status-message";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";

@@ -1,6 +1,6 @@
 "use client";
 
-import CurrentSubscriptionPlan from "@/components/application/CurrentSubscriptionPlan";
+import CurrentSubscriptionPlan from "@/components/application/current-subscription-plan";
 import { Button } from "@/components/ui/button";
 import { useFreeTrial } from "@/context/FreeTrialContext";
 import { useSubscription } from "@/context/SubscriptionContext";
