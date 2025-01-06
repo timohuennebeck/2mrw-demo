@@ -1,6 +1,6 @@
 "use client";
 
-import PricingCard from "@/components/marketing/PricingCard";
+import PricingCard from "@/components/marketing/pricing-card";
 import { isFreePlanEnabled, isOneTimePaymentEnabled } from "@/config";
 import { useSession } from "@/context/SessionContext";
 import { useSubscription } from "@/context/SubscriptionContext";

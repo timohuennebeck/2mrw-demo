@@ -1,7 +1,7 @@
 "use client";
 
 import { Play } from "lucide-react";
-import TestimonialRating from "./TestimonialRating";
+import TestimonialRating from "./testimonial-rating";
 import { Button } from "../ui/button";
 
 interface HeroParams {

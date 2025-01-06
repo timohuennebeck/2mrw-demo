@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { Star, Loader } from "lucide-react";
-import TestimonialCard, { Testimonial } from "./TestimonialCard";
-import FeaturedTestimonialCard from "./FeaturedTestimonialCard";
+import TestimonialCard, { Testimonial } from "./testimonial-card";
+import FeaturedTestimonialCard from "./featured-testimonial-card";
 import { Button } from "../ui/button";
 
 interface TestimonialsGridProps {

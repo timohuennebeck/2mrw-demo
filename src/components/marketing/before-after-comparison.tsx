@@ -1,4 +1,4 @@
-import ComparisonItem from "./ComparisonItem";
+import ComparisonItem from "./comparison-item";
 
 interface BeforeAfterComparisonItem {
     title?: string;

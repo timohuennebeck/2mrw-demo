@@ -1,6 +1,6 @@
 import QuoteImg from "@/assets/quotes-white.svg";
 import Image from "next/image";
-import { Testimonial } from "./TestimonialCard";
+import { Testimonial } from "./testimonial-card";
 
 const FeaturedTestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
     const renderContent = (content: Testimonial["content"]) => {

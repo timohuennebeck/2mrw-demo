@@ -2,7 +2,7 @@ import { ChevronRight } from "lucide-react";
 import React from "react";
 import { Button } from "../ui/button";
 
-interface CTAParams {
+interface CallToActionParams {
     eyebrow?: string;
     title: React.ReactNode;
     description: string;
@@ -16,7 +16,13 @@ interface CTAParams {
     };
 }
 
-const CTA = ({ eyebrow, title, description, primaryButton, secondaryButton }: CTAParams) => {
+const CallToAction = ({
+    eyebrow,
+    title,
+    description,
+    primaryButton,
+    secondaryButton,
+}: CallToActionParams) => {
     return (
         <div className="flex flex-col items-center gap-6">
             <p className="text-sm font-medium text-blue-600">{eyebrow}</p>
@@ -41,4 +47,4 @@ const CTA = ({ eyebrow, title, description, primaryButton, secondaryButton }: CT
     );
 };
 
-export default CTA;
+export default CallToAction;

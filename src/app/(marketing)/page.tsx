@@ -1,20 +1,21 @@
 "use client";
 
-import BeforeAfterComparison from "@/components/marketing/BeforeAfterComparison";
-import CTA from "@/components/marketing/CTA";
-import FAQ from "@/components/marketing/FAQ";
-import FeaturedTestimonial from "@/components/marketing/FeaturedTestimonial";
-import Features from "@/components/marketing/Features";
-import FeaturesList from "@/components/marketing/FeaturesList";
-import Footer from "@/components/marketing/Footer";
-import Header from "@/components/marketing/Header";
-import Hero from "@/components/marketing/Hero";
-import HowItWorks from "@/components/marketing/HowItWorks";
-import PricingComparison from "@/components/marketing/PricingComparison";
-import ProductDemo from "@/components/marketing/ProductDemo";
-import PromoBanner from "@/components/marketing/PromoBanner";
-import Stats from "@/components/marketing/Stats";
-import TestimonialsGrid from "@/components/marketing/TestimonialsGrid";
+import logo from "@/assets/images/logo.svg";
+import BeforeAfterComparison from "@/components/marketing/before-after-comparison";
+import CallToAction from "@/components/marketing/call-to-action";
+import FAQ from "@/components/marketing/faq";
+import FeaturedTestimonial from "@/components/marketing/featured-testimonial";
+import Features from "@/components/marketing/features";
+import FeaturesList from "@/components/marketing/features-list";
+import Footer from "@/components/marketing/footer";
+import Header from "@/components/marketing/header";
+import Hero from "@/components/marketing/hero";
+import HowItWorks from "@/components/marketing/how-it-works";
+import PricingComparison from "@/components/marketing/pricing-comparison";
+import ProductDemo from "@/components/marketing/product-demo";
+import PromoBanner from "@/components/marketing/promo-banner";
+import Stats from "@/components/marketing/stats";
+import TestimonialsGrid from "@/components/marketing/testimonials-grid";
 import { useSession } from "@/context/SessionContext";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { faq } from "@/data/marketing/faq-data";
@@ -24,12 +25,11 @@ import { footerLinks } from "@/data/marketing/footer-data";
 import { exampleStats } from "@/data/marketing/stats-data";
 import { testimonials } from "@/data/marketing/testimonials-data";
 import { cn } from "@/lib/utils";
+import { getFilteredPricingPlans } from "@/services/domain/pricingService";
 import { handleSmoothScroll } from "@/utils/navigation";
 import { Shield } from "lucide-react";
 import { Manrope } from "next/font/google";
 import { useRouter } from "next/navigation";
-import logo from "@/assets/images/logo.svg";
-import { getFilteredPricingPlans } from "@/services/domain/pricingService";
 
 const manrope = Manrope({
     subsets: ["latin"],
@@ -392,7 +392,7 @@ const LandingPage = () => {
                     {/* COPY TIP: CTAs should be action-oriented and create urgency.
                         Focus on what the customer gets, not what they have to do. */}
                     <SectionContainer>
-                        <CTA
+                        <CallToAction
                             eyebrow="Lorem, ipsum dolor."
                             title={
                                 <>
