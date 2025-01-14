@@ -39,7 +39,11 @@ const FAQItem = ({
         </button>
         {isOpen && (
             <div className="pr-12">
-                <p className="text-base text-gray-600">{faq.answer}</p>
+                {faq.answer.split('\n').map((paragraph, i) => (
+                    <p key={i} className="text-base text-gray-600 mb-4 last:mb-0">
+                        {paragraph}
+                    </p>
+                ))}
             </div>
         )}
     </div>
