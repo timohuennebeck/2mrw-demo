@@ -6,7 +6,7 @@ interface ComparisonItemParams {
     bulletPoints: {
         text: string;
     }[];
-    videoUrl: string;
+    videoUrl?: string;
 }
 
 const ComparisonItem = ({ type, title, bulletPoints, videoUrl }: ComparisonItemParams) => {
@@ -47,17 +47,19 @@ const ComparisonItem = ({ type, title, bulletPoints, videoUrl }: ComparisonItemP
                     ))}
                 </ul>
             </div>
-            <div className="relative aspect-video w-full overflow-hidden rounded-lg border shadow-lg">
-                <video
-                    src={videoUrl}
-                    width={1200}
-                    height={675}
-                    className="rounded-lg shadow-2xl"
-                    autoPlay
-                    muted
-                    loop
-                />
-            </div>
+            {videoUrl && (
+                <div className="relative aspect-video w-full overflow-hidden rounded-lg border shadow-lg">
+                    <video
+                        src={videoUrl}
+                        width={1200}
+                        height={675}
+                        className="rounded-lg shadow-2xl"
+                        autoPlay
+                        muted
+                        loop
+                    />
+                </div>
+            )}
         </div>
     );
 };

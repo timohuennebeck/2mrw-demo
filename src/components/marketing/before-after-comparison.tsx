@@ -5,7 +5,7 @@ interface BeforeAfterComparisonItem {
     bulletPoints: {
         text: string;
     }[];
-    videoUrl: string;
+    videoUrl?: string;
 }
 
 interface BeforeAfterComparisonParams {
