@@ -1,8 +1,8 @@
 "use client";
 
-import { Play } from "lucide-react";
-import TestimonialRating from "./testimonial-rating";
+import { ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
+import TestimonialRating from "./testimonial-rating";
 
 interface HeroParams {
     promoText?: string;
@@ -33,9 +33,7 @@ const Hero = ({
         <section className="relative flex flex-col items-center justify-center gap-8 text-center">
             {/* Promotional Banner */}
             {promoText && (
-                <div className="px-4 py-2 text-sm font-medium text-blue-600">
-                    {promoText}
-                </div>
+                <div className="px-4 py-2 text-sm font-medium text-blue-600">{promoText}</div>
             )}
 
             {/* Main Title */}
@@ -50,10 +48,10 @@ const Hero = ({
             <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
                 <Button size="lg" onClick={primaryCTA.onClick}>
                     {primaryCTA.text}
+                    <ArrowRight size={16} />
                 </Button>
                 {secondaryCTA && (
                     <Button size="lg" variant="secondary" onClick={secondaryCTA.onClick}>
-                        <Play size={16} className="fill-current" />
                         {secondaryCTA.text}
                     </Button>
                 )}
