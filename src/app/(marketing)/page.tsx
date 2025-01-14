@@ -312,6 +312,7 @@ const LandingPage = () => {
 
                     <SectionContainer id="product-demo">
                         <ProductDemo
+                            eyebrow="Lorem, ipsum dolor."
                             title={
                                 <>
                                     Lorem ipsum dolor sit{" "}
@@ -328,10 +329,10 @@ const LandingPage = () => {
 
                     <SectionContainer>
                         <FeaturesList
+                            eyebrow="Lorem, ipsum."
                             heading="Lorem ipsum dolor sit amet"
                             description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
                             features={featuresList}
-                            sectionTitle="Lorem, ipsum dolor."
                         />
                     </SectionContainer>
 
@@ -339,6 +340,7 @@ const LandingPage = () => {
                         Highlight what makes each tier unique and who it's best for. */}
                     <SectionContainer id="pricing">
                         <PricingComparison
+                            eyebrow="Lorem, ipsum dolor."
                             title={
                                 <>
                                     Lorem ipsum dolor sit{" "}
@@ -348,7 +350,6 @@ const LandingPage = () => {
                                     adipisicing elit.
                                 </>
                             }
-                            subtitle="Lorem, ipsum dolor."
                             description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, similique."
                             plans={getFilteredPricingPlans()}
                             features={getFilteredPricingPlans().defaultPricingFeatures}

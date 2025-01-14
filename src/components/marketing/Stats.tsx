@@ -9,7 +9,7 @@ interface Stat {
 
 interface StatsParams {
     title: React.ReactNode;
-    eyebrow: string;
+    eyebrow?: string;
     description: string;
     stats: Stat[];
 }
@@ -39,7 +39,7 @@ const Stats = ({ title, eyebrow, description, stats }: StatsParams) => {
         <div className="flex flex-col gap-16">
             {/* Header Section */}
             <div className="flex flex-col gap-6">
-                <p className="text-sm font-medium text-blue-600">{eyebrow}</p>
+                {eyebrow && <p className="text-sm font-medium text-blue-600">{eyebrow}</p>}
                 <h2 className="max-w-4xl text-4xl font-medium tracking-tight md:text-5xl">
                     {title}
                 </h2>

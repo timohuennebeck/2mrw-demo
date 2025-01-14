@@ -6,7 +6,7 @@ interface Feature {
 }
 
 interface FeaturesListParams {
-    sectionTitle?: string;
+    eyebrow?: string;
     heading: string;
     description: string;
     features: Feature[];
@@ -24,17 +24,12 @@ const FeatureItem = ({ title, description }: Feature) => (
     </div>
 );
 
-const FeaturesList = ({
-    sectionTitle = "Features List",
-    heading,
-    description,
-    features,
-}: FeaturesListParams) => {
+const FeaturesList = ({ eyebrow, heading, description, features }: FeaturesListParams) => {
     return (
         <div className="grid grid-cols-1 gap-x-20 gap-y-16 lg:grid-cols-3">
             {/* Header Column */}
             <div className="flex flex-col gap-6">
-                <p className="text-sm font-medium text-blue-600">{sectionTitle}</p>
+                {eyebrow && <p className="text-sm font-medium text-blue-600">{eyebrow}</p>}
                 <h2 className="max-w-4xl text-4xl font-medium tracking-tight">{heading}</h2>
                 <p className="max-w-3xl text-lg text-gray-600">{description}</p>
             </div>

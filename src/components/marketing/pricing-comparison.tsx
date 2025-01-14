@@ -1,12 +1,18 @@
-import { DefaultPricingPlan, isFreePlanEnabled, isOneTimePaymentEnabled, PricingFeatureItem, PricingFeatureSection } from "@/config";
+import {
+    DefaultPricingPlan,
+    isFreePlanEnabled,
+    isOneTimePaymentEnabled,
+    PricingFeatureItem,
+    PricingFeatureSection,
+} from "@/config";
 import { getBillingPeriodText, getPlanPriceDescription } from "@/utils/pricing/pricingHelper";
 import { Check, X } from "lucide-react";
 import React from "react";
 import PricingPlanButton from "../application/pricing-plan-button";
 
 interface PricingComparisonParams {
+    eyebrow: string;
     title: React.ReactNode;
-    subtitle: string;
     description: string;
     plans: {
         monthly: DefaultPricingPlan[];
@@ -103,8 +109,8 @@ const FeatureRow = ({
 );
 
 const PricingComparison = ({
+    eyebrow,
     title,
-    subtitle,
     description,
     plans,
     features,
@@ -120,7 +126,7 @@ const PricingComparison = ({
         <div className="flex flex-col gap-8 md:gap-16">
             {/* Header Section */}
             <div className="flex flex-col gap-4 text-start md:gap-6">
-                <p className="text-sm font-medium text-blue-600">{subtitle}</p>
+                {eyebrow && <p className="text-sm font-medium text-blue-600">{eyebrow}</p>}
                 <h2 className="max-w-4xl text-4xl font-medium leading-tight tracking-tight md:text-5xl">
                     {title}
                 </h2>

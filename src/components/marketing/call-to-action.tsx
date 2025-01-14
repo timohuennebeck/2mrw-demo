@@ -25,7 +25,7 @@ const CallToAction = ({
 }: CallToActionParams) => {
     return (
         <div className="flex flex-col items-center gap-6">
-            <p className="text-sm font-medium text-blue-600">{eyebrow}</p>
+            {eyebrow && <p className="text-sm font-medium text-blue-600">{eyebrow}</p>}
             <h2 className="max-w-4xl text-center text-4xl font-medium tracking-tight md:text-5xl">
                 {title}
             </h2>

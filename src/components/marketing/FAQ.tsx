@@ -39,8 +39,8 @@ const FAQItem = ({
         </button>
         {isOpen && (
             <div className="pr-12">
-                {faq.answer.split('\n').map((paragraph, i) => (
-                    <p key={i} className="text-base text-gray-600 mb-4 last:mb-0">
+                {faq.answer.split("\n").map((paragraph, i) => (
+                    <p key={i} className="mb-4 text-base text-gray-600 last:mb-0">
                         {paragraph}
                     </p>
                 ))}
@@ -56,7 +56,7 @@ const FAQ = ({ title, eyebrow, tagline, items = [] }: FAQParams) => {
         <div className="grid grid-cols-1 gap-20 md:grid-cols-3">
             {/* Left Column - Title */}
             <div className="flex flex-col gap-4">
-                <p className="text-sm font-medium text-blue-600">{eyebrow}</p>
+                {eyebrow && <p className="text-sm font-medium text-blue-600">{eyebrow}</p>}
                 <h2 className="max-w-4xl text-4xl font-medium tracking-tight">{title}</h2>
                 <p className="text-lg text-gray-600">{tagline}</p>
             </div>
