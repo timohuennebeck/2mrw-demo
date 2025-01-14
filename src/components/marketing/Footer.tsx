@@ -1,17 +1,6 @@
+import { FooterLink, FooterLinks } from "@/data/marketing/footer-data";
 import Image from "next/image";
 import Link from "next/link";
-
-interface FooterLink {
-    name: string;
-    href: string;
-}
-
-interface FooterLinks {
-    solutions: FooterLink[];
-    support: FooterLink[];
-    product: FooterLink[];
-    legal: FooterLink[];
-}
 
 interface FooterParams {
     links: FooterLinks;

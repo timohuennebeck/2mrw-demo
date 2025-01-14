@@ -21,7 +21,7 @@ import { useSubscription } from "@/context/SubscriptionContext";
 import { faq } from "@/data/marketing/faq-data";
 import { authFeatures, databaseFeatures, emailFeatures } from "@/data/marketing/features-data";
 import { featuresList } from "@/data/marketing/features-list-data";
-import { footerLinks } from "@/data/marketing/footer-data";
+import { bottomLinks, footerLinks } from "@/data/marketing/footer-data";
 import { exampleStats } from "@/data/marketing/stats-data";
 import { testimonials } from "@/data/marketing/testimonials-data";
 import { cn } from "@/lib/utils";
@@ -426,10 +426,7 @@ const LandingPage = () => {
                             }}
                             description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique optio molestiae exercitationem! Porro doloribus molestias rerum error inventore."
                             companyName="2mrw"
-                            bottomLinks={[
-                                { name: "Terms and Conditions", href: "/privacy" },
-                                { name: "Changelog", href: "/changelog" },
-                            ]}
+                            bottomLinks={bottomLinks}
                         />
                     </SectionContainer>
                 </div>

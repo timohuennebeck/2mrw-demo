@@ -7,7 +7,6 @@ export type FooterLinks = {
     solutions: FooterLink[];
     support: FooterLink[];
     product: FooterLink[];
-    legal: FooterLink[];
 };
 
 export const footerLinks: FooterLinks = {
@@ -28,11 +27,6 @@ export const footerLinks: FooterLinks = {
         { name: "Aliqua ut", href: "/aliqua" },
         { name: "Enim ad", href: "/enim" },
         { name: "Minim veniam", href: "/minim" },
-    ],
-    legal: [
-        { name: "Quis nostrud", href: "/quis" },
-        { name: "Exercitation ullamco", href: "/exercitation" },
-        { name: "Laboris nisi", href: "/laboris" },
     ],
 };
 
