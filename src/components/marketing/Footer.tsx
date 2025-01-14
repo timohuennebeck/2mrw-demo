@@ -1,4 +1,5 @@
 import { FooterLink, FooterLinks } from "@/data/marketing/footer-data";
+import { handleSmoothScroll } from "@/utils/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -29,7 +30,15 @@ const FooterLinkSection = ({ title, links }: { title: string; links: FooterLink[
         <ul className="flex flex-col gap-4">
             {links.map((link) => (
                 <li key={link.name}>
-                    <Link href={link.href} className="text-sm text-gray-600 hover:text-gray-900">
+                    <Link
+                        href={link.href}
+                        onClick={(e) => !link.isExternal && handleSmoothScroll(e, link.href)}
+                        className="text-sm text-gray-600 hover:text-gray-900"
+                        {...(link.isExternal && {
+                            target: "_blank",
+                            rel: "noopener noreferrer",
+                        })}
+                    >
                         {link.name}
                     </Link>
                 </li>
