@@ -1,4 +1,5 @@
 import { Check, X } from "lucide-react";
+import CustomVideo from "../ui/custom-video";
 
 interface ComparisonItemParams {
     type: "before" | "after";
@@ -48,17 +49,7 @@ const ComparisonItem = ({ type, title, bulletPoints, videoUrl }: ComparisonItemP
                 </ul>
             </div>
             {videoUrl && (
-                <div className="relative aspect-video w-full overflow-hidden rounded-lg border shadow-lg">
-                    <video
-                        src={videoUrl}
-                        width={1200}
-                        height={675}
-                        className="rounded-lg shadow-2xl"
-                        autoPlay
-                        muted
-                        loop
-                    />
-                </div>
+                <CustomVideo src={videoUrl} />
             )}
         </div>
     );

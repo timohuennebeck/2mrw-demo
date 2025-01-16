@@ -3,6 +3,7 @@
 import { ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
 import TestimonialRating from "./testimonial-rating";
+import CustomVideo from "../ui/custom-video";
 
 interface HeroParams {
     promoText?: string;
@@ -61,16 +62,8 @@ const Hero = ({
 
             {/* Demo Video */}
             {demoVideoUrl && (
-                <div className="relative w-full max-w-5xl">
-                    <video
-                        src={demoVideoUrl}
-                        width={1200}
-                        height={675}
-                        className="rounded-lg shadow-2xl"
-                        autoPlay
-                        muted
-                        loop
-                    />
+                <div className="w-full max-w-5xl">
+                    <CustomVideo src={demoVideoUrl} />
                 </div>
             )}
         </section>

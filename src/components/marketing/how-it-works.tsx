@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { type LucideIcon } from "lucide-react";
+import CustomVideo from "../ui/custom-video";
 
 interface Step {
     number: number;
@@ -87,17 +88,7 @@ const HowItWorks = ({ eyebrow, title, description, steps, videoPaths }: HowItWor
 
                 {/* Image Column */}
                 <div className="flex items-center">
-                    <div className="relative aspect-video w-full overflow-hidden rounded-lg shadow-2xl">
-                        <video
-                            src={videoPaths[currentStep]}
-                            width={1200}
-                            height={675}
-                            className="rounded-lg shadow-2xl"
-                            autoPlay
-                            muted
-                            loop
-                        />
-                    </div>
+                    <CustomVideo src={videoPaths[currentStep]} />
                 </div>
             </div>
         </div>

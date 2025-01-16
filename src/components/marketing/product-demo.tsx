@@ -1,4 +1,5 @@
 import React from "react";
+import CustomVideo from "../ui/custom-video";
 
 interface ProductDemoParams {
     eyebrow?: string;
@@ -23,15 +24,7 @@ const ProductDemo = ({ eyebrow, title, subtitle, videoUrl }: ProductDemoParams) 
 
             {/* Demo Video */}
             <div className="relative w-full max-w-5xl">
-                <video
-                    src={videoUrl}
-                    width={1200}
-                    height={675}
-                    className="rounded-lg shadow-2xl"
-                    autoPlay
-                    muted
-                    loop
-                />
+                <CustomVideo src={videoUrl} />
             </div>
         </div>
     );
