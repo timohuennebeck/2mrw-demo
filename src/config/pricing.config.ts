@@ -18,9 +18,7 @@ export interface PricingFeatureSection {
 
 export interface PricingFeatureItem {
     name: string;
-    free?: boolean | string;
-    pro: boolean | string;
-    enterprise: boolean | string;
+    [key: string]: any;
 }
 
 export const defaultPricingPlans: {
@@ -130,33 +128,33 @@ export const pricingCardFeatures: PricingFeatureSection[] = [
         items: [
             {
                 name: "Duis aute irure dolor",
-                free: true,
-                pro: true,
-                enterprise: true,
+                [SubscriptionTier.FREE]: true,
+                [SubscriptionTier.ESSENTIALS]: true,
+                [SubscriptionTier.FOUNDERS]: true,
             },
             {
                 name: "Excepteur sint occaecat",
-                free: false,
-                pro: true,
-                enterprise: true,
+                [SubscriptionTier.FREE]: false,
+                [SubscriptionTier.ESSENTIALS]: true,
+                [SubscriptionTier.FOUNDERS]: true,
             },
             {
                 name: "Cupidatat non proident",
-                free: false,
-                pro: true,
-                enterprise: true,
+                [SubscriptionTier.FREE]: false,
+                [SubscriptionTier.ESSENTIALS]: true,
+                [SubscriptionTier.FOUNDERS]: true,
             },
             {
                 name: "Sunt in culpa qui",
-                free: false,
-                pro: false,
-                enterprise: true,
+                [SubscriptionTier.FREE]: false,
+                [SubscriptionTier.ESSENTIALS]: false,
+                [SubscriptionTier.FOUNDERS]: true,
             },
             {
                 name: "Deserunt mollit anim",
-                free: false,
-                pro: false,
-                enterprise: true,
+                [SubscriptionTier.FREE]: false,
+                [SubscriptionTier.ESSENTIALS]: false,
+                [SubscriptionTier.FOUNDERS]: true,
             },
         ],
     },
@@ -165,53 +163,53 @@ export const pricingCardFeatures: PricingFeatureSection[] = [
         items: [
             {
                 name: "Consectetur Quota",
-                free: "5",
-                pro: "50",
-                enterprise: "Unlimited",
+                [SubscriptionTier.FREE]: "5",
+                [SubscriptionTier.ESSENTIALS]: "50",
+                [SubscriptionTier.FOUNDERS]: "Unlimited",
             },
             {
                 name: "Adipiscing Slots",
-                free: "2",
-                pro: "10",
-                enterprise: "25",
+                [SubscriptionTier.FREE]: "2",
+                [SubscriptionTier.ESSENTIALS]: "10",
+                [SubscriptionTier.FOUNDERS]: "25",
             },
         ],
     },
 ];
 
-export const defaultPricingFeatures: PricingFeatureSection[] = [
+export const pricingComparisonFeatures: PricingFeatureSection[] = [
     {
         category: "Lorem",
         items: [
             {
                 name: "Lorem ipsum dolor sit amet",
-                free: true,
-                pro: true,
-                enterprise: true,
+                [SubscriptionTier.FREE]: true,
+                [SubscriptionTier.ESSENTIALS]: true,
+                [SubscriptionTier.FOUNDERS]: true,
             },
             {
                 name: "Consectetur adipiscing elit",
-                free: false,
-                pro: true,
-                enterprise: true,
+                [SubscriptionTier.FREE]: false,
+                [SubscriptionTier.ESSENTIALS]: true,
+                [SubscriptionTier.FOUNDERS]: true,
             },
             {
                 name: "Sed do eiusmod tempor",
-                free: false,
-                pro: true,
-                enterprise: true,
+                [SubscriptionTier.FREE]: false,
+                [SubscriptionTier.ESSENTIALS]: true,
+                [SubscriptionTier.FOUNDERS]: true,
             },
             {
                 name: "Ut labore et dolore",
-                free: false,
-                pro: true,
-                enterprise: true,
+                [SubscriptionTier.FREE]: false,
+                [SubscriptionTier.ESSENTIALS]: true,
+                [SubscriptionTier.FOUNDERS]: true,
             },
             {
                 name: "Magna aliqua ut enim",
-                free: false,
-                pro: false,
-                enterprise: true,
+                [SubscriptionTier.FREE]: false,
+                [SubscriptionTier.ESSENTIALS]: false,
+                [SubscriptionTier.FOUNDERS]: true,
             },
         ],
     },
@@ -220,21 +218,21 @@ export const defaultPricingFeatures: PricingFeatureSection[] = [
         items: [
             {
                 name: "Minim veniam",
-                free: "1 GB",
-                pro: "50 GB",
-                enterprise: "500 GB",
+                [SubscriptionTier.FREE]: "1 GB",
+                [SubscriptionTier.ESSENTIALS]: "50 GB",
+                [SubscriptionTier.FOUNDERS]: "500 GB",
             },
             {
                 name: "Quis nostrud exercitation",
-                free: "10 GB",
-                pro: "500 GB",
-                enterprise: "Unlimited",
+                [SubscriptionTier.FREE]: "10 GB",
+                [SubscriptionTier.ESSENTIALS]: "500 GB",
+                [SubscriptionTier.FOUNDERS]: "Unlimited",
             },
             {
                 name: "Ullamco laboris",
-                free: "1",
-                pro: "5",
-                enterprise: "Unlimited",
+                [SubscriptionTier.FREE]: "1",
+                [SubscriptionTier.ESSENTIALS]: "5",
+                [SubscriptionTier.FOUNDERS]: "Unlimited",
             },
         ],
     },

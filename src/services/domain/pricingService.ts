@@ -1,9 +1,10 @@
 import {
-    defaultPricingFeatures,
+    pricingComparisonFeatures,
     DefaultPricingPlan,
     defaultPricingPlans,
     isFreePlanEnabled,
     pricingCardFeatures,
+    PricingFeatureItem,
     PricingFeatureSection,
 } from "@/config";
 import { SubscriptionTier } from "@/enums";
@@ -32,14 +33,26 @@ export const getFilteredPricingPlans = () => {
     const filterFeatures = (sections: PricingFeatureSection[]) => {
         if (showFreePlan) return sections;
 
-        // omit the 'free' property when free plan is disabled
+        // omit the FREE tier property when free plan is disabled
         return sections.map((section) => ({
             ...section,
-            items: section.items.map((item) => ({
-                name: item.name,
-                pro: item.pro,
-                enterprise: item.enterprise,
-            })),
+            items: section.items.map((item) => {
+                const filteredItem: PricingFeatureItem = {
+                    name: item.name,
+                };
+
+                // only keep non-FREE tier properties
+                Object.keys(item).forEach((key) => {
+                    if (
+                        key !== "name" &&
+                        key !== SubscriptionTier.FREE.toLowerCase()
+                    ) {
+                        filteredItem[key] = item[key];
+                    }
+                });
+
+                return filteredItem;
+            }),
         }));
     };
 
@@ -48,6 +61,6 @@ export const getFilteredPricingPlans = () => {
         annual: filterPlans(defaultPricingPlans.annual),
         oneTime: defaultPricingPlans.oneTime,
         pricingCardFeatures: filterFeatures(pricingCardFeatures),
-        defaultPricingFeatures: filterFeatures(defaultPricingFeatures),
+        pricingComparisonFeatures: filterFeatures(pricingComparisonFeatures),
     };
 };

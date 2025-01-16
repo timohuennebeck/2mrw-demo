@@ -1,6 +1,5 @@
 import {
     DefaultPricingPlan,
-    isFreePlanEnabled,
     isOneTimePaymentEnabled,
     PricingFeatureItem,
     PricingFeatureSection,
@@ -72,42 +71,6 @@ const FeatureCell = ({ value }: { value: boolean | string }) => {
     return <span className="text-sm">{value}</span>;
 };
 
-const FeatureRow = ({
-    item,
-    showFreePlan,
-}: {
-    item: PricingFeatureItem;
-    showFreePlan: boolean;
-}) => (
-    <div
-        className={`grid gap-8 py-6 ${
-            showFreePlan ? "grid-cols-1 md:grid-cols-4" : "grid-cols-1 md:grid-cols-3"
-        }`}
-    >
-        <div className="flex items-center text-sm text-gray-600">{item.name}</div>
-        {showFreePlan && (
-            <div className="flex items-center md:justify-center">
-                <span className="flex-1 text-sm text-gray-500 md:hidden">Free</span>
-                <div className="ml-auto md:ml-0">
-                    <FeatureCell value={item.free ?? false} />
-                </div>
-            </div>
-        )}
-        <div className="flex items-center md:justify-center">
-            <span className="flex-1 text-sm text-gray-500 md:hidden">Pro</span>
-            <div className="ml-auto md:ml-0">
-                <FeatureCell value={item.pro} />
-            </div>
-        </div>
-        <div className="flex items-center md:justify-center">
-            <span className="flex-1 text-sm text-gray-500 md:hidden">Enterprise</span>
-            <div className="ml-auto md:ml-0">
-                <FeatureCell value={item.enterprise} />
-            </div>
-        </div>
-    </div>
-);
-
 const PricingComparison = ({
     eyebrow,
     title,
@@ -117,10 +80,10 @@ const PricingComparison = ({
     isUserLoggedIn,
     currentPlanStripePriceId,
 }: PricingComparisonParams) => {
-    const showFreePlan = isFreePlanEnabled();
     const isOneTimePayment = isOneTimePaymentEnabled();
-
     const plansToShow = isOneTimePayment ? plans.oneTime : plans.monthly;
+
+    const numberOfColumns = plansToShow.length + 1;
 
     return (
         <div className="flex flex-col gap-8 md:gap-16">
@@ -134,11 +97,7 @@ const PricingComparison = ({
             </div>
 
             {/* Plan Headers */}
-            <div
-                className={`grid gap-8 ${
-                    showFreePlan ? "grid-cols-1 md:grid-cols-4" : "grid-cols-1 md:grid-cols-3"
-                }`}
-            >
+            <div className={`grid grid-cols-1 gap-8 md:grid-cols-${numberOfColumns}`}>
                 <div className="col-span-1 hidden md:block" />
                 {plansToShow.map((plan) => (
                     <PricingPlanHeader
@@ -151,23 +110,40 @@ const PricingComparison = ({
                 ))}
             </div>
 
-            {/* Feature Comparison */}
-            <div className="flex flex-col gap-12">
-                {features.map((section) => (
-                    <div key={section.category} className="flex flex-col gap-4">
-                        <h4 className="text-base font-medium">{section.category}</h4>
-                        <div className="divide-y divide-gray-200">
-                            {section.items.map((item) => (
-                                <FeatureRow
-                                    key={item.name}
-                                    item={item}
-                                    showFreePlan={showFreePlan}
-                                />
+            {/* Feature Rows */}
+            {features.map((section) => (
+                <div key={section.category}>
+                    <h3 className="mb-4 text-sm font-medium">{section.category}</h3>
+                    {section.items.map((item) => (
+                        <div
+                            key={item.name}
+                            className={`grid grid-cols-1 gap-8 py-6 md:grid-cols-${numberOfColumns}`}
+                        >
+                            <div className="flex items-center text-sm text-gray-600">
+                                {item.name}
+                            </div>
+                            {plansToShow.map((plan) => (
+                                <div
+                                    key={plan.name}
+                                    className="flex items-center md:justify-center"
+                                >
+                                    <span className="flex-1 text-sm text-gray-500 md:hidden">
+                                        {plan.name}
+                                    </span>
+                                    <div className="ml-auto md:ml-0">
+                                        <FeatureCell
+                                            value={
+                                                item[plan.subscription_tier as keyof typeof item] ??
+                                                false
+                                            }
+                                        />
+                                    </div>
+                                </div>
                             ))}
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            ))}
         </div>
     );
 };

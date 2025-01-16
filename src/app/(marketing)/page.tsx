@@ -352,7 +352,7 @@ const LandingPage = () => {
                             }
                             description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, similique."
                             plans={getFilteredPricingPlans()}
-                            features={getFilteredPricingPlans().defaultPricingFeatures}
+                            features={getFilteredPricingPlans().pricingComparisonFeatures}
                             isUserLoggedIn={!!authUser}
                             currentPlanStripePriceId={subscription?.stripe_price_id ?? ""}
                         />
