@@ -1,13 +1,9 @@
-import {
-    DefaultPricingPlan,
-    isOneTimePaymentEnabled,
-    PricingFeatureItem,
-    PricingFeatureSection,
-} from "@/config";
+import { DefaultPricingPlan, isOneTimePaymentEnabled, PricingFeatureSection } from "@/config";
 import { getBillingPeriodText, getPlanPriceDescription } from "@/utils/pricing/pricingHelper";
 import { Check, X } from "lucide-react";
 import React from "react";
 import PricingPlanButton from "../application/pricing-plan-button";
+import { Badge } from "@/components/ui/badge";
 
 interface PricingComparisonParams {
     eyebrow: string;
@@ -41,7 +37,16 @@ const PricingPlanHeader = ({
 
     return (
         <div className="col-span-1 flex flex-col justify-between gap-6 md:gap-4">
-            <h3 className="text-lg font-medium">{plan.name}</h3>
+            <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-medium">{plan.name}</h3>
+                    {plan.is_highlighted && (
+                        <Badge variant="secondary" className="font-medium rounded-md">
+                            Most Popular
+                        </Badge>
+                    )}
+                </div>
+            </div>
             <div>
                 <span className="text-4xl font-medium">{plan.price}</span>
                 <span className="text-sm text-gray-500">
@@ -60,7 +65,13 @@ const PricingPlanHeader = ({
     );
 };
 
-const FeatureCell = ({ value, isHighlighted }: { value: boolean | string; isHighlighted: boolean }) => {
+const FeatureCell = ({
+    value,
+    isHighlighted,
+}: {
+    value: boolean | string;
+    isHighlighted: boolean;
+}) => {
     if (typeof value === "boolean") {
         return value ? (
             <Check className="mx-auto h-5 w-5 text-black" />
