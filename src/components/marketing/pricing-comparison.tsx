@@ -60,7 +60,7 @@ const PricingPlanHeader = ({
     );
 };
 
-const FeatureCell = ({ value }: { value: boolean | string }) => {
+const FeatureCell = ({ value, isHighlighted }: { value: boolean | string; isHighlighted: boolean }) => {
     if (typeof value === "boolean") {
         return value ? (
             <Check className="mx-auto h-5 w-5 text-black" />
@@ -68,7 +68,7 @@ const FeatureCell = ({ value }: { value: boolean | string }) => {
             <X className="mx-auto h-5 w-5 text-gray-400" />
         );
     }
-    return <span className="text-sm">{value}</span>;
+    return <span className={`text-sm ${isHighlighted ? "font-semibold" : ""}`}>{value}</span>;
 };
 
 const PricingComparison = ({
@@ -136,6 +136,7 @@ const PricingComparison = ({
                                                 item[plan.subscription_tier as keyof typeof item] ??
                                                 false
                                             }
+                                            isHighlighted={plan.is_highlighted}
                                         />
                                     </div>
                                 </div>
