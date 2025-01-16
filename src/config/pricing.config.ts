@@ -18,6 +18,7 @@ export interface PricingFeatureSection {
 
 export interface PricingFeatureItem {
     name: string;
+    comingSoon?: boolean;
     [key: string]: any;
 }
 
@@ -201,12 +202,14 @@ export const pricingComparisonFeatures: PricingFeatureSection[] = [
             },
             {
                 name: "Ut labore et dolore",
+                comingSoon: true,
                 [SubscriptionTier.FREE]: false,
                 [SubscriptionTier.ESSENTIALS]: true,
                 [SubscriptionTier.FOUNDERS]: true,
             },
             {
                 name: "Magna aliqua ut enim",
+                comingSoon: true,
                 [SubscriptionTier.FREE]: false,
                 [SubscriptionTier.ESSENTIALS]: false,
                 [SubscriptionTier.FOUNDERS]: true,
@@ -230,6 +233,7 @@ export const pricingComparisonFeatures: PricingFeatureSection[] = [
             },
             {
                 name: "Ullamco laboris",
+                comingSoon: true,
                 [SubscriptionTier.FREE]: "1",
                 [SubscriptionTier.ESSENTIALS]: "5",
                 [SubscriptionTier.FOUNDERS]: "Unlimited",

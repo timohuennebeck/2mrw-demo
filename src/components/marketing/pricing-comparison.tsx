@@ -1,4 +1,9 @@
-import { DefaultPricingPlan, isOneTimePaymentEnabled, PricingFeatureSection } from "@/config";
+import {
+    DefaultPricingPlan,
+    isOneTimePaymentEnabled,
+    PricingFeatureItem,
+    PricingFeatureSection,
+} from "@/config";
 import { getBillingPeriodText, getPlanPriceDescription } from "@/utils/pricing/pricingHelper";
 import { Check, X } from "lucide-react";
 import React from "react";
@@ -41,7 +46,7 @@ const PricingPlanHeader = ({
                 <div className="flex items-center gap-2">
                     <h3 className="text-lg font-medium">{plan.name}</h3>
                     {plan.is_highlighted && (
-                        <Badge variant="secondary" className="font-medium rounded-md">
+                        <Badge variant="secondary" className="rounded-md font-medium">
                             Most Popular
                         </Badge>
                     )}
@@ -80,6 +85,35 @@ const FeatureCell = ({
         );
     }
     return <span className={`text-sm ${isHighlighted ? "font-semibold" : ""}`}>{value}</span>;
+};
+
+const FeatureRow = ({
+    item,
+    plansToShow,
+}: {
+    item: PricingFeatureItem;
+    plansToShow: DefaultPricingPlan[];
+}) => {
+    return (
+        <div className={`grid grid-cols-1 gap-8 py-6 md:grid-cols-${plansToShow.length + 1}`}>
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+                {item.name}
+                {item.comingSoon && (
+                    <Badge variant="blue" className="rounded-md font-medium">
+                        Coming Soon
+                    </Badge>
+                )}
+            </div>
+            {plansToShow.map((plan) => (
+                <div key={plan.name} className="flex items-center md:justify-center">
+                    <span className="flex-1 text-sm text-gray-500 md:hidden">{plan.name}</span>
+                    <div className="ml-auto md:ml-0">
+                        <FeatureCell value={item[plan.name]} isHighlighted={plan.is_highlighted} />
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
 };
 
 const PricingComparison = ({
@@ -126,33 +160,7 @@ const PricingComparison = ({
                 <div key={section.category}>
                     <h3 className="mb-4 text-sm font-medium">{section.category}</h3>
                     {section.items.map((item) => (
-                        <div
-                            key={item.name}
-                            className={`grid grid-cols-1 gap-8 py-6 md:grid-cols-${numberOfColumns}`}
-                        >
-                            <div className="flex items-center text-sm text-gray-600">
-                                {item.name}
-                            </div>
-                            {plansToShow.map((plan) => (
-                                <div
-                                    key={plan.name}
-                                    className="flex items-center md:justify-center"
-                                >
-                                    <span className="flex-1 text-sm text-gray-500 md:hidden">
-                                        {plan.name}
-                                    </span>
-                                    <div className="ml-auto md:ml-0">
-                                        <FeatureCell
-                                            value={
-                                                item[plan.subscription_tier as keyof typeof item] ??
-                                                false
-                                            }
-                                            isHighlighted={plan.is_highlighted}
-                                        />
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                        <FeatureRow key={item.name} item={item} plansToShow={plansToShow} />
                     ))}
                 </div>
             ))}
