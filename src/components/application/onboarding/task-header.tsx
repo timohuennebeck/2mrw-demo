@@ -18,6 +18,7 @@ export const TaskHeader = ({ title, isCompleted, isOpen, reward }: TaskHeaderPro
                 className={cn(
                     "text-sm leading-none",
                     isCompleted && "text-muted-foreground line-through",
+                    isOpen && "font-medium",
                 )}
             >
                 {title}
