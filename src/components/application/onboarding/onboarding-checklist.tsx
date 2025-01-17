@@ -5,7 +5,7 @@ import {
     OnboardingConfig,
     OnboardingTaskConfig,
 } from "@/config/onboarding.config";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BonusSection } from "./bonus-section";
 import { TaskItem } from "./task-item";
 
@@ -15,6 +15,7 @@ interface OnboardingChecklistProps {
     config: OnboardingConfig;
     onClaimBonus?: () => void;
     bonusClaimed?: boolean;
+    isOpen: boolean;
 }
 
 export const OnboardingChecklist = ({
@@ -23,8 +24,19 @@ export const OnboardingChecklist = ({
     config,
     onClaimBonus,
     bonusClaimed = false,
+    isOpen,
 }: OnboardingChecklistProps) => {
     const [openTaskId, setOpenTaskId] = useState(null as null | string);
+
+    // set the first incomplete task as open when the dropdown opens
+    useEffect(() => {
+        if (isOpen) {
+            const firstIncompleteTask = tasks.find((task) => !task.isCompleted);
+            console.log("→ [LOG] firstIncompleteTask", firstIncompleteTask);
+
+            setOpenTaskId(firstIncompleteTask?.id ?? null);
+        }
+    }, [isOpen, tasks]);
 
     const completedTasks = tasks.filter((task) => task.isCompleted).length;
     const allTasksCompleted = completedTasks === tasks.length;

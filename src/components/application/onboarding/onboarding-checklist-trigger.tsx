@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { appConfig, CompletionCheckField, OnboardingConfig } from "@/config";
 import { ChevronUp } from "lucide-react";
+import { useState } from "react";
 import { OnboardingChecklist } from "./onboarding-checklist";
 
 interface OnboardingChecklistTriggerProps {
@@ -24,6 +25,8 @@ export const OnboardingChecklistTrigger = ({
     onClaimBonus,
     bonusClaimed = false,
 }: OnboardingChecklistTriggerProps) => {
+    const [isOpen, setIsOpen] = useState(false);
+
     if (!appConfig.onboarding.checklist.isEnabled) return null;
 
     const tasks = config.tasks.map((task) => ({
@@ -39,7 +42,7 @@ export const OnboardingChecklistTrigger = ({
     const position = appConfig.onboarding.checklist.direction === "left" ? "left-4" : "right-4";
 
     return (
-        <DropdownMenu>
+        <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
             <DropdownMenuTrigger asChild>
                 <Button variant="outline" className={`fixed bottom-4 ${position} gap-2 shadow-lg`}>
                     <div className="flex items-center gap-2 text-sm">
@@ -62,6 +65,7 @@ export const OnboardingChecklistTrigger = ({
                     config={config}
                     onClaimBonus={onClaimBonus}
                     bonusClaimed={bonusClaimed}
+                    isOpen={isOpen}
                 />
             </DropdownMenuContent>
         </DropdownMenu>
