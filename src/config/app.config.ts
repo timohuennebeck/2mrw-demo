@@ -14,6 +14,10 @@ interface GeneralConfig {
     };
     onboarding: {
         isEnabled: boolean;
+        checklist: {
+            isEnabled: boolean;
+            direction: "left" | "right";
+        };
     };
     feedback: {
         widgets: {
@@ -46,22 +50,26 @@ export const appConfig: GeneralConfig = {
      */
     onboarding: {
         isEnabled: true,
+        checklist: {
+            isEnabled: true,
+            direction: "right",
+        },
     },
 
     feedback: {
         widgets: {
             reportBug: {
-                isEnabled: true,
+                isEnabled: false,
                 formUrl: "https://tally.so/r/bug-report",
             },
             shareFeedback: {
-                isEnabled: true, // controls the FeedbackWidget.tsx in bottom right
+                isEnabled: false, // controls the FeedbackWidget.tsx in bottom right
                 formUrl: "https://tally.so/r/general-feedback",
             },
         },
         forms: {
             accountDeletion: {
-                isEnabled: true, // controls whether to show feedback prompt after account deletion
+                isEnabled: false, // controls whether to show feedback prompt after account deletion
                 formUrl: "https://tally.so/r/exit-survey",
             },
         },
