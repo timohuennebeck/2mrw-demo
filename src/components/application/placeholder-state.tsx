@@ -28,8 +28,8 @@ export const PlaceholderState = ({
                 />
             )}
             <div className="flex flex-col items-center justify-center gap-1">
-                <h3 className="text-base font-semibold">{title}</h3>
-                <p className="text-sm text-muted-foreground">{description}</p>
+                <h3 className="max-w-lg text-center text-base font-semibold">{title}</h3>
+                <p className="max-w-sm text-center text-sm text-muted-foreground">{description}</p>
             </div>
             {ctaLabel && onClick && (
                 <Button onClick={onClick} size="sm" variant="outline">
