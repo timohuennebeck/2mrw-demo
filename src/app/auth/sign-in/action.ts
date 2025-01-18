@@ -3,8 +3,15 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/services/integration/server";
 import { TextConstants } from "@/constants/TextConstants";
+import { cookies } from "next/headers";
+import moment from "moment";
 
-export const signIn = async ({ email, password }: { email: string; password: string }) => {
+interface SignInParams {
+    email: string;
+    password: string;
+}
+
+export const signIn = async ({ email, password }: SignInParams) => {
     const supabase = await createClient();
 
     const { error } = await supabase.auth.signInWithPassword({
@@ -24,9 +31,17 @@ export const signIn = async ({ email, password }: { email: string; password: str
     return { success: true, redirect: "/app" };
 };
 
-export const signInUsingGoogle = async () => {
+export const signInUsingGoogle = async (referralCode?: string) => {
     try {
+        if (referralCode) {
+            const cookieStore = await cookies();
+            cookieStore.set("referral_code", referralCode, {
+                expires: moment().add(72, "hours").toDate(),
+            });
+        }
+
         const supabase = await createClient();
+
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: "google",
             options: {
@@ -40,6 +55,8 @@ export const signInUsingGoogle = async () => {
 
         return { success: true, redirect: data.url };
     } catch (error) {
-        return { error: "There has been an unexpected error signing in to Google" };
+        return {
+            error: "There has been an unexpected error signing in to Google",
+        };
     }
 };

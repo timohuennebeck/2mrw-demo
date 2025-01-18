@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { handleBilling } from "./billingHandlers";
 import { handleOnboarding } from "./onboardingHandlers";
 import { redirectTo } from "./utils";
+import { referralCodeExists } from "@/services/database/referralService";
 
 export const handleLoggedInRedirect = async (
     request: NextRequest,
@@ -27,4 +28,26 @@ export const handleLoggedInRedirect = async (
     }
 
     return NextResponse.next({ request }); // allow access to all other routes
+};
+
+export const handleCheckReferralCode = async (request: NextRequest) => {
+    const { searchParams } = request.nextUrl;
+
+    const authMethodString = searchParams.get("method");
+    if (!authMethodString) return null;
+
+    // assuming the method and referral code are separated by ':'
+    const [_method, ...rest] = authMethodString.split(":");
+    const referralCode = rest.join(":").split("=")[1]; // e.g., "ref=ZA745FHZU"
+
+    if (referralCode) {
+        const { codeExists } = await referralCodeExists(referralCode);
+        if (!codeExists) {
+            const url = request.nextUrl.clone();
+            url.searchParams.set("method", "magic-link");
+            return NextResponse.redirect(url);
+        }
+    }
+
+    return null;
 };

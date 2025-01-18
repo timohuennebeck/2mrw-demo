@@ -105,3 +105,15 @@ export const processReferralSignup = async (
 
     return { success: !error, error };
 };
+
+export const referralCodeExists = async (code: string) => {
+    const supabase = await createClient();
+
+    const { data: referrer } = await supabase
+        .from("users")
+        .select("id")
+        .eq("referral_code", code)
+        .single();
+
+    return { codeExists: !!referrer };
+};

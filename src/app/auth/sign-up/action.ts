@@ -5,21 +5,32 @@ import { SupabaseErrors } from "@/enums";
 import { AuthMethod } from "@/enums/user";
 import { createClient } from "@/services/integration/server";
 import { AuthError } from "@supabase/supabase-js";
+import moment from "moment";
+import { cookies } from "next/headers";
 
 export const signUpUserToSupabase = async ({
     firstName,
     email,
     password,
     authMethod,
+    referralCode,
 }: {
     firstName: string;
     email: string;
     password: string;
     authMethod: AuthMethod;
+    referralCode?: string | null;
 }) => {
-    const supabase = await createClient();
-
     try {
+        if (referralCode) {
+            const cookieStore = await cookies();
+            cookieStore.set("referral_code", referralCode, {
+                expires: moment().add(72, "hours").toDate(),
+            });
+        }
+
+        const supabase = await createClient();
+
         const { error } = await supabase.auth.signUp({
             email,
             password,

@@ -5,15 +5,16 @@ import { StatusMessage } from "@/interfaces/common/form";
 
 interface GoogleButtonParams {
     setStatusMessage: (message: StatusMessage | null) => void;
+    referralCode?: string;
 }
 
-const GoogleButton = ({ setStatusMessage }: GoogleButtonParams) => {
+const GoogleButton = ({ setStatusMessage, referralCode }: GoogleButtonParams) => {
     const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
     const continueWithGoogle = async () => {
         setIsGoogleLoading(true);
 
-        const { success, error, redirect } = await signInUsingGoogle();
+        const { success, error, redirect } = await signInUsingGoogle(referralCode);
 
         if (error) {
             setStatusMessage({

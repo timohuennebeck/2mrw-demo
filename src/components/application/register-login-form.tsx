@@ -1,5 +1,6 @@
 "use client";
 
+import logo from "@/assets/images/logo.svg";
 import FormDivider from "@/components/application/form-divider";
 import GoogleButton from "@/components/application/google-button";
 import {
@@ -23,7 +24,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import FormStatusMessage from "./form-status-message";
 import PasswordStrengthChecker from "./password-strength-checker";
-import logo from "@/assets/images/logo.svg";
+import { ReferralHeader } from "./referral-header";
 
 const _getButtontext = (mode: string, authMethod: string) => {
     if (authMethod === "magic-link" && mode === "signin") {
@@ -78,16 +79,32 @@ export interface RegisterLoginFormParams {
         email,
         password,
         firstName,
+        referralCode,
     }: {
         email: string;
         password: string;
         firstName: string;
+        referralCode: string | null;
     }) => void;
     loginOrSignupWithMagicLink?: (email: string) => void;
     isLoading: boolean;
     statusMessage: StatusMessage | null;
     setStatusMessage: (statusMessage: StatusMessage | null) => void;
 }
+
+const getAuthMethodFromUrl = (authMethodString: string | null) => {
+    if (!authMethodString) return { method: "magic-link", ref: null }; // URL example: http://localhost:3000/auth/sign-up?method=magic-link:ref=123
+
+    const [method, ...rest] = authMethodString.split(":");
+    const ref = rest.join(":").split("=")[1] || null;
+
+    return { method, ref };
+};
+
+const updateAuthMethod = (newAuthMethod: string, currentAuthMethodString: string | null) => {
+    const { ref } = getAuthMethodFromUrl(currentAuthMethodString);
+    return ref ? `${newAuthMethod}:ref=${ref}` : newAuthMethod;
+};
 
 const RegisterLoginForm = ({
     mode,
@@ -98,11 +115,12 @@ const RegisterLoginForm = ({
     setStatusMessage,
 }: RegisterLoginFormParams) => {
     const searchParams = useSearchParams();
+    const authMethodString = searchParams.get("method") || "magic-link";
+
+    const { method: authMethod, ref: referralCode } = getAuthMethodFromUrl(authMethodString);
 
     const [isPasswordFocused, setIsPasswordFocused] = useState(false);
     const [showStrengthChecker, setShowStrengthChecker] = useState(false);
-
-    const authMethod = searchParams.get("method") || "magic-link";
 
     const registerLoginForm = useForm({
         resolver: zodResolver(_createFormSchema(mode, authMethod)),
@@ -119,7 +137,7 @@ const RegisterLoginForm = ({
         if (authMethod === "magic-link") {
             loginOrSignupWithMagicLink?.(email);
         } else {
-            handleSubmit({ email, password, firstName });
+            handleSubmit({ email, password, firstName, referralCode });
         }
     };
 
@@ -144,26 +162,39 @@ const RegisterLoginForm = ({
         <div className="flex h-full items-center justify-center">
             <div className="flex w-full flex-col gap-4">
                 <div className="mb-4 flex items-center gap-2">
-                    <Image
-                        src={logo}
-                        alt="logo"
-                        width={40}
-                        height={40}
-                    />
+                    <Image src={logo} alt="logo" width={40} height={40} />
                 </div>
 
                 <div className="grid w-full gap-6">
                     <div className="grid gap-2">
-                        <h1 className="text-2xl font-semibold">
-                            {mode === "signup"
-                                ? TextConstants.TEXT__SIGN_UP
-                                : TextConstants.TEXT__SIGN_IN}{" "}
-                            to {TextConstants.TEXT__COMPANY_TITLE} to continue! 🙌
-                        </h1>
-                        <p className="text-sm text-gray-400">
-                            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Obcaecati
-                            ullam eveniet laborum numquam quae quasi!
-                        </p>
+                        <div className="flex flex-col gap-4">
+                            {referralCode && (
+                                <ReferralHeader
+                                    title="You've been invited! 🎁"
+                                    description={`Sign up now to get started with ${TextConstants.TEXT__COMPANY_TITLE} and receive bonus tokens as a welcome gift!`}
+                                    expiresIn="72 hours"
+                                    bonus={{
+                                        label: "Tokens",
+                                        amount: 15,
+                                    }}
+                                />
+                            )}
+
+                            {!referralCode && (
+                                <>
+                                    <h1 className="text-2xl font-semibold">
+                                        {mode === "signup"
+                                            ? TextConstants.TEXT__SIGN_UP
+                                            : TextConstants.TEXT__SIGN_IN}{" "}
+                                        to {TextConstants.TEXT__COMPANY_TITLE} to continue! 🙌
+                                    </h1>
+                                    <p className="text-sm text-gray-400">
+                                        Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                                        Obcaecati ullam eveniet laborum numquam quae quasi!
+                                    </p>
+                                </>
+                            )}
+                        </div>
                     </div>
 
                     {statusMessage && (
@@ -284,7 +315,7 @@ const RegisterLoginForm = ({
                                 <p className="text-center text-sm text-gray-500">
                                     You'll be emailed a magic code for a password-free sign in or{" "}
                                     <Link
-                                        href="/auth/sign-in?method=password"
+                                        href={`/auth/sign-in?method=${updateAuthMethod("password", authMethodString)}`}
                                         className="underline"
                                     >
                                         sign in with password instead
@@ -296,7 +327,7 @@ const RegisterLoginForm = ({
                                 <p className="text-center text-sm text-gray-500">
                                     You'll be emailed a magic code for a password-free sign up or{" "}
                                     <Link
-                                        href="/auth/sign-up?method=password"
+                                        href={`/auth/sign-up?method=${updateAuthMethod("password", authMethodString)}`}
                                         className="underline"
                                     >
                                         sign up with password instead
@@ -309,27 +340,28 @@ const RegisterLoginForm = ({
                     {!isPasswordFocused && (
                         <>
                             <FormDivider />
-                            <GoogleButton setStatusMessage={setStatusMessage} />
+                            <GoogleButton
+                                setStatusMessage={setStatusMessage}
+                                referralCode={referralCode ?? undefined}
+                            />
                         </>
                     )}
 
-                    <div className="text-center text-sm">
-                        {mode === "signup"
-                            ? TextConstants.TEXT__HAVE_AN_ACCOUNT
-                            : TextConstants.TEXT__DO_NOT_HAVE_AN_ACCOUNT}{" "}
-                        <Link
-                            href={
-                                mode === "signup"
-                                    ? "/auth/sign-in?method=magic-link"
-                                    : "/auth/sign-up?method=magic-link"
-                            }
-                            className="underline"
-                        >
+                    {!referralCode && (
+                        <div className="text-center text-sm">
                             {mode === "signup"
-                                ? TextConstants.TEXT__SIGN_IN
-                                : TextConstants.TEXT__SIGN_UP}
-                        </Link>
-                    </div>
+                                ? TextConstants.TEXT__HAVE_AN_ACCOUNT
+                                : TextConstants.TEXT__DO_NOT_HAVE_AN_ACCOUNT}{" "}
+                            <Link
+                                href={`/auth/${mode === "signup" ? "sign-in" : "sign-up"}?method=${updateAuthMethod("magic-link", authMethodString)}`}
+                                className="underline"
+                            >
+                                {mode === "signup"
+                                    ? TextConstants.TEXT__SIGN_IN
+                                    : TextConstants.TEXT__SIGN_UP}
+                            </Link>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

@@ -2,6 +2,7 @@
 
 import { isFreePlanEnabled } from "@/config";
 import { EmailType } from "@/enums";
+import { processReferralSignup } from "@/services/database/referralService";
 import { startFreePlan } from "@/services/database/subscriptionService";
 import { createUserTable, fetchUser } from "@/services/database/userService";
 import { createClient } from "@/services/integration/server";
@@ -9,6 +10,7 @@ import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
 import { stripe } from "@/services/stripe/client";
 import { getStripeCustomerId } from "@/services/stripe/stripeCustomer";
 import { type EmailOtpType } from "@supabase/supabase-js";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { type NextRequest, NextResponse } from "next/server";
 
@@ -80,12 +82,27 @@ export const GET = async (request: NextRequest) => {
 
                 if (!userData && authUser) {
                     const authMethod = authUser.user_metadata.auth_method;
+
+                    const cookiesStore = await cookies();
+                    const referralCode = cookiesStore.get("referral_code");
+
                     const { error } = await createUserTable(
                         authUser,
                         authMethod,
                     ); // if the user does not exist in the database, create a new user
+
                     if (error) {
                         return redirect("/auth-status/error?mode=create-user");
+                    }
+
+                    if (referralCode) {
+                        await processReferralSignup(
+                            referralCode.value,
+                            authUser.id,
+                            authUser.email!,
+                        );
+
+                        cookiesStore.delete("referral_code");
                     }
 
                     if (isFreePlanEnabled()) {

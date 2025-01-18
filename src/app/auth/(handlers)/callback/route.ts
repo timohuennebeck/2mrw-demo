@@ -3,8 +3,12 @@
 import { isFreePlanEnabled, ROUTES_CONFIG } from "@/config";
 import { EmailType } from "@/enums";
 import { AuthMethod } from "@/enums/user";
+import { processReferralSignup } from "@/services/database/referralService";
 import { startFreePlan } from "@/services/database/subscriptionService";
-import { checkUserEmailExists, createUserTable } from "@/services/database/userService";
+import {
+    checkUserEmailExists,
+    createUserTable,
+} from "@/services/database/userService";
 import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
@@ -40,15 +44,39 @@ export const GET = async (request: Request) => {
             },
         );
 
-        const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-        if (error) return redirect(`${origin}${ROUTES_CONFIG.PUBLIC.STATUS_ERROR}?mode=google-auth`);
+        const { data, error } = await supabase.auth.exchangeCodeForSession(
+            code,
+        );
+        if (error) {
+            const baseUrl = `${origin}${ROUTES_CONFIG.PUBLIC.STATUS_ERROR}`;
+            return redirect(`${baseUrl}?mode=google-auth`);
+        }
 
         const { user: authUser } = data.session;
         const { emailExists } = await checkUserEmailExists(authUser.email!);
 
         if (!emailExists) {
-            const { error } = await createUserTable(authUser, AuthMethod.GOOGLE);
-            if (error) return redirect(`${origin}${ROUTES_CONFIG.PUBLIC.STATUS_ERROR}?mode=create-user`);
+            const { error } = await createUserTable(
+                authUser,
+                AuthMethod.GOOGLE,
+            );
+            if (error) {
+                const baseUrl = `${origin}${ROUTES_CONFIG.PUBLIC.STATUS_ERROR}`;
+                return redirect(`${baseUrl}?mode=create-user`);
+            }
+
+            const cookiesStore = await cookies();
+            const referralCode = cookiesStore.get("referral_code");
+
+            if (referralCode) {
+                await processReferralSignup(
+                    referralCode.value,
+                    authUser.id,
+                    authUser.email!,
+                );
+
+                cookiesStore.delete("referral_code");
+            }
 
             if (isFreePlanEnabled()) {
                 await startFreePlan(authUser.id);
@@ -60,7 +88,8 @@ export const GET = async (request: Request) => {
                 variables: {},
             });
 
-            return redirect(`${origin}${ROUTES_CONFIG.PUBLIC.STATUS_SUCCESS}?mode=google-connected`);
+            const baseUrl = `${origin}${ROUTES_CONFIG.PUBLIC.STATUS_SUCCESS}`;
+            return redirect(`${baseUrl}?mode=google-connected`);
         }
 
         return redirect(`${origin}${ROUTES_CONFIG.PROTECTED.USER_DASHBOARD}`);
