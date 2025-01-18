@@ -2,74 +2,20 @@
 
 import BugReportWidget from "@/components/application/bug-report-widget";
 import FeedbackWidget from "@/components/application/feedback-widget";
-import AppSidebar from "@/components/ui/app-sidebar";
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import { OnboardingChecklistTrigger } from "@/components/application/onboarding/onboarding-checklist-trigger";
 import { Button } from "@/components/ui/button";
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { appConfig } from "@/config";
-import { ChevronLeft, X } from "lucide-react";
-import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import UserDropdown from "@/components/ui/user-dropdown";
+import { appConfig, onboardingConfig } from "@/config";
+import { cn } from "@/lib/utils";
+import { ChevronLeft, CreditCard, LayoutGrid, Sparkles, User2, Share2, X } from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-const TopBar = () => {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
+    const router = useRouter();
 
-    const breadcrumbs = pathname
-        .split("/")
-        .filter(Boolean)
-        .map((segment, index, array) => {
-            const href = "/" + array.slice(0, index + 1).join("/");
-            // convert kebab-case to Title Case
-            const label = segment
-                .split("-")
-                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                .join(" ");
-
-            return {
-                href,
-                label,
-                isLast: index === array.length - 1,
-            };
-        });
-
-    return (
-        <div className="flex items-center gap-4 px-4 py-4">
-            <SidebarTrigger />
-
-            <Breadcrumb>
-                <BreadcrumbList>
-                    <BreadcrumbItem>
-                        <BreadcrumbLink href="/app">Home</BreadcrumbLink>
-                    </BreadcrumbItem>
-
-                    {breadcrumbs.map((breadcrumb, index) => (
-                        <React.Fragment key={breadcrumb.href}>
-                            <BreadcrumbSeparator />
-                            <BreadcrumbItem>
-                                {breadcrumb.isLast ? (
-                                    <BreadcrumbPage>{breadcrumb.label}</BreadcrumbPage>
-                                ) : (
-                                    <BreadcrumbLink href={breadcrumb.href}>
-                                        {breadcrumb.label}
-                                    </BreadcrumbLink>
-                                )}
-                            </BreadcrumbItem>
-                        </React.Fragment>
-                    ))}
-                </BreadcrumbList>
-            </Breadcrumb>
-        </div>
-    );
-};
-
-const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     const [widgetsVisible, setWidgetsVisible] = useState(true);
     const [showToggle, setShowToggle] = useState(false);
 
@@ -90,21 +36,39 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
+    const mainNavItems = [
+        {
+            href: "/app",
+            label: "Home",
+            icon: LayoutGrid,
+        },
+        {
+            href: "/app/user-profile",
+            label: "Profile",
+            icon: User2,
+        },
+    ];
+
+    const userDropdownItems = [
+        {
+            label: "Billing",
+            href: "/app/billing",
+            icon: CreditCard,
+        },
+        {
+            label: "Invite a Friend",
+            href: "/app/refer",
+            icon: Share2,
+        },
+        {
+            label: "Upgrade to Premium",
+            href: "/choose-pricing-plan",
+            icon: Sparkles,
+        },
+    ];
+
     return (
-        <SidebarProvider defaultOpen>
-            <div className="flex h-screen w-full overflow-hidden">
-                <AppSidebar />
-
-                <SidebarInset>
-                    <main className="flex h-full flex-col">
-                        <TopBar />
-
-                        <div className="h-full overflow-y-auto px-8 py-8">{children}</div>
-                    </main>
-                </SidebarInset>
-            </div>
-
-            {/* Feedback Widgets */}
+        <div className="min-h-screen bg-white">
             <div className="fixed bottom-4 right-8 flex items-center gap-2">
                 {widgetsVisible ? (
                     <>
@@ -141,8 +105,50 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                     </Button>
                 )}
             </div>
-        </SidebarProvider>
-    );
-};
+            <div className="mx-auto max-w-5xl p-6">
+                <div className="mb-12 mt-6 flex justify-start">
+                    <UserDropdown
+                        user={{
+                            name: "Timo Huennebeck",
+                            email: "user@example.com",
+                            initials: "TH",
+                        }}
+                        menuItems={userDropdownItems}
+                        onLogout={() => {
+                            // Add your logout logic here
+                        }}
+                    />
+                </div>
 
-export default DashboardLayout;
+                <nav className="mb-8">
+                    <ul className="flex gap-2">
+                        {mainNavItems.map((item) => (
+                            <li key={item.href}>
+                                <Link
+                                    href={item.href}
+                                    className={cn(
+                                        "flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-500 hover:bg-gray-50 active:bg-gray-100",
+                                        ((item.href === "/app" && pathname === "/app") ||
+                                            (item.href !== "/app" &&
+                                                pathname.startsWith(item.href))) &&
+                                            "bg-gray-100",
+                                    )}
+                                >
+                                    <item.icon className="h-4 w-4" />
+                                    {item.label}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
+
+                <OnboardingChecklistTrigger
+                    userProgress={{ uploadedProductDemos: 0, referralCount: 0 }}
+                    config={onboardingConfig}
+                />
+
+                {children}
+            </div>
+        </div>
+    );
+}
