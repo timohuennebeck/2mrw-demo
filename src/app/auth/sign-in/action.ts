@@ -1,10 +1,10 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { createClient } from "@/services/integration/server";
 import { TextConstants } from "@/constants/TextConstants";
-import { cookies } from "next/headers";
+import { createClient } from "@/services/integration/server";
 import moment from "moment";
+import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 interface SignInParams {
     email: string;
@@ -36,7 +36,7 @@ export const signInUsingGoogle = async (referralCode?: string) => {
         if (referralCode) {
             const cookieStore = await cookies();
             cookieStore.set("referral_code", referralCode, {
-                expires: moment().add(72, "hours").toDate(),
+                expires: moment().add(72, "hours").toDate(), // uses cookies for google as we don't have access to the email until signed up
             });
         }
 

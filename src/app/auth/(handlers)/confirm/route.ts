@@ -10,7 +10,6 @@ import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
 import { stripe } from "@/services/stripe/client";
 import { getStripeCustomerId } from "@/services/stripe/stripeCustomer";
 import { type EmailOtpType } from "@supabase/supabase-js";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { type NextRequest, NextResponse } from "next/server";
 
@@ -83,9 +82,6 @@ export const GET = async (request: NextRequest) => {
                 if (!userData && authUser) {
                     const authMethod = authUser.user_metadata.auth_method;
 
-                    const cookiesStore = await cookies();
-                    const referralCode = cookiesStore.get("referral_code");
-
                     const { error } = await createUserTable(
                         authUser,
                         authMethod,
@@ -95,15 +91,10 @@ export const GET = async (request: NextRequest) => {
                         return redirect("/auth-status/error?mode=create-user");
                     }
 
-                    if (referralCode) {
-                        await processReferralSignup(
-                            referralCode.value,
-                            authUser.id,
-                            authUser.email!,
-                        );
-
-                        cookiesStore.delete("referral_code");
-                    }
+                    await processReferralSignup({
+                        newUserId: authUser.id,
+                        newUserEmail: authUser.email!,
+                    });
 
                     if (isFreePlanEnabled()) {
                         await startFreePlan(authUser.id);

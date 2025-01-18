@@ -69,11 +69,11 @@ export const GET = async (request: Request) => {
             const referralCode = cookiesStore.get("referral_code");
 
             if (referralCode) {
-                await processReferralSignup(
-                    referralCode.value,
-                    authUser.id,
-                    authUser.email!,
-                );
+                await processReferralSignup({
+                    newUserId: authUser.id,
+                    newUserEmail: authUser.email!,
+                    referralCode: referralCode?.value,
+                });
 
                 cookiesStore.delete("referral_code");
             }
