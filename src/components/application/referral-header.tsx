@@ -21,7 +21,7 @@ export const ReferralHeader = ({ title, description, expiresIn, bonus }: Referra
                 </div>
             </div>
             <p className="text-sm text-muted-foreground">{description}</p>
-            <p className="text-sm font-medium text-orange-600">
+            <p className="text-sm font-medium text-muted-foreground">
                 This referral expires in <span className="font-medium">{expiresIn}</span>
             </p>
         </>
