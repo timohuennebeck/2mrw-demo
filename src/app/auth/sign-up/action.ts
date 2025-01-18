@@ -19,7 +19,7 @@ export const signUpUserToSupabase = async ({
     email: string;
     password: string;
     authMethod: AuthMethod;
-    referralCode?: string | null;
+    referralCode?: string;
 }) => {
     try {
         if (referralCode) {

@@ -16,6 +16,7 @@ interface HandleSubmitParams {
     firstName: string;
     email: string;
     password: string;
+    referralCode?: string;
 }
 
 const _getSignUpMethod = (searchParams: URLSearchParams) => {
@@ -42,8 +43,7 @@ const SignUpPageContent = () => {
         duration: 0, // won't auto-clear
         action: {
             label: "Share Feedback",
-            onClick: () =>
-                window.open(appConfig.feedback.forms.accountDeletion.formUrl, "_blank"),
+            onClick: () => window.open(appConfig.feedback.forms.accountDeletion.formUrl, "_blank"),
         },
         configKey: "accountDeletion",
     });
@@ -94,7 +94,12 @@ const SignUpPageContent = () => {
         }, 4000);
     };
 
-    const handleSubmit = async ({ firstName, email, password }: HandleSubmitParams) => {
+    const handleSubmit = async ({
+        firstName,
+        email,
+        password,
+        referralCode,
+    }: HandleSubmitParams) => {
         setIsLoading(true);
 
         try {
@@ -106,6 +111,7 @@ const SignUpPageContent = () => {
                 email,
                 password,
                 authMethod: _getSignUpMethod(searchParams),
+                referralCode,
             };
 
             const result = await signUpUserToSupabase(dataToUpdate);
@@ -126,11 +132,11 @@ const SignUpPageContent = () => {
         }
     };
 
-    const handleSignUpWithMagicLink = async (email: string) => {
+    const handleSignUpWithMagicLink = async (email: string, referralCode?: string) => {
         setIsLoading(true);
 
         try {
-            const result = await sendMagicLink(email);
+            const result = await sendMagicLink(email, referralCode);
 
             if (result.error) throw result.error;
 

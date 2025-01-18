@@ -84,9 +84,9 @@ export interface RegisterLoginFormParams {
         email: string;
         password: string;
         firstName: string;
-        referralCode: string | null;
+        referralCode?: string;
     }) => void;
-    loginOrSignupWithMagicLink?: (email: string) => void;
+    loginOrSignupWithMagicLink: (email: string, referralCode?: string) => void;
     isLoading: boolean;
     statusMessage: StatusMessage | null;
     setStatusMessage: (statusMessage: StatusMessage | null) => void;
@@ -135,9 +135,9 @@ const RegisterLoginForm = ({
         const { firstName, email, password } = values;
 
         if (authMethod === "magic-link") {
-            loginOrSignupWithMagicLink?.(email);
+            loginOrSignupWithMagicLink(email, referralCode ?? undefined);
         } else {
-            handleSubmit({ email, password, firstName, referralCode });
+            handleSubmit({ email, password, firstName, referralCode: referralCode ?? undefined });
         }
     };
 
