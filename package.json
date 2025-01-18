@@ -41,6 +41,7 @@
         "express": "^4.21.2",
         "lucide-react": "^0.451.0",
         "moment": "^2.30.1",
+        "nanoid": "^5.0.9",
         "next": "15.1.2",
         "prettier-plugin-tailwindcss": "^0.6.5",
         "react": "^18.2.0",

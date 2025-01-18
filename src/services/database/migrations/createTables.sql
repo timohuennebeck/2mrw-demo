@@ -1,4 +1,15 @@
 CREATE TABLE
+    referrals (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
+        referrer_user_id UUID REFERENCES auth.users (id),
+        referred_email TEXT,
+        referred_user_id UUID REFERENCES auth.users (id),
+        status TEXT NOT NULL DEFAULT 'PENDING',
+        created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+
+CREATE TABLE
     users (
         id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid (),
         email TEXT NOT NULL,
@@ -11,6 +22,7 @@ CREATE TABLE
             auth_method IN ('password', 'magicLink', 'google')
         ),
         onboarding_completed BOOLEAN NOT NULL DEFAULT FALSE,
+        referral_code TEXT,
         created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
