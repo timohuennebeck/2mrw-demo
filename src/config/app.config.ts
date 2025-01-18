@@ -52,7 +52,7 @@ export const appConfig: GeneralConfig = {
         isEnabled: true,
         checklist: {
             isEnabled: true,
-            direction: "right",
+            direction: "left",
         },
     },
 
