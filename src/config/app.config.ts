@@ -59,7 +59,7 @@ export const appConfig: GeneralConfig = {
     feedback: {
         widgets: {
             reportBug: {
-                isEnabled: false,
+                isEnabled: true,
                 formUrl: "https://tally.so/r/bug-report",
             },
             shareFeedback: {
@@ -69,7 +69,7 @@ export const appConfig: GeneralConfig = {
         },
         forms: {
             accountDeletion: {
-                isEnabled: false, // controls whether to show feedback prompt after account deletion
+                isEnabled: true, // controls whether to show feedback prompt after account deletion
                 formUrl: "https://tally.so/r/exit-survey",
             },
         },
