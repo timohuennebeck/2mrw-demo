@@ -1,13 +1,12 @@
 "use client";
 
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ProfileSection } from "./ProfileSection";
+import { Button } from "@/components/ui/button";
 import { useUser } from "@/context/UserContext";
 import { createClient } from "@/services/integration/client";
-import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
+import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
 
 const _updateProfilePicture = async (userId: string, file: File) => {
     const supabase = createClient();
@@ -115,45 +114,40 @@ export const ProfilePictureSection = () => {
     };
 
     return (
-        <ProfileSection
-            title="Profile Picture"
-            description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-        >
-            <div className="flex flex-row items-center gap-4">
-                <Avatar className="h-24 w-24">
-                    <AvatarImage src={dbUser?.profile_image_url} />
-                    <AvatarFallback>H</AvatarFallback>
-                </Avatar>
+        <div className="flex flex-row items-center gap-4">
+            <Avatar className="h-24 w-24">
+                <AvatarImage src={dbUser?.profile_image_url} />
+                <AvatarFallback>H</AvatarFallback>
+            </Avatar>
 
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleProfilePictureChange}
-                    className="hidden"
-                    id="profile-picture-input"
-                />
+            <input
+                type="file"
+                accept="image/*"
+                onChange={handleProfilePictureChange}
+                className="hidden"
+                id="profile-picture-input"
+            />
 
-                <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={!dbUser?.profile_image_url}
-                    isLoading={isDeleting}
-                    onClick={handleDeletePicture}
-                >
-                    Delete Profile Picture
-                </Button>
+            <Button
+                variant="outline"
+                size="sm"
+                disabled={!dbUser?.profile_image_url}
+                isLoading={isDeleting}
+                onClick={handleDeletePicture}
+            >
+                Delete Profile Picture
+            </Button>
 
-                <Button
-                    type="button"
-                    onClick={() => document.getElementById("profile-picture-input")?.click()}
-                    className="w-fit"
-                    size="sm"
-                    disabled={isUploading}
-                    isLoading={isUploading}
-                >
-                    Upload Profile Picture
-                </Button>
-            </div>
-        </ProfileSection>
+            <Button
+                type="button"
+                onClick={() => document.getElementById("profile-picture-input")?.click()}
+                className="w-fit"
+                size="sm"
+                disabled={isUploading}
+                isLoading={isUploading}
+            >
+                Upload Profile Picture
+            </Button>
+        </div>
     );
 };

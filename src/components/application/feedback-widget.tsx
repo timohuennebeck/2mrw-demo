@@ -8,7 +8,7 @@ const FeedbackWidget = () => {
             onClick={() => window.open(appConfig.feedback.widgets.shareFeedback.formUrl, "_blank")}
             variant="default"
             size="sm"
-            className="group"
+            className="group shadow-sm"
         >
             <SmilePlus className="h-4 w-4 transition-transform group-hover:rotate-12" />
             Share Feedback
