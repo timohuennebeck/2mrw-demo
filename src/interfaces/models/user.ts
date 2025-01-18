@@ -5,7 +5,6 @@ export interface User {
     email: string;
     stripe_customer_id: string;
     profile_image_url: string;
-    first_name: string;
     position: string;
     onboarding_completed: boolean;
     bio: string;

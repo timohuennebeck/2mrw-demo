@@ -39,7 +39,6 @@ INSERT INTO
     public.users (
         id,
         email,
-        first_name,
         auth_method,
         onboarding_completed
     )
@@ -47,21 +46,18 @@ VALUES
     (
         '00000000-0000-0000-0000-000000000000',
         'active.trial@test.com',
-        'Active Trial User',
         'password',
         true
     ),
     (
         '22222222-2222-2222-2222-222222222222',
         'expired.trial@test.com',
-        'Expired Trial User',
         'password',
         true
     ),
     (
         '44444444-4444-4444-4444-444444444444',
         'no.trial@test.com',
-        'No Trial User',
         'password',
         true
     );

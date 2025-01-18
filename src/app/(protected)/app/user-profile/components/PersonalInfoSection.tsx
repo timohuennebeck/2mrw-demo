@@ -22,16 +22,12 @@ import { z } from "zod";
 import { ProfileSection } from "./ProfileSection";
 
 const _profileFormSchema = z.object({
-    first_name: z.string().min(2, {
-        message: "First name must be at least 2 characters.",
-    }),
     email: z.string().email(),
     position: z.string().max(50).nullable().optional(),
     bio: z.string().max(160).nullable().optional(),
 });
 
 interface UserProfileUpdate {
-    first_name?: string;
     email?: string;
     position?: string;
     bio?: string;
@@ -59,7 +55,6 @@ export const PersonalInfoSection = () => {
     const form = useForm({
         resolver: zodResolver(_profileFormSchema),
         defaultValues: {
-            first_name: "",
             email: "",
             position: "",
             bio: "",
@@ -68,7 +63,6 @@ export const PersonalInfoSection = () => {
 
     useEffect(() => {
         if (dbUser) {
-            form.setValue("first_name", dbUser.first_name ?? "");
             form.setValue("email", dbUser.email ?? "");
             form.setValue("position", dbUser.position ?? "");
             form.setValue("bio", dbUser.bio ?? "");
@@ -88,7 +82,6 @@ export const PersonalInfoSection = () => {
             const updates: UserProfileUpdate = {};
 
             // only include changed fields in the update
-            if (values.first_name !== dbUser?.first_name) updates.first_name = values.first_name;
             if (values.position !== dbUser?.position) updates.position = values.position;
             if (values.bio !== dbUser?.bio) updates.bio = values.bio;
 
@@ -128,20 +121,6 @@ export const PersonalInfoSection = () => {
         >
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col gap-4">
-                    <FormField
-                        control={form.control}
-                        name="first_name"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>First name</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Timo" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
                     <FormField
                         control={form.control}
                         name="email"

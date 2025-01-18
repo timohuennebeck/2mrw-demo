@@ -60,14 +60,10 @@ export function NavUser() {
                             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                         >
                             <Avatar className="h-8 w-8 rounded-lg">
-                                <AvatarImage
-                                    src={dbUser?.profile_image_url}
-                                    alt={dbUser?.first_name}
-                                />
+                                <AvatarImage src={dbUser?.profile_image_url} alt="profile image" />
                                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                             </Avatar>
                             <div className="grid flex-1 text-left text-sm leading-tight">
-                                <span className="truncate font-semibold">{dbUser?.first_name}</span>
                                 <span className="truncate text-xs">{dbUser?.email}</span>
                             </div>
                             <Ellipsis className="ml-auto size-4" />
@@ -84,14 +80,11 @@ export function NavUser() {
                                 <Avatar className="h-8 w-8 rounded-lg">
                                     <AvatarImage
                                         src={dbUser?.profile_image_url}
-                                        alt={dbUser?.first_name}
+                                        alt="profile image"
                                     />
                                     <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                                 </Avatar>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-semibold">
-                                        {dbUser?.first_name}
-                                    </span>
                                     <span className="truncate text-xs">{dbUser?.email}</span>
                                 </div>
                             </div>

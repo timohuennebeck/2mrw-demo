@@ -13,7 +13,6 @@ CREATE TABLE
     users (
         id UUID PRIMARY KEY UNIQUE DEFAULT gen_random_uuid (),
         email TEXT NOT NULL,
-        first_name TEXT,
         stripe_customer_id TEXT,
         profile_image_url TEXT,
         position TEXT,

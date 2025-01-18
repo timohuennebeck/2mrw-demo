@@ -64,7 +64,6 @@ export const createUserTable = async (
 
         const { error } = await supabase.from("users").insert({
             id: authUser.id,
-            first_name: authUser.user_metadata.full_name,
             email: authUser.email,
             updated_at: moment().toISOString(),
             created_at: moment().toISOString(),

@@ -13,7 +13,6 @@ import { useParamFeedback } from "@/hooks/useParamFeedback";
 import { useSearchParams } from "next/navigation";
 
 interface HandleSubmitParams {
-    firstName: string;
     email: string;
     password: string;
     referralCode?: string;
@@ -94,12 +93,7 @@ const SignUpPageContent = () => {
         }, 4000);
     };
 
-    const handleSubmit = async ({
-        firstName,
-        email,
-        password,
-        referralCode,
-    }: HandleSubmitParams) => {
+    const handleSubmit = async ({ email, password, referralCode }: HandleSubmitParams) => {
         setIsLoading(true);
 
         try {
@@ -107,7 +101,6 @@ const SignUpPageContent = () => {
             if (emailExists) throw new Error(TextConstants.ERROR__EMAIL_ALREADY_IN_USE); // throws an error because the email exists
 
             const dataToUpdate = {
-                firstName,
                 email,
                 password,
                 authMethod: _getSignUpMethod(searchParams),

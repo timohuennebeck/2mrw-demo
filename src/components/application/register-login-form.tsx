@@ -64,9 +64,6 @@ const _createFormSchema = (mode: string, authMethod: string) => {
     // for password signup, we need all fields
     return z.object({
         ...baseSchema,
-        firstName: z.string().min(1, {
-            message: TextConstants.ERROR__FIRST_NAME_IS_MISSING,
-        }),
         password: z.string().min(1, {
             message: TextConstants.ERROR__PASSWORD_IS_MISSING,
         }),
@@ -78,12 +75,10 @@ export interface RegisterLoginFormParams {
     handleSubmit: ({
         email,
         password,
-        firstName,
         referralCode,
     }: {
         email: string;
         password: string;
-        firstName: string;
         referralCode?: string;
     }) => void;
     loginOrSignupWithMagicLink: (email: string, referralCode?: string) => void;
@@ -125,19 +120,18 @@ const RegisterLoginForm = ({
     const registerLoginForm = useForm({
         resolver: zodResolver(_createFormSchema(mode, authMethod)),
         defaultValues: {
-            firstName: "",
             email: "",
             password: "",
         },
     });
 
-    const handleFormSubmit = (values: { firstName: string; email: string; password: string }) => {
-        const { firstName, email, password } = values;
+    const handleFormSubmit = (values: { email: string; password: string }) => {
+        const { email, password } = values;
 
         if (authMethod === "magic-link") {
             loginOrSignupWithMagicLink(email, referralCode ?? undefined);
         } else {
-            handleSubmit({ email, password, firstName, referralCode: referralCode ?? undefined });
+            handleSubmit({ email, password, referralCode: referralCode ?? undefined });
         }
     };
 
@@ -213,30 +207,6 @@ const RegisterLoginForm = ({
                             }}
                             noValidate
                         >
-                            {mode === "signup" && authMethod === "password" && (
-                                <FormField
-                                    control={registerLoginForm.control}
-                                    name="firstName"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>First name</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    {...field}
-                                                    id="firstName"
-                                                    name="firstName"
-                                                    type="text"
-                                                    placeholder={
-                                                        TextConstants.TEXT__FIRST_NAME_PLACEHOLDER
-                                                    }
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            )}
-
                             <FormField
                                 control={registerLoginForm.control}
                                 name="email"

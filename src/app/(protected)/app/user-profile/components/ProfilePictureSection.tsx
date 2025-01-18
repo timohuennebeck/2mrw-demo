@@ -122,7 +122,7 @@ export const ProfilePictureSection = () => {
             <div className="flex flex-row items-center gap-4">
                 <Avatar className="h-24 w-24">
                     <AvatarImage src={dbUser?.profile_image_url} />
-                    <AvatarFallback>{dbUser?.first_name?.[0]?.toUpperCase() ?? "H"}</AvatarFallback>
+                    <AvatarFallback>H</AvatarFallback>
                 </Avatar>
 
                 <input

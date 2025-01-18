@@ -7,19 +7,19 @@ import { storePendingReferral } from "@/services/database/referralService";
 import { createClient } from "@/services/integration/server";
 import { AuthError } from "@supabase/supabase-js";
 
-export const signUpUserToSupabase = async ({
-    firstName,
-    email,
-    password,
-    authMethod,
-    referralCode,
-}: {
-    firstName: string;
+interface SignUpUserToSupabaseParams {
     email: string;
     password: string;
     authMethod: AuthMethod;
     referralCode?: string;
-}) => {
+}
+
+export const signUpUserToSupabase = async ({
+    email,
+    password,
+    authMethod,
+    referralCode,
+}: SignUpUserToSupabaseParams) => {
     try {
         if (referralCode) {
             await storePendingReferral(email, referralCode);
@@ -32,7 +32,6 @@ export const signUpUserToSupabase = async ({
             password,
             options: {
                 data: {
-                    full_name: firstName,
                     auth_method: authMethod,
                 },
             },

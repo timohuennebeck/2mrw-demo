@@ -32,7 +32,6 @@ export const OnboardingChecklist = ({
     useEffect(() => {
         if (isOpen) {
             const firstIncompleteTask = tasks.find((task) => !task.isCompleted);
-            console.log("→ [LOG] firstIncompleteTask", firstIncompleteTask);
 
             setOpenTaskId(firstIncompleteTask?.id ?? null);
         }

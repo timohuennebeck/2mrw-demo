@@ -1,6 +1,5 @@
 export const TextConstants = {
     TEXT__COMPANY_TITLE: "2mrw",
-    TEXT__FIRST_NAME_PLACEHOLDER: "Timo",
     TEXT__EMAIL_PLACEHOLDER: "m@example.com",
     TEXT__LOGOUT_SUCCESSFUL: "Logout successful!",
     TEXT__OR: "or",
@@ -41,7 +40,6 @@ export const TextConstants = {
     ERROR_SIGNING_OUT: "Error signing out",
     ERROR__FAILED_TO_RESEND_EMAIL: "Failed to resend email.",
     ERROR__PASSWORD_IS_MISSING: "Password is missing.",
-    ERROR__FIRST_NAME_IS_MISSING: "First name is missing",
     ERROR__CONFIRMATION_PASSWORD_IS_MISSING:
         "Confirmation password is missing.",
     ERROR__PASSWORDS_DO_NOT_MATCH: "Passwords do not match.",
