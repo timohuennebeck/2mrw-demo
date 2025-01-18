@@ -27,7 +27,6 @@ export const PlaceholderState = ({
             {ctaLabel && onClick && (
                 <Button onClick={onClick} size="sm" variant="outline">
                     {ctaLabel}
-                    <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
             )}
         </div>
