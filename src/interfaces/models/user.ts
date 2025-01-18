@@ -9,6 +9,7 @@ export interface User {
     onboarding_completed: boolean;
     bio: string;
     auth_method: AuthMethod;
+    referral_code: string;
     updated_at: Date;
     created_at: Date;
 }

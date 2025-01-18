@@ -1,9 +1,9 @@
 "use server";
 
 import { ReferralStatus } from "@/enums/referral";
-import { createClient } from "../integration/server";
-import { nanoid } from "nanoid";
 import moment from "moment";
+import { nanoid } from "nanoid";
+import { createClient } from "../integration/server";
 
 interface ProcessReferralSignupParams {
     newUserId: string;
@@ -44,14 +44,16 @@ export const getReferralLink = async (userId: string) => {
     if (code) return `${process.env.NEXT_PUBLIC_SITE_URL}/referral/${code}`;
 };
 
-const getPendingReferral = async (email: string) => {
+export const getExistingReferral = async (email: string) => {
     const supabase = await createClient();
 
     const { data: existingReferral, error } = await supabase
         .from("referrals")
         .select("*")
         .eq("referred_email", email)
-        .eq("status", ReferralStatus.PENDING)
+        .in("status", [ReferralStatus.PENDING, ReferralStatus.COMPLETED])
+        .order("created_at", { ascending: false })
+        .limit(1)
         .single();
 
     if (error) return { data: null, error };
@@ -82,10 +84,10 @@ export const processReferralSignup = async ({
     newUserEmail,
     referralCode,
 }: ProcessReferralSignupParams) => {
-    const { data: pendingReferral } = await getPendingReferral(newUserEmail); // check for pending referral (email, password, magic link flow, etc.)
+    const { data: existingReferral } = await getExistingReferral(newUserEmail); // check for pending referral (email, password, magic link flow, etc.)
 
-    if (pendingReferral) {
-        return await updateReferralToCompleted(pendingReferral.id, newUserId);
+    if (existingReferral) {
+        return await updateReferralToCompleted(existingReferral.id, newUserId);
     }
 
     if (referralCode) {
@@ -116,42 +118,36 @@ export const processReferralSignup = async ({
     return { success: true };
 };
 
-export const referralCodeExists = async (code: string) => {
+export const referralCodeExists = async (referralCode: string) => {
     const supabase = await createClient();
 
     const { data: referrer } = await supabase
         .from("users")
         .select("id")
-        .eq("referral_code", code)
+        .eq("referral_code", referralCode)
         .single();
 
     return { codeExists: !!referrer };
 };
 
-export const storePendingReferral = async (
-    email: string,
-    referralCode: string,
+export const createPendingReferral = async (
+    referredEmail: string,
+    referrerUserId: string,
 ) => {
     const supabase = await createClient();
-
-    const { referrer } = await getReferrerByReferralCode(referralCode);
-
-    if (!referrer) {
-        return { success: false, error: "The referral code is invalid" };
-    }
 
     const { error: insertError } = await supabase
         .from("referrals")
         .insert({
-            referrer_user_id: referrer.id,
-            referred_email: email,
+            referrer_user_id: referrerUserId,
+            referred_email: referredEmail,
             status: ReferralStatus.PENDING,
         });
 
     return { success: !insertError, error: insertError };
 };
 
-const getReferrerByReferralCode = async (referralCode: string) => {
+export const getReferrerByReferralCode = async (referralCode: string) => {
     const supabase = await createClient();
 
     const { data: referrer, error } = await supabase
@@ -163,4 +159,16 @@ const getReferrerByReferralCode = async (referralCode: string) => {
     if (error) return { referrer: null, error };
 
     return { referrer, error: null };
+};
+
+export const fetchReferrals = async (userId: string) => {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+        .from("referrals")
+        .select("*")
+        .eq("referrer_user_id", userId)
+        .order("created_at", { ascending: false });
+
+    return { referrals: data, error };
 };

@@ -3,7 +3,10 @@
 import { TextConstants } from "@/constants/TextConstants";
 import { SupabaseErrors } from "@/enums";
 import { AuthMethod } from "@/enums/user";
-import { storePendingReferral } from "@/services/database/referralService";
+import {
+    createPendingReferral,
+    getReferrerByReferralCode,
+} from "@/services/database/referralService";
 import { createClient } from "@/services/integration/server";
 import { AuthError } from "@supabase/supabase-js";
 
@@ -22,7 +25,8 @@ export const signUpUserToSupabase = async ({
 }: SignUpUserToSupabaseParams) => {
     try {
         if (referralCode) {
-            await storePendingReferral(email, referralCode);
+            const { referrer } = await getReferrerByReferralCode(referralCode);
+            if (referrer) await createPendingReferral(email, referrer.id);
         }
 
         const supabase = await createClient();

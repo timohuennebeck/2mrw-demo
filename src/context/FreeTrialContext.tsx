@@ -14,13 +14,13 @@ interface FreeTrialContextType {
     isLoading: boolean;
 }
 
-const FreeTrialContext = createContext<FreeTrialContextType>({
+const FreeTrialContext = createContext({
     freeTrial: null,
     canStartFreeTrial: false,
     isOnFreeTrial: false,
     invalidateFreeTrial: async () => {},
     isLoading: false,
-});
+} as FreeTrialContextType);
 
 export const FreeTrialProvider = ({ children }: { children: React.ReactNode }) => {
     const { authUser } = useSession();

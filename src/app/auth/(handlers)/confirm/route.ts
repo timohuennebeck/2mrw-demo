@@ -77,9 +77,11 @@ export const GET = async (request: NextRequest) => {
             }
             case "email":
             case "signup": {
-                const { data: userData } = await fetchUser(authUser?.id ?? "");
+                const { data: userExists } = await fetchUser(
+                    authUser?.id ?? "",
+                );
 
-                if (!userData && authUser) {
+                if (!userExists && authUser) {
                     const authMethod = authUser.user_metadata.auth_method;
 
                     const { error } = await createUserTable(

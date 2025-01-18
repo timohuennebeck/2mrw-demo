@@ -7,10 +7,10 @@ interface SessionContextType {
     authUser: User | null;
 }
 
-const SessionContext = createContext<SessionContextType>({
+const SessionContext = createContext({
     authUserIsLoggedIn: false,
     authUser: null,
-});
+} as SessionContextType);
 
 export const SessionProvider = ({ children }: { children: React.ReactNode }) => {
     const [authUserIsLoggedIn, setAuthUserIsLoggedIn] = useState(false);

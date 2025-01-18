@@ -9,10 +9,10 @@ interface UserContextType {
     invalidateUser: () => void;
 }
 
-const UserContext = createContext<UserContextType>({
+const UserContext = createContext({
     dbUser: null,
     invalidateUser: () => {},
-});
+} as UserContextType);
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const { authUser } = useSession();

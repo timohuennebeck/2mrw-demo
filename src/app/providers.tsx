@@ -7,6 +7,7 @@ import { queryClient } from "@/lib/qClient/qClient";
 import { UserProvider } from "@/context/UserContext";
 import { SubscriptionProvider } from "@/context/SubscriptionContext";
 import { FreeTrialProvider } from "@/context/FreeTrialContext";
+import { ReferralProvider } from "@/context/ReferralContext";
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
     return (
@@ -15,7 +16,9 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
                 <UserProvider>
                     <SubscriptionProvider>
                         <FreeTrialProvider>
-                            {children}
+                            <ReferralProvider>
+                                {children}
+                            </ReferralProvider>
                         </FreeTrialProvider>
                     </SubscriptionProvider>
                 </UserProvider>

@@ -12,12 +12,12 @@ interface SubscriptionContextType {
     isLoading: boolean;
 }
 
-const SubscriptionContext = createContext<SubscriptionContextType>({
+const SubscriptionContext = createContext({
     subscription: null,
     subscriptionStatus: SubscriptionStatus.EXPIRED,
     invalidateSubscription: async () => {},
     isLoading: false,
-});
+} as SubscriptionContextType);
 
 export const SubscriptionProvider = ({ children }: { children: React.ReactNode }) => {
     const { authUser } = useSession();
