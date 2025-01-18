@@ -109,6 +109,10 @@ export const processReferralSignup = async ({
         return { success: !insertError, insertError };
     }
 
+    /**
+     * FYI: This is the part where you can add new logic to the referral flow such as adding credits to the referrer and the referred users accounts, etc.
+     */
+
     return { success: true };
 };
 
