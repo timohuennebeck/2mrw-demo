@@ -2,13 +2,17 @@
 
 import { TextConstants } from "@/constants/TextConstants";
 import { AuthMethod } from "@/enums/user";
-import { storePendingReferral } from "../database/referralService";
+import {
+    createPendingReferral,
+    getReferrerByReferralCode,
+} from "../database/referralService";
 import { createClient } from "../integration/server";
 
 export const sendMagicLink = async (email: string, referralCode?: string) => {
     try {
         if (referralCode) {
-            await storePendingReferral(email, referralCode);
+            const { referrer } = await getReferrerByReferralCode(referralCode);
+            if (referrer) await createPendingReferral(email, referrer.id);
         }
 
         const supabase = await createClient();
