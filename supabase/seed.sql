@@ -64,7 +64,7 @@ VALUES
 
 -- create user subscriptions
 INSERT INTO
-    public.user_subscriptions (
+    public.subscriptions (
         user_id,
         status,
         subscription_tier,

@@ -17,7 +17,7 @@ export const fetchUserSubscription = async (userId: string) => {
         const supabase = await createClient();
 
         const { data, error } = await supabase
-            .from("user_subscriptions")
+            .from("subscriptions")
             .select("*")
             .eq("user_id", userId)
             .single();
@@ -52,9 +52,9 @@ export const updateUserSubscription = async ({
     try {
         const adminSupabase = await createSupabasePowerUserClient();
 
-        // uses upsert in case the user_subscriptions table doesn't yet exist such as when isOneTimePaymentEnabled is enabled
+        // uses upsert in case the subscriptions table doesn't yet exist such as when isOneTimePaymentEnabled is enabled
         const { data, error } = await adminSupabase
-            .from("user_subscriptions")
+            .from("subscriptions")
             .upsert({
                 user_id: userId,
                 stripe_price_id: stripePriceId,
@@ -90,7 +90,7 @@ export const cancelUserSubscription = async (
         const adminSupabase = await createSupabasePowerUserClient();
 
         const { error } = await adminSupabase
-            .from("user_subscriptions")
+            .from("subscriptions")
             .update({
                 status: SubscriptionStatus.CANCELLED,
                 end_date: endDate,
@@ -111,7 +111,7 @@ export const startFreePlan = async (userId: string) => {
     try {
         const adminSupabase = await createSupabasePowerUserClient();
 
-        const { error } = await adminSupabase.from("user_subscriptions").insert(
+        const { error } = await adminSupabase.from("subscriptions").insert(
             {
                 user_id: userId,
                 status: SubscriptionStatus.ACTIVE,

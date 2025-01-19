@@ -121,7 +121,7 @@ const _updateFreeTrialToExpired = async (userId: string) => {
 const _downgradeToFreePlan = async (userId: string) => {
   try {
     const { error } = await supabase
-      .from("user_subscriptions")
+      .from("subscriptions")
       .update({
         status: SubscriptionStatus.ACTIVE,
         subscription_tier: SubscriptionTier.FREE,

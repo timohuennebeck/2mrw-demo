@@ -88,7 +88,7 @@ const _fetchUserEmail = async (userId: string) => {
 const _fetchOnGoingSubscriptions = async () => {
   try {
     const { data, error } = await supabase
-      .from("user_subscriptions")
+      .from("subscriptions")
       .select("*")
       .in("status", [SubscriptionStatus.ACTIVE, SubscriptionStatus.CANCELLED])
       .neq("stripe_price_id", "price_free") // exclude free plan
@@ -105,7 +105,7 @@ const _fetchOnGoingSubscriptions = async () => {
 const _downgradeToFreePlan = async (userId: string) => {
   try {
     const { error } = await supabase
-      .from("user_subscriptions")
+      .from("subscriptions")
       .update({
         status: SubscriptionStatus.ACTIVE,
         subscription_tier: SubscriptionTier.FREE,

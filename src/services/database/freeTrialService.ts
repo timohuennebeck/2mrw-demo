@@ -54,14 +54,14 @@ export const startFreeTrial = async (userId: string, stripePriceId: string) => {
         if (!plan) throw new Error("Pricing plan is missing!");
 
         const { data: existingSubscription } = await supabase
-            .from("user_subscriptions")
+            .from("subscriptions")
             .select("*")
             .eq("user_id", userId)
             .single();
 
         if (!existingSubscription) {
             const { error: insertError } = await supabase
-                .from("user_subscriptions")
+                .from("subscriptions")
                 .insert({
                     user_id: userId,
                     stripe_price_id: stripePriceId,
