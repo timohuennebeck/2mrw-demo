@@ -44,7 +44,10 @@ export const OnboardingChecklistTrigger = ({
     return (
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
             <DropdownMenuTrigger asChild>
-                <Button variant="outline" className={`fixed bottom-4 ${position} gap-2 shadow-lg`}>
+                <Button
+                    variant="outline"
+                    className={`fixed bottom-4 ${position} z-50 gap-2 shadow-lg`}
+                >
                     <div className="flex items-center gap-2 text-sm">
                         {config.title}
                         <Badge className="rounded-sm" variant="blue">
