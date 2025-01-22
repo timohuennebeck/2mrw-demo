@@ -7,6 +7,7 @@ interface BonusSectionProps {
     bonusClaimed: boolean;
     onClaimBonus?: () => void;
     config: OnboardingConfig;
+    isClaimingBonus?: boolean;
 }
 
 export const BonusSection = ({
@@ -14,6 +15,7 @@ export const BonusSection = ({
     bonusClaimed,
     onClaimBonus,
     config,
+    isClaimingBonus,
 }: BonusSectionProps) => {
     if (!config.bonusReward) return null;
 
@@ -34,8 +36,14 @@ export const BonusSection = ({
                     )}
                 </p>
                 {allTasksCompleted && !bonusClaimed && (
-                    <Button size="sm" onClick={onClaimBonus} className="flex items-center gap-1.5">
-                        Claim Bonus
+                    <Button
+                        size="xs"
+                        onClick={onClaimBonus}
+                        className="flex items-center gap-1.5"
+                        disabled={isClaimingBonus}
+                        isLoading={isClaimingBonus}
+                    >
+                        {`Claim ${config.bonusReward.amount} Tokens`}
                     </Button>
                 )}
                 {bonusClaimed && (

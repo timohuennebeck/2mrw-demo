@@ -1,33 +1,27 @@
-import { CompletionCheckField } from "@/config/onboarding.config";
+import { CompletionCheckField, OnboardingTaskConfig } from "@/config/onboarding.config";
 import { cn } from "@/lib/utils";
 import { TaskContent } from "./task-content";
 import { TaskHeader } from "./task-header";
 import { TaskStatus } from "./task-status";
 
 interface TaskItemProps {
-    id: string;
+    taskId: string;
     title: string;
     description: string;
     isCompleted: boolean;
     disabled?: boolean;
-    reward: {
-        amount: number;
-        unit: string;
-    };
-    action: {
-        href: string;
-        label: string;
-    };
+    reward: OnboardingTaskConfig["reward"];
+    action: OnboardingTaskConfig["action"];
     referralSteps?: number;
-    completionCheck?: {
-        field: string;
-    };
+    completionCheck?: OnboardingTaskConfig["completionCheck"];
     isOpen: boolean;
     onToggle: () => void;
     userProgress: { [key in CompletionCheckField]: number };
+    canClaim: boolean;
 }
 
 export const TaskItem = ({
+    taskId,
     title,
     description,
     isCompleted,
@@ -39,6 +33,7 @@ export const TaskItem = ({
     isOpen,
     onToggle,
     userProgress,
+    canClaim,
 }: TaskItemProps) => {
     return (
         <div className="relative">
@@ -62,12 +57,15 @@ export const TaskItem = ({
                         />
                         {isOpen && (
                             <TaskContent
+                                taskId={taskId}
+                                canClaim={canClaim}
                                 description={description}
                                 isCompleted={isCompleted}
                                 action={action}
                                 referralSteps={referralSteps}
                                 completionCheck={completionCheck}
                                 userProgress={userProgress}
+                                reward={reward}
                             />
                         )}
                     </div>

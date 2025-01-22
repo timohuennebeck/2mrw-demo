@@ -8,17 +8,17 @@ import { UserProvider } from "@/context/UserContext";
 import { SubscriptionProvider } from "@/context/SubscriptionContext";
 import { FreeTrialProvider } from "@/context/FreeTrialContext";
 import { ReferralProvider } from "@/context/ReferralContext";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
     return (
         <QueryClientProvider client={queryClient}>
+            <ReactQueryDevtools initialIsOpen={false} />
             <SessionProvider>
                 <UserProvider>
                     <SubscriptionProvider>
                         <FreeTrialProvider>
-                            <ReferralProvider>
-                                {children}
-                            </ReferralProvider>
+                            <ReferralProvider>{children}</ReferralProvider>
                         </FreeTrialProvider>
                     </SubscriptionProvider>
                 </UserProvider>

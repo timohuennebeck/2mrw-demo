@@ -6,18 +6,38 @@ import { OnboardingChecklistTrigger } from "@/components/application/onboarding/
 import { Button } from "@/components/ui/button";
 import UserDropdown from "@/components/ui/user-dropdown";
 import { appConfig, onboardingConfig } from "@/config";
+import { useUser } from "@/context/UserContext";
+import { queryClient } from "@/lib/qClient/qClient";
 import { cn } from "@/lib/utils";
-import { ChevronLeft, CreditCard, LayoutGrid, Sparkles, User2, Share2, X } from "lucide-react";
+import { createClient } from "@/services/integration/client";
+import { ChevronLeft, CreditCard, LayoutGrid, Share2, Sparkles, User2, X } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
+const _claimBonus = async (userId: string) => {
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+        .from("users")
+        .update({
+            onboarding_completed: true,
+        })
+        .eq("id", userId)
+        .select();
+
+    return { data, error };
+};
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+    const { dbUser, invalidateUser } = useUser();
+
     const pathname = usePathname();
-    const router = useRouter();
 
     const [widgetsVisible, setWidgetsVisible] = useState(true);
     const [showToggle, setShowToggle] = useState(false);
+    const [isClaimingBonus, setIsClaimingBonus] = useState(false);
 
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -34,6 +54,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         if (typeof window !== "undefined") {
             localStorage.setItem("feedbackWidgetsVisible", String(newValue));
         }
+    };
+
+    const handleClaimBonus = async () => {
+        if (!dbUser) return;
+        const { error } = await _claimBonus(dbUser.id);
+
+        if (error) {
+            toast.error("Failed to claim bonus");
+            return;
+        }
+
+        setIsClaimingBonus(true);
+        toast.success(`Bonus claimed! You've earned 25 Tokens.`);
+        invalidateUser();
+        setTimeout(() => setIsClaimingBonus(false), 1000);
     };
 
     const mainNavItems = [
@@ -142,10 +177,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </ul>
                 </nav>
 
-                <OnboardingChecklistTrigger
-                    userProgress={{ uploadedProductDemos: 0, referralCount: 0 }}
-                    config={onboardingConfig}
-                />
+                {!dbUser?.onboarding_completed && (
+                    <OnboardingChecklistTrigger
+                        userProgress={{ uploadedProductDemos: 1, referralCount: 5 }}
+                        config={onboardingConfig}
+                        onClaimBonus={handleClaimBonus}
+                        isClaimingBonus={isClaimingBonus}
+                    />
+                )}
 
                 {children}
             </div>

@@ -7,15 +7,19 @@ import {
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { appConfig, CompletionCheckField, OnboardingConfig } from "@/config";
+import { appConfig, CompletionCheckField, OnboardingConfig, OnboardingTaskConfig } from "@/config";
 import { ChevronUp } from "lucide-react";
 import { useState } from "react";
 import { OnboardingChecklist } from "./onboarding-checklist";
+import { useQuery } from "@tanstack/react-query";
+import { useUser } from "@/context/UserContext";
+import { fetchClaimedRewards } from "@/services/domain/onboardingService";
 
 interface OnboardingChecklistTriggerProps {
     userProgress: { [key in CompletionCheckField]: number };
     config: OnboardingConfig;
     onClaimBonus?: () => void;
+    isClaimingBonus?: boolean;
     bonusClaimed?: boolean;
 }
 
@@ -23,18 +27,33 @@ export const OnboardingChecklistTrigger = ({
     userProgress,
     config,
     onClaimBonus,
+    isClaimingBonus,
     bonusClaimed = false,
 }: OnboardingChecklistTriggerProps) => {
+    const { dbUser } = useUser();
+
     const [isOpen, setIsOpen] = useState(false);
+
+    const { data: claimedTaskIds } = useQuery({
+        queryKey: ["claimedRewards", dbUser?.id],
+        queryFn: () => fetchClaimedRewards(dbUser!.id),
+        enabled: !!dbUser?.id,
+    });
 
     if (!appConfig.onboarding.checklist.isEnabled) return null;
 
-    const tasks = config.tasks.map((task) => ({
-        ...task,
-        isCompleted:
+    const tasks = config.tasks.map((task) => {
+        const hasClaimed = claimedTaskIds?.data.includes(task.id);
+        const meetsTarget =
             userProgress[task.completionCheck.field as CompletionCheckField] >=
-            task.completionCheck.target,
-    }));
+            task.completionCheck.target;
+
+        return {
+            ...task,
+            isCompleted: hasClaimed,
+            canClaim: meetsTarget && !hasClaimed,
+        } as OnboardingTaskConfig & { isCompleted: boolean; canClaim: boolean };
+    });
 
     const completedTasks = tasks.filter((task) => task.isCompleted).length;
     const progress = Math.round((completedTasks / tasks.length) * 100);
@@ -69,6 +88,7 @@ export const OnboardingChecklistTrigger = ({
                     onClaimBonus={onClaimBonus}
                     bonusClaimed={bonusClaimed}
                     isOpen={isOpen}
+                    isClaimingBonus={isClaimingBonus}
                 />
             </DropdownMenuContent>
         </DropdownMenu>

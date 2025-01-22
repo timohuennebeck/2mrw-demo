@@ -1,4 +1,12 @@
 CREATE TABLE
+    onboarding_rewards (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
+        user_id UUID REFERENCES auth.users (id),
+        task_id TEXT NOT NULL,
+        claimed_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    );
+
+CREATE TABLE
     referrals (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
         referrer_user_id UUID REFERENCES auth.users (id),

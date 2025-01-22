@@ -10,12 +10,13 @@ import { BonusSection } from "./bonus-section";
 import { TaskItem } from "./task-item";
 
 interface OnboardingChecklistProps {
-    tasks: (OnboardingTaskConfig & { isCompleted: boolean })[];
+    tasks: (OnboardingTaskConfig & { isCompleted: boolean; canClaim: boolean })[];
     userProgress: { [key in CompletionCheckField]: number };
     config: OnboardingConfig;
     onClaimBonus?: () => void;
     bonusClaimed?: boolean;
     isOpen: boolean;
+    isClaimingBonus?: boolean;
 }
 
 export const OnboardingChecklist = ({
@@ -25,13 +26,14 @@ export const OnboardingChecklist = ({
     onClaimBonus,
     bonusClaimed = false,
     isOpen,
+    isClaimingBonus,
 }: OnboardingChecklistProps) => {
     const [openTaskId, setOpenTaskId] = useState(null as null | string);
 
     // set the first incomplete task as open when the dropdown opens
     useEffect(() => {
         if (isOpen) {
-            const firstIncompleteTask = tasks.find((task) => !task.isCompleted);
+            const firstIncompleteTask = tasks.find((task) => !task.isCompleted && task.canClaim);
 
             setOpenTaskId(firstIncompleteTask?.id ?? null);
         }
@@ -46,6 +48,7 @@ export const OnboardingChecklist = ({
                 {tasks.map((task) => (
                     <TaskItem
                         key={task.id}
+                        taskId={task.id}
                         {...task}
                         isOpen={openTaskId === task.id}
                         onToggle={() => {
@@ -60,6 +63,7 @@ export const OnboardingChecklist = ({
                     bonusClaimed={bonusClaimed}
                     onClaimBonus={onClaimBonus}
                     config={config}
+                    isClaimingBonus={isClaimingBonus}
                 />
             </div>
         </div>

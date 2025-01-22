@@ -1,39 +1,88 @@
-import { CompletionCheckField } from "@/config/onboarding.config";
+import { Button } from "@/components/ui/button";
+import { CompletionCheckField, OnboardingTaskConfig } from "@/config/onboarding.config";
+import { useUser } from "@/context/UserContext";
 import { cn } from "@/lib/utils";
+import { claimReward } from "@/services/domain/onboardingService";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 import { ReferralSteps } from "./referral-steps";
+import { queryClient } from "@/lib/qClient/qClient";
 
 interface TaskContentProps {
+    taskId: string;
     description: string;
     isCompleted: boolean;
-    action: {
-        href: string;
-        label: string;
-    };
+    canClaim: boolean;
+    action: OnboardingTaskConfig["action"];
     referralSteps?: number;
-    completionCheck?: {
-        field: string;
-    };
+    completionCheck?: OnboardingTaskConfig["completionCheck"];
     userProgress: { [key in CompletionCheckField]: number };
+    reward: OnboardingTaskConfig["reward"];
 }
 
 export const TaskContent = ({
+    taskId,
     description,
     isCompleted,
+    canClaim,
     action,
     referralSteps,
     completionCheck,
     userProgress,
+    reward,
 }: TaskContentProps) => {
+    const { dbUser } = useUser();
+
     const router = useRouter();
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleClaimBonus = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+
+        if (!dbUser) return;
+
+        try {
+            setIsLoading(true);
+            const result = await claimReward(dbUser.id, taskId);
+            queryClient.invalidateQueries({ queryKey: ["claimedRewards"] });
+
+            if (result.success) {
+                toast.success(`Bonus Claimed! You've earned +${reward.amount} Tokens!`);
+                setTimeout(() => setIsLoading(false), 1000);
+            }
+        } catch (error) {
+            toast.error("Failed to claim reward");
+            setIsLoading(false);
+        }
+    };
 
     return (
         <>
-            <p className={cn("mt-1 text-xs text-muted-foreground", isCompleted && "line-through")}>
+            <p
+                className={cn(
+                    "mt-1 text-xs text-muted-foreground",
+                    !canClaim && isCompleted && "line-through",
+                )}
+            >
                 {description}
             </p>
-            {!isCompleted && (
+
+            {canClaim && !isCompleted && (
+                <Button
+                    size="xs"
+                    onClick={handleClaimBonus}
+                    disabled={isLoading}
+                    isLoading={isLoading}
+                    className="mt-2 flex items-center gap-1.5"
+                >
+                    Claim +15 Tokens
+                </Button>
+            )}
+
+            {!canClaim && !isCompleted && (
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
@@ -45,7 +94,8 @@ export const TaskContent = ({
                     <ArrowRight className="h-3 w-3" />
                 </button>
             )}
-            {referralSteps && completionCheck && (
+
+            {referralSteps && completionCheck && !canClaim && (
                 <ReferralSteps
                     steps={referralSteps}
                     completed={userProgress[completionCheck.field as CompletionCheckField]}

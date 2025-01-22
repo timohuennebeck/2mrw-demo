@@ -20,13 +20,13 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const queryClient = useQueryClient();
 
     const { data } = useQuery({
-        queryKey: ["user"],
+        queryKey: ["user", authUser?.id],
         queryFn: () => fetchUser(authUser?.id ?? ""),
         enabled: !!authUser?.id,
     });
 
     const invalidateUser = () => {
-        queryClient.invalidateQueries({ queryKey: ["user"] });
+        queryClient.invalidateQueries({ queryKey: ["user", authUser?.id] });
     };
 
     return (
