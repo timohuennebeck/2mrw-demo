@@ -19,6 +19,7 @@ export interface PricingFeatureSection {
 export interface PricingFeatureItem {
     name: string;
     comingSoon?: boolean;
+    tooltip?: string;
     [key: string]: any;
 }
 
@@ -203,6 +204,7 @@ export const pricingComparisonFeatures: PricingFeatureSection[] = [
             {
                 name: "Ut labore et dolore",
                 comingSoon: true,
+                tooltip: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                 [SubscriptionTier.FREE]: false,
                 [SubscriptionTier.ESSENTIALS]: true,
                 [SubscriptionTier.FOUNDERS]: true,
@@ -210,6 +212,7 @@ export const pricingComparisonFeatures: PricingFeatureSection[] = [
             {
                 name: "Magna aliqua ut enim",
                 comingSoon: true,
+                tooltip: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                 [SubscriptionTier.FREE]: false,
                 [SubscriptionTier.ESSENTIALS]: false,
                 [SubscriptionTier.FOUNDERS]: true,

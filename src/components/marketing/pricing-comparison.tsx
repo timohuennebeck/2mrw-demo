@@ -5,10 +5,11 @@ import {
     PricingFeatureSection,
 } from "@/config";
 import { getBillingPeriodText, getPlanPriceDescription } from "@/utils/pricing/pricingHelper";
-import { Check, X } from "lucide-react";
+import { Check, X, InfoIcon } from "lucide-react";
 import React from "react";
 import PricingPlanButton from "../application/pricing-plan-button";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface PricingComparisonParams {
     eyebrow: string;
@@ -98,6 +99,18 @@ const FeatureRow = ({
         <div className={`grid grid-cols-1 gap-8 py-6 md:grid-cols-${plansToShow.length + 1}`}>
             <div className="flex items-center gap-2 text-sm text-gray-600">
                 {item.name}
+                {item.tooltip && (
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger>
+                                <InfoIcon className="h-4 w-4 text-gray-400" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p className="max-w-xs text-sm">{item.tooltip}</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                )}
                 {item.comingSoon && (
                     <Badge variant="blue" className="rounded-md font-medium">
                         Coming Soon
