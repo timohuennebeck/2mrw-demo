@@ -78,7 +78,7 @@ export const TaskContent = ({
                     isLoading={isLoading}
                     className="mt-2 flex items-center gap-1.5"
                 >
-                    Claim +15 Tokens
+                    Claim Reward
                 </Button>
             )}
 
