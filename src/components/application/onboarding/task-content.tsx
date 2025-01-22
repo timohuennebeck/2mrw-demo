@@ -76,7 +76,7 @@ export const TaskContent = ({
                     onClick={handleClaimBonus}
                     disabled={isLoading}
                     isLoading={isLoading}
-                    className="mt-2 flex items-center gap-1.5"
+                    className="mt-2 flex items-center gap-1.5 bg-blue-600 text-white hover:bg-blue-700"
                 >
                     Claim Reward
                 </Button>
