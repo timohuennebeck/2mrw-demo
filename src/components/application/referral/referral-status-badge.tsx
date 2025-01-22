@@ -11,7 +11,7 @@ export const ReferralStatusBadge = ({ status }: ReferralStatusBadgeProps) => {
         return (
             <Badge variant="blue" className="gap-2 rounded-sm text-sm font-normal">
                 <CircleCheck className="h-4 w-4 fill-blue-600 stroke-white text-blue-600" />
-                +25 Tokens
+                [INSERT_REWARD_FOR_REFERRAL]
             </Badge>
         );
     }

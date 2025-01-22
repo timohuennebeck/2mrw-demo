@@ -63,7 +63,7 @@ export const ReferralCard = ({ referralLink, userId }: ReferralCardProps) => {
 
             invalidateReferrals();
 
-            // TODO: implement email sending logic and add pending referral for that user
+            // TODO: implement email sending logic
             // await sendReferralEmail(values.email, referralLink);
             form.reset();
         } catch (error) {
@@ -88,7 +88,7 @@ export const ReferralCard = ({ referralLink, userId }: ReferralCardProps) => {
                         </h4>
                         <p className="text-xs text-muted-foreground">
                             Share this referral link with friends and earn{" "}
-                            <span className="font-semibold text-blue-600">+25 tokens</span> for each
+                            <span className="font-semibold text-blue-600">[INSERT_REWARD_FOR_REFERRAL]</span> for each
                             friend who joins
                         </p>
                     </div>

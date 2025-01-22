@@ -24,21 +24,17 @@ const ReferPage = () => {
     const referralCode = dbUser?.referral_code;
     const referralLink = `${process.env.NEXT_PUBLIC_SITE_URL}/auth/sign-up?method=magic-link:ref=${referralCode}`;
 
-    const tokensEarned =
-        referrals && referrals.filter((r) => r.status === ReferralStatus.COMPLETED).length * 25;
-
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-2">
-                    <h1 className="text-xl font-semibold">Invite Friends</h1>
+                    <h1 className="text-xl font-semibold">Invite a Friend</h1>
                     <p className="max-w-lg text-sm text-muted-foreground">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente, eveniet
-                        eligendi placeat assumenda ex veniam nesciunt earum non corrupti laboriosam.
+                        Invite a friend to join the platform and earn [INSERT_REWARD_FOR_REFERRAL] for each friend who joins
                     </p>
                 </div>
                 <Badge variant="blue" className="rounded-sm">
-                    {tokensEarned} / 500 Tokens Earned
+                    0 / [INSERT_REWARD_FOR_REFERRAL]
                 </Badge>
             </div>
 
