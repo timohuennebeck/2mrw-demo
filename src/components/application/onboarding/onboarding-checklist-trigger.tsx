@@ -50,7 +50,7 @@ export const OnboardingChecklistTrigger = ({
 
         return {
             ...task,
-            isCompleted: hasClaimed,
+            isCompleted: hasClaimed || (meetsTarget && task.disableRewardForReferralSteps),
             canClaim: meetsTarget && !hasClaimed,
         } as OnboardingTaskConfig & { isCompleted: boolean; canClaim: boolean };
     });
