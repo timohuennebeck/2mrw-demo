@@ -8,7 +8,6 @@ import {
     handleCheckoutCompleted,
     handleUpdateSubscription,
 } from "@/services/stripe/stripeWebhook";
-import moment from "moment";
 import Stripe from "stripe";
 
 const _verifyStripeWebhook = async (body: string, signature: string) => {

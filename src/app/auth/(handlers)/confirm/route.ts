@@ -1,12 +1,10 @@
 "use server";
 
 import { isFreePlanEnabled } from "@/config";
-import { EmailType } from "@/enums";
 import { processReferralSignup } from "@/services/database/referralService";
 import { startFreePlan } from "@/services/database/subscriptionService";
 import { createUserTable, fetchUser } from "@/services/database/userService";
 import { createClient } from "@/services/integration/server";
-import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
 import { stripe } from "@/services/stripe/client";
 import { getStripeCustomerId } from "@/services/stripe/stripeCustomer";
 import { type EmailOtpType } from "@supabase/supabase-js";

@@ -1,7 +1,6 @@
 "use server";
 
 import { isFreePlanEnabled, ROUTES_CONFIG } from "@/config";
-import { EmailType } from "@/enums";
 import { AuthMethod } from "@/enums/user";
 import { processReferralSignup } from "@/services/database/referralService";
 import { startFreePlan } from "@/services/database/subscriptionService";
@@ -9,7 +8,6 @@ import {
     checkUserEmailExists,
     createUserTable,
 } from "@/services/database/userService";
-import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
