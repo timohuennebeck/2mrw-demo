@@ -9,7 +9,6 @@ import {
     handleUpdateSubscription,
 } from "@/services/stripe/stripeWebhook";
 import moment from "moment";
-import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
 const _verifyStripeWebhook = async (body: string, signature: string) => {
@@ -70,13 +69,13 @@ const _cancelExistingFreeTrialsInStripe = async (userId: string) => {
     }
 };
 
-export const POST = async (req: NextRequest) => {
+export const POST = async (req: Request) => {
     try {
         const body = await req.text();
         const signature = req.headers.get("stripe-signature");
 
         if (!signature) {
-            return NextResponse.json({
+            return Response.json({
                 error: "There was no signature provided",
             }, { status: 400 });
         }
@@ -162,10 +161,10 @@ export const POST = async (req: NextRequest) => {
                 break;
         }
 
-        return NextResponse.json({ received: true }, { status: 200 });
+        return Response.json({ received: true }, { status: 200 });
     } catch (error) {
         console.error("Error processing stripe webhook:", error);
-        return NextResponse.json(
+        return Response.json(
             { error: "Processing stripe webhook failed" },
             { status: 500 },
         );
