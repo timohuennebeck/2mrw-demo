@@ -82,12 +82,6 @@ export const GET = async (request: Request) => {
                 await startFreePlan(authUser.id);
             }
 
-            sendLoopsTransactionalEmail({
-                type: EmailType.WELCOME_TO_SAAS_NAME,
-                email: authUser.email!,
-                variables: {},
-            });
-
             const baseUrl = `${origin}${ROUTES_CONFIG.PUBLIC.STATUS_SUCCESS}`;
             return redirect(`${baseUrl}?mode=google-connected`);
         }

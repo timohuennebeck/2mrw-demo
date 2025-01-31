@@ -102,12 +102,6 @@ export const GET = async (request: NextRequest) => {
                         await startFreePlan(authUser.id);
                     }
 
-                    sendLoopsTransactionalEmail({
-                        type: EmailType.WELCOME_TO_SAAS_NAME,
-                        email: authUser.email!,
-                        variables: {},
-                    });
-
                     return redirect(
                         "/auth-status/success?mode=email-confirmed",
                     );

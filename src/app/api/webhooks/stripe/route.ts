@@ -114,24 +114,11 @@ export const POST = async (req: Request) => {
                      * if it is, cancel the subscripton
                      */
 
-                    const subscriptionEndDate = moment.unix(
-                        subscription.current_period_end,
-                    ).format("Do [of] MMMM, YYYY");
-
-                    sendLoopsTransactionalEmail({
-                        type: EmailType.CANCELLED_SUBSCRIPTION,
-                        email: user.email,
-                        variables: {
-                            endDate: subscriptionEndDate,
-                            feedbackFormUrl:
-                                `${process.env.NEXT_PUBLIC_APP_URL}/app/feedback`,
-                        },
-                    });
-
                     const cancelResult = await handleCancelSubscription(
                         user.id,
                         subscription,
                     );
+
                     if (cancelResult.error) throw cancelResult.error;
                 } else {
                     const updateResult = await handleUpdateSubscription(

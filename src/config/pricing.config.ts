@@ -23,6 +23,8 @@ export interface PricingFeatureItem {
     [key: string]: any;
 }
 
+const FREE_STRIPE_PRICE_INDICATOR = "price_free";
+
 export const defaultPricingPlans: {
     monthly: DefaultPricingPlan[];
     annual: DefaultPricingPlan[];
@@ -37,7 +39,7 @@ export const defaultPricingPlans: {
             billing_period: BillingPeriod.MONTHLY,
             billing_plan: BillingPlan.RECURRING,
             is_highlighted: false,
-            stripe_price_id: "price_free", // Important! Do not change this!!
+            stripe_price_id: FREE_STRIPE_PRICE_INDICATOR, // Important! Do not change this!!
             subscription_tier: SubscriptionTier.FREE,
         },
         {
@@ -72,7 +74,7 @@ export const defaultPricingPlans: {
             billing_period: BillingPeriod.YEARLY,
             billing_plan: BillingPlan.RECURRING,
             is_highlighted: false,
-            stripe_price_id: "price_free", // Important! Do not change this!!
+            stripe_price_id: FREE_STRIPE_PRICE_INDICATOR, // Important! Do not change this!!
             subscription_tier: SubscriptionTier.FREE,
         },
         {
@@ -204,7 +206,8 @@ export const pricingComparisonFeatures: PricingFeatureSection[] = [
             {
                 name: "Ut labore et dolore",
                 comingSoon: true,
-                tooltip: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                tooltip:
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                 [SubscriptionTier.FREE]: false,
                 [SubscriptionTier.ESSENTIALS]: true,
                 [SubscriptionTier.FOUNDERS]: true,
@@ -212,7 +215,8 @@ export const pricingComparisonFeatures: PricingFeatureSection[] = [
             {
                 name: "Magna aliqua ut enim",
                 comingSoon: true,
-                tooltip: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                tooltip:
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                 [SubscriptionTier.FREE]: false,
                 [SubscriptionTier.ESSENTIALS]: false,
                 [SubscriptionTier.FOUNDERS]: true,
