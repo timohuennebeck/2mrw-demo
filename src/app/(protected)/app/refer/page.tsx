@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/table";
 import { useReferral } from "@/context/ReferralContext";
 import { useUser } from "@/context/UserContext";
-import { ReferralStatus } from "@/enums/referral";
 import { SmilePlus } from "lucide-react";
 import moment from "moment";
 

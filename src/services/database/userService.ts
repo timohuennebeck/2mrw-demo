@@ -1,12 +1,12 @@
 "use server";
 
-import { TextConstants } from "@/constants/TextConstants";
 import { AuthMethod } from "@/enums/user";
 import { User } from "@/interfaces";
 import { handleError } from "@/utils/errors/error";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import moment from "moment";
 import { createClient } from "../integration/server";
+import { nanoid } from "nanoid";
 
 export const checkUserEmailExists = async (userEmail: string) => {
     try {
@@ -69,6 +69,7 @@ export const createUserTable = async (
             created_at: moment().toISOString(),
             auth_method: authMethod,
             onboarding_completed: false,
+            referral_code: nanoid(8).toUpperCase(),
         });
 
         if (error) return { success: false, error };
