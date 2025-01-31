@@ -11,7 +11,7 @@ import { TaskItem } from "./task-item";
 
 interface OnboardingChecklistProps {
     tasks: (OnboardingTaskConfig & { isCompleted: boolean; canClaim: boolean })[];
-    userProgress: { [key in CompletionCheckField]: number };
+    userProgress: { [K in CompletionCheckField]: number };
     config: OnboardingConfig;
     onClaimBonus?: () => void;
     bonusClaimed?: boolean;

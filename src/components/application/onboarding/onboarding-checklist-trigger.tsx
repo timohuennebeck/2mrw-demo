@@ -16,7 +16,7 @@ import { useUser } from "@/context/UserContext";
 import { fetchClaimedRewards } from "@/services/domain/onboardingService";
 
 interface OnboardingChecklistTriggerProps {
-    userProgress: { [key in CompletionCheckField]: number };
+    userProgress: { [K in CompletionCheckField]: number };
     config: OnboardingConfig;
     onClaimBonus?: () => void;
     isClaimingBonus?: boolean;
@@ -50,7 +50,7 @@ export const OnboardingChecklistTrigger = ({
 
         return {
             ...task,
-            isCompleted: hasClaimed || (meetsTarget && task.disableRewardForReferralSteps),
+            isCompleted: hasClaimed || (meetsTarget && task.disableRewardForMultipleSteps),
             canClaim: meetsTarget && !hasClaimed,
         } as OnboardingTaskConfig & { isCompleted: boolean; canClaim: boolean };
     });

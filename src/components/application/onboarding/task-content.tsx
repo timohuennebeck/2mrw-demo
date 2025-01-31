@@ -16,9 +16,9 @@ interface TaskContentProps {
     isCompleted: boolean;
     canClaim: boolean;
     action: OnboardingTaskConfig["action"];
-    referralSteps?: number;
+    multipleSteps?: number;
     completionCheck?: OnboardingTaskConfig["completionCheck"];
-    userProgress: { [key in CompletionCheckField]: number };
+    userProgress: { [K in CompletionCheckField]: number };
     reward: OnboardingTaskConfig["reward"];
 }
 
@@ -28,7 +28,7 @@ export const TaskContent = ({
     isCompleted,
     canClaim,
     action,
-    referralSteps,
+    multipleSteps,
     completionCheck,
     userProgress,
     reward,
@@ -95,9 +95,9 @@ export const TaskContent = ({
                 </button>
             )}
 
-            {referralSteps && completionCheck && !canClaim && (
+            {multipleSteps && completionCheck && !canClaim && (
                 <ReferralSteps
-                    steps={referralSteps}
+                    steps={multipleSteps}
                     completed={userProgress[completionCheck.field as CompletionCheckField]}
                 />
             )}

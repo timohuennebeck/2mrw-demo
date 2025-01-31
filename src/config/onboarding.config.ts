@@ -16,8 +16,8 @@ export interface OnboardingTaskConfig {
     };
     disabled?: boolean;
     requiresPrevious?: boolean;
-    referralSteps?: number; // optional: for tasks that need step tracking
-    disableRewardForReferralSteps?: boolean; // optional: for tasks that need step tracking
+    multipleSteps?: number; // optional: for tasks that need step tracking
+    disableRewardForMultipleSteps?: boolean; // optional: for tasks that need step tracking
 }
 
 export interface OnboardingConfig {
@@ -71,8 +71,8 @@ export const onboardingConfig = {
                 field: "referralCount",
                 target: 5,
             },
-            referralSteps: 5,
-            disableRewardForReferralSteps: true,
+            multipleSteps: 5,
+            disableRewardForMultipleSteps: true,
         },
     ],
 } as const satisfies OnboardingConfig; // uses satisfies as we otherwise can't use as const type assertion

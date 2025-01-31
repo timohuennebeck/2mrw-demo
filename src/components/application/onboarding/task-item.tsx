@@ -12,11 +12,11 @@ interface TaskItemProps {
     disabled?: boolean;
     reward: OnboardingTaskConfig["reward"];
     action: OnboardingTaskConfig["action"];
-    referralSteps?: number;
+    multipleSteps?: number;
     completionCheck?: OnboardingTaskConfig["completionCheck"];
     isOpen: boolean;
     onToggle: () => void;
-    userProgress: { [key in CompletionCheckField]: number };
+    userProgress: { [K in CompletionCheckField]: number };
     canClaim: boolean;
 }
 
@@ -28,7 +28,7 @@ export const TaskItem = ({
     disabled,
     reward,
     action,
-    referralSteps,
+    multipleSteps,
     completionCheck,
     isOpen,
     onToggle,
@@ -62,7 +62,7 @@ export const TaskItem = ({
                                 description={description}
                                 isCompleted={isCompleted}
                                 action={action}
-                                referralSteps={referralSteps}
+                                multipleSteps={multipleSteps}
                                 completionCheck={completionCheck}
                                 userProgress={userProgress}
                                 reward={reward}
