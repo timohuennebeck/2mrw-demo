@@ -46,45 +46,6 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY! ?? "",
 );
 
-const _sendLoopsEmail = async (
-  email: string,
-  transactionalId: string,
-  variables: { upgradeUrl: string },
-) => {
-  try {
-    const response = await fetch("https://app.loops.so/api/v1/transactional", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${process.env.LOOPS_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        transactionalId,
-        email,
-        dataVariables: variables,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to send email: ${response.statusText}`);
-    }
-
-    return { success: true, error: null };
-  } catch (error) {
-    console.error("Error sending Loops email:", error);
-    return { success: false, error };
-  }
-};
-
-const _fetchUserEmail = async (userId: string) => {
-  const { data, error } = await supabase
-    .from("users")
-    .select("email")
-    .eq("id", userId);
-
-  return { email: data?.[0]?.email, error };
-};
-
 const _fetchOnGoingSubscriptions = async () => {
   try {
     const { data, error } = await supabase
@@ -97,7 +58,6 @@ const _fetchOnGoingSubscriptions = async () => {
     if (error) return { data: null, error };
     return { data, error: null };
   } catch (error) {
-    console.error("Error in _fetchOnGoingSubscriptions:", error);
     return { data: null, error };
   }
 };
@@ -120,7 +80,6 @@ const _downgradeToFreePlan = async (userId: string) => {
 
     if (error) throw error;
   } catch (error) {
-    console.error("Error in _downgradeToFreePlan:", error);
     throw error;
   }
 };
@@ -129,8 +88,6 @@ const app = express();
 app.use(express.json());
 
 app.post("/manage-subscriptions", async (_req: Request, res: Response) => {
-  console.log("[Cron] Starting subscription update job");
-
   try {
     const subscriptionsResponse = await _fetchOnGoingSubscriptions();
     if (subscriptionsResponse.error) throw subscriptionsResponse.error;
@@ -143,30 +100,13 @@ app.post("/manage-subscriptions", async (_req: Request, res: Response) => {
       });
     }
 
-    console.log(
-      `[Cron] Found ${subscriptionsResponse?.data?.length} subscriptions to process`,
-    );
-
     const processedUsers: string[] = [];
 
     const updatePromise = subscriptionsResponse.data.map(
       async (subscription: PurchasedSubscription) => {
-        console.log(
-          `[Cron] Processing expired subscription for: ${subscription.user_id}`,
-        );
         await _downgradeToFreePlan(subscription.user_id);
 
-        const { email } = await _fetchUserEmail(subscription.user_id);
-
-        await _sendLoopsEmail(email, "YOUR_TRANSACTIONAL_ID", {
-          upgradeUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan`,
-        }); // sends user has been downgraded to free plan email
-
         processedUsers.push(subscription.user_id);
-
-        console.log(
-          `[Cron] Processed subscription for user: ${subscription.user_id}`,
-        );
       },
     );
 
@@ -178,10 +118,8 @@ app.post("/manage-subscriptions", async (_req: Request, res: Response) => {
       processedUsers,
     });
   } catch (error) {
-    console.error("Error in cron job:", error);
-
     res.status(500).json({
-      message: "Subscription update cron job failed",
+      message: "Subscription update cron job failed: " + error,
       status: 500,
       processedUsers: [],
     });
