@@ -168,7 +168,7 @@ const RegisterLoginForm = ({
                                     description={`Sign up now to get started with ${TextConstants.TEXT__COMPANY_TITLE} and receive bonus tokens as a welcome gift!`}
                                     expiresIn="72 hours"
                                     bonus={{
-                                        label: "Tokens",
+                                        label: "[INSERT_REWARD_HERE]",
                                         amount: 15,
                                     }}
                                 />
