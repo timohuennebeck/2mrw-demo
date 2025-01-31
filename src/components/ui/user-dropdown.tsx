@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, LucideIcon, Power } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface UserDropdownProps {
     user: {
@@ -27,8 +28,10 @@ interface UserDropdownProps {
 export default function UserDropdown({ user, menuItems, onLogout }: UserDropdownProps) {
     const router = useRouter();
 
+    const [open, setOpen] = useState(false);
+
     return (
-        <DropdownMenu>
+        <DropdownMenu open={open} onOpenChange={setOpen}>
             <DropdownMenuTrigger className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900">
                 <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarFallback className="rounded-lg">{user.initials}</AvatarFallback>
@@ -43,7 +46,13 @@ export default function UserDropdown({ user, menuItems, onLogout }: UserDropdown
                 align="end"
                 className="w-[--radix-dropdown-menu-trigger-width] min-w-56"
             >
-                <DropdownMenuLabel className="p-0 font-normal">
+                <DropdownMenuLabel
+                    className="cursor-pointer rounded-md p-0 font-normal hover:bg-gray-100"
+                    onClick={() => {
+                        router.push("/app/user-profile");
+                        setOpen(false);
+                    }}
+                >
                     <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                         <Avatar className="h-8 w-8 rounded-lg">
                             <AvatarFallback className="rounded-lg">{user.initials}</AvatarFallback>
@@ -59,13 +68,13 @@ export default function UserDropdown({ user, menuItems, onLogout }: UserDropdown
                         <DropdownMenuItem
                             key={item.href}
                             className="cursor-pointer"
-                            onClick={() => router.push(item.href)}
+                            onSelect={() => router.push(item.href)}
                         >
                             <item.icon className="mr-2 h-4 w-4" />
                             {item.label}
                         </DropdownMenuItem>
                     ))}
-                    <DropdownMenuItem onClick={onLogout} className="cursor-pointer">
+                    <DropdownMenuItem onSelect={onLogout} className="cursor-pointer">
                         <Power className="mr-2 h-4 w-4" />
                         Log out
                     </DropdownMenuItem>

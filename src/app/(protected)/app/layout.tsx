@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import UserDropdown from "@/components/ui/user-dropdown";
 import { appConfig, onboardingConfig } from "@/config";
 import { useUser } from "@/context/UserContext";
-import { queryClient } from "@/lib/qClient/qClient";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/services/integration/client";
 import { ChevronLeft, CreditCard, LayoutGrid, Share2, Sparkles, User2, X } from "lucide-react";
@@ -32,6 +31,8 @@ const _claimBonus = async (userId: string) => {
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const { dbUser, invalidateUser } = useUser();
+
+    const supabase = createClient();
 
     const pathname = usePathname();
 
@@ -149,8 +150,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             initials: "TH",
                         }}
                         menuItems={userDropdownItems}
-                        onLogout={() => {
-                            // Add your logout logic here
+                        onLogout={async () => {
+                            const { error } = await supabase.auth.signOut();
+                            if (error) toast.error("Failed to logout");
                         }}
                     />
                 </div>
