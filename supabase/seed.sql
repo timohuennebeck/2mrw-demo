@@ -86,12 +86,12 @@ VALUES
         'sub_active_trial',
         now () + interval '7 days'
     ),
-    -- expired trial and expired subscription user on Founders plan
+    -- expired trial and expired subscription user on INDIE_HACKER plan
     (
         '22222222-2222-2222-2222-222222222222',
         'ACTIVE',
-        'FOUNDERS',
-        'price_founders_monthly',
+        'INDIE_HACKER',
+        'price_INDIE_HACKER_monthly',
         'RECURRING',
         'MONTHLY',
         'sub_expired_trial',
@@ -133,7 +133,7 @@ VALUES
     (
         '22222222-2222-2222-2222-222222222222',
         'sub_expired_trial',
-        'FOUNDERS',
+        'INDIE_HACKER',
         'ACTIVE',
         now () - interval '14 days',
         now () - interval '1 day'

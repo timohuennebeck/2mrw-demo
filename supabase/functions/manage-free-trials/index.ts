@@ -6,7 +6,7 @@ import process from "node:process";
 export enum SubscriptionTier {
   FREE = "FREE",
   ESSENTIALS = "ESSENTIALS",
-  FOUNDERS = "FOUNDERS",
+  INDIE_HACKER = "INDIE_HACKER",
 }
 
 export enum FreeTrialStatus {
