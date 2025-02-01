@@ -35,7 +35,7 @@ const PricingCard = ({
                         <h4 className="mb-2 text-sm font-medium">{section.category}</h4>
                         <ul className="space-y-3">
                             {section.items.map((item) => {
-                                const value = item[plan.name.toLowerCase() as keyof typeof item];
+                                const value = item[plan.name];
                                 return (
                                     <li key={item.name} className="flex items-start gap-2">
                                         {typeof value === "boolean" ? (

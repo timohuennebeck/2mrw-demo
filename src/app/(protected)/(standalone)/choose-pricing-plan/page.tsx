@@ -59,7 +59,6 @@ const ChoosePricingPlanPage = () => {
                                 key={plan.name}
                                 plan={plan}
                                 features={getFilteredPricingPlans().pricingCardFeatures}
-                                annualPlans={getFilteredPricingPlans().annual}
                                 isUserLoggedIn={!!authUser}
                                 currentPlanStripePriceId={subscription?.stripe_price_id ?? ""}
                             />

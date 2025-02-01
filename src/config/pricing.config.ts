@@ -167,15 +167,15 @@ export const pricingCardFeatures: PricingFeatureSection[] = [
         items: [
             {
                 name: "Consectetur Quota",
-                [SubscriptionTier.FREE]: "5",
-                [SubscriptionTier.ESSENTIALS]: "50",
-                [SubscriptionTier.FOUNDERS]: "Unlimited",
+                [SubscriptionTier.FREE]: false,
+                [SubscriptionTier.ESSENTIALS]: false,
+                [SubscriptionTier.FOUNDERS]: true,
             },
             {
                 name: "Adipiscing Slots",
-                [SubscriptionTier.FREE]: "2",
-                [SubscriptionTier.ESSENTIALS]: "10",
-                [SubscriptionTier.FOUNDERS]: "25",
+                [SubscriptionTier.FREE]: false,
+                [SubscriptionTier.ESSENTIALS]: false,
+                [SubscriptionTier.FOUNDERS]: true,
             },
         ],
     },

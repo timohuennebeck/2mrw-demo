@@ -1,9 +1,9 @@
 import {
-    pricingComparisonFeatures,
     DefaultPricingPlan,
     defaultPricingPlans,
     isFreePlanEnabled,
     pricingCardFeatures,
+    pricingComparisonFeatures,
     PricingFeatureItem,
     PricingFeatureSection,
 } from "@/config";
