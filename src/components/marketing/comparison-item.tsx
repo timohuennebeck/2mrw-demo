@@ -13,8 +13,8 @@ interface ComparisonItemParams {
 const ComparisonItem = ({ type, title, bulletPoints, videoUrl }: ComparisonItemParams) => {
     const styles = {
         before: {
-            bg: "bg-red-50",
-            text: "text-red-600",
+            bg: "bg-gray-50",
+            text: "text-gray-600",
             icon: X,
             label: "BEFORE",
         },
