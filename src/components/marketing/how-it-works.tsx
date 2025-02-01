@@ -26,41 +26,43 @@ interface HowItWorksProps {
 
 const HowItWorks = ({ eyebrow, title, description, steps }: HowItWorksProps) => {
     return (
-        <div className="flex flex-col gap-12">
+        <div className="flex flex-col gap-8 md:gap-12">
             {/* Header Section */}
-            <div className="flex flex-col items-center gap-4 text-center">
+            <div className="flex flex-col items-center gap-4 text-center px-4">
                 {eyebrow && <p className="text-sm font-medium text-blue-600">{eyebrow}</p>}
-                <h2 className="max-w-4xl text-4xl font-medium leading-tight tracking-tight md:text-5xl">
+                <h2 className="max-w-4xl text-3xl font-medium leading-tight tracking-tight md:text-4xl lg:text-5xl">
                     {title}
                 </h2>
-                {description && <p className="max-w-3xl text-lg text-gray-600">{description}</p>}
+                {description && <p className="max-w-3xl text-base md:text-lg text-gray-600">{description}</p>}
             </div>
 
             {/* Steps Section */}
-            <div className="relative flex flex-col gap-16">
-                {/* Vertical Line */}
+            <div className="relative flex flex-col gap-8 md:gap-16 px-4">
+                {/* Vertical Line - Hidden on mobile */}
                 <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 border-l-2 border-dashed border-gray-200" />
 
                 {steps.map((step, idx) => (
                     <div
                         key={idx}
-                        className={`relative flex ${idx % 2 === 0 ? "justify-start" : "justify-end"}`}
+                        className={`relative flex ${
+                            idx % 2 === 0 ? "md:justify-start" : "md:justify-end"
+                        } justify-center`}
                     >
                         <div
                             className={cn(
-                                "w-full max-w-[55%] rounded-lg border border-gray-100 bg-white/50 p-6 backdrop-blur-sm",
-                                idx % 2 === 0 ? "text-right" : "text-left",
+                                "w-full md:max-w-[55%] rounded-lg border border-gray-100 bg-white/50 p-4 md:p-6 backdrop-blur-sm",
+                                idx % 2 === 0 ? "md:text-right text-left" : "text-left",
                             )}
                         >
                             <div className="flex flex-col gap-4">
                                 <div
                                     className={`flex items-center gap-2 ${
-                                        idx % 2 === 0 ? "justify-end" : "justify-start"
+                                        idx % 2 === 0 ? "md:justify-end justify-start" : "justify-start"
                                     }`}
                                 >
                                     {idx % 2 === 0 && (
                                         <span
-                                            className={`text-sm font-medium uppercase ${
+                                            className={`hidden md:inline-block text-sm font-medium uppercase ${
                                                 step.badge.textColor ?? "text-blue-600"
                                             }`}
                                         >
@@ -78,9 +80,16 @@ const HowItWorks = ({ eyebrow, title, description, steps }: HowItWorksProps) => 
                                             }`}
                                         />
                                     </div>
+                                    <span
+                                        className={`text-sm font-medium uppercase md:hidden ${
+                                            step.badge.textColor ?? "text-blue-600"
+                                        }`}
+                                    >
+                                        {step.badge.text}
+                                    </span>
                                     {idx % 2 !== 0 && (
                                         <span
-                                            className={`text-sm font-medium uppercase ${
+                                            className={`hidden md:inline-block text-sm font-medium uppercase ${
                                                 step.badge.textColor ?? "text-blue-600"
                                             }`}
                                         >
@@ -89,22 +98,24 @@ const HowItWorks = ({ eyebrow, title, description, steps }: HowItWorksProps) => 
                                     )}
                                 </div>
                                 <div className="flex flex-col gap-2">
-                                    <h3 className="text-xl font-medium">{step.title}</h3>
-                                    <p className="text-gray-600">{step.description}</p>
+                                    <h3 className="text-lg md:text-xl font-medium">{step.title}</h3>
+                                    <p className="text-sm md:text-base text-gray-600">{step.description}</p>
 
                                     {/* Optional Metrics */}
                                     {step.metrics && (
                                         <div
-                                            className={`mt-4 flex gap-6 ${
-                                                idx % 2 === 0 ? "justify-end" : "justify-start"
+                                            className={`mt-4 flex gap-4 md:gap-6 ${
+                                                idx % 2 === 0
+                                                    ? "md:justify-end justify-start"
+                                                    : "justify-start"
                                             }`}
                                         >
                                             {step.metrics.map((metric, midx) => (
                                                 <div key={midx} className="flex flex-col gap-1">
-                                                    <span className="text-2xl font-semibold">
+                                                    <span className="text-xl md:text-2xl font-semibold">
                                                         {metric.value}
                                                     </span>
-                                                    <span className="text-sm text-gray-500">
+                                                    <span className="text-xs md:text-sm text-gray-500">
                                                         {metric.label}
                                                     </span>
                                                 </div>
