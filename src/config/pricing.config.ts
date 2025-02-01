@@ -1,4 +1,5 @@
 import { BillingPeriod, BillingPlan, SubscriptionTier } from "@/enums";
+import { removeUnderscore } from "@/utils/text/text-helper";
 
 export interface DefaultPricingPlan {
     name: string;
@@ -54,7 +55,7 @@ export const defaultPricingPlans: {
             subscription_tier: SubscriptionTier.ESSENTIALS,
         },
         {
-            name: SubscriptionTier.INDIE_HACKER,
+            name: removeUnderscore(SubscriptionTier.INDIE_HACKER),
             description:
                 "This is the description of the INDIE_HACKER plan and can be modified.",
             price: "$99",
@@ -89,7 +90,7 @@ export const defaultPricingPlans: {
             subscription_tier: SubscriptionTier.ESSENTIALS,
         },
         {
-            name: SubscriptionTier.INDIE_HACKER,
+            name: removeUnderscore(SubscriptionTier.INDIE_HACKER),
             description:
                 "This is the description of the INDIE_HACKER plan and can be modified.",
             price: "$990",
@@ -113,7 +114,7 @@ export const defaultPricingPlans: {
             subscription_tier: SubscriptionTier.ESSENTIALS,
         },
         {
-            name: SubscriptionTier.INDIE_HACKER,
+            name: removeUnderscore(SubscriptionTier.INDIE_HACKER),
             description:
                 "This is the description of the INDIE_HACKER plan and can be modified.",
             price: "$1,999",

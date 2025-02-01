@@ -1,6 +1,6 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { DefaultPricingPlan, PricingFeatureItem, PricingFeatureSection } from "@/config";
-import { getBillingPeriodText } from "@/utils/pricing/pricingHelper";
+import { getBillingPeriodText } from "@/utils/pricing/pricing-helper";
 import { Check, X, InfoIcon } from "lucide-react";
 import PricingPlanButton from "../application/pricing-plan-button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";

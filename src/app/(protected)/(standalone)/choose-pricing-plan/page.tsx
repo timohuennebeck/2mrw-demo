@@ -54,9 +54,9 @@ const ChoosePricingPlanPage = () => {
                             showFreePlan ? "md:grid-cols-3" : "mx-auto max-w-[882px] md:grid-cols-2"
                         }`}
                     >
-                        {plansToShow.map((plan) => (
+                        {plansToShow.map((plan, index) => (
                             <PricingCard
-                                key={plan.name}
+                                key={`${plan.name}-${index}`}
                                 plan={plan}
                                 features={getFilteredPricingPlans().pricingCardFeatures}
                                 isUserLoggedIn={!!authUser}

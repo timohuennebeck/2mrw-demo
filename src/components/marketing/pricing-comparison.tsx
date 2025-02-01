@@ -4,7 +4,7 @@ import {
     PricingFeatureItem,
     PricingFeatureSection,
 } from "@/config";
-import { getBillingPeriodText } from "@/utils/pricing/pricingHelper";
+import { getBillingPeriodText } from "@/utils/pricing/pricing-helper";
 import { Check, X, InfoIcon } from "lucide-react";
 import React from "react";
 import PricingPlanButton from "../application/pricing-plan-button";
