@@ -1,28 +1,21 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { DefaultPricingPlan, PricingFeatureSection } from "@/config";
 import { toTitleCase } from "@/utils/formatting/textHelper";
-import { getBillingPeriodText, getPlanPriceDescription } from "@/utils/pricing/pricingHelper";
+import { getBillingPeriodText } from "@/utils/pricing/pricingHelper";
 import { Check, X } from "lucide-react";
 import PricingPlanButton from "../application/pricing-plan-button";
 
 const PricingCard = ({
     plan,
     features,
-    annualPlans,
     isUserLoggedIn,
     currentPlanStripePriceId,
 }: {
     plan: DefaultPricingPlan;
     features: PricingFeatureSection[];
-    annualPlans: DefaultPricingPlan[];
     isUserLoggedIn: boolean;
     currentPlanStripePriceId: string;
 }) => {
-    const annualPlan = annualPlans.find((p) => p.name === plan.name)?.price;
-    const pricePerMonthForYearlyPlan = annualPlan
-        ? `$${(Number(annualPlan.replace("$", "")) / 12).toFixed(2)}`
-        : null;
-
     return (
         <Card className="shadow-none">
             <CardHeader>
@@ -33,9 +26,7 @@ const PricingCard = ({
                         {getBillingPeriodText(plan.billing_period)}
                     </span>
                 </div>
-                <span className="block pt-2 text-sm text-gray-500">
-                    {getPlanPriceDescription(plan, pricePerMonthForYearlyPlan)}
-                </span>
+                <span className="block pt-2 text-sm text-gray-500">{plan.description}</span>
             </CardHeader>
 
             <CardContent className="flex flex-1 flex-col gap-4">

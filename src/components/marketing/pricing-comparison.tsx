@@ -4,7 +4,7 @@ import {
     PricingFeatureItem,
     PricingFeatureSection,
 } from "@/config";
-import { getBillingPeriodText, getPlanPriceDescription } from "@/utils/pricing/pricingHelper";
+import { getBillingPeriodText } from "@/utils/pricing/pricingHelper";
 import { Check, X, InfoIcon } from "lucide-react";
 import React from "react";
 import PricingPlanButton from "../application/pricing-plan-button";
@@ -27,20 +27,13 @@ interface PricingComparisonParams {
 
 const PricingPlanHeader = ({
     plan,
-    annualPlans,
     isUserLoggedIn,
     currentPlanStripePriceId,
 }: {
     plan: DefaultPricingPlan;
-    annualPlans: DefaultPricingPlan[];
     isUserLoggedIn: boolean;
     currentPlanStripePriceId: string;
 }) => {
-    const annualPlan = annualPlans.find((p) => p.name === plan.name)?.price;
-    const pricePerMonthForYearlyPlan = annualPlan
-        ? `$${(Number(annualPlan.replace("$", "")) / 12).toFixed(2)}`
-        : null;
-
     return (
         <div className="col-span-1 flex flex-col justify-between gap-6 md:gap-4">
             <div className="flex flex-col gap-2">
@@ -59,9 +52,7 @@ const PricingPlanHeader = ({
                     {getBillingPeriodText(plan.billing_period)}
                 </span>
             </div>
-            <span className="text-sm text-gray-500">
-                {getPlanPriceDescription(plan, pricePerMonthForYearlyPlan)}
-            </span>
+            <span className="text-sm text-gray-500">{plan.description}</span>
             <PricingPlanButton
                 plan={plan}
                 currentPlanStripePriceId={currentPlanStripePriceId ?? ""}

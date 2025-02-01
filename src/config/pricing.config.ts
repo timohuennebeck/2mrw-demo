@@ -23,7 +23,7 @@ export interface PricingFeatureItem {
     [key: string]: any;
 }
 
-const FREE_STRIPE_PRICE_INDICATOR = "price_free";
+const FREE_STRIPE_PRICE_INDICATOR = "price_free"; // Important! Do not change this as this is responsible for handling the FREE plan throughout the app!!
 
 export const defaultPricingPlans: {
     monthly: DefaultPricingPlan[];
@@ -34,18 +34,18 @@ export const defaultPricingPlans: {
         {
             name: SubscriptionTier.FREE,
             description:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                "This is the description of the FREE plan and can be modified.",
             price: "$0",
             billing_period: BillingPeriod.MONTHLY,
             billing_plan: BillingPlan.RECURRING,
             is_highlighted: false,
-            stripe_price_id: FREE_STRIPE_PRICE_INDICATOR, // Important! Do not change this!!
+            stripe_price_id: FREE_STRIPE_PRICE_INDICATOR,
             subscription_tier: SubscriptionTier.FREE,
         },
         {
             name: SubscriptionTier.ESSENTIALS,
             description:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                "This is the description of the ESSENTIALS plan and can be modified.",
             price: "$49",
             billing_period: BillingPeriod.MONTHLY,
             billing_plan: BillingPlan.RECURRING,
@@ -56,7 +56,7 @@ export const defaultPricingPlans: {
         {
             name: SubscriptionTier.FOUNDERS,
             description:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                "This is the description of the FOUNDERS plan and can be modified.",
             price: "$99",
             billing_period: BillingPeriod.MONTHLY,
             billing_plan: BillingPlan.RECURRING,
@@ -69,7 +69,7 @@ export const defaultPricingPlans: {
         {
             name: SubscriptionTier.FREE,
             description:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                "This is the description of the FREE plan and can be modified.",
             price: "$0",
             billing_period: BillingPeriod.YEARLY,
             billing_plan: BillingPlan.RECURRING,
@@ -80,7 +80,7 @@ export const defaultPricingPlans: {
         {
             name: SubscriptionTier.ESSENTIALS,
             description:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                "This is the description of the ESSENTIALS plan and can be modified.",
             price: "$490",
             billing_period: BillingPeriod.YEARLY,
             billing_plan: BillingPlan.RECURRING,
@@ -91,7 +91,7 @@ export const defaultPricingPlans: {
         {
             name: SubscriptionTier.FOUNDERS,
             description:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                "This is the description of the FOUNDERS plan and can be modified.",
             price: "$990",
             billing_period: BillingPeriod.YEARLY,
             billing_plan: BillingPlan.RECURRING,
@@ -104,7 +104,7 @@ export const defaultPricingPlans: {
         {
             name: SubscriptionTier.ESSENTIALS,
             description:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                "This is the description of the ESSENTIALS plan and can be modified.",
             price: "$999",
             billing_period: BillingPeriod.LIFETIME,
             billing_plan: BillingPlan.ONE_TIME,
@@ -115,7 +115,7 @@ export const defaultPricingPlans: {
         {
             name: SubscriptionTier.FOUNDERS,
             description:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                "This is the description of the FOUNDERS plan and can be modified.",
             price: "$1,999",
             billing_period: BillingPeriod.LIFETIME,
             billing_plan: BillingPlan.ONE_TIME,
