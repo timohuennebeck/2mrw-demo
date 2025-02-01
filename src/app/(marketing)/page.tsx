@@ -28,7 +28,7 @@ import { testimonials } from "@/data/marketing/testimonials-data";
 import { cn } from "@/lib/utils";
 import { getFilteredPricingPlans } from "@/services/domain/pricingService";
 import { handleSmoothScroll } from "@/utils/navigation";
-import { Shield } from "lucide-react";
+import { Asterisk, Shield } from "lucide-react";
 import { Manrope } from "next/font/google";
 import { useRouter } from "next/navigation";
 
@@ -136,41 +136,59 @@ const LandingPage = () => {
                             eyebrow="Lorem, ipsum dolor."
                             title={
                                 <>
-                                    Lorem ipsum dolor sit{" "}
+                                    Lorem ipsum{" "}
                                     <span className="relative mt-4 inline-block whitespace-nowrap bg-blue-600 p-2 text-white">
-                                        amet consectetur,
+                                        amet consectetur.
                                     </span>
-                                    adipisicing elit.
                                 </>
                             }
                             description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore."
                             steps={[
                                 {
-                                    number: 1,
-                                    title: "Lorem ipsum dolor sit amet.",
+                                    icon: Asterisk,
+                                    title: "Lorem, ipsum dolor.",
                                     description:
-                                        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore.",
-                                    icon: Shield,
+                                        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga quis error saepe eum quia?",
+                                    badge: {
+                                        text: "Step 1",
+                                        bgColor: "bg-blue-50",
+                                        textColor: "text-blue-600",
+                                    },
+                                    metrics: [
+                                        { value: "85%", label: "Success Rate" },
+                                        { value: "2min", label: "Setup Time" },
+                                    ],
                                 },
                                 {
-                                    number: 2,
-                                    title: "Lorem ipsum dolor sit amet.",
+                                    icon: Asterisk,
+                                    title: "Lorem, ipsum dolor.",
                                     description:
-                                        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore.",
-                                    icon: Shield,
+                                        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga quis error saepe eum quia?",
+                                    badge: {
+                                        text: "Step 2",
+                                        bgColor: "bg-blue-50",
+                                        textColor: "text-blue-600",
+                                    },
+                                    metrics: [
+                                        { value: "85%", label: "Success Rate" },
+                                        { value: "2min", label: "Setup Time" },
+                                    ],
                                 },
                                 {
-                                    number: 3,
-                                    title: "Lorem ipsum dolor sit amet.",
+                                    icon: Asterisk,
+                                    title: "Lorem, ipsum dolor.",
                                     description:
-                                        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore.",
-                                    icon: Shield,
+                                        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga quis error saepe eum quia?",
+                                    badge: {
+                                        text: "Step 3",
+                                        bgColor: "bg-blue-50",
+                                        textColor: "text-blue-600",
+                                    },
+                                    metrics: [
+                                        { value: "85%", label: "Success Rate" },
+                                        { value: "2min", label: "Setup Time" },
+                                    ],
                                 },
-                            ]}
-                            videoPaths={[
-                                "https://www.dropbox.com/scl/fi/crcmzz58px8rro2i5axv2/main-demo.mp4?rlkey=duxmf3k5wyss2wtt2trq9q7qo&st=z8p7y1tv&raw=1",
-                                "https://www.dropbox.com/scl/fi/gnskt6it1i6xtqh3b75yw/user-authentication.mp4?rlkey=dpfc9wrj035ulagzg59noifyb&st=wh5j07zu&raw=1",
-                                "https://www.dropbox.com/scl/fi/crcmzz58px8rro2i5axv2/main-demo.mp4?rlkey=duxmf3k5wyss2wtt2trq9q7qo&st=z8p7y1tv&raw=1",
                             ]}
                         />
                     </SectionContainer>
