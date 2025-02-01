@@ -324,7 +324,7 @@ const LandingPage = () => {
                                 </>
                             }
                             subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-                            videoUrl="https://www.dropbox.com/scl/fi/crcmzz58px8rro2i5axv2/main-demo.mp4?rlkey=duxmf3k5wyss2wtt2trq9q7qo&st=z8p7y1tv&raw=1"
+                            videoUrl="https://youtu.be/iiz-MjH5tNs"
                         />
                     </SectionContainer>
 
