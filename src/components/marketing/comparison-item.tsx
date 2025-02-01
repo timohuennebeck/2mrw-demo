@@ -1,5 +1,6 @@
 import { Asterisk, Check, X } from "lucide-react";
 import CustomVideo from "../ui/custom-video";
+import { appConfig } from "@/config";
 
 interface ComparisonItemParams {
     type: "before" | "after";
@@ -16,13 +17,13 @@ const ComparisonItem = ({ type, title, bulletPoints, videoUrl }: ComparisonItemP
             bg: "bg-gray-50",
             text: "text-gray-600",
             icon: X,
-            label: "BEFORE",
+            label: "ALTERNATIVES",
         },
         after: {
             bg: "bg-blue-50",
             text: "text-blue-600",
             icon: Check,
-            label: "AFTER",
+            label: appConfig.company.name.toUpperCase(),
         },
     };
 

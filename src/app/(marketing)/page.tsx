@@ -214,16 +214,16 @@ const LandingPage = () => {
                             before={{
                                 bulletPoints: [
                                     {
-                                        text: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem.",
+                                        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                                     },
                                     {
                                         text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                                     },
                                     {
-                                        text: "Ut enim ad minima veniam, quis nostrum exercitationem ullam.",
+                                        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                                     },
                                     {
-                                        text: "Quis autem vel eum iure reprehenderit qui in ea voluptate velit.",
+                                        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                                     },
                                 ],
                                 videoUrl:
@@ -235,13 +235,13 @@ const LandingPage = () => {
                                         text: "Excepteur sint occaecat cupidatat non proident sunt in culpa.",
                                     },
                                     {
-                                        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                                        text: "Excepteur sint occaecat cupidatat non proident sunt in culpa.",
                                     },
                                     {
-                                        text: "Temporibus autem quibusdam et aut officiis debitis aut rerum.",
+                                        text: "Excepteur sint occaecat cupidatat non proident sunt in culpa.",
                                     },
                                     {
-                                        text: "Itaque earum rerum hic tenetur a sapiente delectus ut aut.",
+                                        text: "Excepteur sint occaecat cupidatat non proident sunt in culpa.",
                                     },
                                 ],
                                 videoUrl:
