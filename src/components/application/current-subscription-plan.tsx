@@ -10,7 +10,6 @@ import {
     createStripeCheckout,
     getStripeCreditCardDetails,
 } from "@/services/stripe/stripeService";
-import { toTitleCase } from "@/utils/formatting/textHelper";
 import { Loader } from "lucide-react";
 import moment from "moment";
 import { useRouter } from "next/navigation";
@@ -162,7 +161,7 @@ const CurrentSubscriptionPlan = ({
                         <div className="space-y-2 md:space-y-3">
                             <div className="flex flex-col gap-2 md:flex-row md:items-center">
                                 <h3 className="text-xl font-medium md:text-2xl">
-                                    {toTitleCase(pricingPlan?.name ?? "")}
+                                    {pricingPlan?.name}
                                 </h3>
                                 <Badge variant="default" className="flex w-fit items-center gap-1">
                                     {subscription?.status}
