@@ -126,58 +126,36 @@ export const defaultPricingPlans: {
     ],
 };
 
-export const pricingCardFeatures: PricingFeatureSection[] = [
+export const pricingCardFeatures: PricingFeatureItem[] = [
     {
-        category: "Lorem Features",
-        items: [
-            {
-                name: "Duis aute irure dolor",
-                [SubscriptionTier.FREE]: true,
-                [SubscriptionTier.ESSENTIALS]: true,
-                [SubscriptionTier.FOUNDERS]: true,
-            },
-            {
-                name: "Excepteur sint occaecat",
-                [SubscriptionTier.FREE]: false,
-                [SubscriptionTier.ESSENTIALS]: true,
-                [SubscriptionTier.FOUNDERS]: true,
-            },
-            {
-                name: "Cupidatat non proident",
-                [SubscriptionTier.FREE]: false,
-                [SubscriptionTier.ESSENTIALS]: true,
-                [SubscriptionTier.FOUNDERS]: true,
-            },
-            {
-                name: "Sunt in culpa qui",
-                [SubscriptionTier.FREE]: false,
-                [SubscriptionTier.ESSENTIALS]: false,
-                [SubscriptionTier.FOUNDERS]: true,
-            },
-            {
-                name: "Deserunt mollit anim",
-                [SubscriptionTier.FREE]: false,
-                [SubscriptionTier.ESSENTIALS]: false,
-                [SubscriptionTier.FOUNDERS]: true,
-            },
-        ],
+        name: "Duis aute irure dolor",
+        [SubscriptionTier.FREE]: true,
+        [SubscriptionTier.ESSENTIALS]: true,
+        [SubscriptionTier.FOUNDERS]: true,
     },
     {
-        category: "Ipsum Limits",
-        items: [
-            {
-                name: "Consectetur Quota",
-                [SubscriptionTier.FREE]: false,
-                [SubscriptionTier.ESSENTIALS]: false,
-                [SubscriptionTier.FOUNDERS]: true,
-            },
-            {
-                name: "Adipiscing Slots",
-                [SubscriptionTier.FREE]: false,
-                [SubscriptionTier.ESSENTIALS]: false,
-                [SubscriptionTier.FOUNDERS]: true,
-            },
-        ],
+        name: "Excepteur sint occaecat",
+        [SubscriptionTier.FREE]: false,
+        [SubscriptionTier.ESSENTIALS]: true,
+        [SubscriptionTier.FOUNDERS]: true,
+    },
+    {
+        name: "Cupidatat non proident",
+        [SubscriptionTier.FREE]: false,
+        [SubscriptionTier.ESSENTIALS]: true,
+        [SubscriptionTier.FOUNDERS]: true,
+    },
+    {
+        name: "Sunt in culpa qui",
+        [SubscriptionTier.FREE]: false,
+        [SubscriptionTier.ESSENTIALS]: false,
+        [SubscriptionTier.FOUNDERS]: true,
+    },
+    {
+        name: "Deserunt mollit anim",
+        [SubscriptionTier.FREE]: false,
+        [SubscriptionTier.ESSENTIALS]: false,
+        [SubscriptionTier.FOUNDERS]: true,
     },
 ];
 

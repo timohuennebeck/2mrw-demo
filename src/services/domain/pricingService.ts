@@ -4,7 +4,8 @@ import {
     isFreePlanEnabled,
     pricingCardFeatures,
     pricingComparisonFeatures,
-    PricingFeatureSection
+    PricingFeatureItem,
+    PricingFeatureSection,
 } from "@/config";
 import { SubscriptionTier } from "@/enums";
 
@@ -26,7 +27,7 @@ const _filterPlans = (plans: DefaultPricingPlan[]) => {
         );
 };
 
-const _filterFeatures = (sections: PricingFeatureSection[]) => {
+const _filterFeaturesForComparison = (sections: PricingFeatureSection[]) => {
     if (isFreePlanEnabled()) return sections;
 
     return sections.map((section) => ({
@@ -35,12 +36,20 @@ const _filterFeatures = (sections: PricingFeatureSection[]) => {
     }));
 };
 
+const _filterFeaturesForCards = (sections: PricingFeatureItem[]) => {
+    if (isFreePlanEnabled()) return sections;
+
+    return sections.filter(({ FREE }) => !FREE);
+};
+
 export const getFilteredPricingPlans = () => {
     return {
         monthly: _filterPlans(defaultPricingPlans.monthly),
         annual: _filterPlans(defaultPricingPlans.annual),
         oneTime: defaultPricingPlans.oneTime,
-        pricingCardFeatures: _filterFeatures(pricingCardFeatures),
-        pricingComparisonFeatures: _filterFeatures(pricingComparisonFeatures),
+        pricingCardFeatures: _filterFeaturesForCards(pricingCardFeatures),
+        pricingComparisonFeatures: _filterFeaturesForComparison(
+            pricingComparisonFeatures,
+        ),
     };
 };
