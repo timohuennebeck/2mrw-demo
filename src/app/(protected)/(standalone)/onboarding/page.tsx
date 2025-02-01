@@ -6,6 +6,7 @@ import { createClient } from "@/services/integration/client";
 import { User } from "@supabase/supabase-js";
 import { useSession } from "@/context/SessionContext";
 import { Suspense } from "react";
+import { appConfig } from "@/config";
 
 const _updateOnboardingStatusDatabase = async (authUser: User) => {
     const supabase = createClient();
@@ -73,7 +74,7 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
     {
         title: "Lorem, ipsum dolor.",
         description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iusto, quas?",
-        buttonText: "Launch 2mrw",
+        buttonText: `Launch ${appConfig.company.name}`,
         content: () => (
             <div className="flex flex-col gap-6">
                 <div className="flex gap-4">

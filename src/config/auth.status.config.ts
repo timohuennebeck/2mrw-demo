@@ -1,5 +1,6 @@
 import { StatusConfig } from "@/app/auth-status/authStatus";
 import { TextConstants } from "@/constants/TextConstants";
+import { appConfig } from "./app.config";
 
 const ERROR_KEYS = [
     "token-expired",
@@ -82,7 +83,8 @@ export const SUCCESS_TYPES: { [K in SuccessType]: StatusConfig } = {
         badge: "EMAIL CONFIRMED",
         title: "Email",
         highlight: "Confirmed",
-        description: `Your email has been confirmed. You can now continue using ${TextConstants.TEXT__COMPANY_TITLE}.`,
+        description:
+            `Your email has been confirmed. You can now continue using ${appConfig.company.name}.`,
         primaryButton: {
             href: "/choose-pricing-plan",
             label: "Continue",
@@ -92,7 +94,8 @@ export const SUCCESS_TYPES: { [K in SuccessType]: StatusConfig } = {
         badge: "GOOGLE CONNECTED",
         title: "Google",
         highlight: "Connected",
-        description: `Your Google account has been connected. You can now continue using ${TextConstants.TEXT__COMPANY_TITLE}.`,
+        description:
+            `Your Google account has been connected. You can now continue using ${appConfig.company.name}.`,
         primaryButton: {
             href: "/app",
             label: "Continue",
@@ -102,7 +105,8 @@ export const SUCCESS_TYPES: { [K in SuccessType]: StatusConfig } = {
         badge: "PASSWORD UPDATED",
         title: "Password",
         highlight: "Updated",
-        description: `Your password has been updated. You can now continue using ${TextConstants.TEXT__COMPANY_TITLE}.`,
+        description:
+            `Your password has been updated. You can now continue using ${appConfig.company.name}.`,
         primaryButton: {
             href: "/app",
             label: "Continue",
@@ -112,7 +116,8 @@ export const SUCCESS_TYPES: { [K in SuccessType]: StatusConfig } = {
         badge: "EMAIL UPDATED",
         title: "Email",
         highlight: "Updated",
-        description: `Your email has been updated. You can now continue using ${TextConstants.TEXT__COMPANY_TITLE}.`,
+        description:
+            `Your email has been updated. You can now continue using ${appConfig.company.name}.`,
         primaryButton: {
             href: "/app/user-profile",
             label: "Continue to Profile",

@@ -81,7 +81,7 @@ export const appConfig: GeneralConfig = {
     },
 
     company: {
-        name: "Company Name",
+        name: "2mrw",
         contactEmail: "support@example.com",
         senderEmail: "m@example.com", // this email is used as the sender email for all outgoing emails such as freeTrialStarted, etc.
     },

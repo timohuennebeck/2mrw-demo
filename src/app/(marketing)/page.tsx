@@ -16,6 +16,7 @@ import ProductDemo from "@/components/marketing/product-demo";
 import PromoBanner from "@/components/marketing/promo-banner";
 import Stats from "@/components/marketing/stats";
 import TestimonialsGrid from "@/components/marketing/testimonials-grid";
+import { appConfig } from "@/config";
 import { useSession } from "@/context/SessionContext";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { faq } from "@/data/marketing/faq-data";
@@ -426,7 +427,7 @@ const LandingPage = () => {
                                 alt: "Logo",
                             }}
                             description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique optio molestiae exercitationem! Porro doloribus molestias rerum error inventore."
-                            companyName="2mrw"
+                            companyName={appConfig.company.name}
                             bottomLinks={bottomLinks}
                         />
                     </SectionContainer>

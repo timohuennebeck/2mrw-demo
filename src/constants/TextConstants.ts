@@ -1,5 +1,4 @@
 export const TextConstants = {
-    TEXT__COMPANY_TITLE: "2mrw",
     TEXT__EMAIL_PLACEHOLDER: "m@example.com",
     TEXT__LOGOUT_SUCCESSFUL: "Logout successful!",
     TEXT__OR: "or",

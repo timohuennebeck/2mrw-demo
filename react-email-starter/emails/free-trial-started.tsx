@@ -1,3 +1,4 @@
+import { appConfig } from "@/config";
 import { FreeTrialStartedEmail as FreeTrialStartedEmailProps } from "@/interfaces/services/resend";
 import {
     Body,
@@ -16,13 +17,13 @@ import {
 export const FreeTrialStartedEmail = (props: FreeTrialStartedEmailProps) => (
     <Html>
         <Head />
-        <Preview>Your 2mrw Free Trial Has Started!</Preview>
+        <Preview>Your {appConfig.company.name} Free Trial Has Started!</Preview>
         <Tailwind>
             <Body className="bg-white font-sans">
                 <Container className="mx-auto max-w-[560px] px-4 py-12">
                     <Img
                         src="https://i.imgur.com/rlrv36H.png"
-                        alt="2mrw"
+                        alt={appConfig.company.name}
                         width={42}
                         height={42}
                         className="block rounded-full"
@@ -34,7 +35,7 @@ export const FreeTrialStartedEmail = (props: FreeTrialStartedEmailProps) => (
 
                     <Text className="mb-4 text-[15px] leading-relaxed text-gray-700">
                         Congratulations! Your <strong>{props.trialDuration}-DAY</strong> free trial
-                        of 2mrw has started and will be active until the{" "}
+                        of {appConfig.company.name} has started and will be active until the{" "}
                         <strong>{props.trialEndDate}</strong>. Have fun!
                     </Text>
 
@@ -43,18 +44,23 @@ export const FreeTrialStartedEmail = (props: FreeTrialStartedEmailProps) => (
                             href={`${process.env.NEXT_PUBLIC_SITE_URL}/app`}
                             className="inline-block w-full rounded-md bg-blue-600 py-3 text-center text-sm font-medium text-white"
                         >
-                            Start Exploring 2mrw
+                            Start Exploring {appConfig.company.name}
                         </Link>
                     </Section>
 
                     <Text className="mb-4 text-[15px] leading-relaxed text-gray-700">
                         Have questions? Contact us at{" "}
-                        <Link href="mailto:support@2mrw.dev" className="text-blue-600 no-underline">
-                            support@2mrw.dev
+                        <Link
+                            href={`mailto:${appConfig.company.contactEmail}`}
+                            className="text-blue-600 no-underline"
+                        >
+                            {appConfig.company.contactEmail}
                         </Link>
                     </Text>
 
-                    <Text className="mt-2 text-xs text-gray-400">© 2024 2mrw</Text>
+                    <Text className="mt-2 text-xs text-gray-400">
+                        © 2024 {appConfig.company.name}
+                    </Text>
                 </Container>
             </Body>
         </Tailwind>

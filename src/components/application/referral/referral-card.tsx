@@ -16,6 +16,7 @@ import { z } from "zod";
 import axios from "axios";
 import { useUser } from "@/context/UserContext";
 import { EmailType } from "@/enums";
+import { appConfig } from "@/config";
 
 interface ReferralCardProps {
     referralLink: string;
@@ -70,7 +71,7 @@ export const ReferralCard = ({ referralLink, userId }: ReferralCardProps) => {
             const postUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/send-email`;
             await axios.post(postUrl, {
                 to: values.email,
-                subject: "You've been invited to join 2mrw!",
+                subject: `You've been invited to join ${appConfig.company.name}!`,
                 emailType: EmailType.REFERRAL_INVITE,
                 variables: {
                     nameOfReferrer: dbUser?.email,
@@ -97,7 +98,7 @@ export const ReferralCard = ({ referralLink, userId }: ReferralCardProps) => {
                 <div className="flex flex-1 flex-col gap-4">
                     <div className="flex flex-col gap-2">
                         <h4 className="text-sm font-medium leading-none">
-                            {TextConstants.TEXT__COMPANY_TITLE}'s Referral Program
+                            {appConfig.company.name}'s Referral Program
                         </h4>
                         <p className="text-xs text-muted-foreground">
                             Share this referral link with friends and earn{" "}

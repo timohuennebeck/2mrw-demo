@@ -1,3 +1,4 @@
+import { appConfig } from "@/config";
 import { FreeTrialExpiresEmail as FreeTrialExpiresEmailProps } from "@/interfaces/services/resend";
 import {
     Body,
@@ -23,7 +24,7 @@ export const FreeTrialExpiresEmail = (props: FreeTrialExpiresEmailProps) => (
                 <Container className="mx-auto max-w-[560px] px-4 py-12">
                     <Img
                         src="https://i.imgur.com/rlrv36H.png"
-                        alt="2mrw"
+                        alt={appConfig.company.name}
                         width={42}
                         height={42}
                         className="block rounded-full"
@@ -35,8 +36,8 @@ export const FreeTrialExpiresEmail = (props: FreeTrialExpiresEmailProps) => (
 
                     <Text className="mb-4 text-[15px] leading-relaxed text-gray-700">
                         Your <strong>{props.trialDuration}-DAY</strong> free trial is about to
-                        expire within the next <strong>72 hours.</strong> To continue using 2mrw,
-                        please upgrade to a paid plan.
+                        expire within the next <strong>72 hours.</strong> To continue using{" "}
+                        {appConfig.company.name}, please upgrade to a paid plan.
                     </Text>
 
                     <Text className="mb-4 text-[15px] leading-relaxed text-gray-700">
@@ -55,12 +56,17 @@ export const FreeTrialExpiresEmail = (props: FreeTrialExpiresEmailProps) => (
 
                     <Text className="mb-4 text-[15px] leading-relaxed text-gray-700">
                         Have questions? Contact us at{" "}
-                        <Link href="mailto:support@2mrw.dev" className="text-blue-600 no-underline">
-                            support@2mrw.dev
+                        <Link
+                            href={`mailto:${appConfig.company.contactEmail}`}
+                            className="text-blue-600 no-underline"
+                        >
+                            {appConfig.company.contactEmail}
                         </Link>
                     </Text>
 
-                    <Text className="mt-2 text-xs text-gray-400">© 2024 2mrw</Text>
+                    <Text className="mt-2 text-xs text-gray-400">
+                        © 2024 {appConfig.company.name}
+                    </Text>
                 </Container>
             </Body>
         </Tailwind>

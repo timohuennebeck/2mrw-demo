@@ -25,6 +25,7 @@ import { Input } from "../ui/input";
 import FormStatusMessage from "./form-status-message";
 import PasswordStrengthChecker from "./password-strength-checker";
 import { ReferralHeader } from "./referral-header";
+import { appConfig } from "@/config";
 
 const _getButtontext = (mode: string, authMethod: string) => {
     if (authMethod === "magic-link" && mode === "signin") {
@@ -165,7 +166,7 @@ const RegisterLoginForm = ({
                             {referralCode && (
                                 <ReferralHeader
                                     title="You've been invited! 🎁"
-                                    description={`Sign up now to get started with ${TextConstants.TEXT__COMPANY_TITLE} and receive bonus tokens as a welcome gift!`}
+                                    description={`Sign up now to get started with ${appConfig.company.name} and receive bonus tokens as a welcome gift!`}
                                     expiresIn="72 hours"
                                     bonus={{
                                         label: "[INSERT_REWARD_HERE]",
@@ -180,7 +181,7 @@ const RegisterLoginForm = ({
                                         {mode === "signup"
                                             ? TextConstants.TEXT__SIGN_UP
                                             : TextConstants.TEXT__SIGN_IN}{" "}
-                                        to {TextConstants.TEXT__COMPANY_TITLE} to continue! 🙌
+                                        to {appConfig.company.name} to continue! 🙌
                                     </h1>
                                     <p className="text-sm text-gray-400">
                                         Lorem ipsum dolor sit amet consectetur, adipisicing elit.
