@@ -56,7 +56,7 @@ const ChoosePricingPlanPage = () => {
                     >
                         {plansToShow.map((plan, index) => (
                             <PricingCard
-                                key={`${plan.name}-${index}`}
+                                key={`${plan.subscription_tier}-${index}`}
                                 plan={plan}
                                 features={getFilteredPricingPlans().pricingCardFeatures}
                                 isUserLoggedIn={!!authUser}

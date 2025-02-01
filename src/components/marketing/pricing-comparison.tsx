@@ -108,11 +108,17 @@ const FeatureRow = ({
                     </Badge>
                 )}
             </div>
-            {plansToShow.map((plan) => (
-                <div key={plan.name} className="flex items-center md:justify-center">
+            {plansToShow.map((plan, index) => (
+                <div
+                    key={`${plan.subscription_tier}-${index}`}
+                    className="flex items-center md:justify-center"
+                >
                     <span className="flex-1 text-sm text-gray-500 md:hidden">{plan.name}</span>
                     <div className="ml-auto md:ml-0">
-                        <FeatureCell value={item[plan.name]} isHighlighted={plan.is_highlighted} />
+                        <FeatureCell
+                            value={item[plan.subscription_tier]}
+                            isHighlighted={plan.is_highlighted}
+                        />
                     </div>
                 </div>
             ))}
@@ -148,9 +154,9 @@ const PricingComparison = ({
             {/* Plan Headers */}
             <div className={`grid grid-cols-1 gap-8 md:grid-cols-${numberOfColumns}`}>
                 <div className="col-span-1 hidden md:block" />
-                {plansToShow.map((plan) => (
+                {plansToShow.map((plan, index) => (
                     <PricingPlanHeader
-                        key={plan.name}
+                        key={`${plan.subscription_tier}-${index}`}
                         plan={plan}
                         isUserLoggedIn={isUserLoggedIn}
                         currentPlanStripePriceId={currentPlanStripePriceId}

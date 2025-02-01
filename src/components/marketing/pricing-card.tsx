@@ -49,7 +49,7 @@ const PricingCard = ({
 
             <CardContent className="flex flex-1 flex-col gap-4">
                 {features.map((feature) => {
-                    const value: string = feature[plan.name];
+                    const value: string = feature[plan.subscription_tier];
 
                     return (
                         <div key={feature.name}>
