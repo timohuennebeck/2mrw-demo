@@ -152,7 +152,6 @@ const PricingComparison = ({
                     <PricingPlanHeader
                         key={plan.name}
                         plan={plan}
-                        annualPlans={plans.annual}
                         isUserLoggedIn={isUserLoggedIn}
                         currentPlanStripePriceId={currentPlanStripePriceId}
                     />

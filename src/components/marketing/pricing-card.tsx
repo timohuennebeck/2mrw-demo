@@ -2,8 +2,10 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { DefaultPricingPlan, PricingFeatureSection } from "@/config";
 import { toTitleCase } from "@/utils/formatting/textHelper";
 import { getBillingPeriodText } from "@/utils/pricing/pricingHelper";
-import { Check, X } from "lucide-react";
+import { Check, X, InfoIcon } from "lucide-react";
 import PricingPlanButton from "../application/pricing-plan-button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
 
 const PricingCard = ({
     plan,
@@ -47,7 +49,33 @@ const PricingCard = ({
                                         ) : (
                                             <span className="text-sm">{value}</span>
                                         )}
-                                        <span className="text-sm text-gray-600">{item.name}</span>
+                                        <div className="flex items-center gap-1">
+                                            <span className="text-sm text-gray-600">
+                                                {item.name}
+                                            </span>
+                                            {item.tooltip && (
+                                                <TooltipProvider>
+                                                    <Tooltip>
+                                                        <TooltipTrigger>
+                                                            <InfoIcon className="h-4 w-4 text-gray-400" />
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>
+                                                            <p className="max-w-xs text-sm">
+                                                                {item.tooltip}
+                                                            </p>
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                </TooltipProvider>
+                                            )}
+                                            {item.comingSoon && (
+                                                <Badge
+                                                    variant="blue"
+                                                    className="rounded-md font-medium"
+                                                >
+                                                    Coming Soon
+                                                </Badge>
+                                            )}
+                                        </div>
                                     </li>
                                 );
                             })}

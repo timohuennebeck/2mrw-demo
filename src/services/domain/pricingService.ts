@@ -4,8 +4,7 @@ import {
     isFreePlanEnabled,
     pricingCardFeatures,
     pricingComparisonFeatures,
-    PricingFeatureItem,
-    PricingFeatureSection,
+    PricingFeatureSection
 } from "@/config";
 import { SubscriptionTier } from "@/enums";
 
