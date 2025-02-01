@@ -1,36 +1,35 @@
-import { EmailType } from "@/enums";
+import { appConfig, emailConfig } from "@/config";
+import { emailRequestSchema, emailSchemas } from "@/interfaces/services/resend";
+import { ReactElement } from "react";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const emailSchemas = {
-    [EmailType.FREE_TRIAL_STARTED]: {
-        enabled: false,
-        variables: ["freeTrialEndDate"],
-    },
-    [EmailType.FREE_TRIAL_EXPIRES_SOON]: {
-        enabled: false,
-        variables: ["upgradeUrl"],
-    },
-    [EmailType.REFERRAL_INVITE]: {
-        enabled: false,
-        variables: ["referralUrl"],
-    },
-};
-
 export const POST = async (req: Request) => {
-    const body = req.json;
+    const { to, subject, emailType, variables } = emailRequestSchema
+        .parse(req.json);
+
+    if (!emailConfig[emailType].isEnabled) {
+        return Response.json({
+            error: `Email type '${emailType}' is currently disabled`,
+        }, { status: 403 });
+    }
+
+    const variablesFromSchema = emailSchemas[emailType].parse(variables);
+    const EmailComponent = emailConfig[emailType].component as (
+        props: typeof variablesFromSchema,
+    ) => ReactElement;
 
     try {
         const { data, error } = await resend.emails.send({
-            from,
+            from: appConfig.company.senderEmail,
             to,
             subject,
-            react: EmailTemplate(templateVariables),
+            react: EmailComponent(variablesFromSchema),
         });
 
         return data
-            ? Response.json(data)
+            ? Response.json({ data }, { status: 200 })
             : Response.json({ error }, { status: 500 });
     } catch (error) {
         return Response.json({ error }, { status: 500 });

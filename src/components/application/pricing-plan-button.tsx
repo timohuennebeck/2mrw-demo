@@ -1,13 +1,12 @@
-import { billingConfig, isOneTimePaymentEnabled, ROUTES_CONFIG } from "@/config";
-import { DefaultPricingPlan } from "@/config";
+import { billingConfig, DefaultPricingPlan, isOneTimePaymentEnabled, ROUTES_CONFIG } from "@/config";
 import { TextConstants } from "@/constants/TextConstants";
 import { useFreeTrial } from "@/context/FreeTrialContext";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { useUser } from "@/context/UserContext";
 import { EmailType } from "@/enums";
 import { startFreeTrial } from "@/services/database/freeTrialService";
-import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
 import { createStripeBillingPortal, createStripeCheckout } from "@/services/stripe/stripeService";
+import axios from "axios";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -113,11 +112,15 @@ const PricingPlanButton = ({
                 const response = await startFreeTrial(dbUser?.id ?? "", plan.stripe_price_id);
                 if (response?.error) throw response.error;
 
-                sendLoopsTransactionalEmail({
-                    type: EmailType.FREE_TRIAL_STARTED,
-                    email: dbUser?.email ?? "",
+                const postUrl = `${process.env.LOOPS_API_URL}/api/send-email`;
+                axios.post(postUrl, {
+                    to: dbUser?.email,
+                    subject: "Your Free Trial Has Begun!",
+                    emailType: EmailType.FREE_TRIAL_STARTED,
                     variables: {
-                        freeTrialEndDate: response.freeTrialEndDate ?? "",
+                        siteUrl: process.env.SITE_URL,
+                        trialDuration: billingConfig.freeTrial.duration,
+                        trialEndDate: response.freeTrialEndDate,
                     },
                 });
 

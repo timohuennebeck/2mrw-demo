@@ -28,6 +28,11 @@ interface GeneralConfig {
             accountDeletion: WidgetConfig;
         };
     };
+    company: {
+        name: string;
+        contactEmail: string;
+        senderEmail: string;
+    };
 }
 
 export const appConfig: GeneralConfig = {
@@ -73,5 +78,11 @@ export const appConfig: GeneralConfig = {
                 formUrl: "https://tally.so/r/exit-survey",
             },
         },
+    },
+
+    company: {
+        name: "Company Name",
+        contactEmail: "support@example.com",
+        senderEmail: "m@example.com", // this email is used as the sender email for all outgoing emails such as freeTrialStarted, etc.
     },
 };

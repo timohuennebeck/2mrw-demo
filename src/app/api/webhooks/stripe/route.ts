@@ -1,7 +1,6 @@
 import { EmailType, StripeWebhookEvents } from "@/enums";
 import { User } from "@/interfaces";
 import { createSupabasePowerUserClient } from "@/services/integration/admin";
-import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
 import { stripe } from "@/services/stripe/client";
 import {
     handleCancelSubscription,
@@ -9,6 +8,8 @@ import {
     handleUpdateSubscription,
 } from "@/services/stripe/stripeWebhook";
 import Stripe from "stripe";
+import axios from "axios";
+import moment from "moment";
 
 const _verifyStripeWebhook = async (body: string, signature: string) => {
     try {
@@ -132,12 +133,23 @@ export const POST = async (req: Request) => {
                 const customerId = subscription.customer as string;
                 const user = await _getUserFromStripeCustomerId(customerId);
 
-                sendLoopsTransactionalEmail({
-                    type: EmailType.FREE_TRIAL_EXPIRES_SOON,
-                    email: user.email,
+                if (!subscription.trial_end || !subscription.trial_start) {
+                    return;
+                }
+
+                const trialStart = moment.unix(subscription.trial_start);
+                const trialEnd = moment.unix(subscription.trial_end);
+                const durationDays = trialEnd.diff(trialStart, "days");
+
+                const postUrl = `${process.env.LOOPS_API_URL}/api/send-email`;
+                axios.post(postUrl, {
+                    to: user.email,
+                    subject: "Your Free Trial is Ending Soon!",
+                    emailType: EmailType.FREE_TRIAL_EXPIRES_SOON,
                     variables: {
-                        upgradeUrl:
-                            `${process.env.NEXT_PUBLIC_APP_URL}/app/billing`,
+                        siteUrl: process.env.NEXT_PUBLIC_SITE_URL,
+                        trialDuration: durationDays,
+                        discountCode: process.env.TRIAL_EXPIRES_DISCOUNT_CODE,
                     },
                 });
 
