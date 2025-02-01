@@ -3,7 +3,7 @@
  * - pages: seo config for individual pages
  */
 
-import { CardType, SEOConfig } from "@/interfaces/models/seo";
+import { CardType, SEOConfig } from "@/interfaces/models/seo.model";
 import { ROUTES_CONFIG } from "./routes.config";
 
 /**

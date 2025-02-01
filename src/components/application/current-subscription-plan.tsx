@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { BillingPeriod, FreeTrialStatus, SubscriptionStatus } from "@/enums";
 import { PurchasedSubscription } from "@/interfaces";
-import { FreeTrial } from "@/interfaces/models/freeTrial";
+import { FreeTrial } from "@/interfaces/models/free-trial.model";
 import { getPricingPlan } from "@/services/domain/pricingService";
 import {
     createStripeBillingPortal,

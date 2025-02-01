@@ -6,7 +6,7 @@ import { useFreeTrial } from "@/context/FreeTrialContext";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { useUser } from "@/context/UserContext";
 import { PurchasedSubscription } from "@/interfaces";
-import { FreeTrial } from "@/interfaces/models/freeTrial";
+import { FreeTrial } from "@/interfaces/models/free-trial.model";
 import moment from "moment";
 import { Manrope } from "next/font/google";
 import { useRouter, useSearchParams } from "next/navigation";

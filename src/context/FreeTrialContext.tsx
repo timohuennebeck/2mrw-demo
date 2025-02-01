@@ -1,6 +1,6 @@
 import { isFreeTrialEnabled } from "@/config";
 import { FreeTrialStatus } from "@/enums";
-import { FreeTrial } from "@/interfaces/models/freeTrial";
+import { FreeTrial } from "@/interfaces/models/free-trial.model";
 import { fetchUserFreeTrial } from "@/services/database/freeTrialService";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
