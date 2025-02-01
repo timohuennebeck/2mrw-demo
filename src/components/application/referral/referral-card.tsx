@@ -13,6 +13,9 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import axios from "axios";
+import { useUser } from "@/context/UserContext";
+import { EmailType } from "@/enums";
 
 interface ReferralCardProps {
     referralLink: string;
@@ -27,6 +30,7 @@ const emailFormSchema = z.object({
 
 export const ReferralCard = ({ referralLink, userId }: ReferralCardProps) => {
     const { invalidateReferrals } = useReferral();
+    const { dbUser } = useUser();
 
     const [showCheck, setShowCheck] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -63,8 +67,17 @@ export const ReferralCard = ({ referralLink, userId }: ReferralCardProps) => {
 
             invalidateReferrals();
 
-            // TODO: implement email sending logic
-            // await sendReferralEmail(values.email, referralLink);
+            const postUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/send-email`;
+            await axios.post(postUrl, {
+                to: values.email,
+                subject: "You've been invited to join 2mrw!",
+                emailType: EmailType.REFERRAL_INVITE,
+                variables: {
+                    nameOfReferrer: dbUser?.email,
+                    referralCode: dbUser?.referral_code,
+                },
+            });
+
             form.reset();
         } catch (error) {
             form.setError("email", {
@@ -88,8 +101,10 @@ export const ReferralCard = ({ referralLink, userId }: ReferralCardProps) => {
                         </h4>
                         <p className="text-xs text-muted-foreground">
                             Share this referral link with friends and earn{" "}
-                            <span className="font-semibold text-blue-600">[INSERT_REWARD_FOR_REFERRAL]</span> for each
-                            friend who joins
+                            <span className="font-semibold text-blue-600">
+                                [INSERT_REWARD_FOR_REFERRAL]
+                            </span>{" "}
+                            for each friend who joins
                         </p>
                     </div>
 

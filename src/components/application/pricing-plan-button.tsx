@@ -1,4 +1,9 @@
-import { billingConfig, DefaultPricingPlan, isOneTimePaymentEnabled, ROUTES_CONFIG } from "@/config";
+import {
+    billingConfig,
+    DefaultPricingPlan,
+    isOneTimePaymentEnabled,
+    ROUTES_CONFIG,
+} from "@/config";
 import { TextConstants } from "@/constants/TextConstants";
 import { useFreeTrial } from "@/context/FreeTrialContext";
 import { useSubscription } from "@/context/SubscriptionContext";
@@ -118,7 +123,6 @@ const PricingPlanButton = ({
                     subject: "Your Free Trial Has Begun!",
                     emailType: EmailType.FREE_TRIAL_STARTED,
                     variables: {
-                        siteUrl: process.env.SITE_URL,
                         trialDuration: billingConfig.freeTrial.duration,
                         trialEndDate: response.freeTrialEndDate,
                     },

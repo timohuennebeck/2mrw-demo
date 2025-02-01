@@ -147,7 +147,6 @@ export const POST = async (req: Request) => {
                     subject: "Your Free Trial is Ending Soon!",
                     emailType: EmailType.FREE_TRIAL_EXPIRES_SOON,
                     variables: {
-                        siteUrl: process.env.NEXT_PUBLIC_SITE_URL,
                         trialDuration: durationDays,
                         discountCode: process.env.TRIAL_EXPIRES_DISCOUNT_CODE,
                     },

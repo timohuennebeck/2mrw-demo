@@ -46,7 +46,7 @@ export const FreeTrialExpiresEmail = (props: FreeTrialExpiresEmailProps) => (
 
                     <Section className="my-4">
                         <Link
-                            href={`${props.siteUrl}/choose-pricing-plan`}
+                            href={`${process.env.NEXT_PUBLIC_SITE_URL}/choose-pricing-plan`}
                             className="inline-block w-full rounded-md bg-blue-600 py-3 text-center text-sm font-medium text-white"
                         >
                             Use 40% Discount Code
@@ -68,7 +68,6 @@ export const FreeTrialExpiresEmail = (props: FreeTrialExpiresEmailProps) => (
 );
 
 FreeTrialExpiresEmail.PreviewProps = {
-    siteUrl: "https://2mrw.dev",
     trialDuration: 3,
     discountCode: "84BFL12",
 } as FreeTrialExpiresEmailProps;

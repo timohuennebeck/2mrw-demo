@@ -16,7 +16,7 @@ import {
 export const ReferralInviteEmail = (props: ReferralInviteEmailProps) => (
     <Html>
         <Head />
-        <Preview>{props.nameOfReferrer} Invited You!</Preview>
+        <Preview>You've Been Invited To 2mrw!</Preview>
         <Tailwind>
             <Body className="bg-white font-sans">
                 <Container className="mx-auto max-w-[560px] px-4 py-12">
@@ -39,7 +39,7 @@ export const ReferralInviteEmail = (props: ReferralInviteEmailProps) => (
 
                     <Section className="my-4">
                         <Link
-                            href={`${props.siteUrl}/signup?ref=${props.referralCode}`}
+                            href={`${process.env.NEXT_PUBLIC_SITE_URL}/auth/sign-up?method=magic-link:ref=${props.referralCode}`}
                             className="inline-block w-full rounded-md bg-blue-600 py-3 text-center text-sm font-medium text-white"
                         >
                             Sign Up To 2mrw
@@ -61,7 +61,6 @@ export const ReferralInviteEmail = (props: ReferralInviteEmailProps) => (
 );
 
 ReferralInviteEmail.PreviewProps = {
-    siteUrl: "https://2mrw.dev",
     nameOfReferrer: "Timo Huennebeck",
     referralCode: "RE8FAF912",
 } as ReferralInviteEmailProps;

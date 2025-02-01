@@ -6,17 +6,14 @@ import ReferralInviteEmail from "../../../react-email-starter/emails/referral-in
 
 export const emailSchemas = {
     [EmailType.FREE_TRIAL_STARTED]: z.object({
-        siteUrl: z.string(),
         trialDuration: z.number(),
         trialEndDate: z.string(),
     }),
     [EmailType.FREE_TRIAL_EXPIRES_SOON]: z.object({
-        siteUrl: z.string(),
         trialDuration: z.number(),
         discountCode: z.string(),
     }),
     [EmailType.REFERRAL_INVITE]: z.object({
-        siteUrl: z.string(),
         nameOfReferrer: z.string(),
         referralCode: z.string(),
     }),

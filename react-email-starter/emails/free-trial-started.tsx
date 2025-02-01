@@ -40,7 +40,7 @@ export const FreeTrialStartedEmail = (props: FreeTrialStartedEmailProps) => (
 
                     <Section className="my-4">
                         <Link
-                            href={`${props.siteUrl}/dashboard`}
+                            href={`${process.env.NEXT_PUBLIC_SITE_URL}/app`}
                             className="inline-block w-full rounded-md bg-blue-600 py-3 text-center text-sm font-medium text-white"
                         >
                             Start Exploring 2mrw
@@ -62,7 +62,6 @@ export const FreeTrialStartedEmail = (props: FreeTrialStartedEmailProps) => (
 );
 
 FreeTrialStartedEmail.PreviewProps = {
-    siteUrl: "https://itsreelify.com",
     trialDuration: 14,
     trialEndDate: "25th of December, 2025",
 } as FreeTrialStartedEmailProps;
