@@ -1,5 +1,5 @@
 import React from "react";
-import YoutubeVideo from "../ui/youtube-video";
+import YouTubeVideo from "../ui/youtube-video";
 
 interface ProductDemoParams {
     eyebrow?: string;
@@ -24,7 +24,7 @@ const ProductDemo = ({ eyebrow, title, subtitle, videoUrl }: ProductDemoParams) 
 
             {/* Demo Video */}
             <div className="relative w-full max-w-5xl">
-                <YoutubeVideo src={videoUrl} />
+                <YouTubeVideo src={videoUrl} />
             </div>
         </div>
     );
