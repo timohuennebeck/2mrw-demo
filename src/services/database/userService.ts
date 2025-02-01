@@ -1,6 +1,6 @@
 "use server";
 
-import { AuthMethod } from "@/enums/user";
+import { AuthMethod } from "@/enums/user.enum";
 import { User } from "@/interfaces";
 import { handleError } from "@/utils/errors/error";
 import { User as SupabaseUser } from "@supabase/supabase-js";

@@ -6,7 +6,7 @@ import { resendConfirmationEmail, signUpUserToSupabase } from "./action";
 import { TextConstants } from "@/constants/TextConstants";
 import { checkUserEmailExists } from "@/services/database/userService";
 import { StatusMessage } from "@/interfaces";
-import { AuthMethod } from "@/enums/user";
+import { AuthMethod } from "@/enums/user.enum";
 import { sendMagicLink } from "@/services/domain/authService";
 import { appConfig } from "@/config";
 import { useParamFeedback } from "@/hooks/useParamFeedback";

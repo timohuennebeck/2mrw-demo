@@ -1,7 +1,7 @@
 "use server";
 
 import { isFreePlanEnabled, ROUTES_CONFIG } from "@/config";
-import { AuthMethod } from "@/enums/user";
+import { AuthMethod } from "@/enums/user.enum";
 import { processReferralSignup } from "@/services/database/referralService";
 import { startFreePlan } from "@/services/database/subscriptionService";
 import {

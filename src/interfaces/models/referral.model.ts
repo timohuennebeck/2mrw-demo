@@ -1,4 +1,4 @@
-import { ReferralStatus } from "@/enums/referral";
+import { ReferralStatus } from "@/enums/referral.enum";
 
 export interface Referral {
     id: string;

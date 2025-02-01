@@ -2,7 +2,7 @@
 
 import { TextConstants } from "@/constants/TextConstants";
 import { SupabaseErrors } from "@/enums";
-import { AuthMethod } from "@/enums/user";
+import { AuthMethod } from "@/enums/user.enum";
 import {
     createPendingReferral,
     getReferrerByReferralCode,

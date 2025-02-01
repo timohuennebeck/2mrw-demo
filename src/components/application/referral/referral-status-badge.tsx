@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { ReferralStatus } from "@/enums/referral";
+import { ReferralStatus } from "@/enums/referral.enum";
 import { CircleCheck, Clock } from "lucide-react";
 
 interface ReferralStatusBadgeProps {

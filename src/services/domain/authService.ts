@@ -1,7 +1,7 @@
 "use server";
 
 import { TextConstants } from "@/constants/TextConstants";
-import { AuthMethod } from "@/enums/user";
+import { AuthMethod } from "@/enums/user.enum";
 import {
     createPendingReferral,
     getReferrerByReferralCode,

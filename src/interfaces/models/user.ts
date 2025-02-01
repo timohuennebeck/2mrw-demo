@@ -1,4 +1,4 @@
-import { AuthMethod } from "@/enums/user";
+import { AuthMethod } from "@/enums/user.enum";
 
 export interface User {
     id: string;

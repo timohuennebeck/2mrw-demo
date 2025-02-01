@@ -1,6 +1,6 @@
 "use server";
 
-import { ReferralStatus } from "@/enums/referral";
+import { ReferralStatus } from "@/enums/referral.enum";
 import moment from "moment";
 import { nanoid } from "nanoid";
 import { createClient } from "../integration/server";
