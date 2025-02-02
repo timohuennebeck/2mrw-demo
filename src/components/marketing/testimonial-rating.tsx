@@ -14,7 +14,7 @@ const TestimonialRating = () => {
                         alt="User avatar"
                         width={32}
                         height={32}
-                        className="-ml-2 h-12 w-12 rounded-full border-2 border-background bg-muted first:ml-0"
+                        className="-ml-2 h-12 w-12 rounded-full border-2 border-background dark:border-border bg-muted first:ml-0"
                     />
                 ))}
             </div>

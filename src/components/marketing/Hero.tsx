@@ -18,7 +18,7 @@ interface HeroParams {
         onClick?: (e: React.MouseEvent) => void;
     };
     demoVideoUrl?: string;
-    showTestimonials?: boolean;
+    hideTestimonials?: boolean;
 }
 
 const Hero = ({
@@ -28,7 +28,7 @@ const Hero = ({
     primaryCTA,
     secondaryCTA,
     demoVideoUrl,
-    showTestimonials,
+    hideTestimonials,
 }: HeroParams) => {
     return (
         <section className="relative flex flex-col items-center justify-center gap-8 text-center">
@@ -58,7 +58,7 @@ const Hero = ({
                 )}
             </div>
 
-            {showTestimonials && <TestimonialRating />}
+            {!hideTestimonials && <TestimonialRating />}
 
             {/* Demo Video */}
             {demoVideoUrl && (
