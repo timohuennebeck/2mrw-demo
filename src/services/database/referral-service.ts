@@ -3,7 +3,7 @@
 import { ReferralStatus } from "@/enums/referral.enum";
 import moment from "moment";
 import { nanoid } from "nanoid";
-import { createClient } from "../integration/server";
+import { createClient } from "../supabase-clients/server";
 
 interface ProcessReferralSignupParams {
     newUserId: string;

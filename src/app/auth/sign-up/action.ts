@@ -7,7 +7,7 @@ import {
     createPendingReferral,
     getReferrerByReferralCode,
 } from "@/services/database/referral-service";
-import { createClient } from "@/services/integration/server";
+import { createClient } from "@/services/supabase-clients/server";
 import { AuthError } from "@supabase/supabase-js";
 
 interface SignUpUserToSupabaseParams {

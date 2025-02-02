@@ -9,7 +9,7 @@ import {
     updateUserSubscription,
 } from "../database/subscription-service";
 import { getPricingPlan } from "../domain/pricing-service";
-import { createSupabasePowerUserClient } from "../integration/admin";
+import { createSupabasePowerUserClient } from "../supabase-clients/admin";
 
 const _updateFreeTrialToConverted = async (userId: string) => {
     try {

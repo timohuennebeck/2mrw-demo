@@ -8,7 +8,7 @@ import UserDropdown from "@/components/ui/user-dropdown";
 import { appConfig, onboardingConfig } from "@/config";
 import { useUser } from "@/context/user-context";
 import { cn } from "@/lib/utils";
-import { createClient } from "@/services/integration/client";
+import { createClient } from "@/services/supabase-clients/client";
 import { ChevronLeft, CreditCard, LayoutGrid, Share2, Sparkles, User2, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

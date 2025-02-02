@@ -5,7 +5,7 @@ import { FreeTrialStatus, SubscriptionStatus } from "@/enums";
 import { handleError } from "@/utils/errors/error";
 import moment from "moment";
 import { getPricingPlan } from "../domain/pricing-service";
-import { createClient } from "../integration/server";
+import { createClient } from "../supabase-clients/server";
 import { stripe } from "../stripe/client";
 import { getStripeCustomerId } from "../stripe/stripe-customer";
 import { updateUserSubscription } from "./subscription-service";

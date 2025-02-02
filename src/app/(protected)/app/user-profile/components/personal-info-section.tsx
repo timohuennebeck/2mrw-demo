@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useSession } from "@/context/session-context";
 import { useUser } from "@/context/user-context";
-import { createClient } from "@/services/integration/client";
+import { createClient } from "@/services/supabase-clients/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";

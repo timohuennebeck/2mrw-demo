@@ -4,7 +4,7 @@ import { isFreePlanEnabled } from "@/config";
 import { processReferralSignup } from "@/services/database/referral-service";
 import { startFreePlan } from "@/services/database/subscription-service";
 import { createUserTable, fetchUser } from "@/services/database/user-service";
-import { createClient } from "@/services/integration/server";
+import { createClient } from "@/services/supabase-clients/server";
 import { stripe } from "@/services/stripe/client";
 import { getStripeCustomerId } from "@/services/stripe/stripe-customer";
 import { type EmailOtpType } from "@supabase/supabase-js";

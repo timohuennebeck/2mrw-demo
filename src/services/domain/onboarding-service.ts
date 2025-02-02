@@ -1,4 +1,4 @@
-import { createClient } from "@/services/integration/client";
+import { createClient } from "@/services/supabase-clients/client";
 
 export const fetchClaimedRewards = async (userId: string) => {
     const supabase = createClient();

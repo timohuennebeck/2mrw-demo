@@ -7,8 +7,8 @@ import {
 } from "@/interfaces";
 import { handleError } from "@/utils/errors/error";
 import moment from "moment";
-import { createSupabasePowerUserClient } from "../integration/admin";
-import { createClient } from "../integration/server";
+import { createSupabasePowerUserClient } from "../supabase-clients/admin";
+import { createClient } from "../supabase-clients/server";
 
 const FREE_PLAN_IDENTIFIER = "price_free";
 

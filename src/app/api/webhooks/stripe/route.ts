@@ -1,6 +1,6 @@
 import { EmailType, StripeWebhookEvents } from "@/enums";
 import { User } from "@/interfaces";
-import { createSupabasePowerUserClient } from "@/services/integration/admin";
+import { createSupabasePowerUserClient } from "@/services/supabase-clients/admin";
 import { stripe } from "@/services/stripe/client";
 import {
     handleCancelSubscription,

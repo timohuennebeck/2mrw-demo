@@ -6,7 +6,7 @@ import {
     createPendingReferral,
     getReferrerByReferralCode,
 } from "../database/referral-service";
-import { createClient } from "../integration/server";
+import { createClient } from "../supabase-clients/server";
 
 export const sendMagicLink = async (email: string, referralCode?: string) => {
     try {

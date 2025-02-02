@@ -1,7 +1,7 @@
 "use server";
 
 import { TextConstants } from "@/constants/TextConstants";
-import { createClient } from "@/services/integration/server";
+import { createClient } from "@/services/supabase-clients/server";
 import { revalidatePath } from "next/cache";
 
 interface UpdatePasswordParams {

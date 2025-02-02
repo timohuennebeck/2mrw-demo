@@ -5,7 +5,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { TextConstants } from "@/constants/TextConstants";
 import { checkUserEmailExists } from "@/services/database/user-service";
-import { createClient } from "@/services/integration/client";
+import { createClient } from "@/services/supabase-clients/client";
 import { StatusMessage } from "@/interfaces";
 import FormStatusMessage from "@/components/application/form-status-message";
 import { zodResolver } from "@hookform/resolvers/zod";

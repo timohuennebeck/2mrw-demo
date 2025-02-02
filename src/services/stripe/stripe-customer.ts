@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/services/integration/server";
+import { createClient } from "@/services/supabase-clients/server";
 import moment from "moment";
 import { stripe } from "./client";
 import { handleError } from "@/utils/errors/error";

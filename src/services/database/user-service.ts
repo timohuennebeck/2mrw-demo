@@ -5,7 +5,7 @@ import { User } from "@/interfaces";
 import { handleError } from "@/utils/errors/error";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import moment from "moment";
-import { createClient } from "../integration/server";
+import { createClient } from "../supabase-clients/server";
 import { nanoid } from "nanoid";
 
 export const checkUserEmailExists = async (userEmail: string) => {
