@@ -41,7 +41,7 @@ const FeatureItem = ({
         </div>
         <div>
             <span className="font-medium">{feature.name}</span>{" "}
-            <span className="text-gray-600">{feature.description}</span>
+            <span className="text-muted-foreground">{feature.description}</span>
         </div>
     </div>
 );
@@ -80,7 +80,7 @@ const Features = ({
                     </div>
 
                     <h2 className="max-w-4xl text-4xl font-medium tracking-tight md:text-5xl">
-                        {title} <span className="text-gray-400">{subtitle}</span>
+                        {title} <span className="text-muted-foreground">{subtitle}</span>
                     </h2>
                 </div>
 

@@ -48,11 +48,11 @@ const PricingPlanHeader = ({
             </div>
             <div>
                 <span className="text-4xl font-medium">{plan.price}</span>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-muted-foreground">
                     {getBillingPeriodText(plan.billing_period)}
                 </span>
             </div>
-            <span className="text-sm text-gray-500">{plan.description}</span>
+            <span className="text-sm text-muted-foreground">{plan.description}</span>
             <PricingPlanButton
                 plan={plan}
                 currentPlanStripePriceId={currentPlanStripePriceId ?? ""}
@@ -71,9 +71,9 @@ const FeatureCell = ({
 }) => {
     if (typeof value === "boolean") {
         return value ? (
-            <Check className="mx-auto h-5 w-5 text-black" />
+            <Check className="mx-auto h-5 w-5" />
         ) : (
-            <X className="mx-auto h-5 w-5 text-gray-400" />
+            <X className="mx-auto h-5 w-5 text-muted-foreground" />
         );
     }
     return <span className={`text-sm ${isHighlighted ? "font-semibold" : ""}`}>{value}</span>;
@@ -88,13 +88,13 @@ const FeatureRow = ({
 }) => {
     return (
         <div className={`grid grid-cols-1 gap-8 py-6 md:grid-cols-${plansToShow.length + 1}`}>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 {item.name}
                 {item.tooltip && (
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger>
-                                <InfoIcon className="h-4 w-4 text-gray-400" />
+                                <InfoIcon className="h-4 w-4 text-muted-foreground" />
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p className="max-w-xs text-sm">{item.tooltip}</p>
@@ -113,7 +113,7 @@ const FeatureRow = ({
                     key={`${plan.subscription_tier}-${index}`}
                     className="flex items-center md:justify-center"
                 >
-                    <span className="flex-1 text-sm text-gray-500 md:hidden">{plan.name}</span>
+                    <span className="flex-1 text-sm text-muted-foreground md:hidden">{plan.name}</span>
                     <div className="ml-auto md:ml-0">
                         <FeatureCell
                             value={item[plan.subscription_tier]}
@@ -148,7 +148,7 @@ const PricingComparison = ({
                 <h2 className="max-w-4xl text-4xl font-medium leading-tight tracking-tight md:text-5xl">
                     {title}
                 </h2>
-                <p className="max-w-4xl text-lg text-gray-600">{description}</p>
+                <p className="max-w-4xl text-lg text-muted-foreground">{description}</p>
             </div>
 
             {/* Plan Headers */}

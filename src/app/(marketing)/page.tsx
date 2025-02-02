@@ -59,7 +59,7 @@ const LandingPage = () => {
     return (
         <>
             <div className="fixed inset-0 -z-10 h-full w-full">
-                <div className="h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]" />
+                <div className="h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] opacity-100 dark:opacity-0" />
             </div>
 
             <div className={`${manrope.variable} flex flex-col font-manrope`}>
@@ -136,8 +136,8 @@ const LandingPage = () => {
                                         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga quis error saepe eum quia?",
                                     badge: {
                                         text: "Step 1",
-                                        bgColor: "bg-blue-50",
-                                        textColor: "text-blue-600",
+                                        bgColor: "bg-blue-50 dark:bg-blue-950",
+                                        textColor: "text-blue-600 ",
                                     },
                                     metrics: [
                                         { value: "85%", label: "Success Rate" },
@@ -151,7 +151,7 @@ const LandingPage = () => {
                                         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga quis error saepe eum quia?",
                                     badge: {
                                         text: "Step 2",
-                                        bgColor: "bg-blue-50",
+                                        bgColor: "bg-blue-50 dark:bg-blue-950",
                                         textColor: "text-blue-600",
                                     },
                                     metrics: [
@@ -166,7 +166,7 @@ const LandingPage = () => {
                                         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga quis error saepe eum quia?",
                                     badge: {
                                         text: "Step 3",
-                                        bgColor: "bg-blue-50",
+                                        bgColor: "bg-blue-50 dark:bg-blue-950",
                                         textColor: "text-blue-600",
                                     },
                                     metrics: [

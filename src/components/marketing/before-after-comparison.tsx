@@ -33,7 +33,7 @@ const BeforeAfterComparison = ({ heading, before, after }: BeforeAfterComparison
                         </h2>
                     </div>
                     {heading.description && (
-                        <p className="max-w-3xl text-lg text-gray-600">{heading.description}</p>
+                        <p className="max-w-3xl text-lg text-muted-foreground">{heading.description}</p>
                     )}
                 </div>
             )}

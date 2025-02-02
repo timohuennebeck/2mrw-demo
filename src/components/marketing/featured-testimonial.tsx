@@ -1,5 +1,7 @@
 import Image from "next/image";
 import QuoteImg from "@/assets/quotes-black.svg";
+import QuoteImgDark from "@/assets/quotes-white.svg";
+import { useTheme } from "next-themes";
 
 interface FeaturedTestimonialParams {
     quote: string;
@@ -11,9 +13,16 @@ interface FeaturedTestimonialParams {
 }
 
 const FeaturedTestimonial = ({ quote, author }: FeaturedTestimonialParams) => {
+    const { theme } = useTheme();
+
     return (
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
-            <Image src={QuoteImg} alt="Quote" width={48} height={48} />
+            <Image
+                src={theme === "dark" ? QuoteImgDark : QuoteImg}
+                alt="Quote"
+                width={48}
+                height={48}
+            />
 
             <blockquote className="text-2xl font-medium">"{quote}"</blockquote>
 
@@ -27,7 +36,7 @@ const FeaturedTestimonial = ({ quote, author }: FeaturedTestimonialParams) => {
                 />
                 <div className="text-left">
                     <div className="font-medium">{author.name}</div>
-                    <div className="text-sm text-gray-500">{author.role}</div>
+                    <div className="text-sm text-muted-foreground">{author.role}</div>
                 </div>
             </div>
         </div>

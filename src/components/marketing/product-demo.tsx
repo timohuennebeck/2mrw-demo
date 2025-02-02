@@ -19,7 +19,7 @@ const ProductDemo = ({ eyebrow, title, subtitle, videoUrl }: ProductDemoParams) 
                 </h2>
 
                 {/* Subtitle */}
-                <p className="max-w-3xl text-lg text-gray-600">{subtitle}</p>
+                <p className="max-w-3xl self-center text-lg text-muted-foreground">{subtitle}</p>
             </div>
 
             {/* Demo Video */}

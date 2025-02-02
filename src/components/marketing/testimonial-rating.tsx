@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { Star } from "lucide-react";
 
@@ -12,17 +14,17 @@ const TestimonialRating = () => {
                         alt="User avatar"
                         width={32}
                         height={32}
-                        className="-ml-2 h-12 w-12 rounded-full border-2 border-white bg-gray-200 first:ml-0"
+                        className="-ml-2 h-12 w-12 rounded-full border-2 border-background bg-muted first:ml-0"
                     />
                 ))}
             </div>
             <div className="flex flex-col gap-2">
                 <div className="flex flex-row">
                     {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} className="h-5 w-5 fill-current" />
+                        <Star key={star} className="h-5 w-5 fill-foreground text-foreground" />
                     ))}
                 </div>
-                <span className="font-medium">569 founders trust us</span>
+                <span className="font-medium text-foreground">569 founders trust us</span>
             </div>
         </div>
     );

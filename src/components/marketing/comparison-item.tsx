@@ -15,7 +15,7 @@ const ComparisonItem = ({ type, title, bulletPoints, videoUrl }: ComparisonItemP
     const styles = {
         before: {
             bg: "bg-gray-50",
-            text: "text-gray-600",
+            text: "text-muted-foreground",
             icon: X,
             label: "ALTERNATIVES",
         },
@@ -46,7 +46,7 @@ const ComparisonItem = ({ type, title, bulletPoints, videoUrl }: ComparisonItemP
                 </div>
                 <ul className="space-y-3">
                     {bulletPoints.map((point, index) => (
-                        <li key={index} className="flex items-start gap-2 text-gray-600">
+                        <li key={index} className="flex items-start gap-2 text-muted-foreground">
                             <Icon className={`mt-1 h-4 w-4 flex-shrink-0 ${currentStyle.text}`} />
                             {point.text}
                         </li>

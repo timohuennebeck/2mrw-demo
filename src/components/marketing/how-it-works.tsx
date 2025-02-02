@@ -33,7 +33,7 @@ const HowItWorks = ({ eyebrow, title, description, steps }: HowItWorksProps) => 
                 <h2 className="max-w-4xl text-3xl font-medium leading-tight tracking-tight md:text-4xl lg:text-5xl">
                     {title}
                 </h2>
-                {description && <p className="max-w-3xl text-base md:text-lg text-gray-600">{description}</p>}
+                {description && <p className="max-w-3xl text-base md:text-lg text-muted-foreground">{description}</p>}
             </div>
 
             {/* Steps Section */}
@@ -50,7 +50,7 @@ const HowItWorks = ({ eyebrow, title, description, steps }: HowItWorksProps) => 
                     >
                         <div
                             className={cn(
-                                "w-full md:max-w-[55%] rounded-lg border border-gray-100 bg-white/50 p-4 md:p-6 backdrop-blur-sm",
+                                "w-full md:max-w-[55%] rounded-lg border border-gray-100 p-4 md:p-6 bg-white",
                                 idx % 2 === 0 ? "md:text-right text-left" : "text-left",
                             )}
                         >
@@ -99,7 +99,7 @@ const HowItWorks = ({ eyebrow, title, description, steps }: HowItWorksProps) => 
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <h3 className="text-lg md:text-xl font-medium">{step.title}</h3>
-                                    <p className="text-sm md:text-base text-gray-600">{step.description}</p>
+                                    <p className="text-sm md:text-base text-muted-foreground">{step.description}</p>
 
                                     {/* Optional Metrics */}
                                     {step.metrics && (
@@ -115,7 +115,7 @@ const HowItWorks = ({ eyebrow, title, description, steps }: HowItWorksProps) => 
                                                     <span className="text-xl md:text-2xl font-semibold">
                                                         {metric.value}
                                                     </span>
-                                                    <span className="text-xs md:text-sm text-gray-500">
+                                                    <span className="text-xs md:text-sm text-muted-foreground">
                                                         {metric.label}
                                                     </span>
                                                 </div>

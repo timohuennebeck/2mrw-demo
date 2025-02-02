@@ -30,7 +30,7 @@ const CallToAction = ({
                 {title}
             </h2>
 
-            <p className="max-w-3xl text-center text-lg text-gray-600">{description}</p>
+            <p className="max-w-3xl text-center text-lg text-muted-foreground">{description}</p>
 
             <div className="flex items-center justify-center gap-4">
                 <Button size="lg" onClick={primaryButton.onClick}>

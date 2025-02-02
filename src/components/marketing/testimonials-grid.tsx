@@ -35,7 +35,7 @@ const SectionHeader = ({ title }: { title: TestimonialsGridProps["title"] }) => 
             <h2 className="max-w-4xl text-4xl font-medium leading-tight tracking-tight md:text-5xl">
                 {title.main}
             </h2>
-            {title.subtitle && <p className="max-w-4xl text-lg text-gray-600">{title.subtitle}</p>}
+            {title.subtitle && <p className="max-w-4xl text-lg text-muted-foreground">{title.subtitle}</p>}
         </div>
     );
 };

@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import ThemeToggle from "../ui/theme-toggle";
 
 interface NavItem {
     href: string;
@@ -26,7 +27,7 @@ const Header = ({ navItems, logoSrc, loginOnClick, userIsLoggedIn }: HeaderParam
     return (
         <header>
             <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-8 sm:px-6 lg:px-8">
-                {/* Logo - Fixed width, so that the nav buttons are centered */}
+                {/* Logo */}
                 <div className="w-32">
                     <Link href="/" className="flex items-center">
                         <Image
@@ -39,14 +40,14 @@ const Header = ({ navItems, logoSrc, loginOnClick, userIsLoggedIn }: HeaderParam
                     </Link>
                 </div>
 
-                {/* Navigation - Centered */}
+                {/* Navigation */}
                 <nav className="hidden items-center gap-8 md:flex">
                     {navItems.map((item) => (
                         <Link
                             key={item.href}
                             href={item.href}
                             onClick={(e) => handleSmoothScroll(e, item.href)}
-                            className="text-sm text-gray-600 hover:text-gray-900"
+                            className="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
                             {...(item.isExternal && {
                                 target: "_blank",
                                 rel: "noopener noreferrer",
@@ -55,9 +56,10 @@ const Header = ({ navItems, logoSrc, loginOnClick, userIsLoggedIn }: HeaderParam
                             {item.label}
                         </Link>
                     ))}
+                    <ThemeToggle />
                 </nav>
 
-                {/* Button - Fixed width, so that the nav buttons are centered */}
+                {/* Login Button */}
                 <div className="w-32 text-right">
                     <Button
                         variant="ghost"

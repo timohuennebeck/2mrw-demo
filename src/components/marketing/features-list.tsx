@@ -19,7 +19,7 @@ const FeatureItem = ({ title, description }: Feature) => (
         </div>
         <div className="flex flex-col gap-2">
             <h3 className="text-lg font-medium">{title}</h3>
-            <p className="text-base text-gray-600">{description}</p>
+            <p className="text-base text-muted-foreground">{description}</p>
         </div>
     </div>
 );
@@ -31,7 +31,7 @@ const FeaturesList = ({ eyebrow, heading, description, features }: FeaturesListP
             <div className="flex flex-col gap-6">
                 {eyebrow && <p className="text-sm font-medium text-blue-600">{eyebrow}</p>}
                 <h2 className="max-w-4xl text-4xl font-medium tracking-tight">{heading}</h2>
-                <p className="max-w-3xl text-lg text-gray-600">{description}</p>
+                <p className="max-w-3xl text-lg text-muted-foreground">{description}</p>
             </div>
 
             {/* Features Columns */}

@@ -43,7 +43,7 @@ const Hero = ({
             </h1>
 
             {/* Subtitle */}
-            <p className="max-w-2xl text-lg text-gray-600">{subtitle}</p>
+            <p className="max-w-2xl text-lg text-muted-foreground">{subtitle}</p>
 
             {/* CTA Buttons */}
             <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
