@@ -13,6 +13,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { Suspense, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { appConfig } from "@/config";
+import TexturedBackground from "@/components/ui/textured-background";
 
 const manrope = Manrope({
     subsets: ["latin"],
@@ -81,9 +82,7 @@ const PlanConfirmationPageContent = () => {
 
     return (
         <>
-            <div className="fixed inset-0 -z-10 h-full w-full">
-                <div className="h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]" />
-            </div>
+            <TexturedBackground />
 
             {showConfetti && (
                 <Confetti recycle={false} numberOfPieces={200} style={{ zIndex: 999 }} />
@@ -105,7 +104,7 @@ const PlanConfirmationPageContent = () => {
                                     {headerContent.highlightText}
                                 </span>
                             </h2>
-                            <p className="mx-auto max-w-2xl text-base text-gray-600">
+                            <p className="mx-auto max-w-2xl text-base text-muted-foreground">
                                 {headerContent.subtitle}
                             </p>
                         </div>

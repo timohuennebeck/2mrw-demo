@@ -167,7 +167,7 @@ const CurrentSubscriptionPlan = ({
                                     {subscription?.status}
                                 </Badge>
                             </div>
-                            <p className="text-sm text-muted-foreground/80">
+                            <p className="text-sm text-muted-foreground">
                                 {pricingPlan?.description}
                             </p>
                         </div>
