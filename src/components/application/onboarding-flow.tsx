@@ -72,8 +72,8 @@ const OnboardingFlow = ({
                                 <div
                                     className={`flex h-10 w-10 items-center justify-center rounded-full border ${
                                         index + 1 <= currentStep
-                                            ? "border-primary bg-primary text-white"
-                                            : "border-gray-200 bg-white text-gray-400"
+                                            ? "border bg-black dark:bg-white text-white dark:text-black"
+                                            : "border-gray-200 bg-white dark:bg-black text-muted-foreground"
                                     }`}
                                 >
                                     {index + 1}
@@ -88,7 +88,7 @@ const OnboardingFlow = ({
                     {/* Header */}
                     <div className="grid w-full gap-4 text-center">
                         <h1 className="text-xl font-semibold md:text-3xl">{title}</h1>
-                        <p className="text-xs text-gray-400 md:text-sm">{description}</p>
+                        <p className="text-xs text-muted-foreground md:text-sm">{description}</p>
                     </div>
 
                     {/* Content - Note the max-w-[380px] addition */}
@@ -106,7 +106,7 @@ const OnboardingFlow = ({
                                         <Button
                                             onClick={handlePrevious}
                                             variant="ghost"
-                                            className="w-full text-gray-500"
+                                            className="w-full text-muted-foreground"
                                         >
                                             Previous
                                         </Button>
@@ -118,7 +118,7 @@ const OnboardingFlow = ({
                                         <Button
                                             onClick={handleSkip}
                                             variant="ghost"
-                                            className="w-full text-gray-500"
+                                            className="w-full text-muted-foreground"
                                         >
                                             Let's do this step later...
                                         </Button>
