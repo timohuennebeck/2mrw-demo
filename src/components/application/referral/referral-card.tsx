@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { TextConstants } from "@/constants/TextConstants";
+import { TextConstants } from "@/constants/text-constants";
 import { useReferral } from "@/context/referral-context";
 import { createPendingReferral, getExistingReferral } from "@/services/database/referral-service";
 import { zodResolver } from "@hookform/resolvers/zod";

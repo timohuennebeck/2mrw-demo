@@ -1,5 +1,5 @@
 import { StatusConfig } from "@/app/auth-status/authStatus";
-import { TextConstants } from "@/constants/TextConstants";
+import { TextConstants } from "@/constants/text-constants";
 import { appConfig } from "./app.config";
 
 const ERROR_KEYS = [

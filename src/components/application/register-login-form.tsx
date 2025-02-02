@@ -11,7 +11,7 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { TextConstants } from "@/constants/TextConstants";
+import { TextConstants } from "@/constants/text-constants";
 import { StatusMessage } from "@/interfaces";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";

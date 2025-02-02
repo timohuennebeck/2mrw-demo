@@ -1,4 +1,4 @@
-import { TextConstants } from "@/constants/TextConstants";
+import { TextConstants } from "@/constants/text-constants";
 
 interface ReferralHeaderProps {
     title: string;

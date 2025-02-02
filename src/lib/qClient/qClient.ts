@@ -8,6 +8,10 @@ import { persistQueryClient } from "@tanstack/react-query-persist-client";
  */
 
 export const CACHE_TIMES = {
+    USER_CRITICAL: {
+        staleTime: 1000 * 60 * 5, // 5 minutes - things like subscription status, free trial status, etc.
+        cacheTime: 1000 * 60 * 30, // 30 minutes
+    },
     DYNAMIC: {
         staleTime: 1000 * 60 * 30, // 30 minutes before background refresh
         cacheTime: 1000 * 60 * 60 * 2, // 2 hours
@@ -38,6 +42,7 @@ if (typeof window !== "undefined") {
     persistQueryClient({
         queryClient,
         persister: localStoragePersister,
-        buster: process.env.BUILD_VERSION, // when this id changes, the cache is invalidated
+        buster: process.env.NEXT_PUBLIC_BUILD_VERSION, // when this id changes, the cache is invalidated
+        maxAge: 1000 * 60 * 60 * 24 * 90, // 90 days
     });
 }

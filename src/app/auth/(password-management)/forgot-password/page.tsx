@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
-import { TextConstants } from "@/constants/TextConstants";
+import { TextConstants } from "@/constants/text-constants";
 import { checkUserEmailExists } from "@/services/database/user-service";
 import { createClient } from "@/services/supabase-clients/client";
 import { StatusMessage } from "@/interfaces";

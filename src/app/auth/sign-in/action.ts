@@ -1,6 +1,6 @@
 "use server";
 
-import { TextConstants } from "@/constants/TextConstants";
+import { TextConstants } from "@/constants/text-constants";
 import { createClient } from "@/services/supabase-clients/server";
 import moment from "moment";
 import { revalidatePath } from "next/cache";

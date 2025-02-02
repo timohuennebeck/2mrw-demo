@@ -1,6 +1,6 @@
 "use server";
 
-import { TextConstants } from "@/constants/TextConstants";
+import { TextConstants } from "@/constants/text-constants";
 import { SupabaseErrors } from "@/enums";
 import { AuthMethod } from "@/enums/user.enum";
 import {

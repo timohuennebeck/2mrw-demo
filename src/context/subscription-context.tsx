@@ -4,6 +4,7 @@ import { fetchUserSubscription } from "@/services/database/subscription-service"
 import { useSession } from "./session-context";
 import { PurchasedSubscription } from "@/interfaces";
 import { SubscriptionStatus } from "@/enums";
+import { CACHE_KEYS } from "@/constants/caching-constants";
 
 interface SubscriptionContextType {
     subscription: PurchasedSubscription | null;
@@ -25,24 +26,22 @@ export const SubscriptionProvider = ({ children }: { children: React.ReactNode }
     const queryClient = useQueryClient();
 
     const { data, isFetching } = useQuery({
-        queryKey: ["subscription", authUser?.id],
+        queryKey: CACHE_KEYS.USER_CRITICAL.SUBSCRIPTION(authUser?.id ?? ""),
         queryFn: () => fetchUserSubscription(authUser?.id ?? ""),
         enabled: !!authUser?.id,
     });
-
-    const invalidateSubscription = async () => {
-        await queryClient.invalidateQueries({
-            queryKey: ["subscription", authUser?.id],
-            refetchType: "active",
-        });
-    };
 
     return (
         <SubscriptionContext.Provider
             value={{
                 subscription: data?.data ?? null,
                 subscriptionStatus: data?.data?.status as SubscriptionStatus,
-                invalidateSubscription,
+                invalidateSubscription: async () => {
+                    await queryClient.invalidateQueries({
+                        queryKey: CACHE_KEYS.USER_CRITICAL.SUBSCRIPTION(authUser?.id ?? ""),
+                        refetchType: "active",
+                    });
+                },
                 isLoading: isFetching,
             }}
         >

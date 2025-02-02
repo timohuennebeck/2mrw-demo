@@ -5,6 +5,7 @@ import { fetchUserFreeTrial } from "@/services/database/free-trial-service";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
 import { useSession } from "./session-context";
+import { CACHE_KEYS } from "@/constants/caching-constants";
 
 interface FreeTrialContextType {
     freeTrial: FreeTrial | null;
@@ -27,30 +28,27 @@ export const FreeTrialProvider = ({ children }: { children: React.ReactNode }) =
 
     const queryClient = useQueryClient();
 
-    const { data, isFetching } = useQuery({
-        queryKey: ["free_trial", authUser?.id],
+    const { data: freeTrial, isFetching } = useQuery({
+        queryKey: CACHE_KEYS.USER_CRITICAL.FREE_TRIAL(authUser?.id ?? ""),
         queryFn: () => fetchUserFreeTrial(authUser?.id ?? ""),
         enabled: !!authUser?.id,
     });
 
-    const invalidateFreeTrial = async () => {
-        await queryClient.invalidateQueries({
-            queryKey: ["free_trial", authUser?.id],
-            refetchType: "active",
-        });
-    };
-
-    const freeTrial = data?.data;
-    const isOnFreeTrial = freeTrial?.status === FreeTrialStatus.ACTIVE;
-    const canStartFreeTrial = isFreeTrialEnabled() && !freeTrial;
+    const isOnFreeTrial = freeTrial?.data && freeTrial?.data.status === FreeTrialStatus.ACTIVE;
+    const canStartFreeTrial = isFreeTrialEnabled() && !freeTrial?.data;
 
     return (
         <FreeTrialContext.Provider
             value={{
-                freeTrial,
+                freeTrial: freeTrial?.data,
                 canStartFreeTrial,
                 isOnFreeTrial,
-                invalidateFreeTrial,
+                invalidateFreeTrial: async () => {
+                    await queryClient.invalidateQueries({
+                        queryKey: CACHE_KEYS.USER_CRITICAL.FREE_TRIAL(authUser?.id ?? ""),,
+                        refetchType: "active",
+                    });
+                },
                 isLoading: isFetching,
             }}
         >

@@ -3,7 +3,7 @@
 import { Suspense, useState } from "react";
 import RegisterLoginForm from "@/components/application/register-login-form";
 import { resendConfirmationEmail, signUpUserToSupabase } from "./action";
-import { TextConstants } from "@/constants/TextConstants";
+import { TextConstants } from "@/constants/text-constants";
 import { checkUserEmailExists } from "@/services/database/user-service";
 import { StatusMessage } from "@/interfaces";
 import { AuthMethod } from "@/enums/user.enum";

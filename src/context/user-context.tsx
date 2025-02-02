@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
 import { useSession } from "./session-context";
 import { User } from "@/interfaces";
+import { CACHE_KEYS } from "@/constants/caching-constants";
 
 interface UserContextType {
     dbUser: User | null;
@@ -20,17 +21,22 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const queryClient = useQueryClient();
 
     const { data } = useQuery({
-        queryKey: ["user", authUser?.id],
+        queryKey: CACHE_KEYS.USER_CRITICAL.USER(authUser?.id ?? ""),
         queryFn: () => fetchUser(authUser?.id ?? ""),
         enabled: !!authUser?.id,
     });
 
-    const invalidateUser = () => {
-        queryClient.invalidateQueries({ queryKey: ["user", authUser?.id] });
-    };
-
     return (
-        <UserContext.Provider value={{ dbUser: data?.data ?? null, invalidateUser }}>
+        <UserContext.Provider
+            value={{
+                dbUser: data?.data ?? null,
+                invalidateUser: () => {
+                    queryClient.invalidateQueries({
+                        queryKey: CACHE_KEYS.USER_CRITICAL.USER(authUser?.id ?? ""),
+                    });
+                },
+            }}
+        >
             {children}
         </UserContext.Provider>
     );

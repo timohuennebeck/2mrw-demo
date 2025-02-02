@@ -1,6 +1,7 @@
-import { createClient } from "@/services/supabase-clients/client";
+import { createContext, useContext } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { User } from "@supabase/supabase-js";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import { createClient } from "@/services/supabase-clients/client";
 
 interface SessionContextType {
     authUserIsLoggedIn: boolean;
@@ -13,35 +14,42 @@ const SessionContext = createContext({
 } as SessionContextType);
 
 export const SessionProvider = ({ children }: { children: React.ReactNode }) => {
-    const [authUserIsLoggedIn, setAuthUserIsLoggedIn] = useState(false);
-    const [authUser, setAuthUser] = useState<User | null>(null);
+    const queryClient = useQueryClient();
 
-    useEffect(() => {
-        const supabaseClient = createClient();
+    const supabaseClient = createClient();
 
-        const checkUser = async () => {
+    const { data } = useQuery({
+        queryKey: ["session"],
+        queryFn: async () => {
             const {
                 data: { user },
             } = await supabaseClient.auth.getUser();
+            return user;
+        },
+        refetchOnWindowFocus: true,
+    });
 
-            setAuthUserIsLoggedIn(!!user);
-            setAuthUser(user);
-        };
+    useQuery({
+        queryKey: ["authListener"],
+        queryFn: () => {
+            const { data: authListener } = supabaseClient.auth.onAuthStateChange((_, session) => {
+                queryClient.setQueryData(["session"], session?.user ?? null);
+            });
 
-        checkUser();
-
-        const { data: authListener } = supabaseClient.auth.onAuthStateChange((_, session) => {
-            setAuthUserIsLoggedIn(!!session);
-            setAuthUser(session?.user ?? null);
-        });
-
-        return () => {
-            authListener.subscription.unsubscribe();
-        };
-    }, []);
+            return () => {
+                authListener.subscription.unsubscribe();
+            };
+        },
+        refetchOnWindowFocus: false,
+    });
 
     return (
-        <SessionContext.Provider value={{ authUserIsLoggedIn, authUser }}>
+        <SessionContext.Provider
+            value={{
+                authUserIsLoggedIn: !!data,
+                authUser: data ?? null,
+            }}
+        >
             {children}
         </SessionContext.Provider>
     );

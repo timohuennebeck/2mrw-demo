@@ -4,7 +4,7 @@ import {
     isOneTimePaymentEnabled,
     ROUTES_CONFIG,
 } from "@/config";
-import { TextConstants } from "@/constants/TextConstants";
+import { TextConstants } from "@/constants/text-constants";
 import { useFreeTrial } from "@/context/free-trial-context";
 import { useSubscription } from "@/context/subscription-context";
 import { useUser } from "@/context/user-context";

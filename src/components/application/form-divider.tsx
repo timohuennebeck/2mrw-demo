@@ -1,4 +1,4 @@
-import { TextConstants } from "@/constants/TextConstants";
+import { TextConstants } from "@/constants/text-constants";
 import React from "react";
 
 const FormDivider = () => {

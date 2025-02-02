@@ -1,4 +1,4 @@
-import { TextConstants } from "@/constants/TextConstants";
+import { TextConstants } from "@/constants/text-constants";
 import { CircleCheck } from "lucide-react";
 
 export interface PasswordStrengthCheckerParams {

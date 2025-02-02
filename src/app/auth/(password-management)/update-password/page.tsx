@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Suspense, useState } from "react";
 import { updatePassword } from "./action";
 import { useSearchParams } from "next/navigation";
-import { TextConstants } from "@/constants/TextConstants";
+import { TextConstants } from "@/constants/text-constants";
 import PasswordStrengthChecker from "@/components/application/password-strength-checker";
 import FormStatusMessage from "@/components/application/form-status-message";
 import { StatusMessage } from "@/interfaces";
