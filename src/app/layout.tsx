@@ -24,8 +24,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 
                 <ThemeProvider
                     attribute="class"
-                    defaultTheme="system"
-                    enableSystem
+                    defaultTheme={appConfig.themeToggle.defaultTheme}
                 >
                     <Providers>
                         {children}

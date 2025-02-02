@@ -69,9 +69,14 @@ export const appConfig: GeneralConfig = {
         },
     },
 
+    /**
+     * when changing the default theme, make sure to remove the "theme" key from localStorage.
+     * this ensures the theme updates to reflect the latest default setting.
+     */
+
     themeToggle: {
         isEnabled: true,
-        defaultTheme: "dark",
+        defaultTheme: "light",
     },
 
     feedback: {
