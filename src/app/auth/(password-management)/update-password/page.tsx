@@ -22,7 +22,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import logo from "@/assets/images/logo.svg"
+import logo from "@/assets/images/logo-black.svg"
 
 const updatePasswordFormSchema = z
     .object({

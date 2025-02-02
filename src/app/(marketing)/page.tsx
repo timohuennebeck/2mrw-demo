@@ -1,6 +1,6 @@
 "use client";
 
-import logoBlack from "@/assets/images/logo.svg";
+import logoBlack from "@/assets/images/logo-black.svg";
 import logoWhite from "@/assets/images/logo-white.svg";
 import BeforeAfterComparison from "@/components/marketing/before-after-comparison";
 import CallToAction from "@/components/marketing/call-to-action";

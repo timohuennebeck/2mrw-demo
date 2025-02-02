@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/images/logo.svg";
+import logo from "@/assets/images/logo-black.svg";
 
 const forgotPasswordFormSchema = z.object({
     email: z.string().email({

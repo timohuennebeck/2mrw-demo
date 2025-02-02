@@ -3,7 +3,7 @@ import { Manrope } from "next/font/google";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
-import logo from "@/assets/images/logo.svg";
+import logo from "@/assets/images/logo-black.svg";
 
 const manrope = Manrope({
     subsets: ["latin"],

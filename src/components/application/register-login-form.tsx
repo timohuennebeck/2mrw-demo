@@ -1,6 +1,6 @@
 "use client";
 
-import logo from "@/assets/images/logo.svg";
+import logo from "@/assets/images/logo-black.svg";
 import FormDivider from "@/components/application/form-divider";
 import GoogleButton from "@/components/application/google-button";
 import {
