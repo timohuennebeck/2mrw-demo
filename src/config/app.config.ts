@@ -20,6 +20,14 @@ interface GeneralConfig {
         };
     };
     feedback: {
+        bugReport: {
+            isEnabled: boolean;
+            formUrl: string;
+        };
+        featureRequest: {
+            isEnabled: boolean;
+            formUrl: string;
+        };
         forms: {
             accountDeletion: WidgetConfig;
         };
@@ -58,6 +66,14 @@ export const appConfig: GeneralConfig = {
     },
 
     feedback: {
+        bugReport: {
+            isEnabled: true,
+            formUrl: "https://tally.so/r/bug-report",
+        },
+        featureRequest: {
+            isEnabled: true,
+            formUrl: "https://tally.so/r/feature-request",
+        },
         forms: {
             accountDeletion: {
                 isEnabled: true, // controls whether to show feedback prompt after account deletion
