@@ -183,7 +183,7 @@ const RegisterLoginForm = ({
                                             : TextConstants.TEXT__SIGN_IN}{" "}
                                         to {appConfig.company.name} to continue! 🙌
                                     </h1>
-                                    <p className="text-sm text-gray-400">
+                                    <p className="text-sm text-muted-foreground">
                                         Lorem ipsum dolor sit amet consectetur, adipisicing elit.
                                         Obcaecati ullam eveniet laborum numquam quae quasi!
                                     </p>
@@ -283,7 +283,7 @@ const RegisterLoginForm = ({
                             </Button>
 
                             {mode === "signin" && authMethod === "magic-link" && (
-                                <p className="text-center text-sm text-gray-500">
+                                <p className="text-center text-sm text-muted-foreground">
                                     You'll be emailed a magic code for a password-free sign in or{" "}
                                     <Link
                                         href={`/auth/sign-in?method=${updateAuthMethod("password", authMethodString)}`}
@@ -295,7 +295,7 @@ const RegisterLoginForm = ({
                             )}
 
                             {mode === "signup" && authMethod === "magic-link" && (
-                                <p className="text-center text-sm text-gray-500">
+                                <p className="text-center text-sm text-muted-foreground">
                                     You'll be emailed a magic code for a password-free sign up or{" "}
                                     <Link
                                         href={`/auth/sign-up?method=${updateAuthMethod("password", authMethodString)}`}
