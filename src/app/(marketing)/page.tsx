@@ -13,7 +13,6 @@ import Hero from "@/components/marketing/hero";
 import HowItWorks from "@/components/marketing/how-it-works";
 import PricingComparison from "@/components/marketing/pricing-comparison";
 import ProductDemo from "@/components/marketing/product-demo";
-import PromoBanner from "@/components/marketing/promo-banner";
 import Stats from "@/components/marketing/stats";
 import TestimonialsGrid from "@/components/marketing/testimonials-grid";
 import { appConfig } from "@/config";
@@ -28,7 +27,7 @@ import { testimonials } from "@/data/marketing/testimonials-data";
 import { cn } from "@/lib/utils";
 import { getFilteredPricingPlans } from "@/services/domain/pricing-service";
 import { handleSmoothScroll } from "@/utils/navigation";
-import { Asterisk, Shield } from "lucide-react";
+import { Asterisk } from "lucide-react";
 import { Manrope } from "next/font/google";
 import { useRouter } from "next/navigation";
 
