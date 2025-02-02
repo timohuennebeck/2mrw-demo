@@ -1,6 +1,7 @@
 "use client";
 
 import PricingCard from "@/components/marketing/pricing-card";
+import TexturedBackground from "@/components/ui/textured-background";
 import { isFreePlanEnabled, isOneTimePaymentEnabled } from "@/config";
 import { useSession } from "@/context/session-context";
 import { useSubscription } from "@/context/subscription-context";
@@ -24,15 +25,7 @@ const ChoosePricingPlanPage = () => {
 
     return (
         <>
-            {/* light theme background */}
-            <div className="fixed inset-0 -z-10 h-full w-full opacity-100 dark:opacity-0">
-                <div className="h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] opacity-100 [background-size:16px_16px]" />
-            </div>
-
-            {/* dark theme background */}
-            <div className="fixed inset-0 -z-10 h-full w-full bg-black opacity-0 dark:opacity-100">
-                <div className="h-full w-full bg-[radial-gradient(#1f2937_1px,transparent_1px)] opacity-0 [background-size:16px_16px] dark:opacity-50" />
-            </div>
+            <TexturedBackground />
 
             <div
                 className={`flex min-h-screen w-full items-center justify-center px-8 py-16 ${manrope.className}`}
