@@ -7,7 +7,16 @@ import { onboardingConfig } from "@/config";
 import { useUser } from "@/context/user-context";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/services/supabase-clients/client";
-import { ChevronLeft, CreditCard, LayoutGrid, Share2, SlidersVertical, Sparkles, User2, X } from "lucide-react";
+import {
+    ChevronLeft,
+    CreditCard,
+    LayoutGrid,
+    Settings2,
+    Share2,
+    Sparkles,
+    User2,
+    X
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -85,14 +94,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     const userDropdownItems = [
         {
+            label: "Preferences",
+            href: "/app/preferences",
+            icon: Settings2,
+        },
+        {
             label: "Billing",
             href: "/app/billing",
             icon: CreditCard,
-        },
-        {
-            label: "Settings",
-            href: "/app/settings",
-            icon: SlidersVertical,
         },
         {
             label: "Invite a Friend",
@@ -144,8 +153,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <div className="mb-12 mt-6 flex justify-start">
                     <UserDropdown
                         user={{
-                            name: "Timo Huennebeck",
-                            email: "user@example.com",
+                            email: dbUser?.email ?? "m@example.com",
                             initials: "TH",
                         }}
                         menuItems={userDropdownItems}

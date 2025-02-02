@@ -7,7 +7,7 @@ const ThemeToggleSection = () => {
     return (
         <div className="flex items-center justify-between">
             <div>
-                <h3 className="mb-3 text-base font-semibold">Help Us Improve</h3>
+                <h3 className="mb-3 text-base font-semibold">Theme</h3>
                 <p className="text-sm text-muted-foreground">
                     Customise the appearance of the app - choose between Light and Dark.
                 </p>
