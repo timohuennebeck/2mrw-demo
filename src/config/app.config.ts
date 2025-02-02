@@ -20,10 +20,6 @@ interface GeneralConfig {
         };
     };
     feedback: {
-        widgets: {
-            reportBug: WidgetConfig;
-            shareFeedback: WidgetConfig;
-        };
         forms: {
             accountDeletion: WidgetConfig;
         };
@@ -62,16 +58,6 @@ export const appConfig: GeneralConfig = {
     },
 
     feedback: {
-        widgets: {
-            reportBug: {
-                isEnabled: true,
-                formUrl: "https://tally.so/r/bug-report",
-            },
-            shareFeedback: {
-                isEnabled: false, // controls the FeedbackWidget.tsx in bottom right
-                formUrl: "https://tally.so/r/general-feedback",
-            },
-        },
         forms: {
             accountDeletion: {
                 isEnabled: true, // controls whether to show feedback prompt after account deletion

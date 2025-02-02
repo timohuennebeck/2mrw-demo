@@ -1,11 +1,9 @@
 "use client";
 
-import BugReportWidget from "@/components/application/bug-report-widget";
-import FeedbackWidget from "@/components/application/feedback-widget";
 import { OnboardingChecklistTrigger } from "@/components/application/onboarding/onboarding-checklist-trigger";
 import { Button } from "@/components/ui/button";
 import UserDropdown from "@/components/ui/user-dropdown";
-import { appConfig, onboardingConfig } from "@/config";
+import { onboardingConfig } from "@/config";
 import { useUser } from "@/context/user-context";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/services/supabase-clients/client";
@@ -122,10 +120,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 >
                                     <X className="h-4 w-4" />
                                 </Button>
-                            )}
-                            {appConfig.feedback.widgets.reportBug.isEnabled && <BugReportWidget />}
-                            {appConfig.feedback.widgets.shareFeedback.isEnabled && (
-                                <FeedbackWidget />
                             )}
                         </div>
                     </>
