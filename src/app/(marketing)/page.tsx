@@ -64,20 +64,6 @@ const LandingPage = () => {
             </div>
 
             <div className={`${manrope.variable} flex flex-col font-manrope`}>
-                {/* COPY TIP: Promo banners should create urgency and highlight clear value.
-                    Use specific numbers, time limits, or exclusive offers. */}
-                <PromoBanner
-                    text={{
-                        desktop: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-                        mobile: "Lorem ipsum dolor",
-                        code: "LOREM50",
-                    }}
-                    link={{
-                        href: "/pricing",
-                        label: "Lorem ipsum",
-                    }}
-                    className="bg-black text-white"
-                />
                 <Header
                     navItems={[
                         { href: "#features", label: "Features" },
