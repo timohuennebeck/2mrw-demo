@@ -9,6 +9,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { ReferralSteps } from "./referral-steps";
 import { queryClient } from "@/lib/qClient/qClient";
+import { useSubscription } from "@/context/subscription-context";
+import { CACHE_KEYS } from "@/constants/caching-constants";
 
 interface TaskContentProps {
     taskId: string;
@@ -33,7 +35,8 @@ export const TaskContent = ({
     userProgress,
     reward,
 }: TaskContentProps) => {
-    const { dbUser } = useUser();
+    const { dbUser, invalidateUser } = useUser();
+    const { invalidateSubscription } = useSubscription();
 
     const router = useRouter();
 
@@ -47,10 +50,14 @@ export const TaskContent = ({
         try {
             setIsLoading(true);
             const result = await claimReward(dbUser.id, taskId);
-            queryClient.invalidateQueries({ queryKey: ["claimedRewards"] });
+            queryClient.invalidateQueries({
+                queryKey: CACHE_KEYS.USER_CRITICAL.CLAIMED_REWARDS(dbUser.id),
+            });
 
             if (result.success) {
                 toast.success(`Bonus Claimed! You've earned +${reward.amount} Tokens!`);
+                invalidateUser();
+                invalidateSubscription();
                 setTimeout(() => setIsLoading(false), 1000);
             }
         } catch (error) {

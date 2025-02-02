@@ -10,7 +10,7 @@ import { FreeTrial } from "@/interfaces/models/free-trial.model";
 import moment from "moment";
 import { Manrope } from "next/font/google";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { appConfig } from "@/config";
 
@@ -30,8 +30,8 @@ const PlanConfirmationPage = () => (
 );
 
 const PlanConfirmationPageContent = () => {
-    const { subscription } = useSubscription();
-    const { dbUser } = useUser();
+    const { subscription, invalidateSubscription } = useSubscription();
+    const { dbUser, invalidateUser } = useUser();
     const { freeTrial } = useFreeTrial();
 
     const router = useRouter();
@@ -39,11 +39,14 @@ const PlanConfirmationPageContent = () => {
 
     const mode = searchParams.get("mode");
 
-    const [showConfetti, setShowConfetti] = React.useState(true);
+    const [showConfetti, setShowConfetti] = useState(true);
 
     useEffect(() => {
+        invalidateUser();
+        invalidateSubscription();
         const timer = setTimeout(() => setShowConfetti(false), 5000);
         return () => clearTimeout(timer);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const getHeaderContent = () => {

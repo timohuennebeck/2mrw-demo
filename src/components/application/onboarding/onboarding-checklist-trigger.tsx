@@ -14,6 +14,7 @@ import { OnboardingChecklist } from "./onboarding-checklist";
 import { useQuery } from "@tanstack/react-query";
 import { useUser } from "@/context/user-context";
 import { fetchClaimedRewards } from "@/services/domain/onboarding-service";
+import { CACHE_KEYS } from "@/constants/caching-constants";
 
 interface OnboardingChecklistTriggerProps {
     userProgress: { [K in CompletionCheckField]: number };
@@ -35,8 +36,8 @@ export const OnboardingChecklistTrigger = ({
     const [isOpen, setIsOpen] = useState(false);
 
     const { data: claimedTaskIds } = useQuery({
-        queryKey: ["claimedRewards", dbUser?.id],
-        queryFn: () => fetchClaimedRewards(dbUser!.id),
+        queryKey: CACHE_KEYS.USER_CRITICAL.CLAIMED_REWARDS(dbUser?.id ?? ""),
+        queryFn: () => fetchClaimedRewards(dbUser?.id ?? ""),
         enabled: !!dbUser?.id,
     });
 

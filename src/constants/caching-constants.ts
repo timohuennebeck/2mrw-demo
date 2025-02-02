@@ -5,5 +5,6 @@ export const CACHE_KEYS = {
         FREE_TRIAL: (userId: string) => ["freeTrial", userId],
 
         REFERRALS: (userId: string) => ["referrals", userId],
+        CLAIMED_REWARDS: (userId: string) => ["claimedRewards", userId],
     },
 };

@@ -172,3 +172,16 @@ export const fetchReferrals = async (userId: string) => {
 
     return { referrals: data, error };
 };
+
+export const fetchCompletedReferrals = async (userId: string) => {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+        .from("referrals")
+        .select("*")
+        .eq("referrer_user_id", userId)
+        .eq("status", ReferralStatus.COMPLETED)
+        .order("created_at", { ascending: false });
+
+    return { referrals: data, error };
+};

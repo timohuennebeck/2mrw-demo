@@ -6,11 +6,17 @@ import { useSubscription } from "@/context/subscription-context";
 import { useUser } from "@/context/user-context";
 import { PurchasedSubscription } from "@/interfaces";
 import { FreeTrial } from "@/interfaces/models/free-trial.model";
+import { useEffect } from "react";
 
 const BillingPage = () => {
-    const { subscription } = useSubscription();
+    const { subscription, invalidateSubscription } = useSubscription();
     const { dbUser } = useUser();
     const { freeTrial } = useFreeTrial();
+
+    useEffect(() => {
+        invalidateSubscription();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <div className="flex max-w-6xl flex-col gap-12">

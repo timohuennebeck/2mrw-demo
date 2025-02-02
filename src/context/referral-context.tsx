@@ -1,13 +1,13 @@
+import { CACHE_KEYS } from "@/constants/caching-constants";
+import { Referral } from "@/interfaces";
 import { fetchReferrals } from "@/services/database/referral-service";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
-import { useSession } from "./session-context";
-import { Referral } from "@/interfaces";
-import { CACHE_KEYS } from "@/constants/caching-constants";
+import { useUser } from "./user-context";
 
 interface ReferralContextType {
     referrals: Referral[] | null;
-    invalidateReferrals: () => void;
+    invalidateReferrals: () => Promise<void>;
 }
 
 const ReferralContext = createContext({
@@ -16,23 +16,23 @@ const ReferralContext = createContext({
 } as ReferralContextType);
 
 export const ReferralProvider = ({ children }: { children: React.ReactNode }) => {
-    const { authUser } = useSession();
+    const { dbUser } = useUser();
 
     const queryClient = useQueryClient();
 
     const { data } = useQuery({
-        queryKey: CACHE_KEYS.USER_CRITICAL.REFERRALS(authUser?.id ?? ""),
-        queryFn: () => fetchReferrals(authUser?.id ?? ""),
-        enabled: !!authUser?.id,
+        queryKey: CACHE_KEYS.USER_CRITICAL.REFERRALS(dbUser?.id ?? ""),
+        queryFn: () => fetchReferrals(dbUser?.id ?? ""),
+        enabled: !!dbUser?.id,
     });
 
     return (
         <ReferralContext.Provider
             value={{
                 referrals: data?.referrals ?? null,
-                invalidateReferrals: () => {
-                    queryClient.invalidateQueries({
-                        queryKey: CACHE_KEYS.USER_CRITICAL.REFERRALS(authUser?.id ?? ""),
+                invalidateReferrals: async () => {
+                    await queryClient.invalidateQueries({
+                        queryKey: CACHE_KEYS.USER_CRITICAL.REFERRALS(dbUser?.id ?? ""),
                     });
                 },
             }}
