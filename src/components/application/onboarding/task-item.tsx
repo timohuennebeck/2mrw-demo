@@ -39,10 +39,10 @@ export const TaskItem = ({
         <div className="relative">
             <div
                 className={cn(
-                    "relative cursor-pointer rounded-lg p-3 transition-colors hover:bg-gray-50/75",
+                    "relative cursor-pointer rounded-lg p-3 transition-colors hover:bg-gray-50 dark:hover:bg-secondary",
                     disabled && "opacity-50",
                     isCompleted && "opacity-50 hover:opacity-75",
-                    isOpen && "bg-gray-50",
+                    isOpen && "bg-gray-50 dark:bg-secondary",
                 )}
                 onClick={onToggle}
             >

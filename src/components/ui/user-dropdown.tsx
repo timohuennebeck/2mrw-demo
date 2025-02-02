@@ -32,7 +32,7 @@ export default function UserDropdown({ user, menuItems, onLogout }: UserDropdown
 
     return (
         <DropdownMenu open={open} onOpenChange={setOpen}>
-            <DropdownMenuTrigger className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900">
+            <DropdownMenuTrigger className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
                 <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarFallback className="rounded-lg">{user.initials}</AvatarFallback>
                 </Avatar>
@@ -44,10 +44,10 @@ export default function UserDropdown({ user, menuItems, onLogout }: UserDropdown
             </DropdownMenuTrigger>
             <DropdownMenuContent
                 align="end"
-                className="w-[--radix-dropdown-menu-trigger-width] min-w-56"
+                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 border border-border"
             >
                 <DropdownMenuLabel
-                    className="cursor-pointer rounded-md p-0 font-normal hover:bg-gray-100"
+                    className="cursor-pointer rounded-md p-0 font-normal hover:bg-secondary"
                     onClick={() => {
                         router.push("/app/user-profile");
                         setOpen(false);

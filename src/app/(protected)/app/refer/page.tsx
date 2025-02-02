@@ -15,8 +15,10 @@ import { useReferral } from "@/context/referral-context";
 import { useUser } from "@/context/user-context";
 import { SmilePlus } from "lucide-react";
 import moment from "moment";
+import { useTheme } from "next-themes";
 
 const ReferPage = () => {
+    const { theme } = useTheme();
     const { dbUser } = useUser();
     const { referrals } = useReferral();
 
@@ -32,7 +34,7 @@ const ReferPage = () => {
                         Invite a friend to join the platform and earn [INSERT_REWARD_FOR_REFERRAL] for each friend who joins
                     </p>
                 </div>
-                <Badge variant="blue" className="rounded-sm">
+                <Badge variant={theme === "dark" ? "secondary" : "blue"} className="rounded-sm">
                     0 / [INSERT_REWARD_FOR_REFERRAL]
                 </Badge>
             </div>

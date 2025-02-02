@@ -20,7 +20,7 @@ export const BonusSection = ({
     if (!config.bonusReward) return null;
 
     return (
-        <div className="mt-2 rounded-sm border border-dashed p-3">
+        <div className="mt-2 rounded-sm border border-dashed dark:border-border dark:bg-background p-3">
             <div className="flex items-center justify-between gap-3">
                 <p className="text-xs">
                     {allTasksCompleted ? (

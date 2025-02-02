@@ -79,7 +79,7 @@ export const OnboardingChecklistTrigger = ({
             </DropdownMenuTrigger>
             <DropdownMenuContent
                 align={appConfig.onboarding.checklist.direction === "left" ? "start" : "end"}
-                className="w-[448px] p-2"
+                className="w-[448px] p-2 border border-border"
                 sideOffset={16}
             >
                 <OnboardingChecklist

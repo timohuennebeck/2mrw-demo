@@ -27,7 +27,7 @@ export const TaskHeader = ({ title, isCompleted, isOpen, reward }: TaskHeaderPro
                 <span
                     className={cn(
                         "whitespace-nowrap text-xs font-medium",
-                        isCompleted ? "text-muted-foreground line-through" : "text-black",
+                        isCompleted ? "text-muted-foreground line-through" : "text-foreground",
                     )}
                 >
                     +{reward.amount} {reward.unit}

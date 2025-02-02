@@ -90,7 +90,7 @@ export const ReferralCard = ({ referralLink, userId }: ReferralCardProps) => {
     };
 
     return (
-        <div className="relative rounded-lg border border-dashed p-4">
+        <div className="relative rounded-lg border border-dashed p-4 dark:border-border dark:bg-background">
             <div className="flex items-start gap-4">
                 <div className="rounded-full bg-muted p-2">
                     <Asterisk className="h-5 w-5" />

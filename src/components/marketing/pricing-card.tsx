@@ -18,20 +18,20 @@ const PricingCardHeader = ({ plan }: { plan: DefaultPricingPlan }) => (
         <CardTitle className="mb-4 text-lg font-medium">{plan.name}</CardTitle>
         <div>
             <span className="text-4xl font-medium">{plan.price}</span>
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-muted-foreground">
                 {getBillingPeriodText(plan.billing_period)}
             </span>
         </div>
-        <span className="block pt-2 text-sm text-gray-500">{plan.description}</span>
+        <span className="block pt-2 text-sm text-muted-foreground">{plan.description}</span>
     </CardHeader>
 );
 
 const PricingCardAvailability = ({ value }: { value: string }) =>
     typeof value === "boolean" ? (
         value ? (
-            <Check className="h-5 w-5 text-black" />
+            <Check className="h-5 w-5" />
         ) : (
-            <X className="h-5 w-5 text-gray-400" />
+            <X className="h-5 w-5 text-muted-foreground" />
         )
     ) : (
         <span className="text-sm">{value}</span>
@@ -44,7 +44,7 @@ const PricingCard = ({
     currentPlanStripePriceId,
 }: PricingCardProps) => {
     return (
-        <Card className="shadow-none">
+        <Card className="shadow-none dark:bg-background border border-border">
             <PricingCardHeader plan={plan} />
 
             <CardContent className="flex flex-1 flex-col gap-4">
@@ -58,14 +58,14 @@ const PricingCard = ({
                                     <PricingCardAvailability value={value} />
 
                                     <div className="flex items-center gap-1">
-                                        <span className="text-sm text-gray-600">
+                                        <span className="text-sm text-muted-foreground">
                                             {feature.name}
                                         </span>
                                         {feature.tooltip && (
                                             <TooltipProvider>
                                                 <Tooltip>
                                                     <TooltipTrigger>
-                                                        <InfoIcon className="h-4 w-4 text-gray-400" />
+                                                        <InfoIcon className="h-4 w-4 text-muted-foreground" />
                                                     </TooltipTrigger>
                                                     <TooltipContent>
                                                         <p className="max-w-xs text-sm">

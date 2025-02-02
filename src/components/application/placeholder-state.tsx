@@ -22,7 +22,7 @@ export const PlaceholderState = ({
     onClick,
 }: PlaceholderStateProps) => {
     return (
-        <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-dashed p-8">
+        <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-dashed dark:border-border bg-background p-8">
             {Icon && (
                 <Icon
                     className={cn("h-8 w-8 text-muted-foreground", iconStyles)}

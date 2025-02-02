@@ -104,7 +104,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     ];
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen dark:bg-black">
             <div className="fixed bottom-4 right-8 flex items-center gap-2">
                 {widgetsVisible ? (
                     <>
@@ -164,11 +164,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 <Link
                                     href={item.href}
                                     className={cn(
-                                        "flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-500 hover:bg-gray-50 active:bg-gray-100",
+                                        "flex items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-secondary",
                                         ((item.href === "/app" && pathname === "/app") ||
                                             (item.href !== "/app" &&
                                                 pathname.startsWith(item.href))) &&
-                                            "bg-gray-100",
+                                            "bg-secondary text-foreground",
                                     )}
                                 >
                                     <item.icon className="h-4 w-4" />

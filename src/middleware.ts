@@ -44,31 +44,31 @@ export const middleware = async (request: NextRequest) => {
      * because a simple mistake could make it hard to debug and cause issues with users being randomly logged out
      */
 
-    const { data: { user } } = await supabaseClient.auth.getUser();
+    // const { data: { user } } = await supabaseClient.auth.getUser();
 
-    if (_isPathExcludedFromRouting(request.nextUrl.pathname)) {
-        return NextResponse.next({ request }); // exclude api and public routes from routing
-    }
+    // if (_isPathExcludedFromRouting(request.nextUrl.pathname)) {
+    //     return NextResponse.next({ request }); // exclude api and public routes from routing
+    // }
 
-    if (!user && isProtectedRoute(request.nextUrl.pathname)) {
-        return redirectTo(request, ROUTES_CONFIG.PUBLIC.LANDING_PAGE); // force user to landing page if not authenticated
-    }
+    // if (!user && isProtectedRoute(request.nextUrl.pathname)) {
+    //     return redirectTo(request, ROUTES_CONFIG.PUBLIC.LANDING_PAGE); // force user to landing page if not authenticated
+    // }
 
-    if (user) {
-        const response = await handleLoggedInRedirect(
-            request,
-            user,
-        );
-        if (response) return response;
-    }
+    // if (user) {
+    //     const response = await handleLoggedInRedirect(
+    //         request,
+    //         user,
+    //     );
+    //     if (response) return response;
+    // }
 
-    if (request.nextUrl.pathname === "/auth/sign-up") {
-        const response = await handleCheckReferralCode(request);
-        console.log("→ [LOG] response", response);
-        if (response) {
-            return response;
-        }
-    }
+    // if (request.nextUrl.pathname === "/auth/sign-up") {
+    //     const response = await handleCheckReferralCode(request);
+    //     console.log("→ [LOG] response", response);
+    //     if (response) {
+    //         return response;
+    //     }
+    // }
 
     /**
      * IMPORTANT: When creating a new response, always:
