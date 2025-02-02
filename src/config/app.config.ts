@@ -19,6 +19,10 @@ interface GeneralConfig {
             direction: "left" | "right";
         };
     };
+    themeToggle: {
+        isEnabled: boolean;
+        defaultTheme: "system" | "light" | "dark";
+    };
     feedback: {
         bugReport: {
             isEnabled: boolean;
@@ -63,6 +67,11 @@ export const appConfig: GeneralConfig = {
             isEnabled: true,
             direction: "left",
         },
+    },
+
+    themeToggle: {
+        isEnabled: true,
+        defaultTheme: "dark",
     },
 
     feedback: {

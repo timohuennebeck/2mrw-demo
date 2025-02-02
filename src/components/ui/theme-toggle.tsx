@@ -3,9 +3,12 @@
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
+import { appConfig } from "@/config";
 
 const ThemeToggle = () => {
     const { theme, setTheme } = useTheme();
+
+    if (!appConfig.themeToggle.isEnabled) return null;
 
     return (
         <Button

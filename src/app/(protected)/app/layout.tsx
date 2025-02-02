@@ -7,7 +7,7 @@ import { onboardingConfig } from "@/config";
 import { useUser } from "@/context/user-context";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/services/supabase-clients/client";
-import { ChevronLeft, CreditCard, LayoutGrid, Share2, Sparkles, User2, X } from "lucide-react";
+import { ChevronLeft, CreditCard, LayoutGrid, Share2, SlidersVertical, Sparkles, User2, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -88,6 +88,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             label: "Billing",
             href: "/app/billing",
             icon: CreditCard,
+        },
+        {
+            label: "Settings",
+            href: "/app/settings",
+            icon: SlidersVertical,
         },
         {
             label: "Invite a Friend",
