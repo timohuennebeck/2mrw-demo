@@ -6,7 +6,7 @@ import {
     handleCancelSubscription,
     handleCheckoutCompleted,
     handleUpdateSubscription,
-} from "@/services/stripe/stripeWebhook";
+} from "@/services/stripe/stripe-webhook";
 import Stripe from "stripe";
 import axios from "axios";
 import moment from "moment";

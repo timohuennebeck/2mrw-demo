@@ -1,12 +1,12 @@
 "use server";
 
 import { isFreePlanEnabled } from "@/config";
-import { processReferralSignup } from "@/services/database/referralService";
-import { startFreePlan } from "@/services/database/subscriptionService";
-import { createUserTable, fetchUser } from "@/services/database/userService";
+import { processReferralSignup } from "@/services/database/referral-service";
+import { startFreePlan } from "@/services/database/subscription-service";
+import { createUserTable, fetchUser } from "@/services/database/user-service";
 import { createClient } from "@/services/integration/server";
 import { stripe } from "@/services/stripe/client";
-import { getStripeCustomerId } from "@/services/stripe/stripeCustomer";
+import { getStripeCustomerId } from "@/services/stripe/stripe-customer";
 import { type EmailOtpType } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 import { type NextRequest, NextResponse } from "next/server";

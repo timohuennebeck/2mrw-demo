@@ -1,9 +1,9 @@
 "use client";
 
 import CurrentSubscriptionPlan from "@/components/application/current-subscription-plan";
-import { useFreeTrial } from "@/context/FreeTrialContext";
-import { useSubscription } from "@/context/SubscriptionContext";
-import { useUser } from "@/context/UserContext";
+import { useFreeTrial } from "@/context/free-trial-context";
+import { useSubscription } from "@/context/subscription-context";
+import { useUser } from "@/context/user-context";
 import { PurchasedSubscription } from "@/interfaces";
 import { FreeTrial } from "@/interfaces/models/free-trial.model";
 

@@ -6,7 +6,7 @@ import { AuthMethod } from "@/enums/user.enum";
 import {
     createPendingReferral,
     getReferrerByReferralCode,
-} from "@/services/database/referralService";
+} from "@/services/database/referral-service";
 import { createClient } from "@/services/integration/server";
 import { AuthError } from "@supabase/supabase-js";
 

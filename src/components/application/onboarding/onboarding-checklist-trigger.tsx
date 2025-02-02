@@ -12,8 +12,8 @@ import { ChevronUp } from "lucide-react";
 import { useState } from "react";
 import { OnboardingChecklist } from "./onboarding-checklist";
 import { useQuery } from "@tanstack/react-query";
-import { useUser } from "@/context/UserContext";
-import { fetchClaimedRewards } from "@/services/domain/onboardingService";
+import { useUser } from "@/context/user-context";
+import { fetchClaimedRewards } from "@/services/domain/onboarding-service";
 
 interface OnboardingChecklistTriggerProps {
     userProgress: { [K in CompletionCheckField]: number };

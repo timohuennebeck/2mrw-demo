@@ -1,5 +1,5 @@
 import { appConfig, ROUTES_CONFIG } from "@/config";
-import { fetchUser } from "@/services/database/userService";
+import { fetchUser } from "@/services/database/user-service";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import { redirectTo } from "./utils";
 import { NextRequest, NextResponse } from "next/server";

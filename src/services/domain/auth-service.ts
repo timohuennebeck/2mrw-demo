@@ -5,7 +5,7 @@ import { AuthMethod } from "@/enums/user.enum";
 import {
     createPendingReferral,
     getReferrerByReferralCode,
-} from "../database/referralService";
+} from "../database/referral-service";
 import { createClient } from "../integration/server";
 
 export const sendMagicLink = async (email: string, referralCode?: string) => {

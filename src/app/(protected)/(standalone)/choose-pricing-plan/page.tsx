@@ -2,9 +2,9 @@
 
 import PricingCard from "@/components/marketing/pricing-card";
 import { isFreePlanEnabled, isOneTimePaymentEnabled } from "@/config";
-import { useSession } from "@/context/SessionContext";
-import { useSubscription } from "@/context/SubscriptionContext";
-import { getFilteredPricingPlans } from "@/services/domain/pricingService";
+import { useSession } from "@/context/session-context";
+import { useSubscription } from "@/context/subscription-context";
+import { getFilteredPricingPlans } from "@/services/domain/pricing-service";
 import { Manrope } from "next/font/google";
 
 const manrope = Manrope({

@@ -1,5 +1,5 @@
-import { PersonalInfoSection } from "./components/PersonalInfoSection";
-import { ProfilePictureSection } from "./components/ProfilePictureSection";
+import { PersonalInfoSection } from "./components/personal-info-section";
+import { ProfilePictureSection } from "./components/profile-picture-section";
 
 const UserProfilePage = () => {
     return (

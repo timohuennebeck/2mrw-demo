@@ -4,12 +4,12 @@ import { Suspense, useState } from "react";
 import RegisterLoginForm from "@/components/application/register-login-form";
 import { resendConfirmationEmail, signUpUserToSupabase } from "./action";
 import { TextConstants } from "@/constants/TextConstants";
-import { checkUserEmailExists } from "@/services/database/userService";
+import { checkUserEmailExists } from "@/services/database/user-service";
 import { StatusMessage } from "@/interfaces";
 import { AuthMethod } from "@/enums/user.enum";
-import { sendMagicLink } from "@/services/domain/authService";
+import { sendMagicLink } from "@/services/domain/auth-service";
 import { appConfig } from "@/config";
-import { useParamFeedback } from "@/hooks/useParamFeedback";
+import { useParamFeedback } from "@/hooks/use-param-feedback";
 import { useSearchParams } from "next/navigation";
 
 interface HandleSubmitParams {

@@ -4,12 +4,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BillingPeriod, FreeTrialStatus, SubscriptionStatus } from "@/enums";
 import { PurchasedSubscription } from "@/interfaces";
 import { FreeTrial } from "@/interfaces/models/free-trial.model";
-import { getPricingPlan } from "@/services/domain/pricingService";
+import { getPricingPlan } from "@/services/domain/pricing-service";
 import {
     createStripeBillingPortal,
     createStripeCheckout,
     getStripeCreditCardDetails,
-} from "@/services/stripe/stripeService";
+} from "@/services/stripe/stripe-service";
 import { Loader } from "lucide-react";
 import moment from "moment";
 import { useRouter } from "next/navigation";

@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import OnboardingFlow from "@/components/application/onboarding-flow";
 import { createClient } from "@/services/integration/client";
 import { User } from "@supabase/supabase-js";
-import { useSession } from "@/context/SessionContext";
+import { useSession } from "@/context/session-context";
 import { Suspense } from "react";
 import { appConfig } from "@/config";
 

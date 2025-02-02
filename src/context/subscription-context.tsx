@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchUserSubscription } from "@/services/database/subscriptionService";
-import { useSession } from "./SessionContext";
+import { fetchUserSubscription } from "@/services/database/subscription-service";
+import { useSession } from "./session-context";
 import { PurchasedSubscription } from "@/interfaces";
 import { SubscriptionStatus } from "@/enums";
 

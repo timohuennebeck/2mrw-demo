@@ -1,7 +1,7 @@
-import { fetchReferrals } from "@/services/database/referralService";
+import { fetchReferrals } from "@/services/database/referral-service";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
-import { useSession } from "./SessionContext";
+import { useSession } from "./session-context";
 import { Referral } from "@/interfaces";
 
 interface ReferralContextType {

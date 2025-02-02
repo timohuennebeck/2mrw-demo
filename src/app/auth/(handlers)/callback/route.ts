@@ -2,12 +2,12 @@
 
 import { isFreePlanEnabled, ROUTES_CONFIG } from "@/config";
 import { AuthMethod } from "@/enums/user.enum";
-import { processReferralSignup } from "@/services/database/referralService";
-import { startFreePlan } from "@/services/database/subscriptionService";
+import { processReferralSignup } from "@/services/database/referral-service";
+import { startFreePlan } from "@/services/database/subscription-service";
 import {
     checkUserEmailExists,
     createUserTable,
-} from "@/services/database/userService";
+} from "@/services/database/user-service";
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";

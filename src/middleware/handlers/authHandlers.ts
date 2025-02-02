@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { handleBilling } from "./billingHandlers";
 import { handleOnboarding } from "./onboardingHandlers";
 import { redirectTo } from "./utils";
-import { referralCodeExists } from "@/services/database/referralService";
+import { referralCodeExists } from "@/services/database/referral-service";
 
 export const handleLoggedInRedirect = async (
     request: NextRequest,

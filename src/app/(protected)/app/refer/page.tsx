@@ -11,8 +11,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { useReferral } from "@/context/ReferralContext";
-import { useUser } from "@/context/UserContext";
+import { useReferral } from "@/context/referral-context";
+import { useUser } from "@/context/user-context";
 import { SmilePlus } from "lucide-react";
 import moment from "moment";
 

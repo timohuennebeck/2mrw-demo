@@ -3,12 +3,12 @@ import { FreeTrialStatus } from "@/enums";
 import { handleError } from "@/utils/errors/error";
 import moment from "moment";
 import Stripe from "stripe";
-import { getSubscriptionEndDate } from "../database/baseService";
+import { getSubscriptionEndDate } from "../database/base-service";
 import {
     cancelUserSubscription,
     updateUserSubscription,
-} from "../database/subscriptionService";
-import { getPricingPlan } from "../domain/pricingService";
+} from "../database/subscription-service";
+import { getPricingPlan } from "../domain/pricing-service";
 import { createSupabasePowerUserClient } from "../integration/admin";
 
 const _updateFreeTrialToConverted = async (userId: string) => {

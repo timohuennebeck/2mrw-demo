@@ -4,11 +4,11 @@ import { billingConfig } from "@/config";
 import { FreeTrialStatus, SubscriptionStatus } from "@/enums";
 import { handleError } from "@/utils/errors/error";
 import moment from "moment";
-import { getPricingPlan } from "../domain/pricingService";
+import { getPricingPlan } from "../domain/pricing-service";
 import { createClient } from "../integration/server";
 import { stripe } from "../stripe/client";
-import { getStripeCustomerId } from "../stripe/stripeCustomer";
-import { updateUserSubscription } from "./subscriptionService";
+import { getStripeCustomerId } from "../stripe/stripe-customer";
+import { updateUserSubscription } from "./subscription-service";
 
 export const fetchUserFreeTrial = async (userId: string) => {
     try {

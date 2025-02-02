@@ -11,8 +11,8 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useSession } from "@/context/SessionContext";
-import { useUser } from "@/context/UserContext";
+import { useSession } from "@/context/session-context";
+import { useUser } from "@/context/user-context";
 import { createClient } from "@/services/integration/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";

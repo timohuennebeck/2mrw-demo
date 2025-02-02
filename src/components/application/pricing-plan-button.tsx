@@ -5,12 +5,12 @@ import {
     ROUTES_CONFIG,
 } from "@/config";
 import { TextConstants } from "@/constants/TextConstants";
-import { useFreeTrial } from "@/context/FreeTrialContext";
-import { useSubscription } from "@/context/SubscriptionContext";
-import { useUser } from "@/context/UserContext";
+import { useFreeTrial } from "@/context/free-trial-context";
+import { useSubscription } from "@/context/subscription-context";
+import { useUser } from "@/context/user-context";
 import { EmailType } from "@/enums";
-import { startFreeTrial } from "@/services/database/freeTrialService";
-import { createStripeBillingPortal, createStripeCheckout } from "@/services/stripe/stripeService";
+import { startFreeTrial } from "@/services/database/free-trial-service";
+import { createStripeBillingPortal, createStripeCheckout } from "@/services/stripe/stripe-service";
 import axios from "axios";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";

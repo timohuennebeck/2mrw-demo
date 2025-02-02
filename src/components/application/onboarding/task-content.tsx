@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { CompletionCheckField, OnboardingTaskConfig } from "@/config/onboarding.config";
-import { useUser } from "@/context/UserContext";
+import { useUser } from "@/context/user-context";
 import { cn } from "@/lib/utils";
-import { claimReward } from "@/services/domain/onboardingService";
+import { claimReward } from "@/services/domain/onboarding-service";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

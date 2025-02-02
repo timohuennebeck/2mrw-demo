@@ -6,7 +6,7 @@ import { OnboardingChecklistTrigger } from "@/components/application/onboarding/
 import { Button } from "@/components/ui/button";
 import UserDropdown from "@/components/ui/user-dropdown";
 import { appConfig, onboardingConfig } from "@/config";
-import { useUser } from "@/context/UserContext";
+import { useUser } from "@/context/user-context";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/services/integration/client";
 import { ChevronLeft, CreditCard, LayoutGrid, Share2, Sparkles, User2, X } from "lucide-react";

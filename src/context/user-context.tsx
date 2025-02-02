@@ -1,7 +1,7 @@
-import { fetchUser } from "@/services/database/userService";
+import { fetchUser } from "@/services/database/user-service";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
-import { useSession } from "./SessionContext";
+import { useSession } from "./session-context";
 import { User } from "@/interfaces";
 
 interface UserContextType {
