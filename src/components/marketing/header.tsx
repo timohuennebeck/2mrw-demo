@@ -19,9 +19,16 @@ interface HeaderParams {
     logoSrc: string;
     loginOnClick: () => void;
     userIsLoggedIn: boolean;
+    hideDarkLightToggle?: boolean;
 }
 
-const Header = ({ navItems, logoSrc, loginOnClick, userIsLoggedIn }: HeaderParams) => {
+const Header = ({
+    navItems,
+    logoSrc,
+    loginOnClick,
+    userIsLoggedIn,
+    hideDarkLightToggle,
+}: HeaderParams) => {
     const router = useRouter();
 
     return (
@@ -56,7 +63,7 @@ const Header = ({ navItems, logoSrc, loginOnClick, userIsLoggedIn }: HeaderParam
                             {item.label}
                         </Link>
                     ))}
-                    <ThemeToggle />
+                    {!hideDarkLightToggle && <ThemeToggle />}
                 </nav>
 
                 {/* Login Button */}
