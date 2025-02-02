@@ -63,11 +63,11 @@ const Header = ({
                             {item.label}
                         </Link>
                     ))}
-                    {!hideDarkLightToggle && <ThemeToggle />}
                 </nav>
 
-                {/* Login Button */}
-                <div className="w-32 text-right">
+                {/* Login Button with Theme Toggle */}
+                <div className="flex items-center gap-4">
+                    {!hideDarkLightToggle && <ThemeToggle />}
                     <Button
                         variant="ghost"
                         onClick={userIsLoggedIn ? () => router.push("/app") : loginOnClick}
