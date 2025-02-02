@@ -45,7 +45,7 @@ export const FreeTrialProvider = ({ children }: { children: React.ReactNode }) =
                 isOnFreeTrial,
                 invalidateFreeTrial: async () => {
                     await queryClient.invalidateQueries({
-                        queryKey: CACHE_KEYS.USER_CRITICAL.FREE_TRIAL(authUser?.id ?? ""),,
+                        queryKey: CACHE_KEYS.USER_CRITICAL.FREE_TRIAL(authUser?.id ?? ""),
                         refetchType: "active",
                     });
                 },
