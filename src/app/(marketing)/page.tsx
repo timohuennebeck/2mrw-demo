@@ -1,6 +1,7 @@
 "use client";
 
-import logo from "@/assets/images/logo.svg";
+import logoBlack from "@/assets/images/logo.svg";
+import logoWhite from "@/assets/images/logo-white.svg";
 import BeforeAfterComparison from "@/components/marketing/before-after-comparison";
 import CallToAction from "@/components/marketing/call-to-action";
 import FAQ from "@/components/marketing/faq";
@@ -80,7 +81,7 @@ const LandingPage = () => {
                         { href: "#faq", label: "FAQ" },
                         { href: "https://docs.2mrw.dev", label: "Documentation", isExternal: true },
                     ]}
-                    logoSrc={logo}
+                    logoSrc={theme === "dark" ? logoWhite : logoBlack}
                     loginOnClick={() => router.push("/auth/sign-in")}
                     userIsLoggedIn={!!authUser}
                 />
@@ -435,7 +436,7 @@ const LandingPage = () => {
                         <Footer
                             links={footerLinks}
                             logo={{
-                                src: logo,
+                                src: theme === "dark" ? logoWhite : logoBlack,
                                 alt: "Logo",
                             }}
                             description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique optio molestiae exercitationem! Porro doloribus molestias rerum error inventore."
