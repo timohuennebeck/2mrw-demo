@@ -14,13 +14,13 @@ interface ComparisonItemParams {
 const ComparisonItem = ({ type, title, bulletPoints, videoUrl }: ComparisonItemParams) => {
     const styles = {
         before: {
-            bg: "bg-gray-50",
+            bg: "bg-gray-100 dark:bg-gray-900",
             text: "text-muted-foreground",
             icon: X,
             label: "ALTERNATIVES",
         },
         after: {
-            bg: "bg-blue-50",
+            bg: "bg-blue-50 dark:bg-blue-950/50",
             text: "text-blue-600",
             icon: Check,
             label: appConfig.company.name.toUpperCase(),

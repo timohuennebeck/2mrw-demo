@@ -24,10 +24,10 @@ const SectionHeader = ({ title }: { title: TestimonialsGridProps["title"] }) => 
         <div className="mx-auto flex flex-col gap-6 text-center">
             {title.badge && (
                 <div className="flex items-center justify-center gap-2">
-                    <div className="rounded-lg bg-purple-50 p-2">
-                        <Star className="h-5 w-5 text-purple-600" />
+                    <div className="rounded-lg bg-blue-50 p-2 dark:bg-blue-950/50">
+                        <Star className="h-5 w-5 text-blue-600" />
                     </div>
-                    <span className="text-sm font-medium uppercase text-purple-600">
+                    <span className="text-sm font-medium uppercase text-blue-600">
                         {title.badge}
                     </span>
                 </div>
@@ -35,7 +35,9 @@ const SectionHeader = ({ title }: { title: TestimonialsGridProps["title"] }) => 
             <h2 className="max-w-4xl text-4xl font-medium leading-tight tracking-tight md:text-5xl">
                 {title.main}
             </h2>
-            {title.subtitle && <p className="max-w-4xl text-lg text-muted-foreground">{title.subtitle}</p>}
+            {title.subtitle && (
+                <p className="max-w-4xl text-lg text-muted-foreground">{title.subtitle}</p>
+            )}
         </div>
     );
 };

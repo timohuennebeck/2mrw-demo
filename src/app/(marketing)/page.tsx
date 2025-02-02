@@ -28,6 +28,7 @@ import { cn } from "@/lib/utils";
 import { getFilteredPricingPlans } from "@/services/domain/pricing-service";
 import { handleSmoothScroll } from "@/utils/navigation";
 import { Asterisk } from "lucide-react";
+import { useTheme } from "next-themes";
 import { Manrope } from "next/font/google";
 import { useRouter } from "next/navigation";
 
@@ -51,6 +52,8 @@ const SectionContainer = ({ id, className, children }: SectionContainerParams) =
 };
 
 const LandingPage = () => {
+    const { theme } = useTheme();
+
     const { authUser } = useSession();
     const { subscription } = useSubscription();
 
@@ -58,8 +61,14 @@ const LandingPage = () => {
 
     return (
         <>
-            <div className="fixed inset-0 -z-10 h-full w-full">
-                <div className="h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] opacity-100 dark:opacity-0" />
+            {/* light theme background */}
+            <div className="fixed inset-0 -z-10 h-full w-full opacity-100 dark:opacity-0">
+                <div className="h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] opacity-100 [background-size:16px_16px]" />
+            </div>
+
+            {/* dark theme background */}
+            <div className="fixed inset-0 -z-10 h-full w-full bg-black opacity-0 dark:opacity-100">
+                <div className="h-full w-full bg-[radial-gradient(#1f2937_1px,transparent_1px)] opacity-0 [background-size:16px_16px] dark:opacity-50" />
             </div>
 
             <div className={`${manrope.variable} flex flex-col font-manrope`}>
@@ -136,8 +145,8 @@ const LandingPage = () => {
                                         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga quis error saepe eum quia?",
                                     badge: {
                                         text: "Step 1",
-                                        bgColor: "bg-blue-50 dark:bg-blue-950",
-                                        textColor: "text-blue-600 ",
+                                        bgColor: "bg-blue-50 dark:bg-blue-950/50",
+                                        textColor: "text-blue-600",
                                     },
                                     metrics: [
                                         { value: "85%", label: "Success Rate" },
@@ -151,7 +160,7 @@ const LandingPage = () => {
                                         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga quis error saepe eum quia?",
                                     badge: {
                                         text: "Step 2",
-                                        bgColor: "bg-blue-50 dark:bg-blue-950",
+                                        bgColor: "bg-blue-50 dark:bg-blue-950/50",
                                         textColor: "text-blue-600",
                                     },
                                     metrics: [
@@ -166,7 +175,7 @@ const LandingPage = () => {
                                         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga quis error saepe eum quia?",
                                     badge: {
                                         text: "Step 3",
-                                        bgColor: "bg-blue-50 dark:bg-blue-950",
+                                        bgColor: "bg-blue-50 dark:bg-blue-950/50",
                                         textColor: "text-blue-600",
                                     },
                                     metrics: [
@@ -272,7 +281,7 @@ const LandingPage = () => {
                             subtitle="Lorem ipsum dolor, sit amet consectetur adipisicing elit."
                             badge={{
                                 text: "CUSTOM BADGE TITLE",
-                                bgColor: "bg-purple-50",
+                                bgColor: "bg-purple-50 dark:bg-purple-950/50",
                                 textColor: "text-purple-600",
                             }}
                             videoUrl="https://www.dropbox.com/scl/fi/crcmzz58px8rro2i5axv2/main-demo.mp4?rlkey=duxmf3k5wyss2wtt2trq9q7qo&st=z8p7y1tv&raw=1"
@@ -284,7 +293,7 @@ const LandingPage = () => {
                             subtitle="Lorem ipsum dolor, sit amet consectetur adipisicing elit."
                             badge={{
                                 text: "CUSTOM BADGE TITLE",
-                                bgColor: "bg-blue-50",
+                                bgColor: "bg-blue-50 dark:bg-blue-950/50",
                                 textColor: "text-blue-600",
                             }}
                             videoUrl="https://www.dropbox.com/scl/fi/gnskt6it1i6xtqh3b75yw/user-authentication.mp4?rlkey=dpfc9wrj035ulagzg59noifyb&st=wh5j07zu&raw=1"
@@ -296,7 +305,7 @@ const LandingPage = () => {
                             subtitle="Lorem ipsum dolor, sit amet consectetur adipisicing elit."
                             badge={{
                                 text: "CUSTOM BADGE TITLE",
-                                bgColor: "bg-orange-50",
+                                bgColor: "bg-orange-50 dark:bg-orange-950/50",
                                 textColor: "text-orange-600",
                             }}
                             videoUrl="https://www.dropbox.com/scl/fi/crcmzz58px8rro2i5axv2/main-demo.mp4?rlkey=duxmf3k5wyss2wtt2trq9q7qo&st=z8p7y1tv&raw=1"

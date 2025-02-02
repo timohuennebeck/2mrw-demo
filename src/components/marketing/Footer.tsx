@@ -20,7 +20,7 @@ const FooterLogo = ({ logo }: { logo: FooterParams["logo"] }) => (
     </Link>
 );
 
-const Separator = () => <div className="h-px bg-gray-200" />;
+const Separator = () => <div className="h-px bg-border dark:bg-border" />;
 
 const FooterLinkSection = ({ title, links }: { title: string; links: FooterLink[] }) => (
     <div className="flex flex-col gap-6">
@@ -77,7 +77,7 @@ const Footer = ({ links, logo, description, companyName, bottomLinks }: FooterPa
         <footer className="flex flex-col gap-8">
             <div className="flex flex-col gap-4">
                 <FooterLogo logo={logo} />
-                <p className="max-w-2xl text-sm text-muted-foreground">{description}</p>
+                <p className="max-w-2xl text-sm text-gray-600">{description}</p>
             </div>
 
             <Separator />

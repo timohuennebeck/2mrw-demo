@@ -37,14 +37,14 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
 
         return (
             <p
-                className="text-lg text-gray-900"
+                className="text-lg text-foreground"
                 dangerouslySetInnerHTML={{ __html: `"${result}"` }}
             />
         );
     };
 
     return (
-        <div className="mb-8 flex break-inside-avoid flex-col gap-8 rounded-lg border border-gray-200 bg-white p-8">
+        <div className="mb-8 flex break-inside-avoid flex-col gap-8 rounded-lg border border-border bg-background p-8">
             <div className="flex flex-col gap-8">
                 <div className="flex items-center justify-between">
                     {testimonial.rating && (
@@ -59,7 +59,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
                         </div>
                     )}
                 </div>
-                <blockquote className="text-lg text-gray-900">
+                <blockquote className="text-lg">
                     {renderContent(testimonial.content)}
                 </blockquote>
             </div>
@@ -73,11 +73,11 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
                 />
                 <div className="flex flex-col gap-1">
                     <div className="font-medium">{testimonial.author.name}</div>
-                    <div className="text-sm text-gray-500">
+                    <div className="text-sm text-muted-foreground">
                         {testimonial.author.role} @{testimonial.author.company}
                     </div>
                     {testimonial.date && (
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-muted-foreground">
                             {new Date(testimonial.date).toLocaleDateString("en-US", {
                                 month: "long",
                                 day: "numeric",
