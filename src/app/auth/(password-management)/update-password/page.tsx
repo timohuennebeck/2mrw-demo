@@ -22,7 +22,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import logo from "@/assets/images/logo-black.svg"
+import logo from "@/assets/images/logo-black.svg";
 
 const updatePasswordFormSchema = z
     .object({
@@ -88,12 +88,7 @@ const UpdatePasswordPageContent = () => {
         <div className="flex h-full items-center">
             <div className="flex w-full flex-col gap-4">
                 <div className="mb-4 flex items-center gap-2">
-                    <Image
-                        src={logo}
-                        alt="logo"
-                        width={40}
-                        height={40}
-                    />
+                    <Image src={logo} alt="logo" width={40} height={40} />
                 </div>
 
                 <div className="grid gap-2">
@@ -101,8 +96,8 @@ const UpdatePasswordPageContent = () => {
                         {TextConstants.TEXT__UPDATE_PASSWORD}
                     </h1>
                     <p className="text-sm text-gray-400">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem
-                        consectetur assumenda minus molestias magni exercitationem.
+                        Enter a strong password that contains at least 6 characters, including
+                        lowercase, uppercase and a digit
                     </p>
                 </div>
 

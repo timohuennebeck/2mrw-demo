@@ -99,8 +99,8 @@ const ForgotPasswordPage = () => {
                 <div className="grid gap-2">
                     <h1 className="text-2xl font-semibold">Forgot Password</h1>
                     <p className="text-sm text-gray-400">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi ipsam
-                        molestiae tenetur iure enim tempore!
+                        Enter your email address below, and we'll send you a link to reset your
+                        password.
                     </p>
                 </div>
 

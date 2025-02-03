@@ -181,11 +181,12 @@ const RegisterLoginForm = ({
                                         {mode === "signup"
                                             ? TextConstants.TEXT__SIGN_UP
                                             : TextConstants.TEXT__SIGN_IN}{" "}
-                                        to {appConfig.company.name} to continue! 🙌
+                                        to {appConfig.company.name}
                                     </h1>
                                     <p className="text-sm text-muted-foreground">
-                                        Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                                        Obcaecati ullam eveniet laborum numquam quae quasi!
+                                        {mode === "signup"
+                                            ? "Create an account to unlock [INSERT_VALUE]"
+                                            : "You're back! Log in to [INSERT_VALUE]"}
                                     </p>
                                 </>
                             )}

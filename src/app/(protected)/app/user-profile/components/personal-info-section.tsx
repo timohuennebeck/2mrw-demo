@@ -151,7 +151,10 @@ export const PersonalInfoSection = () => {
                         <FormItem>
                             <FormLabel>Bio</FormLabel>
                             <FormControl>
-                                <Input placeholder="Lorem ipsum dolor sit amet." {...field} />
+                                <Input
+                                    placeholder="Tell us a little about yourself..."
+                                    {...field}
+                                />
                             </FormControl>
                             <FormDescription>
                                 {bioCharactersLeft} characters remaining

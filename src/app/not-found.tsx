@@ -25,9 +25,8 @@ export default function NotFound() {
                         </span>
                     </h1>
                     <p className="mb-8 text-muted-foreground">
-                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quo repellat
-                        deserunt totam laudantium eum nemo sapiente delectus voluptatem omnis
-                        maiores!
+                        Looks like the page you're looking for doesn't exist. Don't worry—let's get
+                        you back on track!
                     </p>
                     <Button asChild size="lg">
                         <Link href="/">Return to Homepage</Link>
