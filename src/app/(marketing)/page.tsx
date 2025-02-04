@@ -8,7 +8,7 @@ import FAQ from "@/components/marketing/FAQ-";
 import FeaturedTestimonial from "@/components/marketing/featured-testimonial";
 import Features from "@/components/marketing/features-";
 import FeaturesList from "@/components/marketing/features-list";
-import Footer from "@/components/marketing/footer-";
+import Footer from "@/components/marketing/footer";
 import Header from "@/components/marketing/header";
 import Hero from "@/components/marketing/Hero-";
 import HowItWorks from "@/components/marketing/how-it-works";
