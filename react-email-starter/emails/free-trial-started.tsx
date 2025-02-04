@@ -1,3 +1,5 @@
+export const runtime = "nodejs";
+
 import { appConfig } from "@/config";
 import { FreeTrialStartedEmail as FreeTrialStartedEmailProps } from "@/interfaces/services/resend";
 import {

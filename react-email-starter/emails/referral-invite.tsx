@@ -1,3 +1,5 @@
+export const runtime = "nodejs";
+
 import { appConfig } from "@/config";
 import { ReferralInviteEmail as ReferralInviteEmailProps } from "@/interfaces/services/resend";
 import {
