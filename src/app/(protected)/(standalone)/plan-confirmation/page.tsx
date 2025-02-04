@@ -1,18 +1,19 @@
 "use client";
 
-import CurrentSubscriptionPlan from "@/components/application/CurrentSubscriptionPlan";
+import CurrentSubscriptionPlan from "@/components/application/current-subscription-plan";
 import { Button } from "@/components/ui/button";
-import { useFreeTrial } from "@/context/FreeTrialContext";
-import { useSubscription } from "@/context/SubscriptionContext";
-import { useUser } from "@/context/UserContext";
+import { useFreeTrial } from "@/context/free-trial-context";
+import { useSubscription } from "@/context/subscription-context";
+import { useUser } from "@/context/user-context";
 import { PurchasedSubscription } from "@/interfaces";
-import { FreeTrial } from "@/interfaces/models/freeTrial";
+import { FreeTrial } from "@/interfaces/models/free-trial.model";
 import moment from "moment";
 import { Manrope } from "next/font/google";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { appConfig } from "@/config";
+import TexturedBackground from "@/components/ui/textured-background";
 
 const manrope = Manrope({
     subsets: ["latin"],
@@ -30,8 +31,8 @@ const PlanConfirmationPage = () => (
 );
 
 const PlanConfirmationPageContent = () => {
-    const { subscription } = useSubscription();
-    const { dbUser } = useUser();
+    const { subscription, invalidateSubscription } = useSubscription();
+    const { dbUser, invalidateUser } = useUser();
     const { freeTrial } = useFreeTrial();
 
     const router = useRouter();
@@ -39,11 +40,14 @@ const PlanConfirmationPageContent = () => {
 
     const mode = searchParams.get("mode");
 
-    const [showConfetti, setShowConfetti] = React.useState(true);
+    const [showConfetti, setShowConfetti] = useState(true);
 
     useEffect(() => {
+        invalidateUser();
+        invalidateSubscription();
         const timer = setTimeout(() => setShowConfetti(false), 5000);
         return () => clearTimeout(timer);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const getHeaderContent = () => {
@@ -78,9 +82,7 @@ const PlanConfirmationPageContent = () => {
 
     return (
         <>
-            <div className="fixed inset-0 -z-10 h-full w-full">
-                <div className="h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]" />
-            </div>
+            <TexturedBackground />
 
             {showConfetti && (
                 <Confetti recycle={false} numberOfPieces={200} style={{ zIndex: 999 }} />
@@ -102,7 +104,7 @@ const PlanConfirmationPageContent = () => {
                                     {headerContent.highlightText}
                                 </span>
                             </h2>
-                            <p className="mx-auto max-w-2xl text-base text-gray-600">
+                            <p className="mx-auto max-w-2xl text-base text-muted-foreground">
                                 {headerContent.subtitle}
                             </p>
                         </div>

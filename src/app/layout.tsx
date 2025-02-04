@@ -6,6 +6,7 @@ import { Inter } from "next/font/google";
 import { generateSEOTags } from "@/lib/seo";
 import Script from "next/script";
 import { appConfig } from "@/config";
+import { ThemeProvider } from "next-themes";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,9 +22,14 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
                     </Script>
                 )}
 
-                <Providers>
-                    {children}
-                </Providers>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme={appConfig.themeToggle.defaultTheme}
+                >
+                    <Providers>
+                        {children}
+                    </Providers>
+                </ThemeProvider>
 
                 <Toaster position="top-right" expand closeButton />
             </body>

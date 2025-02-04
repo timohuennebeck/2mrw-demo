@@ -1,4 +1,4 @@
-import { Testimonial } from "@/components/marketing/TestimonialCard";
+import { Testimonial } from "@/components/marketing/testimonial-card";
 
 export const testimonials: Testimonial[] = [
     {
@@ -156,7 +156,7 @@ export const testimonials: Testimonial[] = [
             highlights: ["praesentium", "cupiditate"],
         },
         author: {
-            name: "Iusto Odio",
+            name: "Fernando Odio",
             role: "Software Architect",
             company: "Blanditiis Labs",
             image: "https://i.imgur.com/E6nCVLy.jpeg",

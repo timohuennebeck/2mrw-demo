@@ -14,15 +14,32 @@ interface GeneralConfig {
     };
     onboarding: {
         isEnabled: boolean;
+        checklist: {
+            isEnabled: boolean;
+            direction: "left" | "right";
+        };
+    };
+    themeToggle: {
+        isEnabled: boolean;
+        defaultTheme: "system" | "light" | "dark";
     };
     feedback: {
-        widgets: {
-            reportBug: WidgetConfig;
-            shareFeedback: WidgetConfig;
+        bugReport: {
+            isEnabled: boolean;
+            formUrl: string;
+        };
+        featureRequest: {
+            isEnabled: boolean;
+            formUrl: string;
         };
         forms: {
             accountDeletion: WidgetConfig;
         };
+    };
+    company: {
+        name: string;
+        contactEmail: string;
+        senderEmail: string;
     };
 }
 
@@ -46,18 +63,30 @@ export const appConfig: GeneralConfig = {
      */
     onboarding: {
         isEnabled: true,
+        checklist: {
+            isEnabled: true,
+            direction: "left",
+        },
+    },
+
+    /**
+     * when changing the default theme, make sure to remove the "theme" key from localStorage.
+     * this ensures the theme updates to reflect the latest default setting.
+     */
+
+    themeToggle: {
+        isEnabled: true,
+        defaultTheme: "light",
     },
 
     feedback: {
-        widgets: {
-            reportBug: {
-                isEnabled: true,
-                formUrl: "https://tally.so/r/bug-report",
-            },
-            shareFeedback: {
-                isEnabled: true, // controls the FeedbackWidget.tsx in bottom right
-                formUrl: "https://tally.so/r/general-feedback",
-            },
+        bugReport: {
+            isEnabled: true,
+            formUrl: "https://tally.so/r/bug-report",
+        },
+        featureRequest: {
+            isEnabled: true,
+            formUrl: "https://tally.so/r/feature-request",
         },
         forms: {
             accountDeletion: {
@@ -65,5 +94,11 @@ export const appConfig: GeneralConfig = {
                 formUrl: "https://tally.so/r/exit-survey",
             },
         },
+    },
+
+    company: {
+        name: "2mrw",
+        contactEmail: "support@example.com",
+        senderEmail: "m@example.com", // this email is used as the sender email for all outgoing emails such as freeTrialStarted, etc.
     },
 };

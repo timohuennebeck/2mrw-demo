@@ -5,6 +5,7 @@ import { Manrope } from "next/font/google";
 import { useRouter } from "next/navigation";
 import { StatusPageProps } from "../authStatus";
 import { useEffect, useState } from "react";
+import TexturedBackground from "@/components/ui/textured-background";
 
 const manrope = Manrope({
     subsets: ["latin"],
@@ -36,9 +37,7 @@ export function StatusPage({ type = "error", config }: StatusPageProps) {
 
     return (
         <>
-            <div className="fixed inset-0 -z-10 h-full w-full">
-                <div className="h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]" />
-            </div>
+            <TexturedBackground />
 
             <div
                 className={`${manrope.variable} flex min-h-screen flex-col items-center justify-center px-4 font-manrope`}

@@ -1,37 +1,33 @@
 import { EmailType } from "@/enums";
-import { EmailConfig } from "@/interfaces";
+import { emailSchemas } from "@/interfaces/services/resend";
+import { ReactElement } from "react";
+import { z } from "zod";
+import FreeTrialExpiresEmail from "../../react-email-starter/emails/free-trial-expires-soon";
+import FreeTrialStartedEmail from "../../react-email-starter/emails/free-trial-started";
+import ReferralInviteEmail from "../../react-email-starter/emails/referral-invite";
 
-export const emailConfig: EmailConfig = {
-    apiKey: process.env.LOOPS_API_KEY ?? "",
-    baseUrl: "https://app.loops.so/api/v1",
-    templates: {
-        [EmailType.WELCOME_TO_SAAS_NAME]: {
-            transactionalId: "[replace_with_transactionalId]",
-            enabled: false,
-            variables: [],
-        },
+type EmailSchemaType = {
+    [K in EmailType]: z.infer<typeof emailSchemas[K]>;
+};
 
-        [EmailType.FREE_TRIAL_STARTED]: {
-            transactionalId: "[replace_with_transactionalId]",
-            enabled: false,
-            variables: ["freeTrialEndDate"],
-        },
-        [EmailType.FREE_TRIAL_EXPIRES_SOON]: {
-            transactionalId: "[replace_with_transactionalId]",
-            enabled: false,
-            variables: ["upgradeUrl"],
-        },
+type EmailConfigType = {
+    [K in EmailType]: {
+        component: (props: EmailSchemaType[K]) => ReactElement;
+        isEnabled: boolean;
+    };
+};
 
-        [EmailType.CANCELLED_SUBSCRIPTION]: {
-            transactionalId: "[replace_with_transactionalId]",
-            enabled: false,
-            variables: ["endDate, feedbackFormUrl"],
-        },
-
-        [EmailType.DOWNGRADED_TO_FREE_PLAN]: {
-            transactionalId: "[replace_with_transactionalId]",
-            enabled: false,
-            variables: ["upgradeUrl"],
-        },
+export const emailConfig: EmailConfigType = {
+    [EmailType.FREE_TRIAL_STARTED]: {
+        component: FreeTrialStartedEmail,
+        isEnabled: true,
+    },
+    [EmailType.FREE_TRIAL_EXPIRES_SOON]: {
+        component: FreeTrialExpiresEmail,
+        isEnabled: true,
+    },
+    [EmailType.REFERRAL_INVITE]: {
+        component: ReferralInviteEmail,
+        isEnabled: false,
     },
 };

@@ -4,7 +4,7 @@ CREATE TABLE
         user_id UUID NOT NULL UNIQUE REFERENCES auth.users (id) ON DELETE CASCADE,
         stripe_subscription_id TEXT NOT NULL,
         subscription_tier TEXT NOT NULL CHECK (
-            subscription_tier IN ('FREE', 'ESSENTIALS', 'FOUNDERS')
+            subscription_tier IN ('FREE', 'ESSENTIALS', 'INDIE_HACKER')
         ),
         status TEXT NOT NULL CHECK (
             status IN ('ACTIVE', 'CONVERTED', 'CANCELLED', 'EXPIRED')

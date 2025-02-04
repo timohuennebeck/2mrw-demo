@@ -1,8 +1,10 @@
 import { createServerClient } from "@supabase/ssr";
-import { User as SupabaseUser } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 import { isProtectedRoute, isPublicRoute, ROUTES_CONFIG } from "./config";
-import { handleLoggedInRedirect } from "./middleware/handlers/authHandlers";
+import {
+    handleCheckReferralCode,
+    handleLoggedInRedirect,
+} from "./middleware/handlers/authHandlers";
 import { redirectTo } from "./middleware/handlers/utils";
 
 const _isPathExcludedFromRouting = (pathname: string) => {
@@ -55,9 +57,17 @@ export const middleware = async (request: NextRequest) => {
     if (user) {
         const response = await handleLoggedInRedirect(
             request,
-            user as SupabaseUser,
+            user,
         );
         if (response) return response;
+    }
+
+    if (request.nextUrl.pathname === "/auth/sign-up") {
+        const response = await handleCheckReferralCode(request);
+        console.log("→ [LOG] response", response);
+        if (response) {
+            return response;
+        }
     }
 
     /**

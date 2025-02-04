@@ -3,11 +3,11 @@
 import { Suspense, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "./action";
-import RegisterLoginForm from "@/components/application/RegisterLoginForm";
-import { TextConstants } from "@/constants/TextConstants";
+import RegisterLoginForm from "@/components/application/register-login-form";
+import { TextConstants } from "@/constants/text-constants";
 import { StatusMessage } from "@/interfaces";
-import { sendMagicLink } from "@/services/domain/authService";
-import { useParamFeedback } from "@/hooks/useParamFeedback";
+import { sendMagicLink } from "@/services/domain/auth-service";
+import { useParamFeedback } from "@/hooks/use-param-feedback";
 
 const SignInPage = () => (
     <Suspense fallback={null}>

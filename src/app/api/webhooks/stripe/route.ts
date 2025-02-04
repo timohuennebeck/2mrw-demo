@@ -1,16 +1,15 @@
 import { EmailType, StripeWebhookEvents } from "@/enums";
 import { User } from "@/interfaces";
-import { createSupabasePowerUserClient } from "@/services/integration/admin";
-import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
+import { createSupabasePowerUserClient } from "@/services/supabase-clients/admin";
 import { stripe } from "@/services/stripe/client";
 import {
     handleCancelSubscription,
     handleCheckoutCompleted,
     handleUpdateSubscription,
-} from "@/services/stripe/stripeWebhook";
-import moment from "moment";
-import { NextRequest, NextResponse } from "next/server";
+} from "@/services/stripe/stripe-webhook";
 import Stripe from "stripe";
+import axios from "axios";
+import moment from "moment";
 
 const _verifyStripeWebhook = async (body: string, signature: string) => {
     try {
@@ -70,14 +69,13 @@ const _cancelExistingFreeTrialsInStripe = async (userId: string) => {
     }
 };
 
-export const POST = async (req: NextRequest) => {
+export const POST = async (req: Request) => {
     try {
         const body = await req.text();
         const signature = req.headers.get("stripe-signature");
 
         if (!signature) {
-            console.error("Webhook Error: Missing stripe signature");
-            return NextResponse.json({
+            return Response.json({
                 error: "There was no signature provided",
             }, { status: 400 });
         }
@@ -87,7 +85,7 @@ export const POST = async (req: NextRequest) => {
             event = await _verifyStripeWebhook(body, signature);
         } catch (err) {
             console.error("Webhook Error: Signature verification failed", err);
-            return NextResponse.json({
+            return Response.json({
                 error: `Webhook signature verification failed: ${(err as Error).message}`,
             }, { status: 400 });
         }
@@ -130,24 +128,11 @@ export const POST = async (req: NextRequest) => {
                      * if it is, cancel the subscripton
                      */
 
-                    const subscriptionEndDate = moment.unix(
-                        subscription.current_period_end,
-                    ).format("Do [of] MMMM, YYYY");
-
-                    sendLoopsTransactionalEmail({
-                        type: EmailType.CANCELLED_SUBSCRIPTION,
-                        email: user.email,
-                        variables: {
-                            endDate: subscriptionEndDate,
-                            feedbackFormUrl:
-                                `${process.env.NEXT_PUBLIC_APP_URL}/app/feedback`,
-                        },
-                    });
-
                     const cancelResult = await handleCancelSubscription(
                         user.id,
                         subscription,
                     );
+
                     if (cancelResult.error) throw cancelResult.error;
                 } else {
                     const updateResult = await handleUpdateSubscription(
@@ -162,12 +147,22 @@ export const POST = async (req: NextRequest) => {
                 const customerId = subscription.customer as string;
                 const user = await _getUserFromStripeCustomerId(customerId);
 
-                sendLoopsTransactionalEmail({
-                    type: EmailType.FREE_TRIAL_EXPIRES_SOON,
-                    email: user.email,
+                if (!subscription.trial_end || !subscription.trial_start) {
+                    return;
+                }
+
+                const trialStart = moment.unix(subscription.trial_start);
+                const trialEnd = moment.unix(subscription.trial_end);
+                const durationDays = trialEnd.diff(trialStart, "days");
+
+                const postUrl = `${process.env.LOOPS_API_URL}/api/send-email`;
+                axios.post(postUrl, {
+                    to: user.email,
+                    subject: "Your Free Trial is Ending Soon!",
+                    emailType: EmailType.FREE_TRIAL_EXPIRES_SOON,
                     variables: {
-                        upgradeUrl:
-                            `${process.env.NEXT_PUBLIC_APP_URL}/app/billing`,
+                        trialDuration: durationDays,
+                        discountCode: process.env.TRIAL_EXPIRES_DISCOUNT_CODE,
                     },
                 });
 
@@ -177,16 +172,11 @@ export const POST = async (req: NextRequest) => {
                 break;
         }
 
-        return NextResponse.json({ received: true }, { status: 200 });
-    } catch (error: unknown) {
-        console.error("Webhook Error:", {
-            message: (error as Error).message,
-            stack: (error as Error).stack,
-            type: (error as Error).constructor.name
-        });
-        
-        return NextResponse.json(
-            { error: `Webhook failed: ${(error as Error).message}` },
+        return Response.json({ received: true }, { status: 200 });
+    } catch (error) {
+        console.error("Error processing stripe webhook:", error);
+        return Response.json(
+            { error: "Processing stripe webhook failed" },
             { status: 500 },
         );
     }

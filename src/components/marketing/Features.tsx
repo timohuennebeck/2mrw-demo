@@ -1,5 +1,6 @@
 import { Asterisk } from "lucide-react";
 import { type LucideIcon } from "lucide-react";
+import CustomVideo from "../ui/custom-video";
 
 interface Feature {
     name: string;
@@ -40,7 +41,7 @@ const FeatureItem = ({
         </div>
         <div>
             <span className="font-medium">{feature.name}</span>{" "}
-            <span className="text-gray-600">{feature.description}</span>
+            <span className="text-muted-foreground">{feature.description}</span>
         </div>
     </div>
 );
@@ -60,15 +61,7 @@ const Features = ({
             <div className="flex flex-col items-center gap-12 lg:flex-row lg:gap-20">
                 {videoOnLeft && (
                     <div className="flex w-full flex-1 justify-start">
-                        <video
-                            src={videoUrl}
-                            width={928}
-                            height={522}
-                            className="rounded-lg shadow-2xl"
-                            autoPlay
-                            muted
-                            loop
-                        />
+                        <CustomVideo src={videoUrl} />
                     </div>
                 )}
 
@@ -87,21 +80,13 @@ const Features = ({
                     </div>
 
                     <h2 className="max-w-4xl text-4xl font-medium tracking-tight md:text-5xl">
-                        {title} <span className="text-gray-400">{subtitle}</span>
+                        {title} <span className="text-muted-foreground">{subtitle}</span>
                     </h2>
                 </div>
 
                 {!videoOnLeft && (
                     <div className="flex w-full flex-1 justify-start">
-                        <video
-                            src={videoUrl}
-                            width={928}
-                            height={522}
-                            className="rounded-lg shadow-2xl"
-                            autoPlay
-                            muted
-                            loop
-                        />
+                        <CustomVideo src={videoUrl} />
                     </div>
                 )}
             </div>

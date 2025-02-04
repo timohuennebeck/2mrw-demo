@@ -1,4 +1,4 @@
-import TestimonialPanel from "@/components/application/TestimonialPanel";
+import TestimonialPanel from "@/components/application/testimonials-panel";
 import { appConfig } from "@/config";
 import { Manrope } from "next/font/google";
 import { ReactNode } from "react";
@@ -18,10 +18,10 @@ const Layout = ({ children }: { children: ReactNode }) => {
          */
 
         <div
-            className={`flex ${direction === "right" ? "flex-row" : "flex-row-reverse"} justify-center py-8 h-screen lg:py-0 ${manrope.variable} font-manrope`}
+            className={`flex ${direction === "right" ? "flex-row" : "flex-row-reverse"} justify-center py-8 h-screen lg:py-0 ${manrope.variable} font-manrope dark:bg-black`}
         >
             {/* Left Side - Sign Up Form */}
-            <div className="w-[596px] px-16">{children}</div>
+            <div className="w-[596px] px-16 dark:bg-black">{children}</div>
 
             {/* Right Side - Testimonial */}
             {isEnabled && <TestimonialPanel />}

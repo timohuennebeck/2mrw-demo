@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import TexturedBackground from "@/components/ui/textured-background";
 import { Manrope } from "next/font/google";
 import Link from "next/link";
 
@@ -10,9 +11,7 @@ const manrope = Manrope({
 export default function NotFound() {
     return (
         <>
-            <div className="fixed inset-0 -z-10 h-full w-full">
-                <div className="h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]" />
-            </div>
+            <TexturedBackground />
 
             <div
                 className={`${manrope.variable} flex min-h-screen flex-col items-center justify-center px-4 font-manrope`}
@@ -26,9 +25,8 @@ export default function NotFound() {
                         </span>
                     </h1>
                     <p className="mb-8 text-muted-foreground">
-                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quo repellat
-                        deserunt totam laudantium eum nemo sapiente delectus voluptatem omnis
-                        maiores!
+                        Looks like the page you're looking for doesn't exist. Don't worry—let's get
+                        you back on track!
                     </p>
                     <Button asChild size="lg">
                         <Link href="/">Return to Homepage</Link>

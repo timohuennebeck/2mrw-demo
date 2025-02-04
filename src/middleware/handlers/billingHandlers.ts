@@ -1,6 +1,6 @@
 import { ROUTES_CONFIG } from "@/config";
 import { SubscriptionStatus, SubscriptionTier } from "@/enums";
-import { fetchUserSubscription } from "@/services/database/subscriptionService";
+import { fetchUserSubscription } from "@/services/database/subscription-service";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import { redirectTo } from "./utils";
 import { NextRequest as nextRequest } from "next/server";

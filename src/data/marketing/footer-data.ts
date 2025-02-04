@@ -1,42 +1,41 @@
 export type FooterLink = {
     name: string;
     href: string;
+    isExternal?: boolean;
 };
 
 export type FooterLinks = {
-    solutions: FooterLink[];
-    support: FooterLink[];
     product: FooterLink[];
-    legal: FooterLink[];
+    support: FooterLink[];
 };
 
 export const footerLinks: FooterLinks = {
-    solutions: [
-        { name: "Lorem ipsum", href: "/lorem" },
-        { name: "Dolor sit", href: "/dolor" },
-        { name: "Amet consectetur", href: "/amet" },
-        { name: "Adipiscing elit", href: "/adipiscing" },
-        { name: "Sed do", href: "/sed" },
+    product: [
+        { name: "Features", href: "#features" },
+        { name: "Pricing", href: "#pricing" },
+        { name: "Testimonials", href: "#testimonials" },
+        { name: "FAQ", href: "#faq" },
+        {
+            name: "Documentation",
+            href: "https://docs.2mrw.dev",
+            isExternal: true,
+        },
     ],
     support: [
-        { name: "Eiusmod tempor", href: "/tempor" },
-        { name: "Incididunt ut", href: "/incididunt" },
-        { name: "Labore et", href: "/labore" },
-    ],
-    product: [
-        { name: "Dolore magna", href: "/dolore" },
-        { name: "Aliqua ut", href: "/aliqua" },
-        { name: "Enim ad", href: "/enim" },
-        { name: "Minim veniam", href: "/minim" },
-    ],
-    legal: [
-        { name: "Quis nostrud", href: "/quis" },
-        { name: "Exercitation ullamco", href: "/exercitation" },
-        { name: "Laboris nisi", href: "/laboris" },
+        {
+            name: "Help Center",
+            href: "https://help.example.com",
+            isExternal: true,
+        },
+        {
+            name: "Contact",
+            href: "mailto:support@example.com",
+            isExternal: true,
+        },
     ],
 };
 
 export const bottomLinks: FooterLink[] = [
-    { name: "Ut aliquip ex", href: "/aliquip" },
-    { name: "Commodo consequat", href: "/commodo" },
+    { name: "Privacy Policy", href: "/privacy", isExternal: true },
+    { name: "Terms of Service", href: "/terms", isExternal: true },
 ];

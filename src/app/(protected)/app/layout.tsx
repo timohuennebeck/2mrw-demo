@@ -1,77 +1,51 @@
 "use client";
 
-import BugReportWidget from "@/components/application/BugReportWidget";
-import FeedbackWidget from "@/components/application/FeedbackWidget";
-import AppSidebar from "@/components/ui/app-sidebar";
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import { OnboardingChecklistTrigger } from "@/components/application/onboarding/onboarding-checklist-trigger";
 import { Button } from "@/components/ui/button";
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { appConfig } from "@/config";
-import { ChevronLeft, X } from "lucide-react";
+import UserDropdown from "@/components/ui/user-dropdown";
+import { onboardingConfig } from "@/config";
+import { useUser } from "@/context/user-context";
+import { cn } from "@/lib/utils";
+import { createClient } from "@/services/supabase-clients/client";
+import {
+    ChevronLeft,
+    CreditCard,
+    LayoutGrid,
+    Settings2,
+    Share2,
+    Sparkles,
+    User2,
+    X
+} from "lucide-react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-const TopBar = () => {
-    const pathname = usePathname();
+const _claimBonus = async (userId: string) => {
+    const supabase = createClient();
 
-    const breadcrumbs = pathname
-        .split("/")
-        .filter(Boolean)
-        .map((segment, index, array) => {
-            const href = "/" + array.slice(0, index + 1).join("/");
-            // convert kebab-case to Title Case
-            const label = segment
-                .split("-")
-                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                .join(" ");
+    const { data, error } = await supabase
+        .from("users")
+        .update({
+            onboarding_completed: true,
+        })
+        .eq("id", userId)
+        .select();
 
-            return {
-                href,
-                label,
-                isLast: index === array.length - 1,
-            };
-        });
-
-    return (
-        <div className="flex items-center gap-4 px-4 py-4">
-            <SidebarTrigger />
-
-            <Breadcrumb>
-                <BreadcrumbList>
-                    <BreadcrumbItem>
-                        <BreadcrumbLink href="/app">Home</BreadcrumbLink>
-                    </BreadcrumbItem>
-
-                    {breadcrumbs.map((breadcrumb, index) => (
-                        <React.Fragment key={breadcrumb.href}>
-                            <BreadcrumbSeparator />
-                            <BreadcrumbItem>
-                                {breadcrumb.isLast ? (
-                                    <BreadcrumbPage>{breadcrumb.label}</BreadcrumbPage>
-                                ) : (
-                                    <BreadcrumbLink href={breadcrumb.href}>
-                                        {breadcrumb.label}
-                                    </BreadcrumbLink>
-                                )}
-                            </BreadcrumbItem>
-                        </React.Fragment>
-                    ))}
-                </BreadcrumbList>
-            </Breadcrumb>
-        </div>
-    );
+    return { data, error };
 };
 
-const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+    const { dbUser, invalidateUser } = useUser();
+
+    const supabase = createClient();
+
+    const pathname = usePathname();
+
     const [widgetsVisible, setWidgetsVisible] = useState(true);
     const [showToggle, setShowToggle] = useState(false);
+    const [isClaimingBonus, setIsClaimingBonus] = useState(false);
 
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -90,21 +64,59 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
+    const handleClaimBonus = async () => {
+        if (!dbUser) return;
+        const { error } = await _claimBonus(dbUser.id);
+
+        if (error) {
+            toast.error("Failed to claim bonus");
+            return;
+        }
+
+        setIsClaimingBonus(true);
+        toast.success(`Bonus claimed! You've earned 25 Tokens.`);
+        invalidateUser();
+        setTimeout(() => setIsClaimingBonus(false), 1000);
+    };
+
+    const mainNavItems = [
+        {
+            href: "/app",
+            label: "Home",
+            icon: LayoutGrid,
+        },
+        {
+            href: "/app/user-profile",
+            label: "Profile",
+            icon: User2,
+        },
+    ];
+
+    const userDropdownItems = [
+        {
+            label: "Preferences",
+            href: "/app/preferences",
+            icon: Settings2,
+        },
+        {
+            label: "Billing",
+            href: "/app/billing",
+            icon: CreditCard,
+        },
+        {
+            label: "Invite a Friend",
+            href: "/app/refer",
+            icon: Share2,
+        },
+        {
+            label: "Upgrade to Premium",
+            href: "/choose-pricing-plan",
+            icon: Sparkles,
+        },
+    ];
+
     return (
-        <SidebarProvider defaultOpen>
-            <div className="flex h-screen w-full overflow-hidden">
-                <AppSidebar />
-
-                <SidebarInset>
-                    <main className="flex h-full flex-col">
-                        <TopBar />
-
-                        <div className="h-full overflow-y-auto px-8 py-8">{children}</div>
-                    </main>
-                </SidebarInset>
-            </div>
-
-            {/* Feedback Widgets */}
+        <div className="min-h-screen dark:bg-black">
             <div className="fixed bottom-4 right-8 flex items-center gap-2">
                 {widgetsVisible ? (
                     <>
@@ -123,10 +135,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                                     <X className="h-4 w-4" />
                                 </Button>
                             )}
-                            {appConfig.feedback.widgets.reportBug.isEnabled && <BugReportWidget />}
-                            {appConfig.feedback.widgets.shareFeedback.isEnabled && (
-                                <FeedbackWidget />
-                            )}
                         </div>
                     </>
                 ) : (
@@ -141,8 +149,54 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                     </Button>
                 )}
             </div>
-        </SidebarProvider>
-    );
-};
+            <div className="mx-auto max-w-5xl p-6">
+                <div className="mb-12 mt-6 flex justify-start">
+                    <UserDropdown
+                        user={{
+                            email: dbUser?.email ?? "m@example.com",
+                            initials: "TH",
+                        }}
+                        menuItems={userDropdownItems}
+                        onLogout={async () => {
+                            const { error } = await supabase.auth.signOut();
+                            if (error) toast.error("Failed to logout");
+                        }}
+                    />
+                </div>
 
-export default DashboardLayout;
+                <nav className="mb-8">
+                    <ul className="flex gap-2">
+                        {mainNavItems.map((item) => (
+                            <li key={item.href}>
+                                <Link
+                                    href={item.href}
+                                    className={cn(
+                                        "flex items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-secondary",
+                                        ((item.href === "/app" && pathname === "/app") ||
+                                            (item.href !== "/app" &&
+                                                pathname.startsWith(item.href))) &&
+                                            "bg-secondary text-foreground",
+                                    )}
+                                >
+                                    <item.icon className="h-4 w-4" />
+                                    {item.label}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
+
+                {!dbUser?.onboarding_completed && (
+                    <OnboardingChecklistTrigger
+                        userProgress={{ uploadedProductDemos: 1, referralCount: 5 }}
+                        config={onboardingConfig}
+                        onClaimBonus={handleClaimBonus}
+                        isClaimingBonus={isClaimingBonus}
+                    />
+                )}
+
+                {children}
+            </div>
+        </div>
+    );
+}

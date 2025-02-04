@@ -1,31 +1,41 @@
 "use server";
 
-import { TextConstants } from "@/constants/TextConstants";
+import { TextConstants } from "@/constants/text-constants";
 import { SupabaseErrors } from "@/enums";
-import { AuthMethod } from "@/enums/user";
-import { createClient } from "@/services/integration/server";
+import { AuthMethod } from "@/enums/user.enum";
+import {
+    createPendingReferral,
+    getReferrerByReferralCode,
+} from "@/services/database/referral-service";
+import { createClient } from "@/services/supabase-clients/server";
 import { AuthError } from "@supabase/supabase-js";
 
-export const signUpUserToSupabase = async ({
-    firstName,
-    email,
-    password,
-    authMethod,
-}: {
-    firstName: string;
+interface SignUpUserToSupabaseParams {
     email: string;
     password: string;
     authMethod: AuthMethod;
-}) => {
-    const supabase = await createClient();
+    referralCode?: string;
+}
 
+export const signUpUserToSupabase = async ({
+    email,
+    password,
+    authMethod,
+    referralCode,
+}: SignUpUserToSupabaseParams) => {
     try {
+        if (referralCode) {
+            const { referrer } = await getReferrerByReferralCode(referralCode);
+            if (referrer) await createPendingReferral(email, referrer.id);
+        }
+
+        const supabase = await createClient();
+
         const { error } = await supabase.auth.signUp({
             email,
             password,
             options: {
                 data: {
-                    full_name: firstName,
                     auth_method: authMethod,
                 },
             },

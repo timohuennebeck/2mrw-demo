@@ -16,7 +16,7 @@ interface CompletePaymentConfig {
 
 export const billingConfig: CompletePaymentConfig = {
     isFreePlanEnabled: true, // this will be overridden when ONE_TIME is enabled
-    billingPlan: BillingPlan.ONE_TIME,
+    billingPlan: BillingPlan.RECURRING,
 
     // only used when RECURRING billing is enabled
     freeTrial: {

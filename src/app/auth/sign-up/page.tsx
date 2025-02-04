@@ -1,21 +1,21 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import RegisterLoginForm from "@/components/application/RegisterLoginForm";
+import RegisterLoginForm from "@/components/application/register-login-form";
 import { resendConfirmationEmail, signUpUserToSupabase } from "./action";
-import { TextConstants } from "@/constants/TextConstants";
-import { checkUserEmailExists } from "@/services/database/userService";
+import { TextConstants } from "@/constants/text-constants";
+import { checkUserEmailExists } from "@/services/database/user-service";
 import { StatusMessage } from "@/interfaces";
-import { AuthMethod } from "@/enums/user";
-import { sendMagicLink } from "@/services/domain/authService";
+import { AuthMethod } from "@/enums/user.enum";
+import { sendMagicLink } from "@/services/domain/auth-service";
 import { appConfig } from "@/config";
-import { useParamFeedback } from "@/hooks/useParamFeedback";
+import { useParamFeedback } from "@/hooks/use-param-feedback";
 import { useSearchParams } from "next/navigation";
 
 interface HandleSubmitParams {
-    firstName: string;
     email: string;
     password: string;
+    referralCode?: string;
 }
 
 const _getSignUpMethod = (searchParams: URLSearchParams) => {
@@ -42,8 +42,7 @@ const SignUpPageContent = () => {
         duration: 0, // won't auto-clear
         action: {
             label: "Share Feedback",
-            onClick: () =>
-                window.open(appConfig.feedback.forms.accountDeletion.formUrl, "_blank"),
+            onClick: () => window.open(appConfig.feedback.forms.accountDeletion.formUrl, "_blank"),
         },
         configKey: "accountDeletion",
     });
@@ -94,7 +93,7 @@ const SignUpPageContent = () => {
         }, 4000);
     };
 
-    const handleSubmit = async ({ firstName, email, password }: HandleSubmitParams) => {
+    const handleSubmit = async ({ email, password, referralCode }: HandleSubmitParams) => {
         setIsLoading(true);
 
         try {
@@ -102,10 +101,10 @@ const SignUpPageContent = () => {
             if (emailExists) throw new Error(TextConstants.ERROR__EMAIL_ALREADY_IN_USE); // throws an error because the email exists
 
             const dataToUpdate = {
-                firstName,
                 email,
                 password,
                 authMethod: _getSignUpMethod(searchParams),
+                referralCode,
             };
 
             const result = await signUpUserToSupabase(dataToUpdate);
@@ -126,11 +125,11 @@ const SignUpPageContent = () => {
         }
     };
 
-    const handleSignUpWithMagicLink = async (email: string) => {
+    const handleSignUpWithMagicLink = async (email: string, referralCode?: string) => {
         setIsLoading(true);
 
         try {
-            const result = await sendMagicLink(email);
+            const result = await sendMagicLink(email, referralCode);
 
             if (result.error) throw result.error;
 

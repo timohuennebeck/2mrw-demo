@@ -1,10 +1,11 @@
 "use client";
 
-import PricingCard from "@/components/marketing/PricingCard";
+import PricingCard from "@/components/marketing/pricing-card";
+import TexturedBackground from "@/components/ui/textured-background";
 import { isFreePlanEnabled, isOneTimePaymentEnabled } from "@/config";
-import { useSession } from "@/context/SessionContext";
-import { useSubscription } from "@/context/SubscriptionContext";
-import { getFilteredPricingPlans } from "@/services/domain/pricingService";
+import { useSession } from "@/context/session-context";
+import { useSubscription } from "@/context/subscription-context";
+import { getFilteredPricingPlans } from "@/services/domain/pricing-service";
 import { Manrope } from "next/font/google";
 
 const manrope = Manrope({
@@ -24,9 +25,8 @@ const ChoosePricingPlanPage = () => {
 
     return (
         <>
-            <div className="fixed inset-0 -z-10 h-full w-full">
-                <div className="h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]" />
-            </div>
+            <TexturedBackground />
+
             <div
                 className={`flex min-h-screen w-full items-center justify-center px-8 py-16 ${manrope.className}`}
             >
@@ -44,7 +44,7 @@ const ChoosePricingPlanPage = () => {
                                 adipisicing elit.
                             </>
                         </h2>
-                        <p className="max-w-4xl text-lg text-gray-600">
+                        <p className="max-w-4xl text-lg text-muted-foreground">
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
                         </p>
                     </div>
@@ -54,12 +54,11 @@ const ChoosePricingPlanPage = () => {
                             showFreePlan ? "md:grid-cols-3" : "mx-auto max-w-[882px] md:grid-cols-2"
                         }`}
                     >
-                        {plansToShow.map((plan) => (
+                        {plansToShow.map((plan, index) => (
                             <PricingCard
-                                key={plan.name}
+                                key={`${plan.subscription_tier}-${index}`}
                                 plan={plan}
                                 features={getFilteredPricingPlans().pricingCardFeatures}
-                                annualPlans={getFilteredPricingPlans().annual}
                                 isUserLoggedIn={!!authUser}
                                 currentPlanStripePriceId={subscription?.stripe_price_id ?? ""}
                             />

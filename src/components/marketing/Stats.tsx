@@ -9,7 +9,7 @@ interface Stat {
 
 interface StatsParams {
     title: React.ReactNode;
-    eyebrow: string;
+    eyebrow?: string;
     description: string;
     stats: Stat[];
 }
@@ -28,7 +28,7 @@ const StatCard = ({ value, label, description, className, heightClass = "" }: St
             <p className="text-4xl font-semibold tracking-tight">{value}</p>
             <div className="flex flex-col gap-2">
                 <p className="text-lg font-semibold">{label}</p>
-                <p className="text-base text-gray-400">{description}</p>
+                <p className="text-base text-muted-foreground">{description}</p>
             </div>
         </div>
     );
@@ -39,11 +39,11 @@ const Stats = ({ title, eyebrow, description, stats }: StatsParams) => {
         <div className="flex flex-col gap-16">
             {/* Header Section */}
             <div className="flex flex-col gap-6">
-                <p className="text-sm font-medium text-blue-600">{eyebrow}</p>
+                {eyebrow && <p className="text-sm font-medium text-blue-600">{eyebrow}</p>}
                 <h2 className="max-w-4xl text-4xl font-medium tracking-tight md:text-5xl">
                     {title}
                 </h2>
-                <p className="max-w-3xl text-lg">{description}</p>
+                <p className="max-w-3xl text-lg text-muted-foreground">{description}</p>
             </div>
 
             {/* Stats Grid */}

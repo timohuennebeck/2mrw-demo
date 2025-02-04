@@ -1,13 +1,12 @@
 "use server";
 
 import { isFreePlanEnabled } from "@/config";
-import { EmailType } from "@/enums";
-import { startFreePlan } from "@/services/database/subscriptionService";
-import { createUserTable, fetchUser } from "@/services/database/userService";
-import { createClient } from "@/services/integration/server";
-import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
+import { processReferralSignup } from "@/services/database/referral-service";
+import { startFreePlan } from "@/services/database/subscription-service";
+import { createUserTable, fetchUser } from "@/services/database/user-service";
+import { createClient } from "@/services/supabase-clients/server";
 import { stripe } from "@/services/stripe/client";
-import { getStripeCustomerId } from "@/services/stripe/stripeCustomer";
+import { getStripeCustomerId } from "@/services/stripe/stripe-customer";
 import { type EmailOtpType } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 import { type NextRequest, NextResponse } from "next/server";
@@ -76,27 +75,30 @@ export const GET = async (request: NextRequest) => {
             }
             case "email":
             case "signup": {
-                const { data: userData } = await fetchUser(authUser?.id ?? "");
+                const { data: userExists } = await fetchUser(
+                    authUser?.id ?? "",
+                );
 
-                if (!userData && authUser) {
+                if (!userExists && authUser) {
                     const authMethod = authUser.user_metadata.auth_method;
+
                     const { error } = await createUserTable(
                         authUser,
                         authMethod,
                     ); // if the user does not exist in the database, create a new user
+
                     if (error) {
                         return redirect("/auth-status/error?mode=create-user");
                     }
 
+                    await processReferralSignup({
+                        newUserId: authUser.id,
+                        newUserEmail: authUser.email!,
+                    });
+
                     if (isFreePlanEnabled()) {
                         await startFreePlan(authUser.id);
                     }
-
-                    sendLoopsTransactionalEmail({
-                        type: EmailType.WELCOME_TO_SAAS_NAME,
-                        email: authUser.email!,
-                        variables: {},
-                    });
 
                     return redirect(
                         "/auth-status/success?mode=email-confirmed",

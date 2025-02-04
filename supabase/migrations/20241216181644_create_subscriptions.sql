@@ -1,5 +1,5 @@
 CREATE TABLE
-    user_subscriptions (
+    subscriptions (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
         user_id UUID NOT NULL UNIQUE REFERENCES auth.users (id) ON DELETE CASCADE,
         stripe_subscription_id TEXT,
@@ -8,7 +8,7 @@ CREATE TABLE
             status IN ('ACTIVE', 'TRIALING', 'CANCELLED', 'EXPIRED')
         ),
         subscription_tier TEXT NOT NULL CHECK (
-            subscription_tier IN ('FREE', 'ESSENTIALS', 'FOUNDERS')
+            subscription_tier IN ('FREE', 'ESSENTIALS', 'INDIE_HACKER')
         ),
         billing_period TEXT CHECK (
             billing_period IN ('MONTHLY', 'YEARLY', 'LIFETIME')

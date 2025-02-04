@@ -1,11 +1,13 @@
 "use server";
 
 import { isFreePlanEnabled, ROUTES_CONFIG } from "@/config";
-import { EmailType } from "@/enums";
-import { AuthMethod } from "@/enums/user";
-import { startFreePlan } from "@/services/database/subscriptionService";
-import { checkUserEmailExists, createUserTable } from "@/services/database/userService";
-import { sendLoopsTransactionalEmail } from "@/services/loops/loopsService";
+import { AuthMethod } from "@/enums/user.enum";
+import { processReferralSignup } from "@/services/database/referral-service";
+import { startFreePlan } from "@/services/database/subscription-service";
+import {
+    checkUserEmailExists,
+    createUserTable,
+} from "@/services/database/user-service";
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -40,27 +42,46 @@ export const GET = async (request: Request) => {
             },
         );
 
-        const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-        if (error) return redirect(`${origin}${ROUTES_CONFIG.PUBLIC.STATUS_ERROR}?mode=google-auth`);
+        const { data, error } = await supabase.auth.exchangeCodeForSession(
+            code,
+        );
+        if (error) {
+            const baseUrl = `${origin}${ROUTES_CONFIG.PUBLIC.STATUS_ERROR}`;
+            return redirect(`${baseUrl}?mode=google-auth`);
+        }
 
         const { user: authUser } = data.session;
         const { emailExists } = await checkUserEmailExists(authUser.email!);
 
         if (!emailExists) {
-            const { error } = await createUserTable(authUser, AuthMethod.GOOGLE);
-            if (error) return redirect(`${origin}${ROUTES_CONFIG.PUBLIC.STATUS_ERROR}?mode=create-user`);
+            const { error } = await createUserTable(
+                authUser,
+                AuthMethod.GOOGLE,
+            );
+            if (error) {
+                const baseUrl = `${origin}${ROUTES_CONFIG.PUBLIC.STATUS_ERROR}`;
+                return redirect(`${baseUrl}?mode=create-user`);
+            }
+
+            const cookiesStore = await cookies();
+            const referralCode = cookiesStore.get("referral_code");
+
+            if (referralCode) {
+                await processReferralSignup({
+                    newUserId: authUser.id,
+                    newUserEmail: authUser.email!,
+                    referralCode: referralCode?.value,
+                });
+
+                cookiesStore.delete("referral_code");
+            }
 
             if (isFreePlanEnabled()) {
                 await startFreePlan(authUser.id);
             }
 
-            sendLoopsTransactionalEmail({
-                type: EmailType.WELCOME_TO_SAAS_NAME,
-                email: authUser.email!,
-                variables: {},
-            });
-
-            return redirect(`${origin}${ROUTES_CONFIG.PUBLIC.STATUS_SUCCESS}?mode=google-connected`);
+            const baseUrl = `${origin}${ROUTES_CONFIG.PUBLIC.STATUS_SUCCESS}`;
+            return redirect(`${baseUrl}?mode=google-connected`);
         }
 
         return redirect(`${origin}${ROUTES_CONFIG.PROTECTED.USER_DASHBOARD}`);

@@ -1,17 +1,7 @@
+import { FooterLink, FooterLinks } from "@/data/marketing/footer-data";
+import { handleSmoothScroll } from "@/utils/navigation";
 import Image from "next/image";
 import Link from "next/link";
-
-interface FooterLink {
-    name: string;
-    href: string;
-}
-
-interface FooterLinks {
-    solutions: FooterLink[];
-    support: FooterLink[];
-    product: FooterLink[];
-    legal: FooterLink[];
-}
 
 interface FooterParams {
     links: FooterLinks;
@@ -30,17 +20,25 @@ const FooterLogo = ({ logo }: { logo: FooterParams["logo"] }) => (
     </Link>
 );
 
-const Separator = () => <div className="h-px bg-gray-200" />;
+const Separator = () => <div className="h-px bg-border dark:bg-border" />;
 
 const FooterLinkSection = ({ title, links }: { title: string; links: FooterLink[] }) => (
     <div className="flex flex-col gap-6">
-        <h3 className="text-sm font-semibold text-gray-900">
+        <h3 className="text-sm font-semibold text-foreground">
             {title.charAt(0).toUpperCase() + title.slice(1)}
         </h3>
         <ul className="flex flex-col gap-4">
             {links.map((link) => (
                 <li key={link.name}>
-                    <Link href={link.href} className="text-sm text-gray-600 hover:text-gray-900">
+                    <Link
+                        href={link.href}
+                        onClick={(e) => !link.isExternal && handleSmoothScroll(e, link.href)}
+                        className="text-sm text-muted-foreground hover:text-foreground"
+                        {...(link.isExternal && {
+                            target: "_blank",
+                            rel: "noopener noreferrer",
+                        })}
+                    >
                         {link.name}
                     </Link>
                 </li>
@@ -57,7 +55,7 @@ const FooterBottom = ({
     bottomLinks: FooterLink[];
 }) => (
     <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} {companyName}, Inc. All rights reserved.
         </p>
         <div className="flex space-x-6">
@@ -65,7 +63,7 @@ const FooterBottom = ({
                 <Link
                     key={link.name}
                     href={link.href}
-                    className="text-sm text-gray-600 hover:text-gray-900"
+                    className="text-sm text-muted-foreground hover:text-foreground"
                 >
                     {link.name}
                 </Link>

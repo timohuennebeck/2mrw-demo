@@ -1,35 +1,38 @@
 "use client";
 
-import BeforeAfterComparison from "@/components/marketing/BeforeAfterComparison";
-import CTA from "@/components/marketing/CTA";
-import FAQ from "@/components/marketing/FAQ";
-import FeaturedTestimonial from "@/components/marketing/FeaturedTestimonial";
-import Features from "@/components/marketing/Features";
-import FeaturesList from "@/components/marketing/FeaturesList";
-import Footer from "@/components/marketing/Footer";
-import Header from "@/components/marketing/Header";
-import Hero from "@/components/marketing/Hero";
-import HowItWorks from "@/components/marketing/HowItWorks";
-import PricingComparison from "@/components/marketing/PricingComparison";
-import ProductDemo from "@/components/marketing/ProductDemo";
-import PromoBanner from "@/components/marketing/PromoBanner";
-import Stats from "@/components/marketing/Stats";
-import TestimonialsGrid from "@/components/marketing/TestimonialsGrid";
-import { useSession } from "@/context/SessionContext";
-import { useSubscription } from "@/context/SubscriptionContext";
+import logoBlack from "@/assets/images/logo-black.svg";
+import logoWhite from "@/assets/images/logo-white.svg";
+import BeforeAfterComparison from "@/components/marketing/before-after-comparison";
+import CallToAction from "@/components/marketing/call-to-action";
+import FAQ from "@/components/marketing/faq";
+import FeaturedTestimonial from "@/components/marketing/featured-testimonial";
+import Features from "@/components/marketing/features";
+import FeaturesList from "@/components/marketing/features-list";
+import Footer from "@/components/marketing/footer";
+import Header from "@/components/marketing/header";
+import Hero from "@/components/marketing/hero";
+import HowItWorks from "@/components/marketing/how-it-works";
+import PricingComparison from "@/components/marketing/pricing-comparison";
+import ProductDemo from "@/components/marketing/product-demo";
+import Stats from "@/components/marketing/stats";
+import TestimonialsGrid from "@/components/marketing/testimonials-grid";
+import { appConfig } from "@/config";
+import { useSession } from "@/context/session-context";
+import { useSubscription } from "@/context/subscription-context";
 import { faq } from "@/data/marketing/faq-data";
 import { authFeatures, databaseFeatures, emailFeatures } from "@/data/marketing/features-data";
 import { featuresList } from "@/data/marketing/features-list-data";
-import { footerLinks } from "@/data/marketing/footer-data";
+import { bottomLinks, footerLinks } from "@/data/marketing/footer-data";
 import { exampleStats } from "@/data/marketing/stats-data";
 import { testimonials } from "@/data/marketing/testimonials-data";
 import { cn } from "@/lib/utils";
+import { getFilteredPricingPlans } from "@/services/domain/pricing-service";
 import { handleSmoothScroll } from "@/utils/navigation";
-import { Shield } from "lucide-react";
+import { Asterisk } from "lucide-react";
+import { useTheme } from "next-themes";
 import { Manrope } from "next/font/google";
 import { useRouter } from "next/navigation";
-import logo from "@/assets/images/logo.svg";
-import { getFilteredPricingPlans } from "@/services/domain/pricingService";
+import TexturedBackground from "@/components/ui/textured-background";
 
 const manrope = Manrope({
     subsets: ["latin"],
@@ -51,6 +54,8 @@ const SectionContainer = ({ id, className, children }: SectionContainerParams) =
 };
 
 const LandingPage = () => {
+    const { theme } = useTheme();
+
     const { authUser } = useSession();
     const { subscription } = useSubscription();
 
@@ -58,25 +63,9 @@ const LandingPage = () => {
 
     return (
         <>
-            <div className="fixed inset-0 -z-10 h-full w-full">
-                <div className="h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]" />
-            </div>
+            <TexturedBackground />
 
             <div className={`${manrope.variable} flex flex-col font-manrope`}>
-                {/* COPY TIP: Promo banners should create urgency and highlight clear value.
-                    Use specific numbers, time limits, or exclusive offers. */}
-                <PromoBanner
-                    text={{
-                        desktop: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-                        mobile: "Lorem ipsum dolor",
-                        code: "LOREM50",
-                    }}
-                    link={{
-                        href: "/pricing",
-                        label: "Lorem ipsum",
-                    }}
-                    className="bg-black text-white"
-                />
                 <Header
                     navItems={[
                         { href: "#features", label: "Features" },
@@ -85,7 +74,7 @@ const LandingPage = () => {
                         { href: "#faq", label: "FAQ" },
                         { href: "https://docs.2mrw.dev", label: "Documentation", isExternal: true },
                     ]}
-                    logoSrc={logo}
+                    logoSrc={theme === "dark" ? logoWhite : logoBlack}
                     loginOnClick={() => router.push("/auth/sign-in")}
                     userIsLoggedIn={!!authUser}
                 />
@@ -135,41 +124,59 @@ const LandingPage = () => {
                             eyebrow="Lorem, ipsum dolor."
                             title={
                                 <>
-                                    Lorem ipsum dolor sit{" "}
+                                    Lorem ipsum{" "}
                                     <span className="relative mt-4 inline-block whitespace-nowrap bg-blue-600 p-2 text-white">
-                                        amet consectetur,
+                                        amet consectetur.
                                     </span>
-                                    adipisicing elit.
                                 </>
                             }
                             description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore."
                             steps={[
                                 {
-                                    number: 1,
-                                    title: "Lorem ipsum dolor sit amet.",
+                                    icon: Asterisk,
+                                    title: "Lorem, ipsum dolor.",
                                     description:
-                                        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore.",
-                                    icon: Shield,
+                                        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga quis error saepe eum quia?",
+                                    badge: {
+                                        text: "Step 1",
+                                        bgColor: "bg-blue-50 dark:bg-blue-950/50",
+                                        textColor: "text-blue-600",
+                                    },
+                                    metrics: [
+                                        { value: "85%", label: "Success Rate" },
+                                        { value: "2min", label: "Setup Time" },
+                                    ],
                                 },
                                 {
-                                    number: 2,
-                                    title: "Lorem ipsum dolor sit amet.",
+                                    icon: Asterisk,
+                                    title: "Lorem, ipsum dolor.",
                                     description:
-                                        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore.",
-                                    icon: Shield,
+                                        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga quis error saepe eum quia?",
+                                    badge: {
+                                        text: "Step 2",
+                                        bgColor: "bg-blue-50 dark:bg-blue-950/50",
+                                        textColor: "text-blue-600",
+                                    },
+                                    metrics: [
+                                        { value: "85%", label: "Success Rate" },
+                                        { value: "2min", label: "Setup Time" },
+                                    ],
                                 },
                                 {
-                                    number: 3,
-                                    title: "Lorem ipsum dolor sit amet.",
+                                    icon: Asterisk,
+                                    title: "Lorem, ipsum dolor.",
                                     description:
-                                        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet aperiam voluptates totam fuga labore inventore.",
-                                    icon: Shield,
+                                        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga quis error saepe eum quia?",
+                                    badge: {
+                                        text: "Step 3",
+                                        bgColor: "bg-blue-50 dark:bg-blue-950/50",
+                                        textColor: "text-blue-600",
+                                    },
+                                    metrics: [
+                                        { value: "85%", label: "Success Rate" },
+                                        { value: "2min", label: "Setup Time" },
+                                    ],
                                 },
-                            ]}
-                            videoPaths={[
-                                "https://www.dropbox.com/scl/fi/crcmzz58px8rro2i5axv2/main-demo.mp4?rlkey=duxmf3k5wyss2wtt2trq9q7qo&st=z8p7y1tv&raw=1",
-                                "https://www.dropbox.com/scl/fi/gnskt6it1i6xtqh3b75yw/user-authentication.mp4?rlkey=dpfc9wrj035ulagzg59noifyb&st=wh5j07zu&raw=1",
-                                "https://www.dropbox.com/scl/fi/crcmzz58px8rro2i5axv2/main-demo.mp4?rlkey=duxmf3k5wyss2wtt2trq9q7qo&st=z8p7y1tv&raw=1",
                             ]}
                         />
                     </SectionContainer>
@@ -195,16 +202,16 @@ const LandingPage = () => {
                             before={{
                                 bulletPoints: [
                                     {
-                                        text: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem.",
+                                        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                                     },
                                     {
                                         text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                                     },
                                     {
-                                        text: "Ut enim ad minima veniam, quis nostrum exercitationem ullam.",
+                                        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                                     },
                                     {
-                                        text: "Quis autem vel eum iure reprehenderit qui in ea voluptate velit.",
+                                        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                                     },
                                 ],
                                 videoUrl:
@@ -216,13 +223,13 @@ const LandingPage = () => {
                                         text: "Excepteur sint occaecat cupidatat non proident sunt in culpa.",
                                     },
                                     {
-                                        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                                        text: "Excepteur sint occaecat cupidatat non proident sunt in culpa.",
                                     },
                                     {
-                                        text: "Temporibus autem quibusdam et aut officiis debitis aut rerum.",
+                                        text: "Excepteur sint occaecat cupidatat non proident sunt in culpa.",
                                     },
                                     {
-                                        text: "Itaque earum rerum hic tenetur a sapiente delectus ut aut.",
+                                        text: "Excepteur sint occaecat cupidatat non proident sunt in culpa.",
                                     },
                                 ],
                                 videoUrl:
@@ -268,7 +275,7 @@ const LandingPage = () => {
                             subtitle="Lorem ipsum dolor, sit amet consectetur adipisicing elit."
                             badge={{
                                 text: "CUSTOM BADGE TITLE",
-                                bgColor: "bg-purple-50",
+                                bgColor: "bg-purple-50 dark:bg-purple-950/50",
                                 textColor: "text-purple-600",
                             }}
                             videoUrl="https://www.dropbox.com/scl/fi/crcmzz58px8rro2i5axv2/main-demo.mp4?rlkey=duxmf3k5wyss2wtt2trq9q7qo&st=z8p7y1tv&raw=1"
@@ -280,7 +287,7 @@ const LandingPage = () => {
                             subtitle="Lorem ipsum dolor, sit amet consectetur adipisicing elit."
                             badge={{
                                 text: "CUSTOM BADGE TITLE",
-                                bgColor: "bg-blue-50",
+                                bgColor: "bg-blue-50 dark:bg-blue-950/50",
                                 textColor: "text-blue-600",
                             }}
                             videoUrl="https://www.dropbox.com/scl/fi/gnskt6it1i6xtqh3b75yw/user-authentication.mp4?rlkey=dpfc9wrj035ulagzg59noifyb&st=wh5j07zu&raw=1"
@@ -292,7 +299,7 @@ const LandingPage = () => {
                             subtitle="Lorem ipsum dolor, sit amet consectetur adipisicing elit."
                             badge={{
                                 text: "CUSTOM BADGE TITLE",
-                                bgColor: "bg-orange-50",
+                                bgColor: "bg-orange-50 dark:bg-orange-950/50",
                                 textColor: "text-orange-600",
                             }}
                             videoUrl="https://www.dropbox.com/scl/fi/crcmzz58px8rro2i5axv2/main-demo.mp4?rlkey=duxmf3k5wyss2wtt2trq9q7qo&st=z8p7y1tv&raw=1"
@@ -312,6 +319,7 @@ const LandingPage = () => {
 
                     <SectionContainer id="product-demo">
                         <ProductDemo
+                            eyebrow="Lorem, ipsum dolor."
                             title={
                                 <>
                                     Lorem ipsum dolor sit{" "}
@@ -322,16 +330,16 @@ const LandingPage = () => {
                                 </>
                             }
                             subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-                            videoUrl="https://www.dropbox.com/scl/fi/crcmzz58px8rro2i5axv2/main-demo.mp4?rlkey=duxmf3k5wyss2wtt2trq9q7qo&st=z8p7y1tv&raw=1"
+                            videoUrl="https://youtu.be/iiz-MjH5tNs"
                         />
                     </SectionContainer>
 
                     <SectionContainer>
                         <FeaturesList
+                            eyebrow="Lorem, ipsum."
                             heading="Lorem ipsum dolor sit amet"
                             description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
                             features={featuresList}
-                            sectionTitle="Lorem, ipsum dolor."
                         />
                     </SectionContainer>
 
@@ -339,6 +347,7 @@ const LandingPage = () => {
                         Highlight what makes each tier unique and who it's best for. */}
                     <SectionContainer id="pricing">
                         <PricingComparison
+                            eyebrow="Lorem, ipsum dolor."
                             title={
                                 <>
                                     Lorem ipsum dolor sit{" "}
@@ -348,10 +357,9 @@ const LandingPage = () => {
                                     adipisicing elit.
                                 </>
                             }
-                            subtitle="Lorem, ipsum dolor."
                             description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, similique."
                             plans={getFilteredPricingPlans()}
-                            features={getFilteredPricingPlans().defaultPricingFeatures}
+                            features={getFilteredPricingPlans().pricingComparisonFeatures}
                             isUserLoggedIn={!!authUser}
                             currentPlanStripePriceId={subscription?.stripe_price_id ?? ""}
                         />
@@ -392,7 +400,7 @@ const LandingPage = () => {
                     {/* COPY TIP: CTAs should be action-oriented and create urgency.
                         Focus on what the customer gets, not what they have to do. */}
                     <SectionContainer>
-                        <CTA
+                        <CallToAction
                             eyebrow="Lorem, ipsum dolor."
                             title={
                                 <>
@@ -421,15 +429,12 @@ const LandingPage = () => {
                         <Footer
                             links={footerLinks}
                             logo={{
-                                src: logo,
+                                src: theme === "dark" ? logoWhite : logoBlack,
                                 alt: "Logo",
                             }}
                             description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique optio molestiae exercitationem! Porro doloribus molestias rerum error inventore."
-                            companyName="2mrw"
-                            bottomLinks={[
-                                { name: "Terms and Conditions", href: "/privacy" },
-                                { name: "Changelog", href: "/changelog" },
-                            ]}
+                            companyName={appConfig.company.name}
+                            bottomLinks={bottomLinks}
                         />
                     </SectionContainer>
                 </div>

@@ -1,8 +1,9 @@
 "use client";
 
-import { Play } from "lucide-react";
-import TestimonialRating from "./TestimonialRating";
+import { ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
+import TestimonialRating from "./testimonial-rating";
+import CustomVideo from "../ui/custom-video";
 
 interface HeroParams {
     promoText?: string;
@@ -17,7 +18,7 @@ interface HeroParams {
         onClick?: (e: React.MouseEvent) => void;
     };
     demoVideoUrl?: string;
-    showTestimonials?: boolean;
+    hideTestimonials?: boolean;
 }
 
 const Hero = ({
@@ -27,15 +28,13 @@ const Hero = ({
     primaryCTA,
     secondaryCTA,
     demoVideoUrl,
-    showTestimonials,
+    hideTestimonials,
 }: HeroParams) => {
     return (
         <section className="relative flex flex-col items-center justify-center gap-8 text-center">
             {/* Promotional Banner */}
             {promoText && (
-                <div className="rounded-lg bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600">
-                    {promoText}
-                </div>
+                <div className="px-4 py-2 text-sm font-medium text-blue-600">{promoText}</div>
             )}
 
             {/* Main Title */}
@@ -44,35 +43,27 @@ const Hero = ({
             </h1>
 
             {/* Subtitle */}
-            <p className="max-w-2xl text-lg text-gray-600">{subtitle}</p>
+            <p className="max-w-2xl text-lg text-muted-foreground">{subtitle}</p>
 
             {/* CTA Buttons */}
             <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
                 <Button size="lg" onClick={primaryCTA.onClick}>
                     {primaryCTA.text}
+                    <ArrowRight size={16} />
                 </Button>
                 {secondaryCTA && (
                     <Button size="lg" variant="secondary" onClick={secondaryCTA.onClick}>
-                        <Play size={16} className="fill-current" />
                         {secondaryCTA.text}
                     </Button>
                 )}
             </div>
 
-            {showTestimonials && <TestimonialRating />}
+            {!hideTestimonials && <TestimonialRating />}
 
             {/* Demo Video */}
             {demoVideoUrl && (
-                <div className="relative w-full max-w-5xl">
-                    <video
-                        src={demoVideoUrl}
-                        width={1200}
-                        height={675}
-                        className="rounded-lg shadow-2xl"
-                        autoPlay
-                        muted
-                        loop
-                    />
+                <div className="w-full max-w-5xl">
+                    <CustomVideo src={demoVideoUrl} />
                 </div>
             )}
         </section>
