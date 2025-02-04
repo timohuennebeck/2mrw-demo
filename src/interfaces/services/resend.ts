@@ -1,8 +1,5 @@
 import { EmailType } from "@/enums";
 import { z } from "zod";
-import FreeTrialExpiresEmail from "../../../react-email-starter/emails/free-trial-expires-soon";
-import FreeTrialStartedEmail from "../../../react-email-starter/emails/free-trial-started";
-import ReferralInviteEmail from "../../../react-email-starter/emails/referral-invite";
 
 export const emailSchemas = {
     [EmailType.FREE_TRIAL_STARTED]: z.object({
