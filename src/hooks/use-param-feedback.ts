@@ -9,9 +9,7 @@ interface FeedbackConfig {
     message: string;
     duration?: number;
     action?: StatusMessage["action"];
-    configKey?:
-        | keyof typeof appConfig.feedback.widgets
-        | keyof typeof appConfig.feedback.forms;
+    configKey?: keyof typeof appConfig.feedback.forms;
 }
 
 /**
@@ -42,11 +40,10 @@ export const useParamFeedback = (
             if (config.configKey === "accountDeletion") {
                 // if the widget is disabled, don't show the message
                 const widgetConfig = appConfig.feedback
-                    .forms[config.configKey as keyof typeof appConfig.feedback.forms];
-                if (!widgetConfig.isEnabled) return;
-            } else {
-                const widgetConfig = appConfig.feedback
-                    .widgets[config.configKey as keyof typeof appConfig.feedback.widgets];
+                    .forms[
+                        config
+                            .configKey as keyof typeof appConfig.feedback.forms
+                    ];
                 if (!widgetConfig.isEnabled) return;
             }
 
